@@ -1,4 +1,14 @@
+"use client";
+
+import { io } from "socket.io-client";
+
+const socket = io("http://localhost:8080");
+
 export default function Home() {
+  const emitCustomEvent = () => {
+    socket.emit("customEvent", { hello: "world" });
+  };
+
   return (
     <main className="flex min-h-screen flex-col justify-center">
       <section className="container mx-auto px-4">
@@ -18,7 +28,10 @@ export default function Home() {
           </label>
         </div>
         <div className="space-x-2">
-          <button className="bg-indigo-600 px-4 text-white transition hover:bg-indigo-500 focus:bg-indigo-700">
+          <button
+            onClick={emitCustomEvent}
+            className="bg-indigo-600 px-4 text-white transition hover:bg-indigo-500 focus:bg-indigo-700"
+          >
             Start Game
           </button>
           <button className="bg-gray-300 px-4 transition hover:bg-gray-200 focus:bg-gray-400">
