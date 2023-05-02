@@ -5,6 +5,11 @@ import { io } from "socket.io-client";
 const socket = io("http://localhost:8080");
 
 export default function Home() {
+  socket.on("hello", (msg) => {
+    console.log("received messages!");
+    console.log(msg);
+  });
+
   const emitCustomEvent = () => {
     socket.emit("customEvent", { hello: "world" });
   };

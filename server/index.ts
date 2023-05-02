@@ -14,7 +14,9 @@ const app: Express = express();
 const server = createServer(app);
 const port = process.env.PORT;
 
-interface ServerToClientEvents {}
+interface ServerToClientEvents {
+  hello: (str: string) => void;
+}
 
 interface ClientToServerEvents {
   customEvent: (str: string) => void;
@@ -28,6 +30,8 @@ const io = new Server<ClientToServerEvents, ServerToClientEvents>(server, {
 
 io.on("connection", (socket) => {
   console.log("a user connected");
+
+  socket.emit("hello", "world");
 
   socket.on("customEvent", async (str) => {
     console.log("custom event happened!", str);
