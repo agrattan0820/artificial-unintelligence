@@ -1,9 +1,7 @@
 "use client";
 
-import { FormEvent } from "react";
-import { io } from "socket.io-client";
-
-const socket = io("http://localhost:8080");
+import { socket } from "@ai/utils/socket";
+import { FormEvent, useEffect } from "react";
 
 interface FormElementsType extends HTMLFormControlsCollection {
   nickname: HTMLInputElement;
@@ -13,10 +11,10 @@ interface FormType extends HTMLFormElement {
 }
 
 export default function Home() {
-  socket.on("hello", (msg) => {
+  const helloMessages = (msg: string) => {
     console.log("received messages!");
     console.log(msg);
-  });
+  };
 
   const onSubmit = (e: FormEvent<FormType>) => {
     e.preventDefault();
@@ -24,6 +22,14 @@ export default function Home() {
     console.log(formNickname);
     socket.emit("createUser", { nickname: formNickname });
   };
+
+  useEffect(() => {
+    socket.on("hello", helloMessages);
+
+    return () => {
+      socket.off("hello", helloMessages);
+    };
+  }, []);
 
   return (
     <main className="flex min-h-screen flex-col justify-center">
