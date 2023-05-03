@@ -97,6 +97,9 @@ io.on("connection", (socket) => {
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
 });
+app.get("/ping", (req: Request, res: Response) => {
+  res.status(200).send("pong");
+});
 
 server.listen(port, async () => {
   await migrate(db, { migrationsFolder: "./drizzle" });
