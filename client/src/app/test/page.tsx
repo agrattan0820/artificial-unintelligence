@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { generateImage } from "../../utils/query";
 
 export default function Test() {
   const [image, setImage] = useState("");
@@ -10,32 +11,10 @@ export default function Test() {
       <button
         className="rounded bg-indigo-600 font-bold text-white"
         onClick={async () => {
-          try {
-            const response = await fetch("/api/generate", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ prompt: "a white siamese cat" }),
-            });
-
-            const data = await response.json();
-            if (response.status !== 200) {
-              throw (
-                data.error ||
-                new Error(`Request failed with status ${response.status}`)
-              );
-            }
-
-            console.log(data);
-
-            data && setImage(data.result);
-          } catch (error) {
-            console.error(error);
-            if (error instanceof Error) {
-              alert(error.message);
-            }
-          }
+          const imageUrl = await generateImage(
+            "a LAN party in the middle of the highway"
+          );
+          imageUrl && setImage(imageUrl);
         }}
       >
         Send Custom Event

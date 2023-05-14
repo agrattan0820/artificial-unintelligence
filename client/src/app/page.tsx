@@ -1,6 +1,7 @@
 "use client";
 
 import { socket } from "@ai/utils/socket";
+import { useStore } from "@ai/utils/store";
 import { FormEvent, useEffect } from "react";
 
 interface FormElementsType extends HTMLFormControlsCollection {
@@ -11,6 +12,8 @@ interface FormType extends HTMLFormElement {
 }
 
 export default function Home() {
+  const { nickname, setNickname } = useStore();
+
   const helloMessages = (msg: string) => {
     console.log("received messages!");
     console.log(msg);
@@ -19,9 +22,11 @@ export default function Home() {
   const onSubmit = (e: FormEvent<FormType>) => {
     e.preventDefault();
     const formNickname = e.currentTarget.elements.nickname.value;
-    console.log(formNickname);
     socket.emit("createUser", { nickname: formNickname });
+    setNickname(formNickname);
   };
+
+  console.log("nickname", nickname);
 
   useEffect(() => {
     socket.on("hello", helloMessages);
