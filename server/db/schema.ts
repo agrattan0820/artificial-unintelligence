@@ -3,7 +3,7 @@ import { integer, pgTable, serial, text, varchar } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
-  nickname: text("nickname"),
+  nickname: text("nickname").notNull(),
 });
 
 export const rooms = pgTable("rooms", {

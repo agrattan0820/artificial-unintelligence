@@ -15,6 +15,13 @@
       "when": 1683072927231,
       "tag": "0001_clever_microchip",
       "breakpoints": false
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1684201994919,
+      "tag": "0002_worthless_the_call",
+      "breakpoints": false
     }
   ]
 }

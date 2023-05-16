@@ -22,7 +22,7 @@ export const createRoom = async (data: { host: User }) => {
       .from(rooms)
       .where(eq(rooms.code, roomCode));
 
-    if (!doesRoomCodeExist) {
+    if (doesRoomCodeExist.length === 0) {
       validRoomCode = true;
       break;
     }

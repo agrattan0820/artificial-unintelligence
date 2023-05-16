@@ -1,6 +1,7 @@
 "use client";
 
 import Ellipsis from "@ai/components/ellipsis";
+import { CreateHostResponse } from "@ai/types/api.type";
 import { socket } from "@ai/utils/socket";
 import { useStore } from "@ai/utils/store";
 import { useRouter } from "next/navigation";
@@ -14,7 +15,7 @@ interface FormType extends HTMLFormElement {
 }
 
 export default function Home() {
-  const { nickname, setNickname } = useStore();
+  const { user, setUser } = useStore();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -47,15 +48,17 @@ export default function Home() {
       body: JSON.stringify({ nickname: formNickname }),
     });
 
-    const data = await response.json();
+    const data: CreateHostResponse = await response.json();
 
     console.log("RESPONSE", data);
 
+    setUser(data.host);
+
     // await new Promise((resolve) => setTimeout(resolve, 1000));
-    // router.push("/room/hello");
+    router.push(`/room/${data.room.code}`);
   };
 
-  console.log("nickname", nickname);
+  console.log("user", user);
 
   useEffect(() => {
     socket.on("hello", helloMessages);
@@ -76,7 +79,7 @@ export default function Home() {
               className="peer h-10 border-b-2 border-l-2 border-gray-400 bg-transparent px-2 placeholder-transparent focus:border-indigo-600 focus:outline-none"
               type="text"
               placeholder="enter a nickname"
-              defaultValue={nickname ?? ""}
+              defaultValue={user?.nickname ?? ""}
               required
             />
             <label

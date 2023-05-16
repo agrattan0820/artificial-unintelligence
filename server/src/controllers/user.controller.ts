@@ -17,10 +17,17 @@ export const createHostController: ClientToServerEvents["createHost"] = async (
   callback({ host: newUser, room: newRoom });
 };
 
-export const createHostControllerTwo = async (req: Request, res: Response) => {
+export const createHostControllerTwo = async (
+  req: Request<{}, {}, { nickname: string }>,
+  res: Response
+) => {
   const body = req.body;
 
-  console.log("BODY", body);
+  const newUser = await createUser(body);
+  console.log("[CREATE USER]:", newUser);
 
-  res.status(200).json("Received");
+  const newRoom = await createRoom({ host: newUser });
+  console.log("[CREATE ROOM]:", newRoom);
+
+  res.status(200).json({ host: newUser, room: newRoom });
 };
