@@ -1,8 +1,10 @@
 "use client";
 
+import Ellipsis from "@ai/components/ellipsis";
 import { socket } from "@ai/utils/socket";
 import { useStore } from "@ai/utils/store";
-import { FormEvent, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { FormEvent, useEffect, useState } from "react";
 
 interface FormElementsType extends HTMLFormControlsCollection {
   nickname: HTMLInputElement;
@@ -13,17 +15,44 @@ interface FormType extends HTMLFormElement {
 
 export default function Home() {
   const { nickname, setNickname } = useStore();
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const helloMessages = (msg: string) => {
     console.log("received messages!");
     console.log(msg);
   };
 
-  const onSubmit = (e: FormEvent<FormType>) => {
+  const onSubmit = async (e: FormEvent<FormType>) => {
     e.preventDefault();
+    setLoading(true);
     const formNickname = e.currentTarget.elements.nickname.value;
-    socket.emit("createUser", { nickname: formNickname });
-    setNickname(formNickname);
+
+    // SOCKET.IO POST
+    // socket.emit(
+    //   "createUser",
+    //   { nickname: formNickname },
+    //   (val: { id: number; nickname: string }) => {
+    //     console.log("NEW USER", val);
+    //   }
+    // );
+    // setNickname(formNickname);
+
+    // REST POST
+    const response = await fetch("http://localhost:8080/user/createHost", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ nickname: formNickname }),
+    });
+
+    const data = await response.json();
+
+    console.log("RESPONSE", data);
+
+    // await new Promise((resolve) => setTimeout(resolve, 1000));
+    // router.push("/room/hello");
   };
 
   console.log("nickname", nickname);
@@ -47,6 +76,7 @@ export default function Home() {
               className="peer h-10 border-b-2 border-l-2 border-gray-400 bg-transparent px-2 placeholder-transparent focus:border-indigo-600 focus:outline-none"
               type="text"
               placeholder="enter a nickname"
+              defaultValue={nickname ?? ""}
               required
             />
             <label
@@ -60,10 +90,14 @@ export default function Home() {
             <button
               type="submit"
               className="bg-indigo-600 px-4 text-white transition hover:bg-indigo-500 focus:bg-indigo-700"
+              disabled={loading}
             >
-              Start Game
+              {!loading ? <>Start Game</> : <Ellipsis />}
             </button>
-            <button className="bg-gray-300 px-4 transition hover:bg-gray-200 focus:bg-gray-400">
+            <button
+              className="bg-gray-300 px-4 transition hover:bg-gray-200 focus:bg-gray-400"
+              disabled={loading}
+            >
               How to Play
             </button>
           </div>

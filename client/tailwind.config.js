@@ -17,6 +17,15 @@ module.exports = {
       fontFamily: {
         sans: ["var(--font-roboto)", ...fontFamily.sans],
       },
+      keyframes: {
+        dot: {
+          "0%, 100%": { opacity: 0 },
+          "50%": { opacity: 1 },
+        },
+      },
+      animation: {
+        "dot-bounce": "dot 2s infinite",
+      },
     },
   },
   plugins: [],

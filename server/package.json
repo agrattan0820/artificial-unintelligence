@@ -4,10 +4,11 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon index.ts",
+    "dev": "nodemon app.ts",
     "migrate": "drizzle-kit generate:pg --out drizzle --schema db/schema.ts"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "drizzle-orm": "^0.25.4",
     "express": "^4.18.2",
