@@ -1,7 +1,15 @@
 "use client";
 
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 import Ellipsis from "./ellipsis";
+import { useStore } from "@ai/utils/store";
+import { useRouter } from "next/navigation";
+import {
+  CreateHostResponse,
+  CreateUserResponse,
+  Room,
+} from "@ai/types/api.type";
+import { socket } from "@ai/utils/socket";
 
 interface FormElementsType extends HTMLFormControlsCollection {
   nickname: HTMLInputElement;
@@ -12,18 +20,67 @@ export interface NicknameFormType extends HTMLFormElement {
 }
 
 type NicknameFormProps = {
-  onSubmit: (e: FormEvent<NicknameFormType>) => Promise<void>;
-  user: { id: number; nickname: string } | null;
-  loading: boolean;
-  submitBtnLabel: string;
+  room?: Room;
+  submitLabel: string;
+  type: "HOME" | "INVITE";
 };
 
-const NicknameForm = ({
-  onSubmit,
-  user,
-  loading,
-  submitBtnLabel,
-}: NicknameFormProps) => {
+const createHost = async (nickname: string) => {
+  const response = await fetch("http://localhost:8080/user/createHost", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ nickname }),
+  });
+
+  const data: CreateHostResponse = await response.json();
+
+  console.log("RESPONSE", data);
+  return data;
+};
+
+const createUser = async (nickname: string) => {
+  const response = await fetch("http://localhost:8080/user", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ nickname }),
+  });
+
+  const data: CreateUserResponse = await response.json();
+
+  console.log("RESPONSE", data);
+  return data;
+};
+
+const NicknameForm = ({ room, submitLabel, type }: NicknameFormProps) => {
+  const { user, setUser } = useStore();
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  const onSubmit = async (e: FormEvent<NicknameFormType>) => {
+    e.preventDefault();
+    setLoading(true);
+    const formNickname = e.currentTarget.elements.nickname.value;
+
+    // REST POST
+
+    if (type === "HOME") {
+      const hostData = await createHost(formNickname);
+      setUser(hostData.host);
+      router.push(`/room/${hostData.room.code}`);
+    }
+
+    if (type === "INVITE") {
+      const userData = await createUser(formNickname);
+      setUser(userData.user);
+      socket.emit("joinRoom", { user: userData.user, room });
+      if (room) router.push(`/room/${room.code}`);
+    }
+  };
+
   return (
     <form onSubmit={onSubmit}>
       <div className="relative mb-8">
@@ -48,7 +105,7 @@ const NicknameForm = ({
           className="bg-indigo-600 px-4 text-white transition hover:bg-indigo-500 focus:bg-indigo-700"
           disabled={loading}
         >
-          {!loading ? <>{submitBtnLabel}</> : <Ellipsis />}
+          {!loading ? <>{submitLabel}</> : <Ellipsis />}
         </button>
         <button
           className="bg-gray-300 px-4 transition hover:bg-gray-200 focus:bg-gray-400"

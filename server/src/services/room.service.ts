@@ -53,7 +53,7 @@ export const joinRoom = async (data: { user: User; room: Room }) => {
   return addUserToRoom[0];
 };
 
-export const getRoomInfo = async (data: { roomCode: string }) => {
+export const getRoom = async (data: { roomCode: string }) => {
   const room = await db
     .select({
       room: {

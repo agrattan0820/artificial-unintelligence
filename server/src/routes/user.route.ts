@@ -4,6 +4,7 @@ import { ClientToServerEvents, ServerToClientEvents } from "../../server";
 import {
   createHostController,
   createHostControllerTwo,
+  createUserController,
 } from "../controllers/user.controller";
 
 export function userRoutes(
@@ -14,5 +15,5 @@ export function userRoutes(
 
   app.post("/user/createHost", createHostControllerTwo);
 
-  app.post("/user", createHostControllerTwo);
+  app.post("/user", createUserController);
 }

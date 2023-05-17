@@ -21,3 +21,9 @@ export type CreateHostResponse = {
 export type CreateUserResponse = {
   user: User;
 };
+
+export type GetRoomResponse = {
+  host: User;
+  players: User[];
+  room: Room;
+};

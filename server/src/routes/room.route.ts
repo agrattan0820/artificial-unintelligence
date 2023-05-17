@@ -1,9 +1,9 @@
 import { Socket } from "socket.io";
 import express, { Express, Request, Response } from "express";
-import { createRoom, getRoomInfo, joinRoom } from "../services/room.service";
+import { createRoom, getRoom, joinRoom } from "../services/room.service";
 import { ClientToServerEvents, ServerToClientEvents } from "../../server";
 import {
-  acceptRoomInviteController,
+  getRoomController,
   joinRoomController,
 } from "../controllers/room.controller";
 
@@ -16,7 +16,7 @@ export function roomRoutes(
       const addUserToRoom = await joinRoom(data);
       console.log("[ADD USER TO ROOM]:", addUserToRoom);
       socket.join(data.room.code);
-      const roomInfo = await getRoomInfo({ roomCode: data.room.code });
+      const roomInfo = await getRoom({ roomCode: data.room.code });
       socket
         .to(data.room.code)
         .emit("message", `${data.user.nickname} is joining the room!`);
@@ -29,5 +29,5 @@ export function roomRoutes(
     }
   });
 
-  app.get("/room/invite/:code", acceptRoomInviteController);
+  app.get("/room/:code", getRoomController);
 }

@@ -1,20 +1,20 @@
 import express, { Express, Request, Response } from "express";
-import { getRoomInfo, joinRoom } from "../services/room.service";
+import { getRoom, joinRoom } from "../services/room.service";
 import { ClientToServerEvents } from "../../server";
 
-export const acceptRoomInviteController = async (
+export const getRoomController = async (
   req: Request<{ code: string }>,
   res: Response
 ) => {
   const code = req.params.code;
 
-  const roomInfo = await getRoomInfo({ roomCode: code });
+  const roomInfo = await getRoom({ roomCode: code });
 
   if (!roomInfo) {
     res.status(404).send(`Room with room code of ${code} was not found`);
   }
 
-  res.status(200).send(req.params.code);
+  res.status(200).send(roomInfo);
 };
 
 export const joinRoomController: ClientToServerEvents["joinRoom"] = async (
