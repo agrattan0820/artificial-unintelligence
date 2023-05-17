@@ -11,6 +11,8 @@ import { roomRoutes } from "./src/routes/room.route";
 
 export interface ServerToClientEvents {
   hello: (str: string) => void;
+  message: (str: string) => void;
+  error: (str: string) => void;
 }
 
 export interface ClientToServerEvents {
@@ -20,7 +22,24 @@ export interface ClientToServerEvents {
   ) => void;
   joinRoom: (
     data: { user: User; room: Room },
-    callback: (response: { host: User; room: Room; players: User[] }) => void
+    callback: (
+      response:
+        | {
+            players: {
+              id: number | null;
+              nickname: string | null;
+            }[];
+            room: {
+              code: string;
+              hostId: number | null;
+            };
+            host: {
+              id: number;
+              nickname: string;
+            } | null;
+          }
+        | undefined
+    ) => void
   ) => void;
 }
 
@@ -39,6 +58,8 @@ export function buildServer() {
 
   io.on("connection", (socket) => {
     console.log("[CONNECTION]");
+
+    socket.emit("hello", "hello world");
 
     userRoutes(app, socket);
     roomRoutes(app, socket);

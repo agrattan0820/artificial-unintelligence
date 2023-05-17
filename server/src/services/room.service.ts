@@ -44,6 +44,7 @@ export const joinRoom = async (data: { user: User; room: Room }) => {
     userId: data.user.id,
     roomCode: data.room.code,
   };
+
   const addUserToRoom = await db
     .insert(userRooms)
     .values(newUserRoomRelationship)
@@ -55,8 +56,10 @@ export const joinRoom = async (data: { user: User; room: Room }) => {
 export const getRoomInfo = async (data: { roomCode: string }) => {
   const room = await db
     .select({
-      code: rooms.code,
-      hostId: rooms.hostId,
+      room: {
+        code: rooms.code,
+        hostId: rooms.hostId,
+      },
       host: {
         id: users.id,
         nickname: users.nickname,
@@ -72,13 +75,16 @@ export const getRoomInfo = async (data: { roomCode: string }) => {
   }
 
   const players = await db
-    .select()
+    .select({
+      id: users.id,
+      nickname: users.nickname,
+    })
     .from(userRooms)
-    .leftJoin(users, eq(userRooms.userId, users.id))
+    .fullJoin(users, eq(userRooms.userId, users.id))
     .where(eq(userRooms.roomCode, data.roomCode));
 
   return {
-    room: room[0],
+    ...room[0],
     players,
   };
 };

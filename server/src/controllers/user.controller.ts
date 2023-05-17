@@ -31,3 +31,15 @@ export const createHostControllerTwo = async (
 
   res.status(200).json({ host: newUser, room: newRoom });
 };
+
+export const createUserController = async (
+  req: Request<{}, {}, { nickname: string }>,
+  res: Response
+) => {
+  const body = req.body;
+
+  const newUser = await createUser(body);
+  console.log("[CREATE USER]:", newUser);
+
+  res.status(200).json({ user: newUser });
+};

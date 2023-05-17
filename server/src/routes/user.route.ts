@@ -13,4 +13,6 @@ export function userRoutes(
   socket.on("createHost", createHostController);
 
   app.post("/user/createHost", createHostControllerTwo);
+
+  app.post("/user", createHostControllerTwo);
 }

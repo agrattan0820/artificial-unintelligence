@@ -1,5 +1,6 @@
 import "./globals.css";
 import { Inter, Roboto, Space_Mono } from "next/font/google";
+import { Toaster } from "react-hot-toast";
 
 const spaceMono = Space_Mono({
   subsets: ["latin"],
@@ -35,6 +36,7 @@ export default function RootLayout({
       <body
         className={`${spaceMono.variable} ${inter.variable} ${roboto.variable} font-sans`}
       >
+        <Toaster />
         {children}
       </body>
     </html>

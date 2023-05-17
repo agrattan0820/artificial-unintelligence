@@ -17,3 +17,7 @@ export type CreateHostResponse = {
   host: User;
   room: Room;
 };
+
+export type CreateUserResponse = {
+  user: User;
+};
