@@ -13,7 +13,7 @@ export default async function Invite({ params }: { params: { code: string } }) {
         <NicknameForm
           room={roomData.room}
           type="INVITE"
-          submitLabel="Start Game"
+          submitLabel="Join Game"
         />
       </section>
     </main>
