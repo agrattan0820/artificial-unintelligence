@@ -1,25 +1,14 @@
 import express, { Express, Request, Response } from "express";
 
-import { ClientToServerEvents } from "../../server";
+import { ClientToServerEvents, ServerToClientEvents } from "../../server";
 import { createRoom } from "../services/room.service";
 import { createUser } from "../services/user.service";
+import { Socket } from "socket.io";
 
-export const createHostController: ClientToServerEvents["createHost"] = async (
-  data,
-  callback
-) => {
-  const newUser = await createUser(data);
-  console.log("[CREATE USER]:", newUser);
-
-  const newRoom = await createRoom({ host: newUser });
-  console.log("[CREATE ROOM]:", newRoom);
-
-  callback({ host: newUser, room: newRoom });
-};
-
-export const createHostControllerTwo = async (
+export const createHostController = async (
   req: Request<{}, {}, { nickname: string }>,
-  res: Response
+  res: Response,
+  socket: Socket<ClientToServerEvents, ServerToClientEvents>
 ) => {
   const body = req.body;
 
@@ -28,6 +17,8 @@ export const createHostControllerTwo = async (
 
   const newRoom = await createRoom({ host: newUser });
   console.log("[CREATE ROOM]:", newRoom);
+
+  socket.join(newRoom.code);
 
   res.status(200).json({ host: newUser, room: newRoom });
 };

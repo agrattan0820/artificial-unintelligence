@@ -1,8 +1,6 @@
 import express, { Express, Request, Response } from "express";
-import dotenv from "dotenv";
 import { Server, Socket } from "socket.io";
 import { createServer } from "http";
-import * as crypto from "crypto";
 import cors from "cors";
 
 import { Room, User } from "./db/schema";
@@ -16,10 +14,10 @@ export interface ServerToClientEvents {
 }
 
 export interface ClientToServerEvents {
-  createHost: (
-    data: { nickname: string },
-    callback: (response: { host: User; room: Room }) => void
-  ) => void;
+  // createHost: (
+  //   data: { nickname: string },
+  //   callback: (response: { host: User; room: Room }) => void
+  // ) => void;
   joinRoom: (
     data: { user: User; room: Room },
     callback: (
