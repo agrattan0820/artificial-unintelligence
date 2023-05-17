@@ -21,6 +21,8 @@ export function roomRoutes(
         .to(data.room.code)
         .emit("message", `${data.user.nickname} is joining the room!`);
 
+      console.log(`Emitted message to room ${data.room.code}`);
+
       if (roomInfo) {
         callback(roomInfo);
       }

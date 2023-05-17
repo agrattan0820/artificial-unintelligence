@@ -21,7 +21,7 @@ const SocketInitializer = () => {
 
     return () => {
       socket.off("hello", helloMessages);
-      socket.on("message", message);
+      socket.off("message", message);
     };
   }, []);
 
