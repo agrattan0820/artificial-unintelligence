@@ -1,0 +1,19 @@
+{
+ "folders": [
+  {
+   "path": "client"
+  },
+  {
+   "path": "server"
+  },
+ ],
+ "settings": {
+  "eslint.workingDirectories": [
+   "./client",
+   "./server"
+  ],
+  "editor.quickSuggestions": {
+   "strings": true
+  },
+ }
+}
