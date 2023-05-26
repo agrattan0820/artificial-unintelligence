@@ -21,24 +21,7 @@ export const getRoomController = async (
 
 export const joinRoomController = async (
   data: { user: User; room: Room },
-  callback: (
-    response:
-      | {
-          players: {
-            id: number | null;
-            nickname: string | null;
-          }[];
-          room: {
-            code: string;
-            hostId: number | null;
-          };
-          host: {
-            id: number;
-            nickname: string;
-          } | null;
-        }
-      | undefined
-  ) => void,
+  callback: (response: Awaited<ReturnType<typeof getRoom>>) => void,
   socket: Socket<ClientToServerEvents, ServerToClientEvents>
 ) => {
   try {
@@ -49,6 +32,8 @@ export const joinRoomController = async (
     socket
       .to(data.room.code)
       .emit("message", `${data.user.nickname} is joining the room!`);
+
+    socket.to(data.room.code).emit("updateRoom", roomInfo);
 
     console.log(`Emitted message to room ${data.room.code}`);
 

@@ -16,6 +16,8 @@ module.exports = {
       },
       fontFamily: {
         sans: ["var(--font-roboto)", ...fontFamily.sans],
+        space: ["var(--font-space)", ...fontFamily.sans],
+        gluten: ["var(--font-gluten)", ...fontFamily.sans],
       },
       keyframes: {
         dot: {

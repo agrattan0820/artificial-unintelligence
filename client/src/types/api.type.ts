@@ -27,3 +27,18 @@ export type GetRoomResponse = {
   players: User[];
   room: Room;
 };
+
+export type RoomInfo = {
+  players: {
+    id: number | null;
+    nickname: string | null;
+  }[];
+  room: {
+    code: string;
+    hostId: number | null;
+  };
+  host: {
+    id: number;
+    nickname: string;
+  } | null;
+};

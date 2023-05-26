@@ -6,10 +6,12 @@ import cors from "cors";
 import { Room, User } from "./db/schema";
 import { userRoutes } from "./src/routes/user.route";
 import { roomRoutes } from "./src/routes/room.route";
+import { getRoom } from "./src/services/room.service";
 
 export interface ServerToClientEvents {
   hello: (str: string) => void;
   message: (str: string) => void;
+  updateRoom: (roomInfo: Awaited<ReturnType<typeof getRoom>>) => void;
   error: (str: string) => void;
 }
 
@@ -18,26 +20,10 @@ export interface ClientToServerEvents {
   //   data: { nickname: string },
   //   callback: (response: { host: User; room: Room }) => void
   // ) => void;
+  connectToRoom: (code: string) => void;
   joinRoom: (
     data: { user: User; room: Room },
-    callback: (
-      response:
-        | {
-            players: {
-              id: number | null;
-              nickname: string | null;
-            }[];
-            room: {
-              code: string;
-              hostId: number | null;
-            };
-            host: {
-              id: number;
-              nickname: string;
-            } | null;
-          }
-        | undefined
-    ) => void
+    callback: (response: Awaited<ReturnType<typeof getRoom>>) => void
   ) => void;
 }
 
@@ -58,6 +44,10 @@ export function buildServer() {
     console.log("[CONNECTION]");
 
     socket.emit("hello", "hello world");
+
+    socket.on("connectToRoom", (code) => {
+      socket.join(code);
+    });
 
     userRoutes(app, socket);
     roomRoutes(app, socket);
