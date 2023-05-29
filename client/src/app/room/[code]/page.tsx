@@ -1,8 +1,6 @@
-import SocketInitializer from "@ai/components/socket-initializer";
 import RoomLink from "./room-link";
 import UserCount from "@ai/components/user-count";
 import ConnectionStatus from "@ai/components/connection-status";
-import { socket } from "@ai/utils/socket";
 import { useStore } from "@ai/utils/store";
 import StoreInitializer from "@ai/utils/store-initializer";
 import { getRoomInfo } from "@ai/app/actions";
@@ -23,11 +21,10 @@ export default async function Room({ params }: { params: { code: string } }) {
         <p className="mb-2 text-center font-space text-xl">Your Room Link is</p>
         <RoomLink code={params.code} />
         <div className="absolute left-8 top-8">
-          <UserCount initialCount={room.players.length} />
+          <UserCount code={params.code} initialCount={room.players.length} />
         </div>
-        <ConnectionStatus />
+        <ConnectionStatus code={params.code} />
       </section>
-      <SocketInitializer />
     </main>
   );
 }

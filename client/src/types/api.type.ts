@@ -34,6 +34,7 @@ export type GetRoomResponse = {
 
 export type RoomInfo = {
   code: string;
+  created_at: string | null;
   players: {
     host: boolean;
     users: User[];

@@ -8,10 +8,9 @@ import {
   CreateHostResponse,
   CreateUserResponse,
   Room,
+  RoomInfo,
 } from "@ai/types/api.type";
-import { socket } from "@ai/utils/socket";
 import { createHost, joinRoom } from "@ai/app/actions";
-import supabase from "@ai/utils/supabase";
 
 interface FormElementsType extends HTMLFormControlsCollection {
   nickname: HTMLInputElement;
@@ -28,7 +27,7 @@ type NicknameFormProps =
       type: "HOME";
     }
   | {
-      room: Room;
+      room: RoomInfo;
       submitLabel: string;
       type: "INVITE";
     };

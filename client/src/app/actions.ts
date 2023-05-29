@@ -5,7 +5,7 @@ import supabase from "@ai/utils/supabase";
 import { Room, User } from "@ai/types/api.type";
 
 export const createHost = async (nickname: string) => {
-  const { data: host } = await supabase
+  const { data: host, error: hostError } = await supabase
     .from("users")
     .insert({
       nickname: nickname,
@@ -14,19 +14,39 @@ export const createHost = async (nickname: string) => {
     .limit(1)
     .single();
 
+  if (!host) {
+    throw new Error(`Unable to create host: ${hostError.message}`);
+  }
+
   const code = crypto.randomBytes(4).toString("hex");
-  const { data: room } = await supabase
+  const { data: room, error: roomError } = await supabase
     .from("rooms")
     .insert({
-      host_id: host?.id,
       code,
     })
     .select()
     .limit(1)
     .single();
 
-  if (!host || !room) {
-    throw new Error("Unable to create host");
+  if (!room) {
+    throw new Error(`Unable to create room for host: ${roomError.message}`);
+  }
+
+  const { data: userRoom, error: userRoomError } = await supabase
+    .from("user_rooms")
+    .insert({
+      user_id: host.id,
+      room_code: room.code,
+      host: true,
+    })
+    .select()
+    .limit(1)
+    .single();
+
+  if (!userRoom) {
+    throw new Error(
+      `Unable to create host and room relation: ${userRoomError.message}`
+    );
   }
 
   return {
@@ -78,6 +98,7 @@ export const getRoomInfo = async (code: string) => {
     .select(
       `
       code,
+      created_at,
       players: user_rooms(host, users(*))
       `
     )

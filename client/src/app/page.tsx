@@ -1,5 +1,4 @@
 import NicknameForm, { NicknameFormType } from "@ai/components/nickname-form";
-import SocketInitializer from "@ai/components/socket-initializer";
 import supabase from "@ai/utils/supabase";
 import { getRoomInfo } from "./actions";
 
