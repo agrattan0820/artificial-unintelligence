@@ -16,7 +16,7 @@ export default async function Room({ params }: { params: { code: string } }) {
 
   return (
     <main className="flex min-h-screen flex-col justify-center">
-      <StoreInitializer room={room} />
+      {/* <StoreInitializer room={room} /> */}
       <section className="container mx-auto px-4">
         <p className="mb-2 text-center font-space text-xl">Your Room Link is</p>
         <RoomLink code={params.code} />

@@ -6,11 +6,13 @@ import { RoomInfo } from "@ai/types/api.type";
 
 type StoreInitializerType = Partial<Pick<StoreState, "room" | "user">>;
 
-const StoreInitializer = ({ room, user }: StoreInitializerType) => {
+const StoreInitializer = (props: StoreInitializerType) => {
   const initialized = useRef(false);
 
+  console.log(props);
+
   if (!initialized.current) {
-    useStore.setState({ room: room, user: user });
+    useStore.setState(props);
     initialized.current = true;
   }
 
