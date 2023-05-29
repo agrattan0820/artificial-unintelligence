@@ -1,4 +1,4 @@
-import { Player, Room, RoomInfo, User } from "@ai/types/api.type";
+import { Room, RoomInfo, User } from "@ai/types/api.type";
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
@@ -7,8 +7,8 @@ export type StoreState = {
   setUser: (user: User | null) => void;
   room: Room | null;
   setRoom: (room: Room) => void;
-  players: Player[];
-  setPlayers: (players: Player[]) => void;
+  players: User[];
+  setPlayers: (players: User[]) => void;
 };
 
 export const useStore = create<StoreState>()(

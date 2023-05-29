@@ -32,22 +32,23 @@ export const createHost = async (nickname: string) => {
     throw new Error(`Unable to create room for host: ${roomError.message}`);
   }
 
-  const { data: userRoom, error: userRoomError } = await supabase
-    .from("user_rooms")
-    .insert({
-      user_id: host.id,
-      room_code: room.code,
-      host: true,
-    })
-    .select()
-    .limit(1)
-    .single();
+  // TODO: initially don't make user_room relation until game starts
+  // const { data: userRoom, error: userRoomError } = await supabase
+  //   .from("user_rooms")
+  //   .insert({
+  //     user_id: host.id,
+  //     room_code: room.code,
+  //     host: true,
+  //   })
+  //   .select()
+  //   .limit(1)
+  //   .single();
 
-  if (!userRoom) {
-    throw new Error(
-      `Unable to create host and room relation: ${userRoomError.message}`
-    );
-  }
+  // if (!userRoom) {
+  //   throw new Error(
+  //     `Unable to create host and room relation: ${userRoomError.message}`
+  //   );
+  // }
 
   return {
     host,
@@ -99,7 +100,7 @@ export const getRoomInfo = async (code: string) => {
       `
       code,
       created_at,
-      players: user_rooms(host, users(*))
+      players: users(*)
       `
     )
     .match({ code })

@@ -26,19 +26,16 @@ export interface Database {
       user_rooms: {
         Row: {
           created_at: string | null
-          host: boolean
           room_code: string
           user_id: number
         }
         Insert: {
           created_at?: string | null
-          host?: boolean
           room_code: string
           user_id: number
         }
         Update: {
           created_at?: string | null
-          host?: boolean
           room_code?: string
           user_id?: number
         }
