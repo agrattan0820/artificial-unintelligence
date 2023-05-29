@@ -25,7 +25,7 @@ export default async function Room({ params }: { params: { code: string } }) {
         </div>
         <ConnectionStatus code={params.code} />
         <UserList />
-        <StartGame />
+        <StartGame code={params.code} />
       </section>
     </main>
   );

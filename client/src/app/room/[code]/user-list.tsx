@@ -10,10 +10,10 @@ const UserList = () => {
   const isMounted = useIsMounted();
 
   return (
-    <div className="mx-auto mt-8 flex max-w-lg flex-wrap items-center justify-center gap-2">
+    <ul className="mx-auto mt-8 flex max-w-lg flex-wrap items-center justify-center gap-2">
       {isMounted ? (
         players.map((player, i) => (
-          <div
+          <li
             key={i}
             className={cn(
               "flex items-center gap-3 rounded-xl border-2 border-gray-300 p-4"
@@ -21,16 +21,16 @@ const UserList = () => {
               // player.id === user?.id ? "border-gray-200" : "border-gray-300"
             )}
           >
-            <div className="rounded-full border-2 border-black">
+            <span className="rounded-full border-2 border-black">
               <FiUser className="text-2xl" />
-            </div>
+            </span>
             <span className="text-xl">{player.nickname}</span>
-          </div>
+          </li>
         ))
       ) : (
         <FiLoader className="text-xl" />
       )}
-    </div>
+    </ul>
   );
 };
 
