@@ -97,6 +97,7 @@ const NicknameForm = ({ room, submitLabel, type }: NicknameFormProps) => {
           type="text"
           placeholder="enter a nickname"
           defaultValue={user?.nickname ?? ""}
+          maxLength={50}
           required
         />
         <label
