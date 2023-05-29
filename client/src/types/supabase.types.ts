@@ -13,32 +13,32 @@ export interface Database {
         Row: {
           code: string
           created_at: string | null
-          host_id: number | null
         }
         Insert: {
           code: string
           created_at?: string | null
-          host_id?: number | null
         }
         Update: {
           code?: string
           created_at?: string | null
-          host_id?: number | null
         }
       }
       user_rooms: {
         Row: {
           created_at: string | null
+          host: boolean
           room_code: string
           user_id: number
         }
         Insert: {
           created_at?: string | null
+          host?: boolean
           room_code: string
           user_id: number
         }
         Update: {
           created_at?: string | null
+          host?: boolean
           room_code?: string
           user_id?: number
         }

@@ -71,3 +71,23 @@ export const joinRoom = async (nickname: string, room: Room) => {
     userRoom,
   };
 };
+
+export const getRoomInfo = async (code: string) => {
+  const { data: room, error: roomError } = await supabase
+    .from("rooms")
+    .select(
+      `
+      code,
+      players: user_rooms(host, users(*))
+      `
+    )
+    .match({ code })
+    .limit(1)
+    .single();
+
+  if (!room) {
+    throw new Error(`Unable to get room info: ${roomError?.message}`);
+  }
+
+  return room;
+};

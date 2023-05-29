@@ -33,18 +33,11 @@ export type GetRoomResponse = {
 };
 
 export type RoomInfo = {
+  code: string;
   players: {
-    id: number | null;
-    nickname: string | null;
+    host: boolean;
+    users: User[];
   }[];
-  room: {
-    code: string;
-    hostId: number | null;
-  };
-  host: {
-    id: number;
-    nickname: string;
-  } | null;
 };
 
 // Supabase
