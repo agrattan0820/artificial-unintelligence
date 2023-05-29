@@ -6,7 +6,7 @@ import useShare from "@ai/utils/hooks/use-share";
 import { useStore } from "@ai/utils/store";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { FiCheckSquare, FiPlusSquare } from "react-icons/fi";
+import { FiCheckSquare, FiPlusSquare, FiPlay } from "react-icons/fi";
 
 const StartGame = ({ code }: { code: string }) => {
   const { players } = useStore();
@@ -25,7 +25,11 @@ const StartGame = ({ code }: { code: string }) => {
 
   return (
     <div className="mt-8 flex items-center justify-center gap-2">
-      {players.length > 1 && <Button>Start Game</Button>}
+      {players.length > 1 && (
+        <Button className="flex items-center gap-2">
+          Start Game <FiPlay />
+        </Button>
+      )}
       <SecondaryButton onClick={onClick} className="flex items-center gap-2">
         Invite Players {copying ? <FiCheckSquare /> : <FiPlusSquare />}
       </SecondaryButton>
