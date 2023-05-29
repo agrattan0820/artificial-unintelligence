@@ -6,9 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate-types": "supabase gen types typescript --project-id zeysnhkedtlcujotecnw > src/types/supabase.types.ts"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.23.0",
     "@types/node": "18.16.1",
     "@types/react": "18.2.0",
     "@types/react-dom": "18.2.1",
@@ -31,6 +33,7 @@
   },
   "devDependencies": {
     "prettier": "^2.8.8",
-    "prettier-plugin-tailwindcss": "^0.2.7"
+    "prettier-plugin-tailwindcss": "^0.2.7",
+    "supabase": "^1.64.2"
   }
 }
