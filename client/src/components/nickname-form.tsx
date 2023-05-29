@@ -10,6 +10,7 @@ import {
   Room,
 } from "@ai/types/api.type";
 import { socket } from "@ai/utils/socket";
+import { createHost } from "@ai/app/actions";
 
 interface FormElementsType extends HTMLFormControlsCollection {
   nickname: HTMLInputElement;
@@ -25,20 +26,20 @@ type NicknameFormProps = {
   type: "HOME" | "INVITE";
 };
 
-const createHost = async (nickname: string) => {
-  const response = await fetch("http://localhost:8080/user/createHost", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ nickname }),
-  });
+// const createHost = async (nickname: string) => {
+//   const response = await fetch("http://localhost:8080/user/createHost", {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify({ nickname }),
+//   });
 
-  const data: CreateHostResponse = await response.json();
+//   const data: CreateHostResponse = await response.json();
 
-  console.log("RESPONSE", data);
-  return data;
-};
+//   console.log("RESPONSE", data);
+//   return data;
+// };
 
 const createUser = async (nickname: string) => {
   const response = await fetch("http://localhost:8080/user", {

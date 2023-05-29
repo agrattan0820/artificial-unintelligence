@@ -1,10 +1,11 @@
-import { RoomInfo } from "@ai/types/api.type";
+import { RoomInfo, User } from "@ai/types/api.type";
+import { Database } from "@ai/types/supabase.types";
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
 export type StoreState = {
-  user: { id: number; nickname: string } | null;
-  setUser: (user: { id: number; nickname: string }) => void;
+  user: User | null;
+  setUser: (user: User | null) => void;
   room: RoomInfo | null;
   setRoom: (room: RoomInfo) => void;
   // nickname: string | null;

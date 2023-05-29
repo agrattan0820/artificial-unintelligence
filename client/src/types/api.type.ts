@@ -1,12 +1,16 @@
-export type User = {
-  id: number;
-  nickname: string;
-};
+// Socket.io
 
-export type Room = {
-  hostId: number;
-  code: string;
-};
+import { Database } from "./supabase.types";
+
+// export type User = {
+//   id: number;
+//   nickname: string;
+// };
+
+// export type Room = {
+//   hostId: number;
+//   code: string;
+// };
 
 export type UserRoom = {
   roomCode: string;
@@ -42,3 +46,8 @@ export type RoomInfo = {
     nickname: string;
   } | null;
 };
+
+// Supabase
+
+export type User = Database["public"]["Tables"]["users"]["Row"];
+export type Room = Database["public"]["Tables"]["rooms"]["Row"];
