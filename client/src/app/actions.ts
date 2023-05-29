@@ -35,8 +35,23 @@ export const createHost = async (nickname: string) => {
   };
 };
 
-export const joinRoom = async (user: User, room: Room) => {
-  const { data: user_room } = await supabase
+export const joinRoom = async (nickname: string, room: Room) => {
+  const { data: user, error: userError } = await supabase
+    .from("users")
+    .insert({
+      nickname: nickname,
+    })
+    .select()
+    .limit(1)
+    .single();
+
+  if (!user) {
+    throw new Error(
+      `Unable to create user to join room: ${userError?.message}`
+    );
+  }
+
+  const { data: userRoom, error: userRoomError } = await supabase
     .from("user_rooms")
     .insert({
       user_id: user.id,
@@ -46,13 +61,13 @@ export const joinRoom = async (user: User, room: Room) => {
     .limit(1)
     .single();
 
-  if (!user_room) {
-    throw new Error("Unable to join room");
+  if (!userRoom) {
+    throw new Error(`Unable to join room: ${userRoomError?.message}`);
   }
 
   return {
     user,
     room,
-    user_room,
+    userRoom,
   };
 };

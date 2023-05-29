@@ -10,7 +10,8 @@ import {
   Room,
 } from "@ai/types/api.type";
 import { socket } from "@ai/utils/socket";
-import { createHost } from "@ai/app/actions";
+import { createHost, joinRoom } from "@ai/app/actions";
+import supabase from "@ai/utils/supabase";
 
 interface FormElementsType extends HTMLFormControlsCollection {
   nickname: HTMLInputElement;
@@ -20,11 +21,17 @@ export interface NicknameFormType extends HTMLFormElement {
   readonly elements: FormElementsType;
 }
 
-type NicknameFormProps = {
-  room?: Room;
-  submitLabel: string;
-  type: "HOME" | "INVITE";
-};
+type NicknameFormProps =
+  | {
+      room?: never;
+      submitLabel: string;
+      type: "HOME";
+    }
+  | {
+      room: Room;
+      submitLabel: string;
+      type: "INVITE";
+    };
 
 // const createHost = async (nickname: string) => {
 //   const response = await fetch("http://localhost:8080/user/createHost", {
@@ -41,20 +48,20 @@ type NicknameFormProps = {
 //   return data;
 // };
 
-const createUser = async (nickname: string) => {
-  const response = await fetch("http://localhost:8080/user", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ nickname }),
-  });
+// const createUser = async (nickname: string) => {
+//   const response = await fetch("http://localhost:8080/user", {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify({ nickname }),
+//   });
 
-  const data: CreateUserResponse = await response.json();
+//   const data: CreateUserResponse = await response.json();
 
-  console.log("RESPONSE", data);
-  return data;
-};
+//   console.log("RESPONSE", data);
+//   return data;
+// };
 
 const NicknameForm = ({ room, submitLabel, type }: NicknameFormProps) => {
   const { user, setUser } = useStore();
@@ -75,9 +82,8 @@ const NicknameForm = ({ room, submitLabel, type }: NicknameFormProps) => {
     }
 
     if (type === "INVITE") {
-      const userData = await createUser(formNickname);
-      setUser(userData.user);
-      socket.emit("joinRoom", { user: userData.user, room });
+      const joinData = await joinRoom(formNickname, room);
+      setUser(joinData.user);
       if (room) router.push(`/room/${room.code}`);
     }
   };
