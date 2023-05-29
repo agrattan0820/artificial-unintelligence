@@ -1,6 +1,6 @@
-import NicknameForm, { NicknameFormType } from "@ai/components/nickname-form";
+import NicknameForm from "@ai/components/nickname-form";
 
-export default async function Home() {
+export default function Home() {
   return (
     <main className="flex min-h-screen flex-col justify-center">
       <section className="container mx-auto px-4">

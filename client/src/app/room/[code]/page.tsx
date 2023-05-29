@@ -6,6 +6,7 @@ import StoreInitializer from "@ai/utils/store-initializer";
 import { getRoomInfo } from "@ai/app/actions";
 import PlayerPresence from "@ai/utils/player-presence";
 import UserList from "./user-list";
+import StartGame from "./start-game";
 
 export default async function Room({ params }: { params: { code: string } }) {
   const roomInfo = await getRoomInfo(params.code);
@@ -17,13 +18,14 @@ export default async function Room({ params }: { params: { code: string } }) {
       <StoreInitializer room={room} players={players} />
       <PlayerPresence code={room.code} />
       <section className="container mx-auto px-4">
-        <p className="mb-2 text-center font-space text-xl">Your Room Link is</p>
+        <p className="mb-2 text-center text-xl">Your Room Link is</p>
         <RoomLink code={params.code} />
         <div className="absolute left-8 top-8">
           <UserCount code={params.code} initialCount={players.length} />
         </div>
         <ConnectionStatus code={params.code} />
         <UserList />
+        <StartGame />
       </section>
     </main>
   );

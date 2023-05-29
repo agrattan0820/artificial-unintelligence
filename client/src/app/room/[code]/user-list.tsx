@@ -10,14 +10,15 @@ const UserList = () => {
   const isMounted = useIsMounted();
 
   return (
-    <div className="mx-auto mt-8 flex max-w-lg flex-wrap items-center justify-center gap-2 font-space">
+    <div className="mx-auto mt-8 flex max-w-lg flex-wrap items-center justify-center gap-2">
       {isMounted ? (
         players.map((player, i) => (
           <div
             key={i}
             className={cn(
-              "flex items-center gap-3 rounded-xl border-2 p-4",
-              player.id === user?.id ? "border-indigo-200" : "border-gray-300"
+              "flex items-center gap-3 rounded-xl border-2 border-gray-300 p-4"
+              // TODO: show differences between current user and others?
+              // player.id === user?.id ? "border-gray-200" : "border-gray-300"
             )}
           >
             <div className="rounded-full border-2 border-black">

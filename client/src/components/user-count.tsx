@@ -20,7 +20,7 @@ const UserCount = ({
   console.log("PLAYERS", players);
 
   return (
-    <div className="rounded-xl border border-gray-300 p-4 font-space">
+    <div className="rounded-xl border border-gray-300 p-4">
       <p>{players.length.toLocaleString()} / 8 Players</p>
     </div>
   );
