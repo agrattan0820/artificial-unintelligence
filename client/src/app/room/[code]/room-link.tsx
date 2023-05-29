@@ -49,7 +49,7 @@ const RoomLink = ({ code }: { code: string }) => {
 
   return (
     <button
-      className="mx-auto flex w-full max-w-xl items-center justify-center gap-1 rounded-xl border-2 border-indigo-700 p-8 font-space text-xl"
+      className="mx-auto flex w-full max-w-xl items-center justify-center gap-1 rounded-xl border-2 border-indigo-700 p-8 font-space text-xl underline-offset-2 hover:underline"
       onClick={onShareClick}
     >
       {inviteLink} {copying ? <FiCheck /> : <FiCopy />}

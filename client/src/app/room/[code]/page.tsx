@@ -5,13 +5,12 @@ import { useStore } from "@ai/utils/store";
 import StoreInitializer from "@ai/utils/store-initializer";
 import { getRoomInfo } from "@ai/app/actions";
 import PlayerPresence from "@ai/utils/player-presence";
+import UserList from "./user-list";
 
 export default async function Room({ params }: { params: { code: string } }) {
   const roomInfo = await getRoomInfo(params.code);
 
   const { players, ...room } = roomInfo;
-
-  useStore.setState({ room, players });
 
   return (
     <main className="flex min-h-screen flex-col justify-center">
@@ -24,6 +23,7 @@ export default async function Room({ params }: { params: { code: string } }) {
           <UserCount code={params.code} initialCount={players.length} />
         </div>
         <ConnectionStatus code={params.code} />
+        <UserList />
       </section>
     </main>
   );
