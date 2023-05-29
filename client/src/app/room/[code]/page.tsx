@@ -6,22 +6,20 @@ import StoreInitializer from "@ai/utils/store-initializer";
 import { getRoomInfo } from "@ai/app/actions";
 
 export default async function Room({ params }: { params: { code: string } }) {
-  // const roomResponse = await fetch(`http://localhost:8080/room/${params.code}`);
+  const roomInfo = await getRoomInfo(params.code);
 
-  // const roomData: GetRoomResponse = await roomResponse.json();
+  const { players, ...room } = roomInfo;
 
-  const room = await getRoomInfo(params.code);
-
-  useStore.setState({ room });
+  useStore.setState({ room, players });
 
   return (
     <main className="flex min-h-screen flex-col justify-center">
-      {/* <StoreInitializer room={room} /> */}
+      <StoreInitializer room={room} players={players} />
       <section className="container mx-auto px-4">
         <p className="mb-2 text-center font-space text-xl">Your Room Link is</p>
         <RoomLink code={params.code} />
         <div className="absolute left-8 top-8">
-          <UserCount code={params.code} initialCount={room.players.length} />
+          <UserCount code={params.code} initialCount={players.length} />
         </div>
         <ConnectionStatus code={params.code} />
       </section>

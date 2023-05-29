@@ -11,6 +11,7 @@ import {
   RoomInfo,
 } from "@ai/types/api.type";
 import { createHost, joinRoom } from "@ai/app/actions";
+import Button, { SecondaryButton } from "./button";
 
 interface FormElementsType extends HTMLFormControlsCollection {
   nickname: HTMLInputElement;
@@ -106,19 +107,10 @@ const NicknameForm = ({ room, submitLabel, type }: NicknameFormProps) => {
         </label>
       </div>
       <div className="space-x-2">
-        <button
-          type="submit"
-          className="bg-indigo-600 px-4 text-white transition hover:bg-indigo-500 focus:bg-indigo-700"
-          disabled={loading}
-        >
+        <Button type="submit" disabled={loading}>
           {!loading ? <>{submitLabel}</> : <Ellipsis />}
-        </button>
-        <button
-          className="bg-gray-300 px-4 transition hover:bg-gray-200 focus:bg-gray-400"
-          disabled={loading}
-        >
-          How to Play
-        </button>
+        </Button>
+        <SecondaryButton disabled={loading}>How to Play</SecondaryButton>
       </div>
     </form>
   );

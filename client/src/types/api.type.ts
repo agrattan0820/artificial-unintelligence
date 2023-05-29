@@ -35,13 +35,15 @@ export type GetRoomResponse = {
 export type RoomInfo = {
   code: string;
   created_at: string | null;
-  players: {
-    host: boolean;
-    users: User[];
-  }[];
+  players: Player[];
 };
 
 // Supabase
 
 export type User = Database["public"]["Tables"]["users"]["Row"];
 export type Room = Database["public"]["Tables"]["rooms"]["Row"];
+
+export type Player = {
+  host: boolean;
+  users: User[];
+};

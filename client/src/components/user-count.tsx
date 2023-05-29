@@ -14,7 +14,11 @@ const UserCount = ({
   initialCount: number;
 }) => {
   const [userCount, setUserCount] = useState(initialCount);
-  const { user, room } = useStore();
+  const { user, room, players } = useStore();
+
+  console.log("USER", user);
+  console.log("ROOM", room);
+  console.log("PLAYERS", players);
 
   useEffect(() => {
     const channel = supabase.channel(code, {
@@ -55,7 +59,7 @@ const UserCount = ({
 
   return (
     <div className="rounded-xl border border-gray-300 p-4">
-      <p>{userCount.toLocaleString()} Players in room</p>
+      <p>{userCount.toLocaleString()} / 8 Players</p>
     </div>
   );
 };

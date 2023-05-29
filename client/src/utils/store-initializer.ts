@@ -2,17 +2,18 @@
 
 import { useRef } from "react";
 import { StoreState, useStore } from "./store";
-import { RoomInfo } from "@ai/types/api.type";
 
-type StoreInitializerType = Partial<Pick<StoreState, "room" | "user">>;
+type StoreInitializerType = Partial<
+  Pick<StoreState, "room" | "user" | "players">
+>;
 
 const StoreInitializer = (props: StoreInitializerType) => {
   const initialized = useRef(false);
 
-  console.log(props);
-
   if (!initialized.current) {
-    useStore.setState(props);
+    useStore.setState((prevState) => {
+      return { ...prevState, ...props };
+    });
     initialized.current = true;
   }
 
