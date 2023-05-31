@@ -1,42 +1,13 @@
 "use client";
 
-import { FiCheck, FiCopy } from "react-icons/fi";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-import useIsMounted from "@ai/utils/hooks/use-is-mounted";
+import { FiCheckSquare, FiCopy } from "react-icons/fi";
+import { useEffect } from "react";
+import useShare from "@ai/utils/hooks/use-share";
 
 const RoomLink = ({ code }: { code: string }) => {
-  const pathname = usePathname();
-  const [copying, setCopying] = useState(false);
-  const isMounted = useIsMounted();
+  const { link, copying, setCopying, onClick } = useShare(`/invite/${code}`);
 
-  const inviteLink = isMounted
-    ? `${window.location.origin}/invite/${code}`
-    : "";
-
-  const onShareClick = () => {
-    if (navigator.share) {
-      navigator
-        .share({
-          title: `GradeMyAid Rating`,
-          url: typeof window !== "undefined" ? inviteLink : "",
-        })
-        .then(() => {
-          console.log(`Thanks for sharing!`);
-        })
-        .catch(console.error);
-    } else {
-      const cb = navigator.clipboard;
-      if (copying) {
-        setCopying(false);
-      }
-      cb.writeText(typeof window !== "undefined" ? inviteLink : "")
-        .then(() => {
-          setCopying(true);
-        })
-        .catch(console.error);
-    }
-  };
+  console.log("hello");
 
   useEffect(() => {
     if (copying) {
@@ -45,14 +16,14 @@ const RoomLink = ({ code }: { code: string }) => {
         clearTimeout(timer);
       };
     }
-  }, [copying]);
+  }, [copying, setCopying]);
 
   return (
     <button
-      className="mx-auto flex w-full max-w-xl items-center justify-center gap-1 rounded-xl border-2 border-indigo-700 p-8 font-space text-xl"
-      onClick={onShareClick}
+      className="mx-auto flex w-full max-w-xl items-center justify-center gap-1 rounded-xl border-2 border-indigo-600 p-8 text-xl underline-offset-2 hover:underline"
+      onClick={onClick}
     >
-      {inviteLink} {copying ? <FiCheck /> : <FiCopy />}
+      {link} {copying ? <FiCheckSquare /> : <FiCopy />}
     </button>
   );
 };

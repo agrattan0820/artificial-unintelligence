@@ -1,5 +1,4 @@
-import NicknameForm, { NicknameFormType } from "@ai/components/nickname-form";
-import SocketInitializer from "@ai/components/socket-initializer";
+import NicknameForm from "@ai/components/nickname-form";
 
 export default function Home() {
   return (
@@ -8,7 +7,6 @@ export default function Home() {
         <h1 className="mb-8 text-6xl">beeeeeeeep</h1>
         <NicknameForm submitLabel="Start Game" type="HOME" />
       </section>
-      <SocketInitializer />
     </main>
   );
 }

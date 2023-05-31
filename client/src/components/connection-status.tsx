@@ -1,35 +1,30 @@
 "use client";
 
 import useIsMounted from "@ai/utils/hooks/use-is-mounted";
-import { socket } from "@ai/utils/socket";
-import clsx from "clsx";
+import supabase from "@ai/utils/supabase";
 import { useEffect, useState } from "react";
+import { cn } from "@ai/utils/cn";
 
-const ConnectionStatus = () => {
+const ConnectionStatus = ({ code }: { code: string }) => {
   const isMounted = useIsMounted();
-  const [isConnected, setIsConnected] = useState(socket.connected ?? false);
+  const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    const turnOnConnection = () => {
+    const channel = supabase.channel(code);
+
+    channel.on("presence", { event: "sync" }, () => {
+      console.log("Online users: ", channel.presenceState());
       setIsConnected(true);
-    };
-
-    const turnOffConnection = () => {
-      setIsConnected(false);
-    };
-
-    socket.on("connect", turnOnConnection);
-    socket.on("disconnect", turnOffConnection);
+    });
 
     return () => {
-      socket.off("connect", turnOnConnection);
-      socket.off("disconnect", turnOffConnection);
+      supabase.removeChannel(channel);
     };
-  }, []);
+  }, [code]);
 
   return (
     <div
-      className={clsx(
+      className={cn(
         "absolute right-8 top-8 rounded-xl p-4 font-space text-white",
         isMounted && isConnected ? "bg-emerald-700" : "bg-red-700"
       )}

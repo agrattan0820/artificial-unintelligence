@@ -21,12 +21,15 @@ module.exports = {
       },
       keyframes: {
         dot: {
-          "0%, 100%": { opacity: 0 },
+          "0%": { opacity: 0 },
           "50%": { opacity: 1 },
+          "100%": { opacity: 0 },
         },
       },
       animation: {
         "dot-bounce": "dot 2s infinite",
+        "dot-bounce-2": "dot 2s infinite .25s",
+        "dot-bounce-3": "dot 2s infinite .5s",
       },
     },
   },
