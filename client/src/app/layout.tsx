@@ -39,7 +39,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${spaceMono.variable} ${inter.variable} ${roboto.variable} ${gluten.variable} font-space`}
+        className={`${spaceMono.variable} ${inter.variable} ${roboto.variable} ${gluten.variable} font-space dark:bg-slate-900 dark:text-white`}
       >
         <Toaster />
         {children}

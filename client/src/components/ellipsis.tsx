@@ -10,12 +10,8 @@ const Ellipsis = () => {
   return (
     <span>
       <span className="animate-dot-bounce opacity-0">•</span>
-      <span className="[animation-delay: 0.25s] animate-dot-bounce opacity-0">
-        •
-      </span>
-      <span className="[animation-delay: 0.5s] animate-dot-bounce opacity-0">
-        •
-      </span>
+      <span className="animate-dot-bounce-2 opacity-0">•</span>
+      <span className="animate-dot-bounce-3 opacity-0">•</span>
     </span>
   );
 };

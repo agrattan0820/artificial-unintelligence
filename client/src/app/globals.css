@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.loading-ellipsis:after {
+  font-family: var(--font-space);
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: bottom;
+  animation: ellipsis steps(4, end) 900ms infinite;
+  content: "\2026"; /* ascii code for the ellipsis character */
+  width: 0;
+}
+
+@keyframes ellipsis {
+  to {
+    width: 1.5rem;
+  }
+}
