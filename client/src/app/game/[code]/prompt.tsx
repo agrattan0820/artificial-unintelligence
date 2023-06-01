@@ -7,6 +7,7 @@ import Ellipsis from "@ai/components/ellipsis";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@ai/utils/cn";
+import { FiCheck } from "react-icons/fi";
 
 interface FormElementsType extends HTMLFormControlsCollection {
   prompt: HTMLInputElement;
@@ -16,12 +17,15 @@ export interface PromptFormType extends HTMLFormElement {
   readonly elements: FormElementsType;
 }
 
+type ImageOption = 1 | 2;
+
 const Prompt = () => {
   const [loading, setLoading] = useState(false);
   const [imageOption1, setImageOption1] = useState("");
   const [imageOption2, setImageOption2] = useState("");
   const [showImage1, setShowImage1] = useState(false);
   const [showImage2, setShowImage2] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<ImageOption>();
 
   const onSubmit = async (e: FormEvent<PromptFormType>) => {
     e.preventDefault();
@@ -51,32 +55,50 @@ const Prompt = () => {
         <AnimatePresence>
           {imageOption1 && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              <Image
-                className={cn(
-                  `aspect-square rounded-xl opacity-0 transition`,
-                  showImage1 && "opacity-100"
-                )}
-                src={imageOption1}
-                alt="OpenAI Image"
-                onLoad={() => setShowImage1(true)}
-                width={1024}
-                height={1024}
-              />
+              <button className="relative" onClick={() => setSelectedImage(1)}>
+                <Image
+                  className={cn(
+                    `aspect-square rounded-xl opacity-0 transition`,
+                    showImage1 && "opacity-100",
+                    selectedImage === 1 && "ring ring-indigo-600"
+                  )}
+                  src={imageOption1}
+                  alt="OpenAI Image"
+                  onLoad={() => setShowImage1(true)}
+                  width={1024}
+                  height={1024}
+                />
+                <FiCheck
+                  className={cn(
+                    "absolute -right-2 -top-2 scale-0 transform rounded-full bg-green-600 p-0.5 text-xl text-white transition",
+                    selectedImage === 1 && "scale-100"
+                  )}
+                />
+              </button>
             </motion.div>
           )}
           {imageOption2 && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              <Image
-                className={cn(
-                  `aspect-square rounded-xl opacity-0 transition`,
-                  showImage2 && "opacity-100"
-                )}
-                src={imageOption2}
-                alt="OpenAI Image"
-                onLoad={() => setShowImage2(true)}
-                width={1024}
-                height={1024}
-              />
+              <button className="relative" onClick={() => setSelectedImage(2)}>
+                <Image
+                  className={cn(
+                    `aspect-square rounded-xl opacity-0 transition`,
+                    showImage2 && "opacity-100",
+                    selectedImage === 2 && "ring ring-indigo-600"
+                  )}
+                  src={imageOption2}
+                  alt="OpenAI Image"
+                  onLoad={() => setShowImage2(true)}
+                  width={1024}
+                  height={1024}
+                />
+                <FiCheck
+                  className={cn(
+                    "absolute -right-2 -top-2 scale-0 transform rounded-full bg-green-600 p-0.5 text-xl text-white transition",
+                    selectedImage === 2 && "scale-100"
+                  )}
+                />
+              </button>
             </motion.div>
           )}
         </AnimatePresence>
