@@ -55,7 +55,11 @@ const Prompt = () => {
         <AnimatePresence>
           {imageOption1 && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              <button className="relative" onClick={() => setSelectedImage(1)}>
+              <button
+                className="relative"
+                disabled={!showImage1}
+                onClick={() => setSelectedImage(1)}
+              >
                 <Image
                   className={cn(
                     `aspect-square rounded-xl opacity-0 transition`,
@@ -79,7 +83,11 @@ const Prompt = () => {
           )}
           {imageOption2 && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              <button className="relative" onClick={() => setSelectedImage(2)}>
+              <button
+                className="relative"
+                disabled={!showImage2}
+                onClick={() => setSelectedImage(2)}
+              >
                 <Image
                   className={cn(
                     `aspect-square rounded-xl opacity-0 transition`,
