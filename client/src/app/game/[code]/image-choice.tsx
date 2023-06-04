@@ -3,14 +3,14 @@
 import { cn } from "@ai/utils/cn";
 import { Variants, motion } from "framer-motion";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import { FiCheck } from "react-icons/fi";
 
 export type ImageOption = 1 | 2;
 
 type ImageChoiceProps = {
-  imageOption1: string;
-  imageOption2: string;
+  imageOption1: string | StaticImageData;
+  imageOption2: string | StaticImageData;
   selectedImage: ImageOption | undefined;
   setSelectedImage: Dispatch<SetStateAction<ImageOption | undefined>>;
 };
