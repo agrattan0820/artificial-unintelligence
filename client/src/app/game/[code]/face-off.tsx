@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import SadDog from "@ai/images/sad-dog.webp";
 import SadDog2 from "@ai/images/sad-dog-2.webp";
 import { motion } from "framer-motion";
@@ -8,16 +7,12 @@ import Button from "@ai/components/button";
 import { useState } from "react";
 import ImageChoice, { ImageOption } from "./image-choice";
 import Ellipsis from "@ai/components/ellipsis";
-import { cn } from "@ai/utils/cn";
-import { FiCheck } from "react-icons/fi";
 
 const FaceOff = () => {
   const [loading, setLoading] = useState(false);
   const [imageOption1, setImageOption1] = useState("");
   const [imageOption2, setImageOption2] = useState("");
   const [selectedImage, setSelectedImage] = useState<ImageOption>();
-
-  const imagesLoaded = imageOption1 && imageOption2;
 
   const onImageChoice = async () => {};
 
