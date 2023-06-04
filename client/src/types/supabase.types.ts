@@ -9,6 +9,81 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      games: {
+        Row: {
+          completed_at: string | null
+          created_at: string | null
+          first_question: number | null
+          id: number
+          room_code: string
+          second_question: number | null
+          third_question: number | null
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string | null
+          first_question?: number | null
+          id?: number
+          room_code: string
+          second_question?: number | null
+          third_question?: number | null
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string | null
+          first_question?: number | null
+          id?: number
+          room_code?: string
+          second_question?: number | null
+          third_question?: number | null
+        }
+      }
+      generations: {
+        Row: {
+          created_at: string | null
+          game_id: number
+          id: number
+          image_url: string
+          prompt: string
+          question_id: number
+          user_id: number
+        }
+        Insert: {
+          created_at?: string | null
+          game_id: number
+          id?: number
+          image_url: string
+          prompt: string
+          question_id: number
+          user_id: number
+        }
+        Update: {
+          created_at?: string | null
+          game_id?: number
+          id?: number
+          image_url?: string
+          prompt?: string
+          question_id?: number
+          user_id?: number
+        }
+      }
+      questions: {
+        Row: {
+          created_at: string | null
+          id: number
+          text: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: number
+          text: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: number
+          text?: string
+        }
+      }
       rooms: {
         Row: {
           code: string
@@ -55,6 +130,26 @@ export interface Database {
           created_at?: string | null
           id?: number
           nickname?: string
+        }
+      }
+      votes: {
+        Row: {
+          created_at: string | null
+          generation_id: number
+          id: number
+          user_id: number
+        }
+        Insert: {
+          created_at?: string | null
+          generation_id: number
+          id?: number
+          user_id: number
+        }
+        Update: {
+          created_at?: string | null
+          generation_id?: number
+          id?: number
+          user_id?: number
         }
       }
     }

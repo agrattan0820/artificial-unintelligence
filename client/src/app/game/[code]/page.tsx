@@ -1,3 +1,4 @@
+import FaceOff from "./face-off";
 import Prompt from "./prompt";
 import View from "./view";
 
