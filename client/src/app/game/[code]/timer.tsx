@@ -20,6 +20,7 @@ const Timer = () => {
     };
   }, [seconds]);
 
+  // Source: https://stackoverflow.com/questions/6312993/javascript-seconds-to-time-string-with-format-hhmmss
   const timeString = (seconds: number) => {
     const date = new Date(0);
     date.setSeconds(seconds);
