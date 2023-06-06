@@ -2,7 +2,7 @@
 "use client";
 
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { Variants, motion } from "framer-motion";
+import { MotionStyle, Variants, motion } from "framer-motion";
 import Image, { StaticImageData } from "next/image";
 import { BsTrophy } from "react-icons/bs";
 
@@ -20,6 +20,7 @@ const RoundResultImage = ({
   bothImagesShown,
   showWinner,
   winningImage,
+  votes,
   setShowImage,
 }: {
   id: 1 | 2;
@@ -30,8 +31,24 @@ const RoundResultImage = ({
   bothImagesShown: boolean;
   showWinner: boolean;
   winningImage: 1 | 2;
+  votes: string[];
   setShowImage: Dispatch<SetStateAction<boolean>>;
 }) => {
+  const [showVotes, setShowVotes] = useState(false);
+
+  useEffect(() => {
+    let votesTimeout: NodeJS.Timeout;
+    if (bothImagesShown) {
+      votesTimeout = setTimeout(() => {
+        setShowVotes(true);
+      }, 6000);
+    }
+
+    return () => {
+      clearTimeout(votesTimeout);
+    };
+  }, [bothImagesShown]);
+
   const imageVariants: Variants = {
     hidden: {
       opacity: 0,
@@ -47,10 +64,9 @@ const RoundResultImage = ({
       y: 0,
     },
     loser: {
-      scale: 0.75,
+      scale: 0.8,
       opacity: 1,
       y: 0,
-      filter: "grayscale(75%)",
     },
   };
 
@@ -93,8 +109,39 @@ const RoundResultImage = ({
     },
   };
 
+  const voteVariants: Variants = {
+    hidden: {
+      opacity: 0,
+    },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.5,
+      },
+    },
+  };
+  const voteItemVariants: Variants = {
+    hidden: {
+      opacity: 0,
+      y: 5,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+    },
+  };
+
   const isWinner = winningImage === id && showWinner;
   const isLoser = winningImage !== id && showWinner;
+
+  const voteLayouts: MotionStyle[] = [
+    { top: "5%", left: "5%", rotate: 12 },
+    { top: "10%", left: "52%", rotate: -15 },
+    { top: "25%", left: "8%", rotate: -2 },
+    { top: "35%", left: "60%", rotate: 8 },
+    { top: "45%", left: "4%", rotate: -8 },
+    { top: "50%", left: "48%", rotate: 3 },
+  ];
 
   return (
     <motion.figure
@@ -112,10 +159,29 @@ const RoundResultImage = ({
       transition={{ when: "beforeChildren" }}
       className="relative"
     >
+      <motion.ul
+        initial={false}
+        animate={showVotes ? "visible" : "hidden"}
+        className="absolute inset-0 z-10"
+        variants={voteVariants}
+      >
+        {votes.map((vote, i) => (
+          <motion.li
+            key={i}
+            className="absolute inline-block rounded-md bg-indigo-300 p-4 shadow-xl"
+            variants={voteItemVariants}
+            style={voteLayouts[i]}
+          >
+            <p className="text-sm text-black">{vote}</p>
+          </motion.li>
+        ))}
+      </motion.ul>
       <Image
         className={cn(
-          `aspect-square transform rounded-xl transition`,
-          showWinner && isWinner && "ring ring-yellow-600"
+          `aspect-square transform rounded-xl filter transition`,
+          isWinner && "ring ring-yellow-600",
+          isLoser && "grayscale filter",
+          showVotes && "brightness-50"
         )}
         src={image}
         alt={`OpenAI Image with the prompt: ${prompt}`}
@@ -217,11 +283,19 @@ const RoundResult = () => {
           id={1}
           prompt="A dog dressed as a detective solving a murder at a McDonald's."
           nickname="Big Al"
-          percentage={100}
+          percentage={75}
           image={SadDog}
           bothImagesShown={bothShown}
           showWinner={showWinner}
           winningImage={winningImage}
+          votes={[
+            "Big Al Dos",
+            "billy joel",
+            "Lego Pirate",
+            "Lego Yoda",
+            "boyyyyy",
+            "holaaaa",
+          ]}
           setShowImage={setShowImage1}
         />
         <RoundResultImage
@@ -229,11 +303,12 @@ const RoundResult = () => {
           prompt="Saint Bernard shaking its chubby cheeks while it gets splashed by
               a hose."
           nickname="Lifeguard Dan"
-          percentage={0}
+          percentage={25}
           image={SadDog2}
           bothImagesShown={bothShown}
           showWinner={showWinner}
           winningImage={winningImage}
+          votes={["Kylie", "Roy"]}
           setShowImage={setShowImage2}
         />
       </div>
