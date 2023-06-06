@@ -140,7 +140,7 @@ const RoundResultImage = ({
     { top: "25%", left: "8%", rotate: -2 },
     { top: "35%", left: "60%", rotate: 8 },
     { top: "45%", left: "4%", rotate: -8 },
-    { top: "50%", left: "48%", rotate: 3 },
+    { top: "52%", left: "48%", rotate: 3 },
   ];
 
   return (
@@ -168,7 +168,7 @@ const RoundResultImage = ({
         {votes.map((vote, i) => (
           <motion.li
             key={i}
-            className="absolute inline-block rounded-md bg-indigo-300 p-4 shadow-xl"
+            className="absolute inline-block rounded-md bg-indigo-300 p-4 shadow-md"
             variants={voteItemVariants}
             style={voteLayouts[i]}
           >
