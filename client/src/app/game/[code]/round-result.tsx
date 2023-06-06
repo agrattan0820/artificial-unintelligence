@@ -1,16 +1,14 @@
 /* eslint-disable react/no-unescaped-entities */
 "use client";
 
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Variants, motion } from "framer-motion";
 import Image, { StaticImageData } from "next/image";
+import { BsTrophy } from "react-icons/bs";
 
-import ImageChoice from "./image-choice";
 import SadDog from "@ai/images/sad-dog.webp";
 import SadDog2 from "@ai/images/sad-dog-2.webp";
-import Button from "@ai/components/button";
-import Ellipsis from "@ai/components/ellipsis";
 import { cn } from "@ai/utils/cn";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Friend from "./friend";
 
 const RoundResultImage = ({
@@ -94,13 +92,16 @@ const RoundResultImage = ({
     },
   };
 
+  const isWinner = winningImage === id && showWinner;
+  const isLoser = winningImage !== id && showWinner;
+
   return (
     <motion.figure
       initial={false}
       animate={
-        showWinner && winningImage === id
+        isWinner
           ? "winner"
-          : showWinner && winningImage !== id
+          : isLoser
           ? "loser"
           : bothImagesShown
           ? "visible"
@@ -108,11 +109,12 @@ const RoundResultImage = ({
       }
       variants={imageVariants}
       transition={{ when: "beforeChildren" }}
+      className="relative"
     >
       <Image
         className={cn(
           `aspect-square transform rounded-xl transition`,
-          showWinner && winningImage === 1 && "ring ring-yellow-600"
+          showWinner && isWinner && "ring ring-yellow-600"
         )}
         src={image}
         alt={`OpenAI Image with the prompt: ${prompt}`}
@@ -120,15 +122,17 @@ const RoundResultImage = ({
         width={1024}
         height={1024}
       />
+      <div
+        className={cn(
+          "absolute -right-2 -top-2 scale-0 transform rounded-full bg-yellow-600 p-2 text-xl text-white opacity-0 transition",
+          isWinner && "scale-100 opacity-100"
+        )}
+      >
+        <BsTrophy />
+      </div>
       <motion.figcaption
         initial={false}
-        animate={
-          showWinner && winningImage === id
-            ? "winner"
-            : showWinner
-            ? "loser"
-            : "hidden"
-        }
+        animate={isWinner ? "winner" : isLoser ? "loser" : "hidden"}
         variants={captionVariants}
         className="py-4"
       >
