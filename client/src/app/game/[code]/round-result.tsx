@@ -10,6 +10,7 @@ import SadDog from "@ai/images/sad-dog.webp";
 import SadDog2 from "@ai/images/sad-dog-2.webp";
 import { cn } from "@ai/utils/cn";
 import Friend from "./friend";
+import FriendWithLegs from "./friend-with-legs";
 
 const RoundResultImage = ({
   id,
@@ -275,7 +276,7 @@ const RoundResult = () => {
           animate={{ x: 0, opacity: 1 }}
           className="flex justify-end"
         >
-          <Friend />
+          <FriendWithLegs />
         </motion.div>
       </div>
       <div className="mb-16 flex gap-6">
