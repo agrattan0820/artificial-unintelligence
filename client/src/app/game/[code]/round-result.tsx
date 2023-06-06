@@ -63,6 +63,7 @@ const RoundResultImage = ({
       opacity: 1,
       y: 0,
       transition: {
+        delayChildren: 1,
         staggerChildren: 0.5,
       },
     },
@@ -70,8 +71,8 @@ const RoundResultImage = ({
       opacity: 1,
       y: 0,
       transition: {
-        delay: 1.5,
-        delayChildren: 1.5,
+        delay: 2.5,
+        delayChildren: 2.5,
         staggerChildren: 0.5,
       },
     },
