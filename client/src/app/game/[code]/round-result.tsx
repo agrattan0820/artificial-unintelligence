@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 "use client";
 
 import { Variants, motion } from "framer-motion";
@@ -9,44 +10,31 @@ import SadDog2 from "@ai/images/sad-dog-2.webp";
 import Button from "@ai/components/button";
 import Ellipsis from "@ai/components/ellipsis";
 import { cn } from "@ai/utils/cn";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import Friend from "./friend";
 
-const RoundResult = () => {
-  const [imageOption1, setImageOption1] = useState("");
-  const [imageOption2, setImageOption2] = useState("");
-
-  const [showImage1, setShowImage1] = useState(false);
-  const [showImage2, setShowImage2] = useState(false);
-
-  const [showWinner, setShowWinner] = useState(false);
-
-  const bothShown = showImage1 && showImage2;
-
-  const winningImage: number = 1;
-
-  useEffect(() => {
-    if (!imageOption1) {
-      setShowImage1(false);
-    }
-    if (!imageOption2) {
-      setShowImage2(false);
-    }
-  }, [imageOption1, imageOption2]);
-
-  useEffect(() => {
-    let winnerTimeout: NodeJS.Timeout;
-    if (showImage1 && showImage2) {
-      winnerTimeout = setTimeout(() => {
-        setShowWinner(true);
-      }, 3000);
-    }
-
-    return () => {
-      clearTimeout(winnerTimeout);
-    };
-  }, [showImage1, showImage2]);
-
-  const image1Variants: Variants = {
+const RoundResultImage = ({
+  id,
+  prompt,
+  nickname,
+  percentage,
+  image,
+  bothImagesShown,
+  showWinner,
+  winningImage,
+  setShowImage,
+}: {
+  id: 1 | 2;
+  prompt: string;
+  nickname: string;
+  percentage: number;
+  image: string | StaticImageData;
+  bothImagesShown: boolean;
+  showWinner: boolean;
+  winningImage: 1 | 2;
+  setShowImage: Dispatch<SetStateAction<boolean>>;
+}) => {
+  const imageVariants: Variants = {
     hidden: {
       opacity: 0,
       y: -15,
@@ -64,100 +52,185 @@ const RoundResult = () => {
       scale: 0.75,
       opacity: 1,
       y: 0,
-    },
-  };
-  const image2Variants: Variants = {
-    hidden: {
-      opacity: 0,
-      y: -15,
-    },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        delay: 0.3,
-      },
-    },
-    winner: {
-      scale: 1.1,
-      opacity: 1,
-      y: 0,
-    },
-    loser: {
-      scale: 0.9,
-      opacity: 1,
-      y: 0,
       filter: "grayscale(75%)",
     },
   };
 
+  const captionVariants: Variants = {
+    hidden: {
+      opacity: 0,
+      y: -25,
+    },
+    winner: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        staggerChildren: 0.5,
+      },
+    },
+    loser: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: 1.5,
+        delayChildren: 1.5,
+        staggerChildren: 0.5,
+      },
+    },
+  };
+
+  const captionItemVariants: Variants = {
+    hidden: {
+      opacity: 0,
+      y: -25,
+    },
+    winner: {
+      opacity: 1,
+      y: 0,
+    },
+    loser: {
+      opacity: 1,
+      y: 0,
+    },
+  };
+
+  return (
+    <motion.figure
+      initial={false}
+      animate={
+        showWinner && winningImage === id
+          ? "winner"
+          : showWinner && winningImage !== id
+          ? "loser"
+          : bothImagesShown
+          ? "visible"
+          : "hidden"
+      }
+      variants={imageVariants}
+      transition={{ when: "beforeChildren" }}
+    >
+      <Image
+        className={cn(
+          `aspect-square transform rounded-xl transition`,
+          showWinner && winningImage === 1 && "ring ring-yellow-600"
+        )}
+        src={image}
+        alt={`OpenAI Image with the prompt: ${prompt}`}
+        onLoad={() => setShowImage(true)}
+        width={1024}
+        height={1024}
+      />
+      <motion.figcaption
+        initial={false}
+        animate={
+          showWinner && winningImage === id
+            ? "winner"
+            : showWinner
+            ? "loser"
+            : "hidden"
+        }
+        variants={captionVariants}
+        className="py-4"
+      >
+        <motion.p variants={captionItemVariants} className="mb-4">
+          {prompt}
+        </motion.p>
+        <motion.div
+          variants={captionItemVariants}
+          className="flex justify-between"
+        >
+          <h3 className="text-lg text-indigo-700 dark:text-indigo-300">
+            {nickname}
+          </h3>{" "}
+          <p>{percentage.toLocaleString()}%</p>
+        </motion.div>
+      </motion.figcaption>
+    </motion.figure>
+  );
+};
+
+const RoundResult = () => {
+  const [imageOption1, setImageOption1] = useState("");
+  const [imageOption2, setImageOption2] = useState("");
+
+  const [showImage1, setShowImage1] = useState(false);
+  const [showImage2, setShowImage2] = useState(false);
+
+  const [showWinner, setShowWinner] = useState(false);
+
+  const bothShown = showImage1 && showImage2;
+
+  const winningImage: 1 | 2 = 1;
+
+  useEffect(() => {
+    if (!imageOption1) {
+      setShowImage1(false);
+    }
+    if (!imageOption2) {
+      setShowImage2(false);
+    }
+  }, [imageOption1, imageOption2]);
+
+  useEffect(() => {
+    let winnerTimeout: NodeJS.Timeout;
+    if (showImage1 && showImage2) {
+      winnerTimeout = setTimeout(() => {
+        setShowWinner(true);
+      }, 2000);
+    }
+
+    return () => {
+      clearTimeout(winnerTimeout);
+    };
+  }, [showImage1, showImage2]);
+
   return (
     <div className="mx-auto max-w-2xl">
       <div className="relative mb-14">
-        <motion.h2
-          initial={{ y: 10, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: 10, opacity: 0 }}
-          className="text-center text-lg md:text-2xl"
+        <div className="rounded-xl p-4">
+          <motion.h2
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 10, opacity: 0 }}
+            className="text-center text-lg md:text-2xl"
+          >
+            Which is the funnier{" "}
+            <span className="text-indigo-700 dark:text-indigo-300">Dog</span>{" "}
+            image?
+          </motion.h2>
+        </div>
+        <motion.div
+          initial={{ x: 10, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          className="flex justify-end"
         >
-          Which is the funnier{" "}
-          <span className="text-indigo-700 dark:text-indigo-300">Dog</span>{" "}
-          image?
-        </motion.h2>
+          <Friend />
+        </motion.div>
       </div>
       <div className="mb-16 flex gap-6">
-        <motion.div
-          initial={false}
-          animate={
-            showWinner && winningImage === 1
-              ? "winner"
-              : showWinner && winningImage !== 1
-              ? "loser"
-              : bothShown
-              ? "visible"
-              : "hidden"
-          }
-          variants={image1Variants}
-        >
-          <Image
-            className={cn(
-              `aspect-square transform rounded-xl transition`,
-              showWinner && winningImage === 1 && "ring ring-yellow-600"
-            )}
-            src={SadDog}
-            alt="OpenAI Image"
-            onLoad={() => setShowImage1(true)}
-            width={1024}
-            height={1024}
-          />
-        </motion.div>
-        <motion.div
-          initial={false}
-          animate={
-            showWinner && winningImage === 2
-              ? "winner"
-              : showWinner && winningImage !== 2
-              ? "loser"
-              : bothShown
-              ? "visible"
-              : "hidden"
-          }
-          variants={image2Variants}
-        >
-          <button className="relative" disabled={!showImage2}>
-            <Image
-              className={cn(
-                `aspect-square transform rounded-xl transition`,
-                showWinner && winningImage === 2 && "ring ring-yellow-600"
-              )}
-              src={SadDog2}
-              alt="OpenAI Image"
-              onLoad={() => setShowImage2(true)}
-              width={1024}
-              height={1024}
-            />
-          </button>
-        </motion.div>
+        <RoundResultImage
+          id={1}
+          prompt="A dog dressed as a detective solving a murder at a McDonald's."
+          nickname="Big Al"
+          percentage={100}
+          image={SadDog}
+          bothImagesShown={bothShown}
+          showWinner={showWinner}
+          winningImage={winningImage}
+          setShowImage={setShowImage1}
+        />
+        <RoundResultImage
+          id={2}
+          prompt="Saint Bernard shaking its chubby cheeks while it gets splashed by
+              a hose."
+          nickname="Lifeguard Dan"
+          percentage={0}
+          image={SadDog2}
+          bothImagesShown={bothShown}
+          showWinner={showWinner}
+          winningImage={winningImage}
+          setShowImage={setShowImage2}
+        />
       </div>
     </div>
   );
