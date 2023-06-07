@@ -99,14 +99,14 @@ const Winner = () => {
           <Image
             src={Crown}
             alt="Golden royalty crown"
-            className="absolute -top-28 left-1/2 w-40 -translate-x-1/2 transform"
+            className="absolute -top-24 left-1/2 w-32 -translate-x-1/2 transform md:-top-28 md:w-40"
           />
         </motion.div>
         <motion.h3
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 1 }}
-          className="mb-5 text-7xl"
+          className="mb-5 text-4xl md:text-7xl"
         >
           Big Al
         </motion.h3>
@@ -124,18 +124,19 @@ const Winner = () => {
           initial="hidden"
           animate="visible"
           variants={imageListVariants}
-          className="mt-16 flex flex-wrap items-center justify-center gap-6"
+          className="mt-16 flex gap-6 overflow-x-auto py-4 md:flex-wrap md:py-0"
         >
           {images.map((image, i) => (
             <motion.figure
               key={i}
               variants={imageListItemVariants}
-              className="w-40 text-left"
+              className="w-40 min-w-[10rem] flex-1 text-left"
             >
               <Image
                 src={image.src}
                 alt={image.prompt}
-                className="mb-2 rounded-xl"
+                className="mb-2 w-40 rounded-xl"
+                width={160}
               />
               <figcaption className="line-clamp-3 text-sm">
                 {image.prompt}
