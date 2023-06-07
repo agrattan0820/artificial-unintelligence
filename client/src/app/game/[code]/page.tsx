@@ -5,6 +5,8 @@ import RoundResult from "./round-result";
 import Timer from "./timer";
 import View from "./view";
 import Winner from "./winner";
+import WinnerLeadUp from "./winner-lead-up";
+import WinnerWithImage from "./winner-with-image";
 
 export default function Game({ params }: { params: { code: string } }) {
   return (

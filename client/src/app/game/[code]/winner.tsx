@@ -1,14 +1,41 @@
 "use client";
 
 import { BsTrophy } from "react-icons/bs";
-import Crown from "@ai/images/crown.webp";
 import Image from "next/image";
-import { motion, animate, useMotionValue, useTransform } from "framer-motion";
-import { useEffect } from "react";
+import {
+  motion,
+  animate,
+  useMotionValue,
+  useTransform,
+  AnimatePresence,
+  Variants,
+} from "framer-motion";
+import { useEffect, useState } from "react";
+import Friend from "./friend";
+import SadDog from "@ai/images/sad-dog.webp";
+import SadDog2 from "@ai/images/sad-dog-2.webp";
+import Crown from "@ai/images/crown.webp";
 
 const Winner = () => {
   const count = useMotionValue(0);
   const animatedPoints = useTransform(count, (latest) => Math.round(latest));
+  const [showImages, setShowImages] = useState(false);
+
+  const images = [
+    {
+      src: SadDog,
+      prompt: "A dog dressed as a detective solving a murder at a McDonald's.",
+    },
+    {
+      src: SadDog2,
+      prompt:
+        "Saint Bernard shaking its chubby cheeks while it gets splashed by a hose.",
+    },
+    {
+      src: Crown,
+      prompt: "A cool crown.",
+    },
+  ];
 
   useEffect(() => {
     const controls = animate(count, 1500, { duration: 3 });
@@ -16,42 +43,108 @@ const Winner = () => {
     return controls.stop;
   }, []);
 
+  useEffect(() => {
+    const showImagesTimer = setTimeout(() => {
+      setShowImages(true);
+    }, 4000);
+
+    return () => {
+      clearTimeout(showImagesTimer);
+    };
+  }, []);
+
+  const imageListVariants: Variants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.3,
+      },
+    },
+  };
+  const imageListItemVariants: Variants = {
+    hidden: {
+      opacity: 0,
+      y: 15,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+    },
+  };
+
   return (
-    <div className="mx-auto max-w-2xl text-center">
-      <h2 className="mb-24 text-2xl">Your Winning Ai Trainer!</h2>
-      <motion.div className="flex items-center justify-center gap-6">
-        <motion.div
+    <motion.div layout className="mx-auto max-w-2xl text-center">
+      {/* <div className="mb-40">
+        <motion.h2
           initial={{ y: 15, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="relative"
+          className="text-2xl"
+        >
+          And my winning Ai trainer is...
+        </motion.h2>
+        <motion.div
+          initial={{ x: 15, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          className="flex justify-end"
+        >
+          <Friend />
+        </motion.div>
+      </div> */}
+      <motion.div layout className="relative">
+        <motion.div
+          initial={{ y: -15, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 3 }}
         >
           <Image
             src={Crown}
             alt="Golden royalty crown"
-            className="absolute -top-16 left-1/2 w-40 -translate-x-1/2 transform"
+            className="absolute -top-28 left-1/2 w-40 -translate-x-1/2 transform"
           />
-          <div className="h-48 w-48 rounded-full bg-indigo-600" />
         </motion.div>
-        <motion.div className="text-left">
-          <motion.h3
-            initial={{ x: 15, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ delay: 1 }}
-            className="mb-2 text-4xl"
-          >
-            Big Al
-          </motion.h3>
-          <motion.p
-            initial={{ x: 15, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ delay: 1.3 }}
-            className="text-lg"
-          >
-            <motion.span>{animatedPoints}</motion.span> points
-          </motion.p>
-        </motion.div>
+        <motion.h3
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 1 }}
+          className="mb-5 text-7xl"
+        >
+          Big Al
+        </motion.h3>
+        <motion.p
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 1.2 }}
+          className="text-xl"
+        >
+          <motion.span>{animatedPoints}</motion.span> points
+        </motion.p>
       </motion.div>
-    </div>
+      {showImages && (
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={imageListVariants}
+          className="mt-16 flex flex-wrap items-center justify-center gap-6"
+        >
+          {images.map((image, i) => (
+            <motion.figure
+              key={i}
+              variants={imageListItemVariants}
+              className="w-40 text-left"
+            >
+              <Image
+                src={image.src}
+                alt={image.prompt}
+                className="mb-2 rounded-xl"
+              />
+              <figcaption className="line-clamp-3 text-sm">
+                {image.prompt}
+              </figcaption>
+            </motion.figure>
+          ))}
+        </motion.div>
+      )}
+    </motion.div>
   );
 };
 
