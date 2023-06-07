@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import "./globals.css";
 import { Inter, Roboto, Space_Mono, Gluten } from "next/font/google";
 import { Toaster } from "react-hot-toast";
@@ -23,7 +24,7 @@ const gluten = Gluten({
   weight: ["100", "200", "300", "400", "500", "700", "800", "900"],
 });
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "beeeeeeeep",
   description:
     "Multiplayer Jackbox-style game with an artificial intelligence twist.",
