@@ -1,4 +1,5 @@
 import FaceOff from "./face-off";
+import Leaderboard from "./leaderboard";
 import NextRound from "./next-round";
 import Prompt from "./prompt";
 import RoundResult from "./round-result";
@@ -12,7 +13,7 @@ export default function Game({ params }: { params: { code: string } }) {
   return (
     <main className="flex min-h-screen flex-col justify-center">
       <section className="container mx-auto px-4">
-        <Winner />
+        <Leaderboard />
       </section>
     </main>
   );
