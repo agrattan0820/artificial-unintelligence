@@ -4,6 +4,7 @@ import ConnectToMainframe from "./connect-to-mainframe";
 import ConnectionEstablished from "./connection-established";
 import Prompt from "./prompt";
 import { motion } from "framer-motion";
+import AnnouncementText from "./announcement-text";
 
 // COMPONENTS
 
@@ -51,6 +52,7 @@ export const gameMachine = createMachine(
     },
     states: {
       connectingToMainframe: {
+        // TODO: pass in context and vent into components?
         entry: assign(() => ({
           render: (
             <TransitionWrapper key="connectingToMainframe">
@@ -93,8 +95,15 @@ export const gameMachine = createMachine(
       },
 
       promptTimesUp: {
-        on: {
-          NEXT: "promptDone",
+        entry: assign(() => ({
+          render: (
+            <TransitionWrapper key="promptTimesUp">
+              <AnnouncementText text="Time's Up!" />
+            </TransitionWrapper>
+          ),
+        })),
+        after: {
+          5000: "promptDone",
         },
       },
 

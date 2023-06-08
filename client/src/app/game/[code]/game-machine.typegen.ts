@@ -15,6 +15,9 @@ export interface Typegen0 {
     "xstate.after(5000)#Machine.nextRound": {
       type: "xstate.after(5000)#Machine.nextRound";
     };
+    "xstate.after(5000)#Machine.promptTimesUp": {
+      type: "xstate.after(5000)#Machine.promptTimesUp";
+    };
     "xstate.after(90000)#Machine.prompt": {
       type: "xstate.after(90000)#Machine.prompt";
     };
