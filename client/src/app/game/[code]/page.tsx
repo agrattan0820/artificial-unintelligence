@@ -12,8 +12,9 @@ import View from "./view";
 import Winner from "./winner";
 import WinnerLeadUp from "./winner-lead-up";
 import WinnerWithImage from "./winner-with-image";
-import { gameMachine } from "./machine";
+import { gameMachine } from "./game-machine";
 import Button from "@ai/components/button";
+import { AnimatePresence } from "framer-motion";
 
 export default function Game({ params }: { params: { code: string } }) {
   const [state, send] = useMachine(gameMachine);
@@ -21,7 +22,7 @@ export default function Game({ params }: { params: { code: string } }) {
   return (
     <main className="flex min-h-screen flex-col justify-center">
       <section className="container mx-auto px-4">
-        {state.context.render}
+        <AnimatePresence mode="wait">{state.context.render}</AnimatePresence>
       </section>
       <div className="fixed bottom-8 right-8">
         <Button onClick={() => send("NEXT")}>Next</Button>

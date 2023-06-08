@@ -3,6 +3,12 @@
 export interface Typegen0 {
   "@@xstate/typegen": true;
   internalEvents: {
+    "xstate.after(5000)#Machine.connectingToMainframe": {
+      type: "xstate.after(5000)#Machine.connectingToMainframe";
+    };
+    "xstate.after(5000)#Machine.connectionEstablished": {
+      type: "xstate.after(5000)#Machine.connectionEstablished";
+    };
     "xstate.init": { type: "xstate.init" };
   };
   invokeSrcNameMap: {};
