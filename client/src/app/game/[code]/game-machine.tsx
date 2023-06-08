@@ -108,6 +108,13 @@ export const gameMachine = createMachine(
       },
 
       promptSubmitted: {
+        entry: assign(() => ({
+          render: (
+            <TransitionWrapper key="promptSubmitted">
+              <AnnouncementText text="Waiting For Companions to Submit" />
+            </TransitionWrapper>
+          ),
+        })),
         on: {
           NEXT: "promptDone",
           MORE: "prompt",
@@ -115,6 +122,13 @@ export const gameMachine = createMachine(
       },
 
       promptDone: {
+        entry: assign(() => ({
+          render: (
+            <TransitionWrapper key="promptSubmitted">
+              <AnnouncementText text="All Participants Have Submitted!" />
+            </TransitionWrapper>
+          ),
+        })),
         on: {
           NEXT: "faceOff",
         },
