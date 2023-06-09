@@ -12,7 +12,7 @@ import { cn } from "@ai/utils/cn";
 import Friend from "./friend";
 import FriendWithLegs from "./friend-with-legs";
 
-const RoundResultImage = ({
+const FaceOffResultImage = ({
   id,
   prompt,
   nickname,
@@ -221,7 +221,7 @@ const RoundResultImage = ({
   );
 };
 
-const RoundResult = () => {
+const FaceOffResult = () => {
   const [imageOption1, setImageOption1] = useState("");
   const [imageOption2, setImageOption2] = useState("");
 
@@ -280,7 +280,7 @@ const RoundResult = () => {
         </motion.div>
       </div>
       <div className="mb-16 flex gap-6">
-        <RoundResultImage
+        <FaceOffResultImage
           id={1}
           prompt="A dog dressed as a detective solving a murder at a McDonald's."
           nickname="Big Al"
@@ -299,7 +299,7 @@ const RoundResult = () => {
           ]}
           setShowImage={setShowImage1}
         />
-        <RoundResultImage
+        <FaceOffResultImage
           id={2}
           prompt="Saint Bernard shaking its chubby cheeks while it gets splashed by
               a hose."
@@ -317,4 +317,4 @@ const RoundResult = () => {
   );
 };
 
-export default RoundResult;
+export default FaceOffResult;

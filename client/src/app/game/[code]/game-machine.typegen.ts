@@ -6,17 +6,23 @@ export interface Typegen0 {
     "xstate.after(30000)#Machine.faceOff": {
       type: "xstate.after(30000)#Machine.faceOff";
     };
+    "xstate.after(4000)#Machine.nextRound": {
+      type: "xstate.after(4000)#Machine.nextRound";
+    };
     "xstate.after(5000)#Machine.connectingToMainframe": {
       type: "xstate.after(5000)#Machine.connectingToMainframe";
     };
     "xstate.after(5000)#Machine.connectionEstablished": {
       type: "xstate.after(5000)#Machine.connectionEstablished";
     };
-    "xstate.after(5000)#Machine.nextRound": {
-      type: "xstate.after(5000)#Machine.nextRound";
+    "xstate.after(5000)#Machine.promptDone": {
+      type: "xstate.after(5000)#Machine.promptDone";
     };
     "xstate.after(5000)#Machine.promptTimesUp": {
       type: "xstate.after(5000)#Machine.promptTimesUp";
+    };
+    "xstate.after(5000)#Machine.winnerLeadUp": {
+      type: "xstate.after(5000)#Machine.winnerLeadUp";
     };
     "xstate.after(90000)#Machine.prompt": {
       type: "xstate.after(90000)#Machine.prompt";
@@ -41,8 +47,6 @@ export interface Typegen0 {
     | "connectionEstablished"
     | "faceOff"
     | "faceOffResults"
-    | "faceOffTimesUp"
-    | "faceOffVoteSubmitted"
     | "leaderboard"
     | "nextRound"
     | "prompt"

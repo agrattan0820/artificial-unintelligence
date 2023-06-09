@@ -7,6 +7,7 @@ import Button from "@ai/components/button";
 import { useState } from "react";
 import ImageChoice, { ImageOption } from "./image-choice";
 import Ellipsis from "@ai/components/ellipsis";
+import Timer from "./timer";
 
 const FaceOff = () => {
   const [loading, setLoading] = useState(false);
@@ -18,6 +19,7 @@ const FaceOff = () => {
 
   return (
     <div className="mx-auto max-w-2xl">
+      <Timer totalSeconds={30} />
       <div className="relative mb-14">
         <motion.h2
           initial={{ y: 10, opacity: 0 }}

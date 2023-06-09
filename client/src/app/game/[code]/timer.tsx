@@ -3,8 +3,8 @@
 import { cn } from "@ai/utils/cn";
 import { useEffect, useState } from "react";
 
-const Timer = () => {
-  const [seconds, setSeconds] = useState(90);
+const Timer = ({ totalSeconds }: { totalSeconds: number }) => {
+  const [seconds, setSeconds] = useState(totalSeconds);
 
   useEffect(() => {
     const interval = setTimeout(() => {

@@ -5,6 +5,13 @@ import ConnectionEstablished from "./connection-established";
 import Prompt from "./prompt";
 import { motion } from "framer-motion";
 import AnnouncementText from "./announcement-text";
+import PromptSubmitted from "./prompt-submitted";
+import FaceOff from "./face-off";
+import FaceOffResult from "./face-off-result";
+import WinnerLeadUp from "./winner-lead-up";
+import Winner from "./winner";
+import Leaderboard from "./leaderboard";
+import NextRound from "./next-round";
 
 // COMPONENTS
 
@@ -38,7 +45,7 @@ const completedRounds = (context: MachineContext, event: MachineEvent) => {
 
 export const gameMachine = createMachine(
   {
-    /** @xstate-layout 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 */
+    /** @xstate-layout N4IgpgJg5mDOIC5QFkCGBjAFgSwHZgDp0B7XfdAFzygBVi08AzAJ1QFswBiAD1gtQqFUjQcwAUAVgAMMgJSc0WPIRJkwlanQa4W7MAG0pAXUSgADsVjYqpUyG6IAjABYAbAQDsjqQA4PEnx8AJmcpDxCAGhAATydXCQIATh8AZmdnNJSpFOSPAF88qMUcfCJSchtcAFE+VAAjABtsWExIHlrBAmFRSRkpeWLlMrUNUhr+RubWiEMTJBALK0q7BwQXdy9ff0CQsKCPKNiEZ28CCXjnRI9fEIkCoowSwjNmYjYzCk4AZQBVACFkABJGizOyLazYWzzVYpIKJJK+FIpRw+KSJRGJVyHRASDzw0KuZxBRywxIpPGOe4gQalF5vD7tfidbpgcTovoDR5DOnvCig+bg5bQxAAWmcHgIjlc4XSsPOaX8EmxCACUiSjlxiUS518ZKCVJpz1evJo2A4sB+ZkZAiEIlZvTkCi5tONH1N5st-PMlghUNAqykyqkBudRvpFC+AFc6mxrIIIJwAHJVAAaIOMYJ9Qv9iCRPk8HmurhSrnRQVcPkxyo8gQIpfChZ8rkcWtSIaULvDABFSFxeEzbT1pI7DQQeR8e-gvQss5DcCtEIGYov208CIwMGAAPKMRjff5A9Nzb1LOcLhCkhGpZGo9GpKvLta+dwSDXxEvE5wSCTOVdDDfoNuu7WsydriFkHJOh2hAAUBjDToKZ7CggYobIkQRBBIJbIl4LbOMq3i1lImFSG4jhwq4+wpH+pSwTujAAEpwJGDQULASapkemann69iIB47iUUixbOH45aYfhj4uMEkopPKsIZBkZI0TBm70UxsAsWxHFpvojjHjOPHzshjj+AQH4BKZaIpIED5HBqWoEMELgKa4pZSip65qbuGlaexyBbgxVQIbOvGrBqzhOUExGWU2WonEEBEohKXgBD4KKiVIbm-oU1KhgQ+DcBQDHEJGuAJsmukZgKoXGTmKqwgQUgtnJFZSNIEjasqP7uBkNkhF4mLRXcuWjgA7ng+DMAAMmAqAQJaOlcTVRnniKjWUW55YSJh36lk2BGURKmHodkxYyNcI0PNBBATWozBLSFq0mecdZwriYTJc1mEEaiCQZYpqRYZSVK4MQEBwHYhrcb6dV8ShjhSk51zkgpiQnNIjjKiKfh1v4xFhNqLZhFdeU3aoFSaPQqBMKwHAw9m8PomcwQeG47WlnsBxSf96RE4j6TfsR+qjflFPqJU4z1E0LSQAzSH1dqngUWiTaUejpnKuWkXkkW30uBdpOjuOFDy2FTjluZuL44EoS3Fjj7SPmUrEj4lxsy4HhyZ5JvunAlpm3DqwihWyPZF7IQa5jyoVgkuIYa+DmI2zPuuhG0axhQ8aB+eFFJNeQR+LisLNkqj6x2c4SYYjnXJzl11ribk5gDnJlIgQJxeEEWQ2WiiOJY+fiOAQuyUZ15wYSSnl0burf1Rqw8BAENneJc+xl-Z2TD+E6H7KZBL12Ta4z4xzGsfAK2w+e5GRTWe9u1+0glliUklsdokkuSzVndRos3YVxVSrlTnvDd2TlmzoniGSZI0oX72W-JFKUD8EHtS8J5O6U1ZrzQDpfRmwdiyyULg2ZE2popuwIjtf6xF-BwnLPFI2+UMGshAeFH8TVYTXDdpWZq4QCJeAlN4aSaQl47RBg3IYDQ5oQ2YHUYgqBmAQBYU4NITlXx818JWDUXsCLoQlHJRI5EfzpHFD4AoBQgA */
     id: "Machine",
     schema: {
       context: {} as MachineContext,
@@ -46,13 +53,14 @@ export const gameMachine = createMachine(
     },
     tsTypes: {} as import("./game-machine.typegen").Typegen0,
     initial: "connectingToMainframe",
+    predictableActionArguments: true,
     context: {
       render: <div>Hello State Machine!</div>,
       round: 1,
     },
     states: {
       connectingToMainframe: {
-        // TODO: pass in context and vent into components?
+        // TODO: pass in context and event into components?
         entry: assign(() => ({
           render: (
             <TransitionWrapper key="connectingToMainframe">
@@ -103,7 +111,7 @@ export const gameMachine = createMachine(
           ),
         })),
         after: {
-          5000: "promptDone",
+          5000: "faceOff",
         },
       },
 
@@ -111,51 +119,52 @@ export const gameMachine = createMachine(
         entry: assign(() => ({
           render: (
             <TransitionWrapper key="promptSubmitted">
-              <AnnouncementText text="Waiting For Companions to Submit" />
+              <PromptSubmitted />
             </TransitionWrapper>
           ),
         })),
         on: {
           NEXT: "promptDone",
-          MORE: "prompt",
         },
       },
 
       promptDone: {
         entry: assign(() => ({
           render: (
-            <TransitionWrapper key="promptSubmitted">
+            <TransitionWrapper key="promptDone">
               <AnnouncementText text="All Participants Have Submitted!" />
             </TransitionWrapper>
           ),
         })),
-        on: {
-          NEXT: "faceOff",
+        after: {
+          5000: "faceOff",
         },
       },
 
       faceOff: {
+        entry: assign(() => ({
+          render: (
+            <TransitionWrapper key="faceOff">
+              <FaceOff />
+            </TransitionWrapper>
+          ),
+        })),
         on: {
-          SUBMIT: "faceOffVoteSubmitted",
+          SUBMIT: "faceOffResults",
         },
         after: {
-          30000: "faceOffTimesUp",
-        },
-      },
-
-      faceOffVoteSubmitted: {
-        on: {
-          NEXT: "faceOffResults",
-        },
-      },
-
-      faceOffTimesUp: {
-        on: {
-          NEXT: "faceOffResults",
+          30000: "faceOffResults",
         },
       },
 
       faceOffResults: {
+        entry: assign(() => ({
+          render: (
+            <TransitionWrapper key="faceOffResults">
+              <FaceOffResult />
+            </TransitionWrapper>
+          ),
+        })),
         on: {
           NEXT: [
             {
@@ -171,24 +180,54 @@ export const gameMachine = createMachine(
       },
 
       nextRound: {
+        entry: assign((context, event) => ({
+          round: context.round + 1,
+          render: (
+            <TransitionWrapper key="nextRound">
+              <NextRound nextQueryNum={context.round + 1} totalQueries={3} />
+            </TransitionWrapper>
+          ),
+        })),
         after: {
-          5000: "prompt",
+          4000: "prompt",
         },
       },
 
       winnerLeadUp: {
-        on: {
-          NEXT: "winner",
+        entry: assign(() => ({
+          render: (
+            <TransitionWrapper key="winnerLeadUp">
+              <WinnerLeadUp />
+            </TransitionWrapper>
+          ),
+        })),
+        after: {
+          5000: "winner",
         },
       },
 
       winner: {
+        entry: assign(() => ({
+          render: (
+            <TransitionWrapper key="winner">
+              <Winner />
+            </TransitionWrapper>
+          ),
+        })),
         on: {
           NEXT: "leaderboard",
         },
       },
 
-      leaderboard: {},
+      leaderboard: {
+        entry: assign(() => ({
+          render: (
+            <TransitionWrapper key="leaderboard">
+              <Leaderboard />
+            </TransitionWrapper>
+          ),
+        })),
+      },
     },
   },
   {

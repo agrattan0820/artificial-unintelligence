@@ -17,6 +17,7 @@ const NextRound = ({ nextQueryNum, totalQueries }: NextRoundProps) => {
           className="absolute left-0"
           initial={{ y: 0, opacity: 1 }}
           animate={{ y: 15, opacity: 0 }}
+          transition={{ delay: 1 }}
           aria-hidden={true}
         >
           {nextQueryNum - 1}
@@ -25,6 +26,7 @@ const NextRound = ({ nextQueryNum, totalQueries }: NextRoundProps) => {
           className="absolute left-0"
           initial={{ y: -15, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 1 }}
           aria-hidden={true}
         >
           {nextQueryNum}

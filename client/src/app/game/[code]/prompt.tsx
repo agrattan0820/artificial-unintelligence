@@ -9,6 +9,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@ai/utils/cn";
 import { FiCheck } from "react-icons/fi";
 import ImageChoice, { ImageOption } from "./image-choice";
+import Timer from "./timer";
 
 interface FormElementsType extends HTMLFormControlsCollection {
   prompt: HTMLInputElement;
@@ -57,6 +58,7 @@ const Prompt = () => {
 
   return (
     <motion.div layout className="max-w-2xl">
+      <Timer totalSeconds={90} />
       <div className="relative mb-14">
         <AnimatePresence>
           {!imagesLoaded && (
