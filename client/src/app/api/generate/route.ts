@@ -26,13 +26,13 @@ export async function POST(req: Request) {
   }
 
   try {
-    const image = await openai.createImage({
+    const images = await openai.createImage({
       prompt,
-      n: 1,
+      n: 2,
       size: "1024x1024",
     });
 
-    return NextResponse.json({ result: image.data.data[0].url });
+    return NextResponse.json({ result: images.data.data });
   } catch (error) {
     // Consider adjusting the error handling logic for your use case
     if (error instanceof AxiosError && error.response) {

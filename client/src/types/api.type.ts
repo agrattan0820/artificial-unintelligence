@@ -42,3 +42,7 @@ export type RoomInfo = {
 
 export type User = Database["public"]["Tables"]["users"]["Row"];
 export type Room = Database["public"]["Tables"]["rooms"]["Row"];
+export type Game = Database["public"]["Tables"]["games"]["Row"];
+export type Question = Database["public"]["Tables"]["questions"]["Row"];
+export type Generation = Database["public"]["Tables"]["generations"]["Row"];
+export type Vote = Database["public"]["Tables"]["votes"]["Row"];

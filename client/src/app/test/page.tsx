@@ -11,10 +11,10 @@ export default function Test() {
       <button
         className="rounded bg-indigo-600 font-bold text-white"
         onClick={async () => {
-          const imageUrl = await generateImage(
+          const images = await generateImage(
             "a LAN party in the middle of the highway"
           );
-          imageUrl && setImage(imageUrl);
+          images && setImage(images[0].url ?? "");
         }}
       >
         Send Custom Event

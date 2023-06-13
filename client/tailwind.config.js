@@ -25,11 +25,21 @@ module.exports = {
           "50%": { opacity: 1 },
           "100%": { opacity: 0 },
         },
+        typing: {
+          from: { width: 0 },
+          to: { width: "100%" },
+        },
+        "blink-caret": {
+          "from, to": { borderColor: "inherit" },
+          "50%": { borderColor: "transparent" },
+        },
       },
       animation: {
         "dot-bounce": "dot 2s infinite",
         "dot-bounce-2": "dot 2s infinite .25s",
         "dot-bounce-3": "dot 2s infinite .5s",
+        typewriter:
+          "typing 3.5s steps(40, end), blink-caret .75s step-end infinite",
       },
     },
   },

@@ -1,3 +1,5 @@
+import { ImagesResponseDataInner } from "openai";
+
 // generate an AI image
 export const generateImage = async (prompt: string) => {
   try {
@@ -9,12 +11,10 @@ export const generateImage = async (prompt: string) => {
       body: JSON.stringify({ prompt }),
     });
 
-    const data: { result: string | undefined } = await response.json();
+    const data: { result: ImagesResponseDataInner[] } = await response.json();
     if (response.status !== 200) {
       throw new Error(`Request failed with status ${response.status}`);
     }
-
-    console.log(data);
 
     return data.result;
   } catch (error) {

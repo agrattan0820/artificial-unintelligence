@@ -8,6 +8,9 @@ const nextConfig = {
       {
         hostname: "media.giphy.com",
       },
+      {
+        hostname: "oaidalleapiprodscus.blob.core.windows.net",
+      },
     ],
   },
 };
