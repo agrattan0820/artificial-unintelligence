@@ -2,18 +2,18 @@
 
 import RoomLink from "./room-link";
 import UserCount from "@ai/components/user-count";
-import ConnectionStatus from "@ai/components/connection-status";
-import { useStore } from "@ai/utils/store";
-import StoreInitializer from "@ai/utils/store-initializer";
-import { RoomInfo, getRoomInfo } from "@ai/app/server-actions";
-import PlayerPresence from "@ai/utils/player-presence";
+import { RoomInfo, User, getRoomInfo } from "@ai/app/server-actions";
 import UserList from "./user-list";
 import StartGame from "./start-game";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { socket } from "@ai/utils/socket";
 import toast from "react-hot-toast";
+import { useStore } from "@ai/utils/store";
 
 export default function Lobby({ roomInfo }: { roomInfo: RoomInfo }) {
+  const { user } = useStore();
+  const [players, setPlayers] = useState<User[]>(roomInfo.players);
+
   const helloMessages = (msg: string) => {
     console.log("received messages!");
     toast(msg);
@@ -24,6 +24,8 @@ export default function Lobby({ roomInfo }: { roomInfo: RoomInfo }) {
   };
 
   useEffect(() => {
+    socket.auth = { userId: user?.id };
+    socket.connect();
     socket.emit("connectToRoom", roomInfo.code);
     socket.on("hello", helloMessages);
     socket.on("message", message);
@@ -31,8 +33,9 @@ export default function Lobby({ roomInfo }: { roomInfo: RoomInfo }) {
     return () => {
       socket.off("hello", helloMessages);
       socket.off("message", message);
+      socket.disconnect();
     };
-  }, [roomInfo.code]);
+  }, [roomInfo.code, user?.id]);
 
   return (
     <main className="flex min-h-screen flex-col justify-center">
@@ -41,13 +44,10 @@ export default function Lobby({ roomInfo }: { roomInfo: RoomInfo }) {
         <p className="mb-2 text-center text-xl">Your Room Link is</p>
         <RoomLink code={roomInfo.code} />
         <div className="absolute left-8 top-8">
-          <UserCount
-            code={roomInfo.code}
-            initialCount={roomInfo.players.length}
-          />
+          <UserCount count={players.length} />
         </div>
         {/* <ConnectionStatus code={params.code} /> */}
-        <UserList />
+        <UserList players={players} />
         <StartGame code={roomInfo.code} />
       </section>
     </main>

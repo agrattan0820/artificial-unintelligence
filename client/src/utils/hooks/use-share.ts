@@ -5,7 +5,9 @@ export default function useShare(slug: string, callback?: () => void) {
   const [copying, setCopying] = useState(false);
   const isMounted = useIsMounted();
 
-  const link = isMounted ? `${window.location.origin}${slug}` : "";
+  const link = isMounted
+    ? `${window.location.origin}${slug}`
+    : `http://localhost:3000${slug}`;
 
   const onClick = () => {
     if (navigator.share) {
