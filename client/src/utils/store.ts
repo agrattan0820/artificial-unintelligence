@@ -1,4 +1,4 @@
-import { Game, Room, User } from "@ai/types/api.type";
+import { Game, Room, User } from "@ai/app/server-actions";
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 

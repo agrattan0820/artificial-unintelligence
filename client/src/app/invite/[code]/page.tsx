@@ -1,6 +1,5 @@
-import { getRoomInfo } from "@ai/app/actions";
+import { getRoomInfo } from "@ai/app/server-actions";
 import NicknameForm from "@ai/components/nickname-form";
-import { GetRoomResponse } from "@ai/types/api.type";
 
 export default async function Invite({ params }: { params: { code: string } }) {
   const roomInfo = await getRoomInfo(params.code);

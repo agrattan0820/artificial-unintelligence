@@ -7,18 +7,17 @@ import { Socket } from "socket.io";
 
 export const createHostController = async (
   req: Request<{}, {}, { nickname: string }>,
-  res: Response,
-  socket: Socket<ClientToServerEvents, ServerToClientEvents>
+  res: Response
 ) => {
   const body = req.body;
+
+  console.log("BODY", body);
 
   const newUser = await createUser(body);
   console.log("[CREATE USER]:", newUser);
 
-  const newRoom = await createRoom({ host: newUser });
+  const newRoom = await createRoom();
   console.log("[CREATE ROOM]:", newRoom);
-
-  socket.join(newRoom.code);
 
   res.status(200).json({ host: newUser, room: newRoom });
 };

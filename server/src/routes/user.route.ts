@@ -10,9 +10,7 @@ export function userRoutes(
   app: Express,
   socket: Socket<ClientToServerEvents, ServerToClientEvents>
 ) {
-  app.post("/user/createHost", (req: Request, res: Response) =>
-    createHostController(req, res, socket)
-  );
+  app.post("/user/createHost", createHostController);
 
   app.post("/user", createUserController);
 }

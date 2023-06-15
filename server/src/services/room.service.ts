@@ -11,7 +11,7 @@ import {
 } from "../../db/schema";
 import { eq } from "drizzle-orm";
 
-export const createRoom = async (data: { host: User }) => {
+export const createRoom = async () => {
   let validRoomCode = false;
 
   let roomCode = crypto.randomBytes(4).toString("hex");
@@ -31,7 +31,6 @@ export const createRoom = async (data: { host: User }) => {
   }
 
   const newRoom: NewRoom = {
-    hostId: data.host.id,
     code: roomCode,
   };
   const createRoom = await db.insert(rooms).values(newRoom).returning();
@@ -55,33 +54,19 @@ export const joinRoom = async (data: { user: User; room: Room }) => {
 
 export const getRoom = async (data: { roomCode: string }) => {
   const room = await db
-    .select({
-      room: {
-        code: rooms.code,
-        hostId: rooms.hostId,
-      },
-      host: {
-        id: users.id,
-        nickname: users.nickname,
-      },
-    })
+    .select()
     .from(rooms)
-    .leftJoin(userRooms, eq(rooms.code, userRooms.roomCode))
-    .leftJoin(users, eq(userRooms.userId, users.id))
     .where(eq(rooms.code, data.roomCode));
 
-  if (!room[0]) {
-    return;
-  }
-
-  const players = await db
+  const players = (await db
     .select({
       id: users.id,
       nickname: users.nickname,
+      createdAt: users.createdAt,
     })
     .from(userRooms)
     .fullJoin(users, eq(userRooms.userId, users.id))
-    .where(eq(userRooms.roomCode, data.roomCode));
+    .where(eq(userRooms.roomCode, data.roomCode))) as User[];
 
   return {
     ...room[0],

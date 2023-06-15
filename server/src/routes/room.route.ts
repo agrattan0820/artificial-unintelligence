@@ -4,6 +4,7 @@ import { ClientToServerEvents, ServerToClientEvents } from "../../server";
 import {
   getRoomController,
   joinRoomController,
+  joinRoomControllerHTTP,
 } from "../controllers/room.controller";
 
 export function roomRoutes(
@@ -13,6 +14,8 @@ export function roomRoutes(
   socket.on("joinRoom", async (data, callback) =>
     joinRoomController(data, callback, socket)
   );
+
+  app.post("/room/join", joinRoomControllerHTTP);
 
   app.get("/room/:code", getRoomController);
 }

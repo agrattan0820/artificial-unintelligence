@@ -1,10 +1,24 @@
-// import { useEffect } from "react";
-// import { Socket, io } from "socket.io-client";
+import { Socket, io } from "socket.io-client";
 
-// const URL =
-//   process.env.NODE_ENV === "production"
-//     ? "http://localhost:8080" // TODO: change to API_URL
-//     : "http://localhost:8080";
+export interface ServerToClientEvents {
+  hello: (str: string) => void;
+  message: (str: string) => void;
+  error: (str: string) => void;
+}
+
+export interface ClientToServerEvents {
+  // createHost: (
+  //   data: { nickname: string },
+  //   callback: (response: { host: User; room: Room }) => void
+  // ) => void;
+  connectToRoom: (code: string) => void;
+  leaveRoom: (code: string) => void;
+}
+
+export const URL =
+  process.env.NODE_ENV === "production"
+    ? "http://localhost:8080" // TODO: change to API_URL
+    : "http://localhost:8080";
 
 // // export const useSocketInitializer = async (socket: Socket | null) => {
 // //   useEffect(() => {
@@ -23,4 +37,5 @@
 // //   }, []);
 // // };
 
-// export const socket = io(URL);
+export const socket: Socket<ServerToClientEvents, ClientToServerEvents> =
+  io(URL);

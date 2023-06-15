@@ -4,13 +4,8 @@ import { FormEvent, useState } from "react";
 import Ellipsis from "./ellipsis";
 import { useStore } from "@ai/utils/store";
 import { useRouter } from "next/navigation";
-import {
-  CreateHostResponse,
-  CreateUserResponse,
-  Room,
-  RoomInfo,
-} from "@ai/types/api.type";
-import { createHost, joinRoom } from "@ai/app/actions";
+// import { createHost, joinRoom } from "@ai/app/supabase-actions";
+import { RoomInfo, createHost, joinRoom } from "@ai/app/server-actions";
 import Button, { SecondaryButton } from "./button";
 import Input from "./input";
 
@@ -34,36 +29,6 @@ type NicknameFormProps =
       type: "INVITE";
     };
 
-// const createHost = async (nickname: string) => {
-//   const response = await fetch("http://localhost:8080/user/createHost", {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify({ nickname }),
-//   });
-
-//   const data: CreateHostResponse = await response.json();
-
-//   console.log("RESPONSE", data);
-//   return data;
-// };
-
-// const createUser = async (nickname: string) => {
-//   const response = await fetch("http://localhost:8080/user", {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify({ nickname }),
-//   });
-
-//   const data: CreateUserResponse = await response.json();
-
-//   console.log("RESPONSE", data);
-//   return data;
-// };
-
 const NicknameForm = ({ room, submitLabel, type }: NicknameFormProps) => {
   const { user, setUser } = useStore();
   const [loading, setLoading] = useState(false);
@@ -74,7 +39,7 @@ const NicknameForm = ({ room, submitLabel, type }: NicknameFormProps) => {
     setLoading(true);
     const formNickname = e.currentTarget.elements.nickname.value;
 
-    // REST POST
+    // alert(formNickname);
 
     if (type === "HOME") {
       const hostData = await createHost(formNickname);
