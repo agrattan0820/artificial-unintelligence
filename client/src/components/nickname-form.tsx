@@ -48,7 +48,7 @@ const NicknameForm = ({ room, submitLabel, type }: NicknameFormProps) => {
     }
 
     if (type === "INVITE") {
-      const joinData = await joinRoom(formNickname, room);
+      const joinData = await joinRoom(formNickname, room.code);
       setUser(joinData.user);
       if (room) router.push(`/room/${room.code}`);
     }
