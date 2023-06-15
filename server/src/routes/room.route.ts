@@ -7,14 +7,7 @@ import {
   joinRoomControllerHTTP,
 } from "../controllers/room.controller";
 
-export function roomRoutes(
-  app: Express,
-  socket: Socket<ClientToServerEvents, ServerToClientEvents>
-) {
-  socket.on("joinRoom", async (data, callback) =>
-    joinRoomController(data, callback, socket)
-  );
-
+export function roomRoutes(app: Express) {
   app.post("/room/join", joinRoomControllerHTTP);
 
   app.get("/room/:code", getRoomController);

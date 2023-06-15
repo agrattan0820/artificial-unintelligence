@@ -46,9 +46,11 @@ export function buildServer() {
 
     socket.emit("hello", `hello world ${socket.handshake.auth.userId}`);
 
-    socket.on("connectToRoom", (code) => {
+    socket.on("connectToRoom", async (code) => {
+      const roomInfo = await getRoom({ roomCode: code });
       socket.join(code);
       socket.to(code).emit("message", `${socket.handshake.auth.userId} joined`);
+      socket.to(code).emit("roomState", roomInfo);
     });
 
     socket.on("leaveRoom", (code) => {
@@ -64,8 +66,8 @@ export function buildServer() {
       });
     });
 
-    userRoutes(app, socket);
-    roomRoutes(app, socket);
+    userRoutes(app);
+    roomRoutes(app);
   });
 
   app.get("/", (req: Request, res: Response) => {

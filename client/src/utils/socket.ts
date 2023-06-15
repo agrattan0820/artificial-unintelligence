@@ -1,8 +1,10 @@
+import { RoomInfo } from "@ai/app/server-actions";
 import { Socket, io } from "socket.io-client";
 
 export interface ServerToClientEvents {
   hello: (str: string) => void;
   message: (str: string) => void;
+  roomState: (roomInfo: RoomInfo) => void;
   error: (str: string) => void;
 }
 

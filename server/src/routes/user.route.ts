@@ -6,10 +6,7 @@ import {
   createUserController,
 } from "../controllers/user.controller";
 
-export function userRoutes(
-  app: Express,
-  socket: Socket<ClientToServerEvents, ServerToClientEvents>
-) {
+export function userRoutes(app: Express) {
   app.post("/user/createHost", createHostController);
 
   app.post("/user", createUserController);

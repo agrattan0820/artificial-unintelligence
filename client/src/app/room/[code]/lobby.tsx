@@ -23,12 +23,19 @@ export default function Lobby({ roomInfo }: { roomInfo: RoomInfo }) {
     toast(msg);
   };
 
+  const handleRoomState = (roomInfo: RoomInfo) => {
+    console.log("[ROOM INFO]", roomInfo);
+    toast("GOT ROOM INFO");
+    setPlayers(roomInfo.players);
+  };
+
   useEffect(() => {
     socket.auth = { userId: user?.id };
     socket.connect();
     socket.emit("connectToRoom", roomInfo.code);
     socket.on("hello", helloMessages);
     socket.on("message", message);
+    socket.on("roomState", handleRoomState);
 
     return () => {
       socket.off("hello", helloMessages);
