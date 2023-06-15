@@ -47,7 +47,7 @@ export function buildServer() {
     socket.emit("hello", `hello world ${socket.handshake.auth.userId}`);
 
     socket.on("connectToRoom", async (code) => {
-      const roomInfo = await getRoom({ roomCode: code });
+      const roomInfo = await getRoom({ code });
       socket.join(code);
       socket.to(code).emit("message", `${socket.handshake.auth.userId} joined`);
       socket.to(code).emit("roomState", roomInfo);
