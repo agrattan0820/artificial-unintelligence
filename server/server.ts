@@ -2,11 +2,12 @@ import express, { Express, Request, Response } from "express";
 import { Server, Socket } from "socket.io";
 import { createServer } from "http";
 import cors from "cors";
+import morgan from "morgan";
 
 import { Room, RoomInfo, User } from "./db/schema";
 import { userRoutes } from "./src/routes/user.route";
 import { roomRoutes } from "./src/routes/room.route";
-import { getRoom, leaveRoom } from "./src/services/room.service";
+import { getRoom, joinRoom, leaveRoom } from "./src/services/room.service";
 
 export interface ServerToClientEvents {
   hello: (str: string) => void;
@@ -30,6 +31,7 @@ export function buildServer() {
 
   app.use(express.json());
   app.use(cors());
+  app.use(morgan("tiny"));
 
   const io = new Server<ClientToServerEvents, ServerToClientEvents>(server, {
     cors: {
@@ -41,9 +43,15 @@ export function buildServer() {
     socket.emit("hello", `hello world ${socket.handshake.auth.userId}`);
 
     socket.on("connectToRoom", async (code) => {
-      const roomInfo = await getRoom({ code });
+      const userId = socket.handshake.auth.userId;
+      let roomInfo = await getRoom({ code });
+
+      if (!roomInfo.players.find((player) => player.id === userId)) {
+        const userJoinRoom = await joinRoom({ userId: userId, code });
+        roomInfo = await getRoom({ code });
+      }
       socket.join(code);
-      socket.to(code).emit("message", `${socket.handshake.auth.userId} joined`);
+      socket.to(code).emit("message", `${userId} joined`);
       socket.to(code).emit("roomState", roomInfo);
     });
 
