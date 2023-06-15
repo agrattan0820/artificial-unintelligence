@@ -14,10 +14,6 @@ export default function Lobby({ roomInfo }: { roomInfo: RoomInfo }) {
   const { user } = useStore();
   const [players, setPlayers] = useState<User[]>(roomInfo.players);
 
-  const helloMessages = (msg: string) => {
-    console.log("received messages!");
-    toast(msg);
-  };
   const message = (msg: string) => {
     console.log("Received messages:", msg);
     toast(msg);
@@ -32,12 +28,10 @@ export default function Lobby({ roomInfo }: { roomInfo: RoomInfo }) {
     socket.auth = { userId: user?.id };
     socket.connect();
     socket.emit("connectToRoom", roomInfo.code);
-    socket.on("hello", helloMessages);
     socket.on("message", message);
     socket.on("roomState", handleRoomState);
 
     return () => {
-      socket.off("hello", helloMessages);
       socket.off("message", message);
       socket.off("roomState", handleRoomState);
       socket.disconnect();
