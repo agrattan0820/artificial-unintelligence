@@ -3,6 +3,7 @@ import { Server, Socket } from "socket.io";
 import { createServer } from "http";
 import cors from "cors";
 import morgan from "morgan";
+import errorhandler from "errorhandler";
 
 import { Room, RoomInfo, User } from "./db/schema";
 import { userRoutes } from "./src/routes/user.route";
@@ -32,6 +33,10 @@ export function buildServer() {
   app.use(express.json());
   app.use(cors());
   app.use(morgan("tiny"));
+
+  if (process.env.NODE_ENV === "development") {
+    app.use(errorhandler());
+  }
 
   const io = new Server<ClientToServerEvents, ServerToClientEvents>(server, {
     cors: {
