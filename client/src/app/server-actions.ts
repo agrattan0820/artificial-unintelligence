@@ -80,7 +80,7 @@ export async function joinRoom(nickname: string, room: Room) {
 export type GetRoomInfoResponse = RoomInfo;
 
 export async function getRoomInfo(code: string) {
-  const response = await fetch(`${URL}/room/${code}`);
+  const response = await fetch(`${URL}/room/${code}`, { cache: "no-store" });
 
   const data: GetRoomInfoResponse = await response.json();
 
