@@ -9,7 +9,7 @@ import {
   userRooms,
   users,
 } from "../../db/schema";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 export const createRoom = async () => {
   let validRoomCode = false;
@@ -54,7 +54,16 @@ export const joinRoom = async (data: { userId: number; code: string }) => {
   return addUserToRoom[0];
 };
 
-export const leaveRoom = async (data: {}) => {};
+export const leaveRoom = async (data: { userId: number; code: string }) => {
+  const { userId, code } = data;
+
+  const removeUserFromRoom = await db
+    .delete(userRooms)
+    .where(and(eq(userRooms.userId, userId), eq(userRooms.roomCode, code)))
+    .returning();
+
+  return removeUserFromRoom[0];
+};
 
 export const getRoom = async (data: { code: string }) => {
   const room = await db.select().from(rooms).where(eq(rooms.code, data.code));
