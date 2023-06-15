@@ -25,7 +25,6 @@ export default function Lobby({ roomInfo }: { roomInfo: RoomInfo }) {
 
   const handleRoomState = (roomInfo: RoomInfo) => {
     console.log("[ROOM INFO]", roomInfo);
-    toast("GOT ROOM INFO");
     setPlayers(roomInfo.players);
   };
 

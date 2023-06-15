@@ -4,11 +4,10 @@ import { ClientToServerEvents, ServerToClientEvents } from "../../server";
 import {
   getRoomController,
   joinRoomController,
-  joinRoomControllerHTTP,
 } from "../controllers/room.controller";
 
 export function roomRoutes(app: Express) {
-  app.post("/room/join", joinRoomControllerHTTP);
+  app.post("/room/join", joinRoomController);
 
   app.get("/room/:code", getRoomController);
 }

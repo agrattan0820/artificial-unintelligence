@@ -60,7 +60,7 @@ export type JoinRoomResponse = {
   user: User;
 };
 
-export async function joinRoom(nickname: string, room: Room) {
+export async function joinRoom(nickname: string, code: string) {
   const response = await fetch(`${URL}/room/join`, {
     method: "POST",
     headers: {
@@ -68,7 +68,7 @@ export async function joinRoom(nickname: string, room: Room) {
     },
     body: JSON.stringify({
       nickname,
-      room,
+      code,
     }),
   });
 

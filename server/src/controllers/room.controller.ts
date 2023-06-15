@@ -12,7 +12,7 @@ export const getRoomController = async (
   try {
     const code = req.params.code;
 
-    const roomInfo = await getRoom({ roomCode: code });
+    const roomInfo = await getRoom({ code });
 
     if (!roomInfo) {
       res.status(404).send(`Room with room code of ${code} was not found`);
@@ -24,15 +24,18 @@ export const getRoomController = async (
   }
 };
 
-export const joinRoomControllerHTTP = async (
-  req: Request<{}, {}, { nickname: string; room: Room }>,
+export const joinRoomController = async (
+  req: Request<{}, {}, { nickname: string; code: string }>,
   res: Response
 ) => {
   try {
-    const { nickname, room } = req.body;
+    const { nickname, code } = req.body;
 
     const createdUser = await createUser({ nickname });
-    const addUserToRoom = await joinRoom({ user: createdUser, room });
+    const addUserToRoom = await joinRoom({
+      userId: createdUser.id,
+      code,
+    });
     // Unsure right now if it's necessary to return the room info
     // const roomInfo = await getRoom({ roomCode: room.code });
 
@@ -41,31 +44,5 @@ export const joinRoomControllerHTTP = async (
     res.status(200).send({ user: createdUser });
   } catch (error) {
     res.status(500).send(error);
-  }
-};
-
-export const joinRoomController = async (
-  data: { user: User; room: Room },
-  callback: (response: Awaited<ReturnType<typeof getRoom>>) => void,
-  socket: Socket<ClientToServerEvents, ServerToClientEvents>
-) => {
-  try {
-    const addUserToRoom = await joinRoom(data);
-    console.log("[ADD USER TO ROOM]:", addUserToRoom);
-    socket.join(data.room.code);
-    const roomInfo = await getRoom({ roomCode: data.room.code });
-    socket
-      .to(data.room.code)
-      .emit("message", `${data.user.nickname} is joining the room!`);
-
-    socket.to(data.room.code).emit("roomState", roomInfo);
-
-    console.log(`Emitted message to room ${data.room.code}`);
-
-    if (roomInfo) {
-      callback(roomInfo);
-    }
-  } catch (error) {
-    socket.emit("error", "The room the user tried to join does not exist");
   }
 };
