@@ -39,6 +39,7 @@ export default function Lobby({ roomInfo }: { roomInfo: RoomInfo }) {
     return () => {
       socket.off("hello", helloMessages);
       socket.off("message", message);
+      socket.off("roomState", handleRoomState);
       socket.disconnect();
     };
   }, [roomInfo.code, user?.id]);
