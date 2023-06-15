@@ -83,9 +83,6 @@ export function buildServer() {
         })
       );
     });
-
-    userRoutes(app);
-    roomRoutes(app);
   });
 
   app.get("/", (req: Request, res: Response) => {
@@ -94,6 +91,9 @@ export function buildServer() {
   app.get("/ping", (req: Request, res: Response) => {
     res.status(200).send("pong");
   });
+
+  userRoutes(app);
+  roomRoutes(app);
 
   return server;
 }
