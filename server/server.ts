@@ -23,10 +23,6 @@ export interface ServerToClientEvents {
 }
 
 export interface ClientToServerEvents {
-  // createHost: (
-  //   data: { nickname: string },
-  //   callback: (response: { host: User; room: Room }) => void
-  // ) => void;
   connectToRoom: (code: string) => void;
   leaveRoom: (data: { userId: number; code: string }) => void;
 }
@@ -100,7 +96,7 @@ export function buildServer() {
     if (res.headersSent) {
       return next(err);
     }
-    console.log(`ERROR: ${err.message}`);
+    console.error(err.stack);
     const status = "status" in err ? (err.status as number) : 500;
     res.status(status).send(err.message);
   };
