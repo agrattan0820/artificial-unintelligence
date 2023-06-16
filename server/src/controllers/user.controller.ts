@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from "express";
+import express, { Express, NextFunction, Request, Response } from "express";
 
 import { ClientToServerEvents, ServerToClientEvents } from "../../server";
 import { createRoom, joinRoom } from "../services/room.service";
@@ -7,20 +7,25 @@ import { Socket } from "socket.io";
 
 export const createHostController = async (
   req: Request<{}, {}, { nickname: string }>,
-  res: Response
+  res: Response,
+  next: NextFunction
 ) => {
-  const body = req.body;
+  try {
+    const body = req.body;
 
-  const newUser = await createUser(body);
+    const newUser = await createUser(body);
 
-  const newRoom = await createRoom();
+    const newRoom = await createRoom();
 
-  const hostInRoom = await joinRoom({
-    userId: newUser.id,
-    code: newRoom.code,
-  });
+    const hostInRoom = await joinRoom({
+      userId: newUser.id,
+      code: newRoom.code,
+    });
 
-  res.status(200).json({ host: newUser, room: newRoom });
+    res.status(200).json({ host: newUser, room: newRoom });
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const createUserController = async (
