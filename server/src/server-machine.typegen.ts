@@ -21,6 +21,9 @@ export interface Typegen0 {
     "xstate.after(5000)#Server Machine.promptTimesUp": {
       type: "xstate.after(5000)#Server Machine.promptTimesUp";
     };
+    "xstate.after(5000)#Server Machine.startGame": {
+      type: "xstate.after(5000)#Server Machine.startGame";
+    };
     "xstate.after(5000)#Server Machine.winnerLeadUp": {
       type: "xstate.after(5000)#Server Machine.winnerLeadUp";
     };
@@ -33,10 +36,15 @@ export interface Typegen0 {
   missingImplementations: {
     actions: never;
     delays: never;
-    guards: "completedRounds";
+    guards: never;
     services: never;
   };
-  eventsCausingActions: {};
+  eventsCausingActions: {
+    sendNextToClient:
+      | "xstate.after(5000)#Server Machine.connectingToMainframe"
+      | "xstate.after(5000)#Server Machine.connectionEstablished"
+      | "xstate.after(5000)#Server Machine.startGame";
+  };
   eventsCausingDelays: {};
   eventsCausingGuards: {
     completedRounds: "NEXT";
@@ -53,6 +61,7 @@ export interface Typegen0 {
     | "promptDone"
     | "promptSubmitted"
     | "promptTimesUp"
+    | "startGame"
     | "winner"
     | "winnerLeadUp";
   tags: never;

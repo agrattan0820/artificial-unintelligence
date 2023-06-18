@@ -52,13 +52,26 @@ export const gameMachine = createMachine(
       events: {} as MachineEvent,
     },
     tsTypes: {} as import("./game-machine.typegen").Typegen0,
-    initial: "connectingToMainframe",
+    initial: "startGame",
     predictableActionArguments: true,
     context: {
       render: <div>Hello State Machine!</div>,
       round: 1,
     },
     states: {
+      startGame: {
+        // TODO: pass in context and event into components?
+        entry: assign(() => ({
+          render: (
+            <TransitionWrapper key="connectingToMainframe">
+              <div>Hello</div>
+            </TransitionWrapper>
+          ),
+        })),
+        on: {
+          NEXT: "connectingToMainframe",
+        },
+      },
       connectingToMainframe: {
         // TODO: pass in context and event into components?
         entry: assign(() => ({

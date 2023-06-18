@@ -1,6 +1,5 @@
 import { Socket } from "socket.io";
 import express, { Express, Request, Response } from "express";
-import { ClientToServerEvents, ServerToClientEvents } from "../server";
 import {
   getRoomController,
   joinRoomController,

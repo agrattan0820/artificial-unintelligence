@@ -1,42 +1,48 @@
 "use client";
 
+import { useCallback, useContext, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+
 import RoomLink from "./room-link";
 import UserCount from "@ai/components/user-count";
-import { RoomInfo, User, getRoomInfo } from "@ai/app/server-actions";
+import { RoomInfo, User } from "@ai/app/server-actions";
 import UserList from "./user-list";
 import StartGame from "./start-game";
-import { useEffect, useState } from "react";
-import { socket } from "@ai/utils/socket";
-import toast from "react-hot-toast";
+// import { socket } from "@ai/utils/socket";
 import { useStore } from "@ai/utils/store";
+import { SocketContext } from "@ai/utils/socket-provider";
 
 export default function Lobby({ roomInfo }: { roomInfo: RoomInfo }) {
+  const router = useRouter();
   const { user } = useStore();
   const [players, setPlayers] = useState<User[]>(roomInfo.players);
 
-  const message = (msg: string) => {
-    console.log("Received messages:", msg);
-    toast(msg);
-  };
+  const socket = useContext(SocketContext);
 
   const handleRoomState = (roomInfo: RoomInfo) => {
     console.log("[ROOM INFO]", roomInfo);
     setPlayers(roomInfo.players);
   };
 
+  const handleStartGame = useCallback(() => {
+    console.log("RECEIVED START GAME");
+    router.push(`/room/${roomInfo.code}/game`);
+  }, [roomInfo.code, router]);
+
+  const initiateStartGame = () => {
+    socket.emit("initiateGame", roomInfo.code);
+  };
+
   useEffect(() => {
-    socket.auth = { userId: user?.id };
-    socket.connect();
     socket.emit("connectToRoom", roomInfo.code);
-    socket.on("message", message);
     socket.on("roomState", handleRoomState);
+    socket.on("startGame", handleStartGame);
 
     return () => {
-      socket.off("message", message);
       socket.off("roomState", handleRoomState);
-      socket.disconnect();
+      socket.off("startGame", handleStartGame);
     };
-  }, [roomInfo.code, user?.id]);
+  }, [handleStartGame, roomInfo.code, socket, user?.id]);
 
   return (
     <main className="flex min-h-screen flex-col justify-center">
@@ -49,7 +55,11 @@ export default function Lobby({ roomInfo }: { roomInfo: RoomInfo }) {
         </div>
         {/* <ConnectionStatus code={params.code} /> */}
         <UserList players={players} />
-        <StartGame code={roomInfo.code} />
+        <StartGame
+          players={players}
+          code={roomInfo.code}
+          onStartGame={initiateStartGame}
+        />
       </section>
     </main>
   );

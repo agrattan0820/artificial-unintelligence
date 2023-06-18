@@ -53,6 +53,7 @@ export interface Typegen0 {
     | "promptDone"
     | "promptSubmitted"
     | "promptTimesUp"
+    | "startGame"
     | "winner"
     | "winnerLeadUp";
   tags: never;

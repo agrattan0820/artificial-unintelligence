@@ -1,6 +1,5 @@
 import express, { Express, Request, Response } from "express";
 import { getRoom, joinRoom } from "../services/room.service";
-import { ClientToServerEvents, ServerToClientEvents } from "../server";
 import { Socket } from "socket.io";
 import { Room, User } from "../../db/schema";
 import { createUser } from "../services/user.service";
