@@ -1,6 +1,6 @@
 import express, { Express, NextFunction, Request, Response } from "express";
 
-import { ClientToServerEvents, ServerToClientEvents } from "../../server";
+import { ClientToServerEvents, ServerToClientEvents } from "../server";
 import { createRoom, joinRoom } from "../services/room.service";
 import { createUser } from "../services/user.service";
 import { Socket } from "socket.io";

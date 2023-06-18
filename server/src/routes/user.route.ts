@@ -1,6 +1,6 @@
 import { Socket } from "socket.io";
 import express, { Express, Request, Response } from "express";
-import { ClientToServerEvents, ServerToClientEvents } from "../../server";
+import { ClientToServerEvents, ServerToClientEvents } from "../server";
 import {
   createHostController,
   createUserController,

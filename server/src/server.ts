@@ -10,10 +10,10 @@ import { createServer } from "http";
 import cors from "cors";
 import morgan from "morgan";
 
-import { Room, RoomInfo, User } from "./db/schema";
-import { userRoutes } from "./src/routes/user.route";
-import { roomRoutes } from "./src/routes/room.route";
-import { getRoom, joinRoom, leaveRoom } from "./src/services/room.service";
+import { Room, RoomInfo, User } from "../db/schema";
+import { userRoutes } from "./routes/user.route";
+import { roomRoutes } from "./routes/room.route";
+import { getRoom, joinRoom, leaveRoom } from "./services/room.service";
 
 export interface ServerToClientEvents {
   hello: (str: string) => void;

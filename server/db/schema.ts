@@ -22,8 +22,12 @@ export const rooms = pgTable("rooms", {
 export const userRooms = pgTable(
   "user_rooms",
   {
-    userId: integer("user_id").references(() => users.id),
-    roomCode: text("room_code").references(() => rooms.code),
+    userId: integer("user_id")
+      .references(() => users.id)
+      .notNull(),
+    roomCode: text("room_code")
+      .references(() => rooms.code)
+      .notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
   (table) => ({
@@ -39,20 +43,27 @@ export const questions = pgTable("questions", {
 
 export const games = pgTable("games", {
   id: serial("id").primaryKey(),
-  roomCode: text("room_code").references(() => rooms.code),
-  firstQuestionId: integer("first_question_id").references(() => questions.id),
-  secondQuestionId: integer("second_question_id").references(
-    () => questions.id
-  ),
-  thirdQuestionId: integer("third_question_id").references(() => questions.id),
+  roomCode: text("room_code")
+    .references(() => rooms.code)
+    .notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   completedAt: timestamp("completed_at"),
 });
 
 export const generations = pgTable("generations", {
   id: serial("id").primaryKey(),
-  gameId: integer("game_id").notNull(),
+  gameId: integer("game_id")
+    .references(() => games.id)
+    .notNull(),
+  userId: integer("user_id")
+    .references(() => users.id)
+    .notNull(),
+  questionId: integer("question_id")
+    .references(() => questions.id)
+    .notNull(),
+  round: integer("round").notNull(),
   text: text("text").notNull(),
+  imageUrl: text("image_url").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
