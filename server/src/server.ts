@@ -10,24 +10,25 @@ import { createServer } from "http";
 import cors from "cors";
 import morgan from "morgan";
 import { interpret, InterpreterFrom } from "xstate";
+import { waitFor } from "xstate/lib/waitFor";
 
 import { Room, RoomInfo, User } from "../db/schema";
 import { userRoutes } from "./routes/user.route";
 import { roomRoutes } from "./routes/room.route";
 import { getRoom, joinRoom, leaveRoom } from "./services/room.service";
-import { createGame } from "./services/game.service";
+import { createGame, getGameInfo, updateGame } from "./services/game.service";
 import { serverMachine } from "./server-machine";
 import { ClientToServerEvents, ServerToClientEvents } from "./types";
+import { getGameRoundGenerations } from "./services/generation.service";
+import { getQuestionVotes } from "./services/question.service";
+import { gameRoutes } from "./routes/game.route";
 
 export function buildServer() {
   const app: Express = express();
   const server = createServer(app);
 
-  const gameStateMachineMap = new Map<
-    string,
-    InterpreterFrom<typeof serverMachine>
-  >();
-  const inProgressGameSet = new Set<string>();
+  const inProgressRoomSet = new Set<string>();
+  const gameStateMap = new Map<number, { state: string; round: number }>();
 
   app.use(express.json());
   app.use(cors());
@@ -40,18 +41,25 @@ export function buildServer() {
   });
 
   io.on("connection", (socket) => {
-    socket.emit("hello", `hello world ${socket.handshake.auth.userId}`);
-
     console.log("[CONNECTION]", socket.id);
 
     socket.on("connectToRoom", async (code) => {
       const userId = socket.handshake.auth.userId;
       let roomInfo = await getRoom({ code });
 
-      if (!roomInfo.players.find((player) => player.id === userId)) {
+      if (
+        roomInfo &&
+        !roomInfo.players.find((player) => player.id === userId)
+      ) {
         const userJoinRoom = await joinRoom({ userId: userId, code });
         roomInfo = await getRoom({ code });
       }
+
+      if (!roomInfo) {
+        socket.emit("message", `Unable to connect to room`);
+        return;
+      }
+
       socket.join(code);
       socket.to(code).emit("message", `${userId} joined`);
       socket.to(code).emit("roomState", roomInfo);
@@ -60,38 +68,115 @@ export function buildServer() {
     socket.on("leaveRoom", async ({ userId, code }) => {
       const leaveRoomEntry = await leaveRoom({ userId, code });
       const roomInfo = await getRoom({ code });
+
+      if (!roomInfo) {
+        socket.emit("message", `Unable to leave room`);
+        return;
+      }
+
       socket.leave(code);
       socket.to(code).emit("message", `${socket.handshake.auth.userId} left`);
       socket.to(code).emit("roomState", roomInfo);
     });
 
     socket.on("initiateGame", async (code) => {
+      inProgressRoomSet.add(code);
+
       const newGame = await createGame({ code });
 
-      const gameActor = interpret(
-        serverMachine.withContext({ socket: socket, round: 1 })
-      );
+      gameStateMap.set(newGame.id, {
+        state: newGame.state,
+        round: newGame.round,
+      });
 
-      inProgressGameSet.add(code);
+      // const gameService = interpret(
+      //   serverMachine.withContext({ socket: socket, round: 1 })
+      //   );
 
-      // socket.to(code).emit("gameEvent", {
-      //   type: "NEXT",
-      // });
+      //   let gameDone = false;
+
+      // gameService.onTransition((state) => {
+      //   console.log("[STATE VALUE]", state.value);
+      // })
+      // gameService.onDone((state) => {
+      //   gameDone = true;
+      // })
 
       // TODO: `socket.in` which is supposed to send to members including the sender is not working as expected, using two emits as a workaround
       socket.emit("startGame");
       socket.to(code).emit("startGame");
-      // socket.to(code).emit("message", "SENT EVENT");
 
-      // gameStateMachineMap.set(code, gameActor);
+      // while (!gameDone) {
+      //   await waitFor(gameService, (state) => state.matches(state.));
+      //   socket.to(code).emit("serverEvent", {
+      //     type: "NEXT",
+      //   });
+      // }
     });
 
-    // If the current state requires a timer, initiate it on the server and wait for it to complete
-    // If all prompts/votes come in to the server before time's up, go to next state, if not wait until time's up to go to next state
+    socket.on("clientEvent", async ({ state, gameId, round }) => {
+      const gameState = gameStateMap.get(gameId);
+
+      if (gameState && gameState?.state !== state) {
+        gameStateMap.set(gameId, { state, round });
+        const updatedGame = await updateGame({ state, gameId, round });
+      }
+    });
+
+    socket.on("generationSubmitted", async ({ gameId, round }) => {
+      // Receive gameId, and current round number
+      // Check if game has all possible generations submitted for the current round
+      // 2 x # of players is number of total needed generations
+      const gameInfo = await getGameInfo({ gameId });
+
+      if (!gameInfo) {
+        socket.emit("message", `Unable to find game with gameId`);
+        return;
+      }
+
+      const gameRoundGenerations = getGameRoundGenerations({ gameId, round });
+
+      const totalNeeded = gameInfo.room.players.length * 2;
+      const currentAmount = (await gameRoundGenerations).length;
+
+      if (currentAmount >= totalNeeded) {
+        socket.emit("serverEvent", {
+          type: "NEXT",
+        });
+        socket.to(gameInfo.room.code).emit("serverEvent", {
+          type: "NEXT",
+        });
+      }
+    });
+
+    socket.on("voteSubmitted", async ({ gameId, questionId }) => {
+      // Receive gameId, questionId
+      // Check if all votes are supplied for the given question
+      // # of players - 2 is number of total votes needed
+      const gameInfo = await getGameInfo({ gameId });
+
+      if (!gameInfo) {
+        socket.emit("message", `Unable to find game with gameId`);
+        return;
+      }
+
+      const questionVotes = await getQuestionVotes({ gameId, questionId });
+
+      const totalNeeded = gameInfo.room.players.length - 2;
+
+      if (questionVotes.length >= totalNeeded) {
+        socket.emit("serverEvent", {
+          type: "NEXT",
+        });
+        socket.to(gameInfo.room.code).emit("serverEvent", {
+          type: "NEXT",
+        });
+      }
+    });
 
     socket.on("disconnecting", async () => {
       const intersect = new Set(
-        [...socket.rooms].filter((room) => inProgressGameSet.has(room))
+        [...socket.rooms].filter((room) => inProgressRoomSet.has(room))
       );
 
       if (intersect.size === 0) {
@@ -102,6 +187,12 @@ export function buildServer() {
               code: room,
             });
             const roomInfo = await getRoom({ code: room });
+
+            if (!roomInfo) {
+              socket.emit("message", `Unable to fully disconnect from room`);
+              return;
+            }
+
             socket
               .to(room)
               .emit("message", `${socket.handshake.auth.userId} left`);
@@ -121,6 +212,7 @@ export function buildServer() {
 
   userRoutes(app);
   roomRoutes(app);
+  gameRoutes(app);
 
   const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
     if (res.headersSent) {

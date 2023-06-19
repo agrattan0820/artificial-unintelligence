@@ -1,12 +1,11 @@
-import express, { Express, Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import { getRoom, joinRoom } from "../services/room.service";
-import { Socket } from "socket.io";
-import { Room, User } from "../../db/schema";
 import { createUser } from "../services/user.service";
 
 export const getRoomController = async (
   req: Request<{ code: string }>,
-  res: Response
+  res: Response,
+  next: NextFunction
 ) => {
   try {
     const code = req.params.code;
@@ -14,18 +13,21 @@ export const getRoomController = async (
     const roomInfo = await getRoom({ code });
 
     if (!roomInfo) {
-      res.status(404).send(`Room with room code of ${code} was not found`);
+      res
+        .status(404)
+        .send({ error: `Room with room code of ${code} was not found` });
     }
 
     res.status(200).send(roomInfo);
   } catch (error) {
-    res.status(500).send(error);
+    next(error);
   }
 };
 
 export const joinRoomController = async (
   req: Request<{}, {}, { nickname: string; code: string }>,
-  res: Response
+  res: Response,
+  next: NextFunction
 ) => {
   try {
     const { nickname, code } = req.body;
@@ -42,6 +44,6 @@ export const joinRoomController = async (
 
     res.status(200).send({ user: createdUser });
   } catch (error) {
-    res.status(500).send(error);
+    next(error);
   }
 };

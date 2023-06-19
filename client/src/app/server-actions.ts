@@ -15,12 +15,11 @@ export type RoomInfo = {
   players: User[];
 };
 export type Game = {
-  createdAt: string;
   id: number;
   roomCode: string | null;
-  firstQuestionId: number | null;
-  secondQuestionId: number | null;
-  thirdQuestionId: number | null;
+  state: string;
+  round: number;
+  createdAt: string;
   completedAt: string | null;
 };
 export type Generation = {
@@ -33,6 +32,11 @@ export type Vote = {
   createdAt: string;
   id: number;
   userId: number;
+};
+
+export type GameInfo = {
+  game: Game;
+  room: RoomInfo;
 };
 
 export type CreateHostResponse = {
@@ -83,6 +87,16 @@ export async function getRoomInfo(code: string) {
   const response = await fetch(`${URL}/room/${code}`, { cache: "no-store" });
 
   const data: GetRoomInfoResponse = await response.json();
+
+  return data;
+}
+
+export type GetGameInfoResponse = GameInfo;
+
+export async function getGameInfo(code: string) {
+  const response = await fetch(`${URL}/game/${code}`, { cache: "no-store" });
+
+  const data: GetGameInfoResponse = await response.json();
 
   return data;
 }

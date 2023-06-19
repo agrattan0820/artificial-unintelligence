@@ -46,6 +46,8 @@ export const games = pgTable("games", {
   roomCode: text("room_code")
     .references(() => rooms.code)
     .notNull(),
+  state: text("state").notNull(),
+  round: integer("round").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   completedAt: timestamp("completed_at"),
 });
@@ -71,6 +73,9 @@ export const votes = pgTable("votes", {
   id: serial("id").primaryKey(),
   userId: integer("user_id")
     .references(() => users.id)
+    .notNull(),
+  generationId: integer("generation_id")
+    .references(() => generations.id)
     .notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });

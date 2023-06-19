@@ -38,9 +38,13 @@ export const createRoom = async () => {
   return createRoom[0];
 };
 
-export const joinRoom = async (data: { userId: number; code: string }) => {
-  const { userId, code } = data;
-
+export const joinRoom = async ({
+  userId,
+  code,
+}: {
+  userId: number;
+  code: string;
+}) => {
   const newUserRoomRelationship: NewUserRoom = {
     userId,
     roomCode: code,
@@ -54,9 +58,13 @@ export const joinRoom = async (data: { userId: number; code: string }) => {
   return addUserToRoom[0];
 };
 
-export const leaveRoom = async (data: { userId: number; code: string }) => {
-  const { userId, code } = data;
-
+export const leaveRoom = async ({
+  userId,
+  code,
+}: {
+  userId: number;
+  code: string;
+}) => {
   const removeUserFromRoom = await db
     .delete(userRooms)
     .where(and(eq(userRooms.userId, userId), eq(userRooms.roomCode, code)))
@@ -65,8 +73,12 @@ export const leaveRoom = async (data: { userId: number; code: string }) => {
   return removeUserFromRoom[0];
 };
 
-export const getRoom = async (data: { code: string }) => {
-  const room = await db.select().from(rooms).where(eq(rooms.code, data.code));
+export const getRoom = async ({ code }: { code: string }) => {
+  const room = await db.select().from(rooms).where(eq(rooms.code, code));
+
+  if (room.length === 0) {
+    return null;
+  }
 
   const players = (await db
     .select({
@@ -76,7 +88,7 @@ export const getRoom = async (data: { code: string }) => {
     })
     .from(userRooms)
     .fullJoin(users, eq(userRooms.userId, users.id))
-    .where(eq(userRooms.roomCode, data.code))) as User[];
+    .where(eq(userRooms.roomCode, code))) as User[];
 
   return {
     ...room[0],

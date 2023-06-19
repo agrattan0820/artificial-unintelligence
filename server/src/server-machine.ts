@@ -125,7 +125,9 @@ export const serverMachine = createMachine(
         },
       },
 
-      leaderboard: {},
+      leaderboard: {
+        type: "final",
+      },
     },
   },
   {

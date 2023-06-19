@@ -1,9 +1,9 @@
 import { db } from "../../db/db";
 import { NewUser, users } from "../../db/schema";
 
-export const createUser = async (data: { nickname: string }) => {
+export const createUser = async ({ nickname }: { nickname: string }) => {
   const newUser: NewUser = {
-    nickname: data.nickname,
+    nickname,
   };
   const insertedUsers = await db.insert(users).values(newUser).returning();
   return insertedUsers[0];

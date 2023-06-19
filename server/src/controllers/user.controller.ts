@@ -1,8 +1,7 @@
-import express, { Express, NextFunction, Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 
 import { createRoom, joinRoom } from "../services/room.service";
 import { createUser } from "../services/user.service";
-import { Socket } from "socket.io";
 
 export const createHostController = async (
   req: Request<{}, {}, { nickname: string }>,
@@ -29,12 +28,17 @@ export const createHostController = async (
 
 export const createUserController = async (
   req: Request<{}, {}, { nickname: string }>,
-  res: Response
+  res: Response,
+  next: NextFunction
 ) => {
-  const body = req.body;
+  try {
+    const body = req.body;
 
-  const newUser = await createUser(body);
-  console.log("[CREATE USER]:", newUser);
+    const newUser = await createUser(body);
+    console.log("[CREATE USER]:", newUser);
 
-  res.status(200).json({ user: newUser });
+    res.status(200).json({ user: newUser });
+  } catch (error) {
+    next(error);
+  }
 };

@@ -233,6 +233,7 @@ export const gameMachine = createMachine(
       },
 
       leaderboard: {
+        type: "final",
         entry: assign(() => ({
           render: (
             <TransitionWrapper key="leaderboard">

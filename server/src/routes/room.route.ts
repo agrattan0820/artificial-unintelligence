@@ -1,5 +1,4 @@
-import { Socket } from "socket.io";
-import express, { Express, Request, Response } from "express";
+import type { Express } from "express";
 import {
   getRoomController,
   joinRoomController,
