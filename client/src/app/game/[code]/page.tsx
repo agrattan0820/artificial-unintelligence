@@ -5,7 +5,7 @@ import { useMachine } from "@xstate/react";
 import { AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
 
-import { gameMachine } from "./game-machine";
+import { gameMachine, getCurrentComponent } from "./game-machine";
 import Button from "@ai/components/button";
 import { socket } from "@ai/utils/socket";
 import { RoomInfo, User } from "@ai/app/server-actions";
@@ -60,7 +60,9 @@ export default function Game({ params }: { params: { code: string } }) {
   return (
     <main className="flex min-h-screen flex-col justify-center">
       <section className="container mx-auto px-4">
-        <AnimatePresence mode="wait">{state.context.render}</AnimatePresence>
+        <AnimatePresence mode="wait">
+          {getCurrentComponent(state)}
+        </AnimatePresence>
       </section>
       <div className="fixed bottom-8 right-8 flex gap-2">
         <Button onClick={() => send("NEXT")}>Next</Button>
