@@ -22,6 +22,7 @@ import { ClientToServerEvents, ServerToClientEvents } from "./types";
 import { getGameRoundGenerations } from "./services/generation.service";
 import { getQuestionVotes } from "./services/question.service";
 import { gameRoutes } from "./routes/game.route";
+import { questionRoutes } from "./routes/question.route";
 
 export function buildServer() {
   const app: Express = express();
@@ -89,29 +90,9 @@ export function buildServer() {
         round: newGame.round,
       });
 
-      // const gameService = interpret(
-      //   serverMachine.withContext({ socket: socket, round: 1 })
-      //   );
-
-      //   let gameDone = false;
-
-      // gameService.onTransition((state) => {
-      //   console.log("[STATE VALUE]", state.value);
-      // })
-      // gameService.onDone((state) => {
-      //   gameDone = true;
-      // })
-
       // TODO: `socket.in` which is supposed to send to members including the sender is not working as expected, using two emits as a workaround
       socket.emit("startGame");
       socket.to(code).emit("startGame");
-
-      // while (!gameDone) {
-      //   await waitFor(gameService, (state) => state.matches(state.));
-      //   socket.to(code).emit("serverEvent", {
-      //     type: "NEXT",
-      //   });
-      // }
     });
 
     socket.on("clientEvent", async ({ state, gameId, round }) => {
@@ -213,6 +194,7 @@ export function buildServer() {
   userRoutes(app);
   roomRoutes(app);
   gameRoutes(app);
+  questionRoutes(app);
 
   const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
     if (res.headersSent) {

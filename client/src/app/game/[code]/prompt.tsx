@@ -1,15 +1,15 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+
 import Button, { SecondaryButton } from "@ai/components/button";
 import { generateImage } from "@ai/utils/query";
 import Ellipsis from "@ai/components/ellipsis";
-import Image from "next/image";
-import { AnimatePresence, motion } from "framer-motion";
-import { cn } from "@ai/utils/cn";
-import { FiCheck } from "react-icons/fi";
 import ImageChoice, { ImageOption } from "./image-choice";
 import Timer from "./timer";
+import { generateQuestion } from "@ai/app/server-actions";
+import { useQuery } from "@tanstack/react-query";
 
 interface FormElementsType extends HTMLFormControlsCollection {
   prompt: HTMLInputElement;
@@ -24,6 +24,10 @@ const Prompt = () => {
   const [imageOption1, setImageOption1] = useState("");
   const [imageOption2, setImageOption2] = useState("");
   const [selectedImage, setSelectedImage] = useState<ImageOption>();
+
+  const { data } = useQuery(["question", 1], () => generateQuestion(1));
+
+  console.log("question data", data);
 
   const imagesLoaded = imageOption1 && imageOption2;
 
@@ -68,9 +72,7 @@ const Prompt = () => {
               exit={{ y: 10, opacity: 0 }}
               className="text-lg md:text-2xl"
             >
-              Make a funny{" "}
-              <span className="text-indigo-700 dark:text-indigo-300">Dog</span>{" "}
-              picture for me human
+              {data && data?.text}
             </motion.h2>
           )}
           {imagesLoaded && (

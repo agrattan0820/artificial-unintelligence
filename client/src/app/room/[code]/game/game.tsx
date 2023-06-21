@@ -1,22 +1,19 @@
 "use client";
 
-import { gameMachine } from "@ai/app/game/[code]/game-machine";
+import {
+  gameMachine,
+  getCurrentComponent,
+} from "@ai/app/game/[code]/game-machine";
 import { GameInfo, GetGameInfoResponse } from "@ai/app/server-actions";
 import Button from "@ai/components/button";
 import { SocketContext } from "@ai/utils/socket-provider";
 import { useStore } from "@ai/utils/store";
 import { useMachine } from "@xstate/react";
 import { AnimatePresence } from "framer-motion";
-import { useCallback, useContext, useEffect } from "react";
-import { EventFrom, State, StateFrom } from "xstate";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { EventFrom, State } from "xstate";
 
-export default function Game({
-  gameInfo,
-}: // gameState,
-{
-  gameInfo: GetGameInfoResponse;
-  // gameState: StateFrom<typeof gameMachine> | null;
-}) {
+export default function Game({ gameInfo }: { gameInfo: GetGameInfoResponse }) {
   const { user } = useStore();
   const [state, send] = useMachine(gameMachine, {
     state:
@@ -30,12 +27,13 @@ export default function Game({
     },
   });
   const socket = useContext(SocketContext);
+  const currentComponent = useMemo(() => {
+    return getCurrentComponent(state);
+  }, [state]);
 
-  console.log("[GAME INFO]", gameInfo);
   const handleStateChange = useCallback(() => {
-    const { context, ...stateWithoutContext } = state.toJSON();
     socket.emit("clientEvent", {
-      state: JSON.stringify(stateWithoutContext),
+      state: JSON.stringify(state),
       gameId: gameInfo.game.id,
       round: state.context.round,
     });
@@ -64,7 +62,7 @@ export default function Game({
   return (
     <main className="flex min-h-screen flex-col justify-center">
       <section className="container mx-auto px-4">
-        <AnimatePresence mode="wait">{state.context.render}</AnimatePresence>
+        <AnimatePresence mode="wait">{currentComponent}</AnimatePresence>
       </section>
       <div className="fixed bottom-8 right-8 flex gap-2">
         <Button onClick={() => send("NEXT")}>Next</Button>

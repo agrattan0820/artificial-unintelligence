@@ -1,6 +1,15 @@
 import { and, eq, inArray } from "drizzle-orm";
 import { db } from "../../db/db";
-import { generations, votes } from "../../db/schema";
+import { generations, questions, votes } from "../../db/schema";
+
+export const getQuestionById = async ({ id }: { id: number }) => {
+  const question = await db
+    .select()
+    .from(questions)
+    .where(eq(questions.id, id));
+
+  return question[0];
+};
 
 export const getQuestionVotes = async ({
   gameId,

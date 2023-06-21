@@ -1,5 +1,6 @@
 import { InferModel } from "drizzle-orm";
 import {
+  boolean,
   integer,
   pgTable,
   primaryKey,
@@ -66,6 +67,7 @@ export const generations = pgTable("generations", {
   round: integer("round").notNull(),
   text: text("text").notNull(),
   imageUrl: text("image_url").notNull(),
+  votedOn: boolean("voted_on").default(false).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

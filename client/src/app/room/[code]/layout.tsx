@@ -1,3 +1,4 @@
+import QueryProvider from "@ai/utils/query-provider";
 import SocketProvider from "@ai/utils/socket-provider";
 
 export default function RoomLayout({
@@ -5,5 +6,9 @@ export default function RoomLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <SocketProvider>{children}</SocketProvider>;
+  return (
+    <QueryProvider>
+      <SocketProvider>{children}</SocketProvider>
+    </QueryProvider>
+  );
 }
