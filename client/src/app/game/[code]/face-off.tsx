@@ -19,7 +19,7 @@ const FaceOff = () => {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <Timer totalSeconds={30} />
+      {/* <Timer totalSeconds={30} /> */}
       <div className="relative mb-14">
         <motion.h2
           initial={{ y: 10, opacity: 0 }}

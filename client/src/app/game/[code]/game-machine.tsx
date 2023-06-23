@@ -49,14 +49,14 @@ export const gameMachine = createMachine(
     },
     states: {
       connectingToMainframe: {
-        after: {
-          5000: "connectionEstablished",
+        on: {
+          NEXT: "connectionEstablished",
         },
       },
 
       connectionEstablished: {
-        after: {
-          5000: "prompt",
+        on: {
+          NEXT: "prompt",
         },
       },
 
@@ -73,8 +73,8 @@ export const gameMachine = createMachine(
       },
 
       promptDone: {
-        after: {
-          5000: "faceOff",
+        on: {
+          NEXT: "faceOff",
         },
       },
 
@@ -101,14 +101,14 @@ export const gameMachine = createMachine(
 
       nextRound: {
         entry: "incrementRound",
-        after: {
-          4000: "prompt",
+        on: {
+          NEXT: "prompt",
         },
       },
 
       winnerLeadUp: {
-        after: {
-          5000: "winner",
+        on: {
+          NEXT: "winner",
         },
       },
 

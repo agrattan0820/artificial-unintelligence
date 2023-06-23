@@ -3,21 +3,6 @@
 export interface Typegen0 {
   "@@xstate/typegen": true;
   internalEvents: {
-    "xstate.after(4000)#Machine.nextRound": {
-      type: "xstate.after(4000)#Machine.nextRound";
-    };
-    "xstate.after(5000)#Machine.connectingToMainframe": {
-      type: "xstate.after(5000)#Machine.connectingToMainframe";
-    };
-    "xstate.after(5000)#Machine.connectionEstablished": {
-      type: "xstate.after(5000)#Machine.connectionEstablished";
-    };
-    "xstate.after(5000)#Machine.promptDone": {
-      type: "xstate.after(5000)#Machine.promptDone";
-    };
-    "xstate.after(5000)#Machine.winnerLeadUp": {
-      type: "xstate.after(5000)#Machine.winnerLeadUp";
-    };
     "xstate.init": { type: "xstate.init" };
   };
   invokeSrcNameMap: {};

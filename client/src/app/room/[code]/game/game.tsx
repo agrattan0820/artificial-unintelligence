@@ -15,29 +15,19 @@ import { EventFrom, State } from "xstate";
 
 export default function Game({ gameInfo }: { gameInfo: GetGameInfoResponse }) {
   const { user } = useStore();
-  const [state, send] = useMachine(gameMachine, {
-    state:
-      gameInfo.game.state !== "START_GAME"
-        ? gameMachine.resolveState(
-            State.create(JSON.parse(gameInfo.game.state))
-          )
-        : gameMachine.initialState,
-    context: {
-      round: gameInfo.game.round,
-    },
-  });
+  const [state, send] = useMachine(gameMachine);
   const socket = useContext(SocketContext);
   const currentComponent = useMemo(() => {
     return getCurrentComponent(state);
   }, [state]);
 
-  const handleStateChange = useCallback(() => {
-    socket.emit("clientEvent", {
-      state: JSON.stringify(state),
-      gameId: gameInfo.game.id,
-      round: state.context.round,
-    });
-  }, [gameInfo.game.id, socket, state]);
+  // const handleStateChange = useCallback(() => {
+  //   socket.emit("clientEvent", {
+  //     state: JSON.stringify(state),
+  //     gameId: gameInfo.game.id,
+  //     round: state.context.round,
+  //   });
+  // }, [gameInfo.game.id, socket, state]);
 
   const handleServerEvent = useCallback(
     (event: EventFrom<typeof gameMachine>) => {
@@ -47,9 +37,9 @@ export default function Game({ gameInfo }: { gameInfo: GetGameInfoResponse }) {
     [send]
   );
 
-  useEffect(() => {
-    handleStateChange();
-  }, [handleStateChange, state]);
+  // useEffect(() => {
+  //   handleStateChange();
+  // }, [handleStateChange, state]);
 
   useEffect(() => {
     socket.on("serverEvent", handleServerEvent);
@@ -65,9 +55,9 @@ export default function Game({ gameInfo }: { gameInfo: GetGameInfoResponse }) {
         <AnimatePresence mode="wait">{currentComponent}</AnimatePresence>
       </section>
       <div className="fixed bottom-8 right-8 flex gap-2">
-        <Button onClick={() => send("NEXT")}>Next</Button>
+        {/* <Button onClick={() => send("NEXT")}>Next</Button>
         <Button onClick={() => send("SUBMIT")}>Submit</Button>
-        <Button onClick={() => send("MORE")}>More</Button>
+        <Button onClick={() => send("MORE")}>More</Button> */}
       </div>
     </main>
   );

@@ -85,6 +85,20 @@ export function buildServer() {
 
       const newGame = await createGame({ code });
 
+      const gameService = interpret(
+        serverMachine.withContext({ socket: socket, round: 1 })
+      ).onTransition((state, action) => {
+        console.log("ON TRANSITION", state.value);
+        socket.emit("serverEvent", {
+          type: action.type,
+        });
+        socket.to(code).emit("serverEvent", {
+          type: action.type,
+        });
+      });
+
+      gameService.start();
+
       gameStateMap.set(newGame.id, {
         state: newGame.state,
         round: newGame.round,

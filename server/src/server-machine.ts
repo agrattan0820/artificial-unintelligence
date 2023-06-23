@@ -23,33 +23,18 @@ export const serverMachine = createMachine(
       round: 1,
     },
     tsTypes: {} as import("./server-machine.typegen").Typegen0,
-    initial: "startGame",
+    initial: "connectingToMainframe",
     predictableActionArguments: true,
     states: {
-      startGame: {
-        after: {
-          5000: {
-            target: "connectingToMainframe",
-            actions: "sendNextToClient",
-          },
-        },
-      },
-
       connectingToMainframe: {
         after: {
-          5000: {
-            target: "connectionEstablished",
-            actions: "sendNextToClient",
-          },
+          5000: "connectionEstablished",
         },
       },
 
       connectionEstablished: {
         after: {
-          5000: {
-            target: "prompt",
-            actions: "sendNextToClient",
-          },
+          5000: "prompt",
         },
       },
 
@@ -131,11 +116,6 @@ export const serverMachine = createMachine(
     },
   },
   {
-    actions: {
-      sendNextToClient: (context, event) => {
-        console.log("SENDING NEXT TO CLIENT");
-      },
-    },
     guards: {
       completedRounds: (context, event) => {
         return context.round === 3;
