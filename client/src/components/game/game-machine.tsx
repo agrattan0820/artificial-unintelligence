@@ -5,7 +5,7 @@ import ConnectionEstablished from "./connection-established";
 import Prompt from "./prompt";
 import { motion } from "framer-motion";
 import AnnouncementText from "./announcement-text";
-import PromptSubmitted from "./prompt-submitted";
+import PromptSubmitted from "../../../components/game/prompt-submitted";
 import FaceOff from "./face-off";
 import FaceOffResult from "./face-off-result";
 import WinnerLeadUp from "./winner-lead-up";

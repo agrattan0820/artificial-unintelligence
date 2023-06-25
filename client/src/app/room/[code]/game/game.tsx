@@ -1,17 +1,18 @@
 "use client";
 
+import { useCallback, useContext, useEffect, useMemo } from "react";
+import { EventFrom, State } from "xstate";
+import { useMachine } from "@xstate/react";
+import { AnimatePresence } from "framer-motion";
+
+import { GameInfo, GetGameInfoResponse } from "@ai/app/server-actions";
+import Button from "@ai/components/button";
 import {
   gameMachine,
   getCurrentComponent,
-} from "@ai/app/game/[code]/game-machine";
-import { GameInfo, GetGameInfoResponse } from "@ai/app/server-actions";
-import Button from "@ai/components/button";
+} from "@ai/components/game/game-machine";
 import { SocketContext } from "@ai/utils/socket-provider";
 import { useStore } from "@ai/utils/store";
-import { useMachine } from "@xstate/react";
-import { AnimatePresence } from "framer-motion";
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { EventFrom, State } from "xstate";
 
 export default function Game({ gameInfo }: { gameInfo: GetGameInfoResponse }) {
   const { user } = useStore();

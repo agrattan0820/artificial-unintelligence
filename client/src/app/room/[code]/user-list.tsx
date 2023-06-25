@@ -1,10 +1,9 @@
 "use client";
 
+import { FiUser } from "react-icons/fi";
+
 import { User } from "@ai/app/server-actions";
 import { cn } from "@ai/utils/cn";
-import useIsMounted from "@ai/utils/hooks/use-is-mounted";
-import { useStore } from "@ai/utils/store";
-import { FiLoader, FiUser } from "react-icons/fi";
 
 const UserList = ({ players }: { players: User[] }) => {
   return (

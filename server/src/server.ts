@@ -51,7 +51,7 @@ export function buildServer() {
         roomInfo &&
         !roomInfo.players.find((player) => player.id === userId)
       ) {
-        const userJoinRoom = await joinRoom({ userId: userId, code });
+        await joinRoom({ userId: userId, code });
         roomInfo = await getRoom({ code });
       }
 
@@ -66,11 +66,11 @@ export function buildServer() {
     });
 
     socket.on("leaveRoom", async ({ userId, code }) => {
-      const leaveRoomEntry = await leaveRoom({ userId, code });
+      await leaveRoom({ userId, code });
       const roomInfo = await getRoom({ code });
 
       if (!roomInfo) {
-        socket.emit("message", `Unable to leave room`);
+        socket.emit("message", `Unable to get room info when leaving`);
         return;
       }
 
@@ -99,14 +99,11 @@ export function buildServer() {
 
       if (gameState && gameState?.state !== state) {
         gameStateMap.set(gameId, { state, round });
-        const updatedGame = await updateGame({ state, gameId, round });
+        await updateGame({ state, gameId, round });
       }
     });
 
     socket.on("generationSubmitted", async (data) => {
-      // Create generation
-      const newGeneration = await createGeneration(data);
-
       // Receive gameId, and current round number
       // Check if game has all possible generations submitted for the current round
       // 2 x # of players is number of total needed generations
@@ -116,6 +113,8 @@ export function buildServer() {
         socket.emit("message", `Unable to find game with gameId`);
         return;
       }
+
+      await createGeneration(data);
 
       const gameRoundGenerations = await getGameRoundGenerations({
         gameId: data.gameId,
@@ -136,12 +135,6 @@ export function buildServer() {
     });
 
     socket.on("voteSubmitted", async (data) => {
-      // Create vote
-      const newVote = await createVote({
-        userId: data.userId,
-        generationId: data.generationId,
-      });
-
       // Receive gameId, questionId
       // Check if all votes are supplied for the given question
       // # of players - 2 is number of total votes needed
@@ -151,6 +144,11 @@ export function buildServer() {
         socket.emit("message", `Unable to find game with gameId`);
         return;
       }
+
+      await createVote({
+        userId: data.userId,
+        generationId: data.generationId,
+      });
 
       const questionVotes = await getQuestionVotes({
         gameId: data.gameId,
@@ -170,14 +168,14 @@ export function buildServer() {
     });
 
     socket.on("disconnecting", async () => {
-      const intersect = new Set(
-        [...socket.rooms].filter((room) => inProgressRoomSet.has(room))
-      );
+      const userNotInInProgressRoom =
+        new Set([...socket.rooms].filter((room) => inProgressRoomSet.has(room)))
+          .size === 0;
 
-      if (intersect.size === 0) {
+      if (userNotInInProgressRoom) {
         await Promise.all(
           [...socket.rooms].map(async (room) => {
-            const leaveRoomEntry = await leaveRoom({
+            await leaveRoom({
               userId: socket.handshake.auth.userId,
               code: room,
             });

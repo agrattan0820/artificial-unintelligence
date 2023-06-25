@@ -15,7 +15,7 @@ export const createHostController = async (
 
     const newRoom = await createRoom();
 
-    const hostInRoom = await joinRoom({
+    await joinRoom({
       userId: newUser.id,
       code: newRoom.code,
     });
