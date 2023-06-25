@@ -1,7 +1,6 @@
 import express, {
   ErrorRequestHandler,
   Express,
-  NextFunction,
   Request,
   Response,
 } from "express";
@@ -9,20 +8,20 @@ import { Server } from "socket.io";
 import { createServer } from "http";
 import cors from "cors";
 import morgan from "morgan";
-import { interpret, InterpreterFrom } from "xstate";
-import { waitFor } from "xstate/lib/waitFor";
 
-import { Room, RoomInfo, User } from "../db/schema";
 import { userRoutes } from "./routes/user.route";
 import { roomRoutes } from "./routes/room.route";
 import { getRoom, joinRoom, leaveRoom } from "./services/room.service";
 import { createGame, getGameInfo, updateGame } from "./services/game.service";
-import { serverMachine } from "./server-machine";
 import { ClientToServerEvents, ServerToClientEvents } from "./types";
-import { getGameRoundGenerations } from "./services/generation.service";
+import {
+  createGeneration,
+  getGameRoundGenerations,
+} from "./services/generation.service";
 import { getQuestionVotes } from "./services/question.service";
 import { gameRoutes } from "./routes/game.route";
 import { questionRoutes } from "./routes/question.route";
+import { createVote } from "./services/vote.service";
 
 export function buildServer() {
   const app: Express = express();
@@ -104,21 +103,27 @@ export function buildServer() {
       }
     });
 
-    socket.on("generationSubmitted", async ({ gameId, round }) => {
+    socket.on("generationSubmitted", async (data) => {
+      // Create generation
+      const newGeneration = await createGeneration(data);
+
       // Receive gameId, and current round number
       // Check if game has all possible generations submitted for the current round
       // 2 x # of players is number of total needed generations
-      const gameInfo = await getGameInfo({ gameId });
+      const gameInfo = await getGameInfo({ gameId: data.gameId });
 
       if (!gameInfo) {
         socket.emit("message", `Unable to find game with gameId`);
         return;
       }
 
-      const gameRoundGenerations = getGameRoundGenerations({ gameId, round });
+      const gameRoundGenerations = await getGameRoundGenerations({
+        gameId: data.gameId,
+        round: data.round,
+      });
 
       const totalNeeded = gameInfo.room.players.length * 2;
-      const currentAmount = (await gameRoundGenerations).length;
+      const currentAmount = gameRoundGenerations.length;
 
       if (currentAmount >= totalNeeded) {
         socket.emit("serverEvent", {
@@ -130,18 +135,27 @@ export function buildServer() {
       }
     });
 
-    socket.on("voteSubmitted", async ({ gameId, questionId }) => {
+    socket.on("voteSubmitted", async (data) => {
+      // Create vote
+      const newVote = await createVote({
+        userId: data.userId,
+        generationId: data.generationId,
+      });
+
       // Receive gameId, questionId
       // Check if all votes are supplied for the given question
       // # of players - 2 is number of total votes needed
-      const gameInfo = await getGameInfo({ gameId });
+      const gameInfo = await getGameInfo({ gameId: data.gameId });
 
       if (!gameInfo) {
         socket.emit("message", `Unable to find game with gameId`);
         return;
       }
 
-      const questionVotes = await getQuestionVotes({ gameId, questionId });
+      const questionVotes = await getQuestionVotes({
+        gameId: data.gameId,
+        questionId: data.questionId,
+      });
 
       const totalNeeded = gameInfo.room.players.length - 2;
 

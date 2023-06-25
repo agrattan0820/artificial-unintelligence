@@ -3,7 +3,6 @@ import { db } from "../../db/db";
 import {
   NewRoom,
   NewUserRoom,
-  Room,
   User,
   rooms,
   userRooms,

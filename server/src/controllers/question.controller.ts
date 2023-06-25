@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import { getLatestGameInfoByRoomCode } from "../services/game.service";
-import { getQuestionById } from "../services/question.service";
+import { createQuestion, getQuestionById } from "../services/question.service";
 
 export const getQuestionByIdController = async (
   req: Request<{ id: number }>,
@@ -17,6 +17,22 @@ export const getQuestionByIdController = async (
         .status(404)
         .send({ error: `Question with the id of ${id} was not found` });
     }
+
+    res.status(200).send(question);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const createQuestionController = async (
+  req: Request<{}, {}, { text: string }>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const body = req.body;
+
+    const question = await createQuestion(body);
 
     res.status(200).send(question);
   } catch (error) {

@@ -11,6 +11,17 @@ export const getQuestionById = async ({ id }: { id: number }) => {
   return question[0];
 };
 
+export const createQuestion = async ({ text }: { text: string }) => {
+  const newQuestion = await db
+    .insert(questions)
+    .values({
+      text,
+    })
+    .returning();
+
+  return newQuestion[0];
+};
+
 export const getQuestionVotes = async ({
   gameId,
   questionId,

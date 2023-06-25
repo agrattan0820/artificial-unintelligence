@@ -1,6 +1,6 @@
 import { and, eq } from "drizzle-orm";
 import { db } from "../../db/db";
-import { generations } from "../../db/schema";
+import { NewGeneration, generations } from "../../db/schema";
 
 export const getGameRoundGenerations = async ({
   gameId,
@@ -15,4 +15,10 @@ export const getGameRoundGenerations = async ({
     .where(and(eq(generations.gameId, gameId), eq(generations.round, round)));
 
   return gameRoundGenerations;
+};
+
+export const createGeneration = async (data: NewGeneration) => {
+  const newGeneration = await db.insert(generations).values(data).returning();
+
+  return newGeneration[0];
 };

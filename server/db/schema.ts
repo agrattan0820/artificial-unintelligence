@@ -67,7 +67,7 @@ export const generations = pgTable("generations", {
   round: integer("round").notNull(),
   text: text("text").notNull(),
   imageUrl: text("image_url").notNull(),
-  votedOn: boolean("voted_on").default(false).notNull(),
+  votedOn: boolean("voted_on").default(false).notNull(), // change to datetime to track which generations were voted on first?
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
