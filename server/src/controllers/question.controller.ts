@@ -1,5 +1,4 @@
 import type { NextFunction, Request, Response } from "express";
-import { getLatestGameInfoByRoomCode } from "../services/game.service";
 import { createQuestion, getQuestionById } from "../services/question.service";
 
 export const getQuestionByIdController = async (
