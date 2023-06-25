@@ -50,6 +50,13 @@
       "when": 1687183498382,
       "tag": "0006_happy_reaper",
       "breakpoints": false
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1687481514787,
+      "tag": "0007_demonic_shaman",
+      "breakpoints": false
     }
   ]
 }

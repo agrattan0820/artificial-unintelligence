@@ -4,7 +4,6 @@ import { ClientToServerEvents, ServerToClientEvents } from "./types";
 
 // TYPES
 type MachineContext = {
-  socket: Socket<ClientToServerEvents, ServerToClientEvents> | null;
   round: number;
 };
 type MachineEvent = { type: "NEXT" } | { type: "SUBMIT" } | { type: "MORE" };
@@ -19,7 +18,6 @@ export const serverMachine = createMachine(
       events: {} as MachineEvent,
     },
     context: {
-      socket: null,
       round: 1,
     },
     tsTypes: {} as import("./server-machine.typegen").Typegen0,

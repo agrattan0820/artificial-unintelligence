@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 import Button, { SecondaryButton } from "@ai/components/button";
@@ -10,6 +10,7 @@ import ImageChoice, { ImageOption } from "./image-choice";
 import Timer from "./timer";
 import { generateQuestion } from "@ai/app/server-actions";
 import { useQuery } from "@tanstack/react-query";
+import { SocketContext } from "@ai/utils/socket-provider";
 
 interface FormElementsType extends HTMLFormControlsCollection {
   prompt: HTMLInputElement;
@@ -28,6 +29,8 @@ const Prompt = () => {
   const { data } = useQuery(["question", 1], () => generateQuestion(1));
 
   console.log("question data", data);
+
+  const socket = useContext(SocketContext);
 
   const imagesLoaded = imageOption1 && imageOption2;
 
@@ -138,6 +141,13 @@ const Prompt = () => {
             </SecondaryButton>
           </div>
         )}
+        <Button
+          onClick={() =>
+            socket.emit("generationSubmitted", { gameId: 29, round: 1 })
+          }
+        >
+          Test Submit
+        </Button>
       </AnimatePresence>
     </motion.div>
   );

@@ -30,6 +30,10 @@ export function buildServer() {
 
   const inProgressRoomSet = new Set<string>();
   const gameStateMap = new Map<number, { state: string; round: number }>();
+  const gameStateMachineMap = new Map<
+    number,
+    InterpreterFrom<typeof serverMachine>
+  >();
 
   app.use(express.json());
   app.use(cors());
@@ -85,19 +89,17 @@ export function buildServer() {
 
       const newGame = await createGame({ code });
 
-      const gameService = interpret(
-        serverMachine.withContext({ socket: socket, round: 1 })
-      ).onTransition((state, action) => {
-        console.log("ON TRANSITION", state.value);
-        socket.emit("serverEvent", {
-          type: action.type,
-        });
-        socket.to(code).emit("serverEvent", {
-          type: action.type,
-        });
-      });
-
-      gameService.start();
+      const gameService = interpret(serverMachine).onTransition(
+        (state, action) => {
+          console.log("ON TRANSITION", state.value);
+          socket.emit("serverEvent", {
+            type: "NEXT",
+          });
+          socket.to(code).emit("serverEvent", {
+            type: "NEXT",
+          });
+        }
+      );
 
       gameStateMap.set(newGame.id, {
         state: newGame.state,
@@ -107,6 +109,10 @@ export function buildServer() {
       // TODO: `socket.in` which is supposed to send to members including the sender is not working as expected, using two emits as a workaround
       socket.emit("startGame");
       socket.to(code).emit("startGame");
+
+      gameStateMachineMap.set(newGame.id, gameService);
+
+      gameService.start();
     });
 
     socket.on("clientEvent", async ({ state, gameId, round }) => {
@@ -129,19 +135,27 @@ export function buildServer() {
         return;
       }
 
-      const gameRoundGenerations = getGameRoundGenerations({ gameId, round });
+      const gameRoundGenerations = await getGameRoundGenerations({
+        gameId,
+        round,
+      });
 
       const totalNeeded = gameInfo.room.players.length * 2;
-      const currentAmount = (await gameRoundGenerations).length;
+      const currentAmount = gameRoundGenerations.length;
 
-      if (currentAmount >= totalNeeded) {
-        socket.emit("serverEvent", {
-          type: "NEXT",
-        });
-        socket.to(gameInfo.room.code).emit("serverEvent", {
-          type: "NEXT",
-        });
-      }
+      // if (currentAmount >= totalNeeded) {
+      const gameService = gameStateMachineMap.get(gameId);
+
+      console.log("GAME SERVICE", gameService);
+
+      gameService?.send({ type: "SUBMIT" });
+      socket.emit("serverEvent", {
+        type: "SUBMIT",
+      });
+      socket.to(gameInfo.room.code).emit("serverEvent", {
+        type: "SUBMIT",
+      });
+      // }
     });
 
     socket.on("voteSubmitted", async ({ gameId, questionId }) => {

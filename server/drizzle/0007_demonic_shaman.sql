@@ -1,0 +1,1 @@
+ALTER TABLE "generations" ADD COLUMN "voted_on" boolean DEFAULT false NOT NULL;
