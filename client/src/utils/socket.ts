@@ -1,7 +1,9 @@
-import { gameMachine } from "@ai/app/game/[code]/game-machine";
-import { RoomInfo } from "@ai/app/server-actions";
-import { Socket, io } from "socket.io-client";
+
 import type { EventFrom } from "xstate";
+import { Socket, io } from "socket.io-client";
+
+import { RoomInfo } from "@ai/app/server-actions";
+import { gameMachine } from "@ai/components/game/game-machine";
 
 export interface ServerToClientEvents {
   message: (str: string) => void;
