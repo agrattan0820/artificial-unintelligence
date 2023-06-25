@@ -1,17 +1,18 @@
 import { ReactNode } from "react";
+import { motion } from "framer-motion";
 import { StateFrom, StateValueFrom, assign, createMachine } from "xstate";
+
 import ConnectToMainframe from "./connect-to-mainframe";
 import ConnectionEstablished from "./connection-established";
 import Prompt from "./prompt";
-import { motion } from "framer-motion";
 import AnnouncementText from "./announcement-text";
-import PromptSubmitted from "../../../components/game/prompt-submitted";
 import FaceOff from "./face-off";
 import FaceOffResult from "./face-off-result";
 import WinnerLeadUp from "./winner-lead-up";
 import Winner from "./winner";
 import Leaderboard from "./leaderboard";
 import NextRound from "./next-round";
+import PromptSubmitted from "./prompt-submitted";
 
 // COMPONENTS
 const TransitionWrapper = ({ children }: { children: ReactNode }) => {
