@@ -1,36 +1,44 @@
-import express, { Express, Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 
-import { ClientToServerEvents, ServerToClientEvents } from "../../server";
-import { createRoom } from "../services/room.service";
+import { createRoom, joinRoom } from "../services/room.service";
 import { createUser } from "../services/user.service";
-import { Socket } from "socket.io";
 
 export const createHostController = async (
   req: Request<{}, {}, { nickname: string }>,
   res: Response,
-  socket: Socket<ClientToServerEvents, ServerToClientEvents>
+  next: NextFunction
 ) => {
-  const body = req.body;
+  try {
+    const body = req.body;
 
-  const newUser = await createUser(body);
-  console.log("[CREATE USER]:", newUser);
+    const newUser = await createUser(body);
 
-  const newRoom = await createRoom({ host: newUser });
-  console.log("[CREATE ROOM]:", newRoom);
+    const newRoom = await createRoom();
 
-  socket.join(newRoom.code);
+    await joinRoom({
+      userId: newUser.id,
+      code: newRoom.code,
+    });
 
-  res.status(200).json({ host: newUser, room: newRoom });
+    res.status(200).json({ host: newUser, room: newRoom });
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const createUserController = async (
   req: Request<{}, {}, { nickname: string }>,
-  res: Response
+  res: Response,
+  next: NextFunction
 ) => {
-  const body = req.body;
+  try {
+    const body = req.body;
 
-  const newUser = await createUser(body);
-  console.log("[CREATE USER]:", newUser);
+    const newUser = await createUser(body);
+    console.log("[CREATE USER]:", newUser);
 
-  res.status(200).json({ user: newUser });
+    res.status(200).json({ user: newUser });
+  } catch (error) {
+    next(error);
+  }
 };

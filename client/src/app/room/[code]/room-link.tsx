@@ -1,7 +1,8 @@
 "use client";
 
-import { FiCheckSquare, FiCopy } from "react-icons/fi";
 import { useEffect } from "react";
+import { FiCheckSquare, FiCopy } from "react-icons/fi";
+
 import useShare from "@ai/utils/hooks/use-share";
 
 const RoomLink = ({ code }: { code: string }) => {

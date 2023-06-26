@@ -1,18 +1,11 @@
-import { Socket } from "socket.io";
-import express, { Express, Request, Response } from "express";
-import { ClientToServerEvents, ServerToClientEvents } from "../../server";
+import type { Express } from "express";
 import {
   createHostController,
   createUserController,
 } from "../controllers/user.controller";
 
-export function userRoutes(
-  app: Express,
-  socket: Socket<ClientToServerEvents, ServerToClientEvents>
-) {
-  app.post("/user/createHost", (req: Request, res: Response) =>
-    createHostController(req, res, socket)
-  );
+export function userRoutes(app: Express) {
+  app.post("/user/createHost", createHostController);
 
   app.post("/user", createUserController);
 }

@@ -1,11 +1,12 @@
 "use client";
 
-import { motion } from "framer-motion";
-import FriendWithLegs from "./friend-with-legs";
-import { cn } from "@ai/utils/cn";
-import { FiCheck } from "react-icons/fi";
-import Button from "@ai/components/button";
 import { useState } from "react";
+import { motion } from "framer-motion";
+import { FiCheck } from "react-icons/fi";
+
+import { cn } from "@ai/utils/cn";
+import Button from "@ai/components/button";
+import FriendWithLegs from "./friend-with-legs";
 
 type PlayerBlockProps = {
   nickname: string;
