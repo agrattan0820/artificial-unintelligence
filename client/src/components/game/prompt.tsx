@@ -1,10 +1,10 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 import Button, { SecondaryButton } from "@ai/components/button";
-import { generateImage } from "@ai/utils/query";
+import { generateImage, generatePrompt } from "@ai/utils/query";
 import Ellipsis from "@ai/components/ellipsis";
 import ImageChoice, { ImageOption } from "./image-choice";
 import Timer from "./timer";
@@ -26,8 +26,9 @@ const Prompt = () => {
   const [selectedImage, setSelectedImage] = useState<ImageOption>();
 
   const { data } = useQuery(["question", 1], () => generateQuestion(1));
+  const { data: openAIQuestion } = useQuery(["question"], generatePrompt);
 
-  console.log("question data", data);
+  console.log("openAIQuestion", openAIQuestion);
 
   const imagesLoaded = imageOption1 && imageOption2;
 
@@ -72,7 +73,7 @@ const Prompt = () => {
               exit={{ y: 10, opacity: 0 }}
               className="text-lg md:text-2xl"
             >
-              {data && data?.text}
+              {openAIQuestion ? openAIQuestion[0].text?.trim() : <Ellipsis />}
             </motion.h2>
           )}
           {imagesLoaded && (
