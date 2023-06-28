@@ -20,7 +20,6 @@ import {
 } from "./services/generation.service";
 import {
   assignQuestionsToPlayers,
-  generateAIQuestions,
   getQuestionVotes,
 } from "./services/question.service";
 import { gameRoutes } from "./routes/game.route";

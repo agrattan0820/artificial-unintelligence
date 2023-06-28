@@ -9,20 +9,20 @@ import {
 } from "../../db/schema";
 import { openai } from "../openai";
 
-export const getQuestionById = async ({ id }: { id: number }) => {
+export async function getQuestionById({ id }: { id: number }) {
   const question = await db
     .select()
     .from(questions)
     .where(eq(questions.id, id));
 
   return question[0];
-};
+}
 
-export const generateAIQuestions = async ({
+export async function generateAIQuestions({
   playerCount,
 }: {
   playerCount: number;
-}) => {
+}) {
   const originalPrompt = `Generate a list of ${playerCount} funny prompts for a game that's all one string with each prompt separated by a comma. For the game, players will respond to the prompt with AI generated images. Two players will respond to the prompt while the rest of the players vote on their favorite response/image. The targeted audience is between 15 and 30. The prompts should relate to pop culture, historical events, celebrities, brands, and dark humor. The players already know the rules, so do not specify that they have to generate an image. Some example prompts include: The uninvited wedding guest, The new challenger in Super Smash Bros, The newly discovered animal in Australia, The new British Museum exhibit,The creature hidden in IKEA, A unique vacation spot, A cancelled children's toy, The new Olympic sport`;
 
   try {
@@ -37,7 +37,7 @@ export const generateAIQuestions = async ({
   }
 
   return [];
-};
+}
 
 function getRandomInt(min: number, max: number) {
   min = Math.ceil(min);
@@ -45,7 +45,7 @@ function getRandomInt(min: number, max: number) {
   return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
 }
 
-export const shuffleArray = <T>(arr: T[]) => {
+export function shuffleArray<T>(arr: T[]) {
   for (let i = 0; i < arr.length - 2; i++) {
     const randNum = getRandomInt(i, arr.length);
     const temp = arr[i];
@@ -54,9 +54,9 @@ export const shuffleArray = <T>(arr: T[]) => {
   }
 
   return arr;
-};
+}
 
-export const assignQuestionsToPlayers = async ({
+export async function assignQuestionsToPlayers({
   gameId,
   round,
   players,
@@ -64,7 +64,7 @@ export const assignQuestionsToPlayers = async ({
   gameId: number;
   round: number;
   players: User[];
-}) => {
+}) {
   const shuffledArray: User[] = shuffleArray([...players]);
 
   const generatedQuestions = await generateAIQuestions({
@@ -99,13 +99,13 @@ export const assignQuestionsToPlayers = async ({
   const createdQuestions = await createQuestions(questionData);
 
   return createdQuestions;
-};
+}
 
-export const createQuestions = async (data: NewQuestion[]) => {
+export async function createQuestions(data: NewQuestion[]) {
   const newQuestions = await db.insert(questions).values(data).returning();
 
   return newQuestions;
-};
+}
 
 export const createQuestion = async ({
   text,
@@ -128,11 +128,7 @@ export const createQuestion = async ({
   return newQuestion[0];
 };
 
-export const getQuestionVotes = async ({
-  questionId,
-}: {
-  questionId: number;
-}) => {
+export async function getQuestionVotes({ questionId }: { questionId: number }) {
   const getAssociatedGenerations = await db
     .select()
     .from(generations)
@@ -149,4 +145,4 @@ export const getQuestionVotes = async ({
     );
 
   return questionVotes;
-};
+}

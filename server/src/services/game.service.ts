@@ -2,7 +2,7 @@ import { desc, eq } from "drizzle-orm";
 import { db } from "../../db/db";
 import { NewGame, User, games, rooms, userRooms, users } from "../../db/schema";
 
-export const createGame = async ({ code }: { code: string }) => {
+export async function createGame({ code }: { code: string }) {
   const newGame: NewGame = {
     state: "START_GAME",
     roomCode: code,
@@ -11,9 +11,9 @@ export const createGame = async ({ code }: { code: string }) => {
   const createRoom = await db.insert(games).values(newGame).returning();
 
   return createRoom[0];
-};
+}
 
-export const getGameInfo = async ({ gameId }: { gameId: number }) => {
+export async function getGameInfo({ gameId }: { gameId: number }) {
   const getGame = await db
     .select({
       game: games,
@@ -44,13 +44,9 @@ export const getGameInfo = async ({ gameId }: { gameId: number }) => {
       players,
     },
   };
-};
+}
 
-export const getLatestGameInfoByRoomCode = async ({
-  code,
-}: {
-  code: string;
-}) => {
+export async function getLatestGameInfoByRoomCode({ code }: { code: string }) {
   const latestGame = await db
     .select({
       game: games,
@@ -82,9 +78,9 @@ export const getLatestGameInfoByRoomCode = async ({
       players,
     },
   };
-};
+}
 
-export const updateGame = async ({
+export async function updateGame({
   state,
   gameId,
   round,
@@ -92,7 +88,7 @@ export const updateGame = async ({
   state: string;
   gameId: number;
   round: number;
-}) => {
+}) {
   const updatedGame = await db
     .update(games)
     .set({ state, round })
@@ -100,4 +96,4 @@ export const updateGame = async ({
     .returning();
 
   return updatedGame[0];
-};
+}

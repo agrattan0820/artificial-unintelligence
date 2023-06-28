@@ -2,11 +2,11 @@ import type { NextFunction, Request, Response } from "express";
 import { getRoom, joinRoom } from "../services/room.service";
 import { createUser } from "../services/user.service";
 
-export const getRoomController = async (
+export async function getRoomController(
   req: Request<{ code: string }>,
   res: Response,
   next: NextFunction
-) => {
+) {
   try {
     const code = req.params.code;
 
@@ -22,13 +22,13 @@ export const getRoomController = async (
   } catch (error) {
     next(error);
   }
-};
+}
 
-export const joinRoomController = async (
+export async function joinRoomController(
   req: Request<{}, {}, { nickname: string; code: string }>,
   res: Response,
   next: NextFunction
-) => {
+) {
   try {
     const { nickname, code } = req.body;
 
@@ -46,4 +46,4 @@ export const joinRoomController = async (
   } catch (error) {
     next(error);
   }
-};
+}

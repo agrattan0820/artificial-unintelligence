@@ -1,11 +1,11 @@
 import type { NextFunction, Request, Response } from "express";
 import { createQuestion, getQuestionById } from "../services/question.service";
 
-export const getQuestionByIdController = async (
+export async function getQuestionByIdController(
   req: Request<{ id: number }>,
   res: Response,
   next: NextFunction
-) => {
+) {
   try {
     const id = req.params.id;
 
@@ -21,7 +21,7 @@ export const getQuestionByIdController = async (
   } catch (error) {
     next(error);
   }
-};
+}
 
 // export const createQuestionController = async (
 //   req: Request<{}, {}, { text: string }>,

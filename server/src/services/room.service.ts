@@ -10,7 +10,7 @@ import {
 } from "../../db/schema";
 import { and, eq } from "drizzle-orm";
 
-export const createRoom = async () => {
+export async function createRoom() {
   let validRoomCode = false;
 
   let roomCode = crypto.randomBytes(4).toString("hex");
@@ -35,15 +35,15 @@ export const createRoom = async () => {
   const createRoom = await db.insert(rooms).values(newRoom).returning();
 
   return createRoom[0];
-};
+}
 
-export const joinRoom = async ({
+export async function joinRoom({
   userId,
   code,
 }: {
   userId: number;
   code: string;
-}) => {
+}) {
   const newUserRoomRelationship: NewUserRoom = {
     userId,
     roomCode: code,
@@ -55,24 +55,24 @@ export const joinRoom = async ({
     .returning();
 
   return addUserToRoom[0];
-};
+}
 
-export const leaveRoom = async ({
+export async function leaveRoom({
   userId,
   code,
 }: {
   userId: number;
   code: string;
-}) => {
+}) {
   const removeUserFromRoom = await db
     .delete(userRooms)
     .where(and(eq(userRooms.userId, userId), eq(userRooms.roomCode, code)))
     .returning();
 
   return removeUserFromRoom[0];
-};
+}
 
-export const getRoom = async ({ code }: { code: string }) => {
+export async function getRoom({ code }: { code: string }) {
   const room = await db.select().from(rooms).where(eq(rooms.code, code));
 
   if (room.length === 0) {
@@ -93,4 +93,4 @@ export const getRoom = async ({ code }: { code: string }) => {
     ...room[0],
     players,
   };
-};
+}
