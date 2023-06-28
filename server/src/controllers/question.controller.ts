@@ -23,18 +23,18 @@ export const getQuestionByIdController = async (
   }
 };
 
-export const createQuestionController = async (
-  req: Request<{}, {}, { text: string }>,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const body = req.body;
+// export const createQuestionController = async (
+//   req: Request<{}, {}, { text: string }>,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//   try {
+//     const body = req.body;
 
-    const question = await createQuestion(body);
+//     const question = await createQuestion(body);
 
-    res.status(200).send(question);
-  } catch (error) {
-    next(error);
-  }
-};
+//     res.status(200).send(question);
+//   } catch (error) {
+//     next(error);
+//   }
+// };

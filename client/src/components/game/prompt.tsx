@@ -25,11 +25,6 @@ const Prompt = () => {
   const [imageOption2, setImageOption2] = useState("");
   const [selectedImage, setSelectedImage] = useState<ImageOption>();
 
-  const { data } = useQuery(["question", 1], () => generateQuestion(1));
-  const { data: openAIQuestion } = useQuery(["question"], generatePrompt);
-
-  console.log("openAIQuestion", openAIQuestion);
-
   const imagesLoaded = imageOption1 && imageOption2;
 
   const onPromptSubmit = async (e: FormEvent<PromptFormType>) => {
@@ -73,7 +68,7 @@ const Prompt = () => {
               exit={{ y: 10, opacity: 0 }}
               className="text-lg md:text-2xl"
             >
-              {openAIQuestion ? openAIQuestion[0].text?.trim() : <Ellipsis />}
+              {/* {openAIQuestion ? openAIQuestion[0].text?.trim() : <Ellipsis />} */}
             </motion.h2>
           )}
           {imagesLoaded && (
