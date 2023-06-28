@@ -1,5 +1,8 @@
 import type { NextFunction, Request, Response } from "express";
-import { createQuestion, getQuestionById } from "../services/question.service";
+import {
+  getQuestionById,
+  getUserQuestionsForRound,
+} from "../services/question.service";
 
 export async function getQuestionByIdController(
   req: Request<{ id: number }>,
@@ -18,6 +21,28 @@ export async function getQuestionByIdController(
     }
 
     res.status(200).send(question);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getQuestionsByUserGameRoundController(
+  req: Request<{ userId: number; gameId: number; round: number }>,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const params = req.params;
+
+    const questions = await getUserQuestionsForRound(params);
+
+    if (questions.length === 0) {
+      res.status(404).send({
+        error: `Questions for the user: ${params.userId} could not be found for this game: ${params.gameId}, and round: ${params.round}`,
+      });
+    }
+
+    res.status(200).send(questions);
   } catch (error) {
     next(error);
   }

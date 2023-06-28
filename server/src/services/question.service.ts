@@ -1,4 +1,4 @@
-import { and, eq, inArray } from "drizzle-orm";
+import { and, eq, inArray, or } from "drizzle-orm";
 import { db } from "../../db/db";
 import {
   NewQuestion,
@@ -16,6 +16,12 @@ export async function getQuestionById({ id }: { id: number }) {
     .where(eq(questions.id, id));
 
   return question[0];
+}
+
+export async function createQuestions(data: NewQuestion[]) {
+  const newQuestions = await db.insert(questions).values(data).returning();
+
+  return newQuestions;
 }
 
 export async function generateAIQuestions({
@@ -37,23 +43,6 @@ export async function generateAIQuestions({
   }
 
   return [];
-}
-
-function getRandomInt(min: number, max: number) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
-}
-
-export function shuffleArray<T>(arr: T[]) {
-  for (let i = 0; i < arr.length - 2; i++) {
-    const randNum = getRandomInt(i, arr.length);
-    const temp = arr[i];
-    arr[i] = arr[randNum];
-    arr[randNum] = temp;
-  }
-
-  return arr;
 }
 
 export async function assignQuestionsToPlayers({
@@ -101,32 +90,28 @@ export async function assignQuestionsToPlayers({
   return createdQuestions;
 }
 
-export async function createQuestions(data: NewQuestion[]) {
-  const newQuestions = await db.insert(questions).values(data).returning();
-
-  return newQuestions;
-}
-
-export const createQuestion = async ({
-  text,
+export async function getUserQuestionsForRound({
+  userId,
   gameId,
   round,
-  player1,
-  player2,
-}: NewQuestion) => {
-  const newQuestion = await db
-    .insert(questions)
-    .values({
-      text,
-      gameId,
-      round,
-      player1,
-      player2,
-    })
-    .returning();
+}: {
+  userId: number;
+  gameId: number;
+  round: number;
+}) {
+  const userQuestionsForRound = await db
+    .select()
+    .from(questions)
+    .where(
+      and(
+        eq(questions.gameId, gameId),
+        eq(questions.round, round),
+        or(eq(questions.player1, userId), eq(questions.player2, userId))
+      )
+    );
 
-  return newQuestion[0];
-};
+  return userQuestionsForRound;
+}
 
 export async function getQuestionVotes({ questionId }: { questionId: number }) {
   const getAssociatedGenerations = await db
@@ -145,4 +130,23 @@ export async function getQuestionVotes({ questionId }: { questionId: number }) {
     );
 
   return questionVotes;
+}
+
+// UTILS
+
+function getRandomInt(min: number, max: number) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
+}
+
+function shuffleArray<T>(arr: T[]) {
+  for (let i = 0; i < arr.length - 2; i++) {
+    const randNum = getRandomInt(i, arr.length);
+    const temp = arr[i];
+    arr[i] = arr[randNum];
+    arr[randNum] = temp;
+  }
+
+  return arr;
 }
