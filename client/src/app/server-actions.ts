@@ -26,8 +26,6 @@ export type Generation = {
   id: number;
   text: string;
   imageUrl: string;
-  round: number;
-  gameId: number;
   userId: number;
   questionId: number;
   createdAt: string;
@@ -36,6 +34,11 @@ export type Question = {
   id: number;
   text: string;
   createdAt: string;
+  gameId: number;
+  round: number;
+  player1: number;
+  player2: number;
+  votedOn: boolean;
 };
 export type Vote = {
   createdAt: string;
@@ -46,6 +49,7 @@ export type Vote = {
 export type GameInfo = {
   game: Game;
   room: RoomInfo;
+  questions: Question;
 };
 
 export type CreateHostResponse = {
@@ -110,12 +114,12 @@ export async function getGameInfo(code: string) {
   return data;
 }
 
-export type GenerateQuestionResponse = Question;
+// export type GenerateQuestionResponse = Question;
 
-export async function generateQuestion(id: number) {
-  const response = await fetch(`${URL}/question/${id}`, { cache: "no-store" });
+// export async function generateQuestion(id: number) {
+//   const response = await fetch(`${URL}/question/${id}`, { cache: "no-store" });
 
-  const data: GenerateQuestionResponse = await response.json();
+//   const data: GenerateQuestionResponse = await response.json();
 
-  return data;
-}
+//   return data;
+// }

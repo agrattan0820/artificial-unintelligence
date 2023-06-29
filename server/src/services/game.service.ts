@@ -1,6 +1,14 @@
 import { desc, eq } from "drizzle-orm";
 import { db } from "../../db/db";
-import { NewGame, User, games, rooms, userRooms, users } from "../../db/schema";
+import {
+  NewGame,
+  User,
+  games,
+  questions,
+  rooms,
+  userRooms,
+  users,
+} from "../../db/schema";
 
 export async function createGame({ code }: { code: string }) {
   const newGame: NewGame = {
@@ -57,7 +65,7 @@ export async function getLatestGameInfoByRoomCode({ code }: { code: string }) {
     .where(eq(games.roomCode, code))
     .orderBy(desc(games.createdAt));
 
-  if (latestGame.length === 0 || !latestGame[0].room) {
+  if (latestGame.length === 0 || !latestGame[0].room || !latestGame[0].game) {
     return null;
   }
 
@@ -71,12 +79,18 @@ export async function getLatestGameInfoByRoomCode({ code }: { code: string }) {
     .fullJoin(users, eq(userRooms.userId, users.id))
     .where(eq(userRooms.roomCode, latestGame[0].room.code))) as User[];
 
+  const gameQuestions = await db
+    .select()
+    .from(questions)
+    .where(eq(questions.gameId, latestGame[0].game.id));
+
   return {
     game: latestGame[0].game,
     room: {
       ...latestGame[0].room,
       players,
     },
+    questions: gameQuestions,
   };
 }
 

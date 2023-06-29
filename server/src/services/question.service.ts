@@ -24,12 +24,8 @@ export async function createQuestions(data: NewQuestion[]) {
   return newQuestions;
 }
 
-export async function generateAIQuestions({
-  playerCount,
-}: {
-  playerCount: number;
-}) {
-  const originalPrompt = `Generate a list of ${playerCount} funny prompts for a game that's all one string with each prompt separated by a comma. For the game, players will respond to the prompt with AI generated images. Two players will respond to the prompt while the rest of the players vote on their favorite response/image. The targeted audience is between 15 and 30. The prompts should relate to pop culture, historical events, celebrities, brands, and dark humor. The players already know the rules, so do not specify that they have to generate an image. Some example prompts include: The uninvited wedding guest, The new challenger in Super Smash Bros, The newly discovered animal in Australia, The new British Museum exhibit,The creature hidden in IKEA, A unique vacation spot, A cancelled children's toy, The new Olympic sport`;
+export async function generateAIQuestions(questionAmount: number) {
+  const originalPrompt = `Generate a list of ${questionAmount} funny prompts for a game that's all one string with each prompt separated by a comma. For the game, players will respond to the prompt with AI generated images. Two players will respond to the prompt while the rest of the players vote on their favorite response/image. The targeted audience is between 15 and 30. The prompts should relate to pop culture, historical events, brands, and dark humor. The players already know the rules, so do not specify that they have to generate an image. Some example prompts include: The uninvited wedding guest, The new challenger in Super Smash Bros, The newly discovered animal in Australia, The new British Museum exhibit,The creature hidden in IKEA, A unique vacation spot, A cancelled children's toy, The new Olympic sport`;
 
   try {
     const response = await openai.createChatCompletion({
@@ -47,23 +43,23 @@ export async function generateAIQuestions({
 
 export async function assignQuestionsToPlayers({
   gameId,
-  round,
   players,
 }: {
   gameId: number;
-  round: number;
   players: User[];
 }) {
-  const shuffledArray: User[] = shuffleArray([...players]);
+  let shuffledArray: User[] = shuffleArray([...players]);
 
-  const generatedQuestions = await generateAIQuestions({
-    playerCount: players.length,
-  });
+  const amountOfRounds = 3;
 
-  if (shuffledArray.length !== generatedQuestions.length) {
-    throw new Error(
-      "The amount of shuffled users does not match the amount of generated questions"
-    );
+  const generatedQuestions = await generateAIQuestions(
+    players.length * amountOfRounds
+  );
+
+  console.log("GENERATED QUESTIONS", generatedQuestions);
+
+  if (players.length * amountOfRounds !== generatedQuestions.length) {
+    throw new Error("The incorrect amount of questions were generated");
   }
 
   const normalizeQuestionText = (question: string) => {
@@ -72,16 +68,22 @@ export async function assignQuestionsToPlayers({
       : question.trim();
   };
 
+  let roundCount = 0;
+
   const questionData: NewQuestion[] = generatedQuestions.map((question, i) => {
+    if (i % players.length === 0) {
+      roundCount++;
+      shuffledArray = shuffleArray(shuffledArray);
+    }
     return {
       text: normalizeQuestionText(question),
       gameId,
-      round,
-      player1: shuffledArray[i].id,
+      round: roundCount,
+      player1: shuffledArray[i % players.length].id,
       player2:
-        i === players.length - 1
+        i % players.length === players.length - 1
           ? shuffledArray[0].id
-          : shuffledArray[i + 1].id,
+          : shuffledArray[(i % players.length) + 1].id,
     };
   });
 

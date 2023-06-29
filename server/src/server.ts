@@ -111,10 +111,6 @@ export function buildServer() {
           round: newGame.round,
         });
 
-        // TODO: `socket.in` which is supposed to send to members including the sender is not working as expected, using two emits as a workaround
-        socket.emit("startGame");
-        socket.to(code).emit("startGame");
-
         const roomInfo = await getRoom({ code });
 
         if (!roomInfo?.players) {
@@ -125,9 +121,12 @@ export function buildServer() {
 
         await assignQuestionsToPlayers({
           gameId: newGame.id,
-          round: newGame.round,
           players: roomInfo?.players,
         });
+
+        // TODO: `socket.in` which is supposed to send to members including the sender is not working as expected, using two emits as a workaround
+        socket.emit("startGame");
+        socket.to(code).emit("startGame");
       } catch (error) {
         if (error instanceof Error) handleError(error, socket, code);
       }
