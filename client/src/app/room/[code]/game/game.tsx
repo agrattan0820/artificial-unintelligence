@@ -5,17 +5,37 @@ import { EventFrom, State } from "xstate";
 import { useMachine } from "@xstate/react";
 import { AnimatePresence } from "framer-motion";
 
-import { GameInfo, GetGameInfoResponse } from "@ai/app/server-actions";
+import {
+  GameInfo,
+  GetGameInfoResponse,
+  getGameInfo,
+} from "@ai/app/server-actions";
 import Button from "@ai/components/button";
 import {
   gameMachine,
   getCurrentComponent,
 } from "@ai/components/game/game-machine";
 import { SocketContext } from "@ai/utils/socket-provider";
-import { useStore } from "@ai/utils/store";
 
-export default function Game({ gameInfo }: { gameInfo: GetGameInfoResponse }) {
-  const { user } = useStore();
+export default function Game({
+  roomCode,
+  gameInfo,
+}: {
+  roomCode: string;
+  gameInfo: GetGameInfoResponse;
+}) {
+  // const { data: gameInfo, refetch: refetchGameInfo } = useQuery(
+  //   ["gameInfo", initialGameInfo.game.id],
+  //   async () => await getGameInfo(roomCode),
+  //   {
+  //     initialData: initialGameInfo,
+  //   }
+  // );
+
+  // Socket for real-time communication
+  const socket = useContext(SocketContext);
+
+  // State machine
   const [state, send] = useMachine(gameMachine, {
     state:
       gameInfo.game.state !== "START_GAME"
@@ -27,11 +47,13 @@ export default function Game({ gameInfo }: { gameInfo: GetGameInfoResponse }) {
       round: gameInfo.game.round,
     },
   });
-  const socket = useContext(SocketContext);
-  const currentComponent = useMemo(() => {
-    return getCurrentComponent(state);
-  }, [state]);
 
+  // Game component shown based off state
+  const currentComponent = useMemo(() => {
+    return getCurrentComponent(gameInfo, state, send);
+  }, [gameInfo, send, state]);
+
+  // Send updated state to server
   const handleStateChange = useCallback(() => {
     socket.emit("clientEvent", {
       state: JSON.stringify(state),
@@ -40,6 +62,11 @@ export default function Game({ gameInfo }: { gameInfo: GetGameInfoResponse }) {
     });
   }, [gameInfo.game.id, socket, state]);
 
+  useEffect(() => {
+    handleStateChange();
+  }, [handleStateChange, state]);
+
+  // Receive state changes from server
   const handleServerEvent = useCallback(
     (event: EventFrom<typeof gameMachine>) => {
       console.log("RECEIVED EVENT", event);
@@ -47,10 +74,6 @@ export default function Game({ gameInfo }: { gameInfo: GetGameInfoResponse }) {
     },
     [send]
   );
-
-  useEffect(() => {
-    handleStateChange();
-  }, [handleStateChange, state]);
 
   useEffect(() => {
     socket.on("serverEvent", handleServerEvent);

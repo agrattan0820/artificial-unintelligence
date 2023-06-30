@@ -1,6 +1,12 @@
 import { ReactNode } from "react";
 import { motion } from "framer-motion";
-import { StateFrom, StateValueFrom, assign, createMachine } from "xstate";
+import {
+  EventFrom,
+  StateFrom,
+  StateValueFrom,
+  assign,
+  createMachine,
+} from "xstate";
 
 import ConnectToMainframe from "./connect-to-mainframe";
 import ConnectionEstablished from "./connection-established";
@@ -13,6 +19,7 @@ import Winner from "./winner";
 import Leaderboard from "./leaderboard";
 import NextRound from "./next-round";
 import PromptSubmitted from "./prompt-submitted";
+import { GameInfo } from "@ai/app/server-actions";
 
 // COMPONENTS
 const TransitionWrapper = ({ children }: { children: ReactNode }) => {
@@ -136,7 +143,11 @@ export const gameMachine = createMachine(
   }
 );
 
-export const getCurrentComponent = (state: StateFrom<typeof gameMachine>) => {
+export const getCurrentComponent = (
+  gameInfo: GameInfo,
+  state: StateFrom<typeof gameMachine>,
+  send: (event: EventFrom<typeof gameMachine>) => StateFrom<typeof gameMachine>
+) => {
   const stateMachineComponentMap: Record<
     StateValueFrom<typeof gameMachine>,
     ReactNode
@@ -153,7 +164,7 @@ export const getCurrentComponent = (state: StateFrom<typeof gameMachine>) => {
     ),
     prompt: (
       <TransitionWrapper key="prompt">
-        <Prompt />
+        <Prompt gameInfo={gameInfo} state={state} send={send} />
       </TransitionWrapper>
     ),
     promptSubmitted: (

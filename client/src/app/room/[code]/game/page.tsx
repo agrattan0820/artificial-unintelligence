@@ -10,5 +10,5 @@ export default async function GamePage({
 
   console.log("GAME INFO", gameInfo);
 
-  return <Game gameInfo={gameInfo} />;
+  return <Game roomCode={params.code} gameInfo={gameInfo} />;
 }

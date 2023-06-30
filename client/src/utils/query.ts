@@ -14,10 +14,11 @@ export const generateImage = async (prompt: string) => {
       body: JSON.stringify({ prompt }),
     });
 
-    const data: { result: ImagesResponseDataInner[] } = await response.json();
     if (response.status !== 200) {
       throw new Error(`Request failed with status ${response.status}`);
     }
+
+    const data: { result: ImagesResponseDataInner[] } = await response.json();
 
     return data.result;
   } catch (error) {

@@ -49,7 +49,7 @@ export type Vote = {
 export type GameInfo = {
   game: Game;
   room: RoomInfo;
-  questions: Question;
+  questions: Question[];
 };
 
 export type CreateHostResponse = {

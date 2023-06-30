@@ -60,7 +60,7 @@ const ImageChoice = ({
   };
 
   return (
-    <div className="mb-16 flex gap-6">
+    <div className="flex gap-6">
       {imageOption1 && (
         <motion.div
           initial={false}
