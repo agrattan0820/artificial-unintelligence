@@ -119,6 +119,13 @@ export function buildServer() {
           );
         }
 
+        const sockets = await io.in(code).fetchSockets();
+
+        console.log(
+          "SOCKETS IN ROOM",
+          sockets.map((socket) => socket.handshake.auth.userId)
+        );
+
         await assignQuestionsToPlayers({
           gameId: newGame.id,
           players: roomInfo?.players,
@@ -145,6 +152,24 @@ export function buildServer() {
       }
     });
 
+    socket.on("testEvent", async (code) => {
+      console.log("GOT TEST EVENT", code);
+
+      const sockets = await io.in(code).fetchSockets();
+
+      console.log(
+        "SOCKETS IN ROOM",
+        sockets.map((socket) => socket.handshake.auth.userId)
+      );
+
+      // socket.emit("serverEvent", {
+      //   type: "SUBMIT",
+      // });
+      // socket.to(code).emit("serverEvent", {
+      //   type: "SUBMIT",
+      // });
+    });
+
     socket.on("generationSubmitted", async (data) => {
       try {
         // Receive gameId, and current round number
@@ -164,12 +189,40 @@ export function buildServer() {
           round: data.round,
         });
 
-        console.log("GAME ROUND GENERATIONS", gameRoundGenerations);
+        // Player Submissions
+        const userGenerationCountMap = new Map<number, number>();
+        const submittedUsers = gameRoundGenerations.reduce<number[]>(
+          (acc, curr) => {
+            const currUserId = curr.generations.userId;
+
+            if (userGenerationCountMap.get(currUserId) === 1) {
+              userGenerationCountMap.set(currUserId, 2);
+              acc.push(currUserId);
+            }
+
+            if (!userGenerationCountMap.has(currUserId)) {
+              userGenerationCountMap.set(currUserId, 1);
+            }
+
+            return acc;
+          },
+          []
+        );
+
+        socket.emit("submittedPlayers", submittedUsers);
+        socket.to(gameInfo.room.code).emit("submittedPlayers", submittedUsers);
 
         const totalNeeded = gameInfo.room.players.length * 2;
         const currentAmount = gameRoundGenerations.length;
 
         console.log("TOTAL NEEDED", totalNeeded);
+
+        const sockets = await io.in(gameInfo.room.code).fetchSockets();
+
+        console.log(
+          "SOCKETS IN ROOM",
+          sockets.map((socket) => socket.handshake.auth.userId)
+        );
 
         if (currentAmount >= totalNeeded) {
           console.log("SENDING SERVER EVENTS", gameInfo.room.code);

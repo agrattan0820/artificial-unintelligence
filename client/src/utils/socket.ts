@@ -9,6 +9,7 @@ export interface ServerToClientEvents {
   roomState: (roomInfo: RoomInfo) => void;
   startGame: () => void;
   serverEvent: (event: EventFrom<typeof gameMachine>) => void;
+  submittedPlayers: (players: number[]) => void;
   error: (str: string) => void;
 }
 
@@ -16,6 +17,7 @@ export interface ClientToServerEvents {
   connectToRoom: (code: string) => void;
   initiateGame: (code: string) => void;
   clientEvent: (data: { state: string; gameId: number; round: number }) => void;
+  testEvent: (code: string) => void;
   generationSubmitted: (data: {
     gameId: number;
     round: number;

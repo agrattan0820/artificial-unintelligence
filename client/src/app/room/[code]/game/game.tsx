@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useContext, useEffect, useMemo } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { EventFrom, State } from "xstate";
 import { useMachine } from "@xstate/react";
 import { AnimatePresence } from "framer-motion";
@@ -48,11 +48,6 @@ export default function Game({
     },
   });
 
-  // Game component shown based off state
-  const currentComponent = useMemo(() => {
-    return getCurrentComponent(gameInfo, state, send);
-  }, [gameInfo, send, state]);
-
   // Send updated state to server
   const handleStateChange = useCallback(() => {
     socket.emit("clientEvent", {
@@ -75,13 +70,34 @@ export default function Game({
     [send]
   );
 
+  // Store players who have submitted their prompts for a round
+  const [submittedPlayers, setSubmittedPlayers] = useState<Set<number>>(
+    new Set([])
+  );
+
+  const handleOnSubmittedPlayers = (players: number[]) => {
+    console.log("HANDLE SUBMITTED PLAYERS", players);
+    setSubmittedPlayers(new Set(players));
+  };
+
   useEffect(() => {
     socket.on("serverEvent", handleServerEvent);
+    socket.on("submittedPlayers", handleOnSubmittedPlayers);
 
     return () => {
       socket.off("serverEvent", handleServerEvent);
+      socket.off("submittedPlayers", handleOnSubmittedPlayers);
     };
   }, [handleServerEvent, socket]);
+
+  const handleTestEvent = () => {
+    socket.emit("testEvent", gameInfo.room.code);
+  };
+
+  // Game component shown based off state
+  const currentComponent = useMemo(() => {
+    return getCurrentComponent(gameInfo, state, send, submittedPlayers);
+  }, [gameInfo, send, state, submittedPlayers]);
 
   return (
     <main className="flex min-h-screen flex-col justify-center">
@@ -89,6 +105,7 @@ export default function Game({
         <AnimatePresence mode="wait">{currentComponent}</AnimatePresence>
       </section>
       <div className="fixed bottom-8 right-8 flex gap-2">
+        <Button onClick={handleTestEvent}>Test Event</Button>
         <Button onClick={() => send("NEXT")}>Next</Button>
         <Button onClick={() => send("SUBMIT")}>Submit</Button>
         <Button onClick={() => send("MORE")}>More</Button>

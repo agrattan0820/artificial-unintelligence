@@ -146,7 +146,8 @@ export const gameMachine = createMachine(
 export const getCurrentComponent = (
   gameInfo: GameInfo,
   state: StateFrom<typeof gameMachine>,
-  send: (event: EventFrom<typeof gameMachine>) => StateFrom<typeof gameMachine>
+  send: (event: EventFrom<typeof gameMachine>) => StateFrom<typeof gameMachine>,
+  submittedPlayers: Set<number>
 ) => {
   const stateMachineComponentMap: Record<
     StateValueFrom<typeof gameMachine>,
@@ -169,7 +170,11 @@ export const getCurrentComponent = (
     ),
     promptSubmitted: (
       <TransitionWrapper key="promptSubmitted">
-        <PromptSubmitted />
+        <PromptSubmitted
+          gameInfo={gameInfo}
+          state={state}
+          submittedPlayers={submittedPlayers}
+        />
       </TransitionWrapper>
     ),
     promptDone: (
