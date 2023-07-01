@@ -164,10 +164,15 @@ export function buildServer() {
           round: data.round,
         });
 
+        console.log("GAME ROUND GENERATIONS", gameRoundGenerations);
+
         const totalNeeded = gameInfo.room.players.length * 2;
         const currentAmount = gameRoundGenerations.length;
 
+        console.log("TOTAL NEEDED", totalNeeded);
+
         if (currentAmount >= totalNeeded) {
+          console.log("SENDING SERVER EVENTS", gameInfo.room.code);
           socket.emit("serverEvent", {
             type: "NEXT",
           });

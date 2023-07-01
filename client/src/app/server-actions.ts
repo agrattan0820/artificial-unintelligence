@@ -57,6 +57,8 @@ export type CreateHostResponse = {
   room: Room;
 };
 
+// ! ----------> USERS <----------
+
 export async function createHost(nickname: string) {
   const response = await fetch(`${URL}/user/createHost`, {
     method: "POST",
@@ -72,6 +74,8 @@ export async function createHost(nickname: string) {
 
   return data;
 }
+
+// ! ----------> ROOMS <----------
 
 export type JoinRoomResponse = {
   user: User;
@@ -105,6 +109,8 @@ export async function getRoomInfo(code: string) {
 }
 
 export type GetGameInfoResponse = GameInfo;
+
+// ! ----------> GAMES <----------
 
 export async function getGameInfo(code: string) {
   const response = await fetch(`${URL}/game/${code}`, { cache: "no-store" });

@@ -1,5 +1,5 @@
 import type { EventFrom } from "xstate";
-import { NewGeneration, NewVote, RoomInfo } from "../db/schema";
+import { RoomInfo } from "../db/schema";
 import { serverMachine } from "./server-machine";
 
 export interface ServerToClientEvents {

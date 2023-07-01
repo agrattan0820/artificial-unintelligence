@@ -1,6 +1,13 @@
 "use client";
 
-import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from "react";
+import {
+  ChangeEvent,
+  FormEvent,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 import Button, { SecondaryButton } from "@ai/components/button";
@@ -13,6 +20,7 @@ import { EventFrom, StateFrom } from "xstate";
 import { gameMachine } from "./game-machine";
 import { useStore } from "@ai/utils/store";
 import toast from "react-hot-toast";
+import { SocketContext } from "@ai/utils/socket-provider";
 
 interface FormElementsType extends HTMLFormControlsCollection {
   prompt: HTMLInputElement;
@@ -32,6 +40,7 @@ const Prompt = ({
   send: (event: EventFrom<typeof gameMachine>) => StateFrom<typeof gameMachine>;
 }) => {
   const { user } = useStore();
+  const socket = useContext(SocketContext);
 
   const currRound = state.context.round;
 
@@ -87,6 +96,17 @@ const Prompt = ({
 
   const onImageSubmit = async () => {
     setLoading(true);
+
+    if (user) {
+      socket.emit("generationSubmitted", {
+        gameId: gameInfo.game.id,
+        round: currRound,
+        imageUrl: selectedImage === 1 ? imageOption1 : imageOption2,
+        questionId: currQuestion.id,
+        text: imagePrompt,
+        userId: user?.id,
+      });
+    }
 
     if (stage === "FIRST") {
       setStage("SECOND");
