@@ -50,11 +50,11 @@ const PlayerBlock = ({ nickname, submitted }: PlayerBlockProps) => {
 const PromptSubmitted = ({
   gameInfo,
   state,
-  submittedPlayers,
+  submittedPlayerIds,
 }: {
   gameInfo: GameInfo;
   state: StateFrom<typeof gameMachine>;
-  submittedPlayers: Set<number>;
+  submittedPlayerIds: Set<number>;
 }) => {
   const { user } = useStore();
   // const socket = useContext(SocketContext);
@@ -73,7 +73,7 @@ const PromptSubmitted = ({
             key={i}
             nickname={player.nickname}
             submitted={
-              submittedPlayers.has(player.id) || player.id === user?.id
+              submittedPlayerIds.has(player.id) || player.id === user?.id
             }
           />
         ))}

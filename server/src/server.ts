@@ -8,6 +8,7 @@ import { Server, Socket } from "socket.io";
 import { createServer } from "http";
 import cors from "cors";
 import morgan from "morgan";
+import helmet from "helmet";
 
 import { userRoutes } from "./routes/user.route";
 import { roomRoutes } from "./routes/room.route";
@@ -25,6 +26,7 @@ import {
 import { gameRoutes } from "./routes/game.route";
 import { questionRoutes } from "./routes/question.route";
 import { createVote } from "./services/vote.service";
+import { generationRoutes } from "./routes/generation.route";
 
 export function buildServer() {
   const app: Express = express();
@@ -35,6 +37,7 @@ export function buildServer() {
 
   app.use(express.json());
   app.use(cors());
+  app.use(helmet());
   app.use(morgan("tiny"));
 
   const io = new Server<ClientToServerEvents, ServerToClientEvents>(server, {
@@ -43,7 +46,7 @@ export function buildServer() {
     },
   });
 
-  const handleError = (
+  const handleSocketIOError = (
     e: Error,
     socket: Socket<ClientToServerEvents, ServerToClientEvents>,
     code?: string
@@ -52,6 +55,8 @@ export function buildServer() {
     socket.emit("error", e.message);
     if (code) socket.to(code).emit("error", e.message);
   };
+
+  io.engine.use(helmet());
 
   io.on("connection", (socket) => {
     console.log("[CONNECTION]", socket.id);
@@ -78,7 +83,7 @@ export function buildServer() {
         socket.to(code).emit("message", `${userId} joined`);
         socket.to(code).emit("roomState", roomInfo);
       } catch (error) {
-        if (error instanceof Error) handleError(error, socket, code);
+        if (error instanceof Error) handleSocketIOError(error, socket, code);
       }
     });
 
@@ -96,7 +101,7 @@ export function buildServer() {
         socket.to(code).emit("message", `${socket.handshake.auth.userId} left`);
         socket.to(code).emit("roomState", roomInfo);
       } catch (error) {
-        if (error instanceof Error) handleError(error, socket, code);
+        if (error instanceof Error) handleSocketIOError(error, socket, code);
       }
     });
 
@@ -135,7 +140,7 @@ export function buildServer() {
         socket.emit("startGame");
         socket.to(code).emit("startGame");
       } catch (error) {
-        if (error instanceof Error) handleError(error, socket, code);
+        if (error instanceof Error) handleSocketIOError(error, socket, code);
       }
     });
 
@@ -148,7 +153,7 @@ export function buildServer() {
           await updateGame({ state, gameId, round });
         }
       } catch (error) {
-        if (error instanceof Error) handleError(error, socket);
+        if (error instanceof Error) handleSocketIOError(error, socket);
       }
     });
 
@@ -234,7 +239,7 @@ export function buildServer() {
           });
         }
       } catch (error) {
-        if (error instanceof Error) handleError(error, socket);
+        if (error instanceof Error) handleSocketIOError(error, socket);
       }
     });
 
@@ -270,7 +275,7 @@ export function buildServer() {
           });
         }
       } catch (error) {
-        if (error instanceof Error) handleError(error, socket);
+        if (error instanceof Error) handleSocketIOError(error, socket);
       }
     });
 
@@ -303,7 +308,7 @@ export function buildServer() {
           );
         }
       } catch (error) {
-        if (error instanceof Error) handleError(error, socket);
+        if (error instanceof Error) handleSocketIOError(error, socket);
       }
     });
   });
@@ -319,6 +324,7 @@ export function buildServer() {
   roomRoutes(app);
   gameRoutes(app);
   questionRoutes(app);
+  generationRoutes(app);
 
   const expressErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     if (res.headersSent) {

@@ -6,9 +6,9 @@ import { useMachine } from "@xstate/react";
 import { AnimatePresence } from "framer-motion";
 
 import {
-  GameInfo,
   GetGameInfoResponse,
-  getGameInfo,
+  QuestionGenerations,
+  getGameRoundGenerations,
 } from "@ai/app/server-actions";
 import Button from "@ai/components/button";
 import {
@@ -16,22 +16,18 @@ import {
   getCurrentComponent,
 } from "@ai/components/game/game-machine";
 import { SocketContext } from "@ai/utils/socket-provider";
+import { useQuery } from "@tanstack/react-query";
 
-export default function Game({
-  roomCode,
-  gameInfo,
-}: {
+// ! ----------> TYPES <----------
+
+type GameProps = {
   roomCode: string;
   gameInfo: GetGameInfoResponse;
-}) {
-  // const { data: gameInfo, refetch: refetchGameInfo } = useQuery(
-  //   ["gameInfo", initialGameInfo.game.id],
-  //   async () => await getGameInfo(roomCode),
-  //   {
-  //     initialData: initialGameInfo,
-  //   }
-  // );
+};
 
+// ! ----------> COMPONENTS <----------
+
+export default function Game({ roomCode, gameInfo }: GameProps) {
   // Socket for real-time communication
   const socket = useContext(SocketContext);
 
@@ -71,15 +67,69 @@ export default function Game({
   );
 
   // Store players who have submitted their prompts for a round
-  const [submittedPlayers, setSubmittedPlayers] = useState<Set<number>>(
+  const [submittedPlayerIds, setSubmittedPlayerIds] = useState<Set<number>>(
     new Set([])
   );
 
   const handleOnSubmittedPlayers = (players: number[]) => {
     console.log("HANDLE SUBMITTED PLAYERS", players);
-    setSubmittedPlayers(new Set(players));
+    setSubmittedPlayerIds(new Set(players));
   };
 
+  // Track the current question in the face-off
+  const [faceOffQuestionIdx, setFaceOffQuestionIdx] = useState(0);
+
+  // Construct Question Generation map for face-offs
+  const gameId = gameInfo.game.id;
+  const round = state.context.round;
+  const { data: generations, isLoading: generationsLoading } = useQuery(
+    ["generations", "gameId", gameId, "round", round],
+    async () => await getGameRoundGenerations({ gameId, round }),
+    {
+      enabled:
+        !!gameId &&
+        !!round &&
+        (state.matches("faceOff") || state.matches("faceOffResults")),
+    }
+  );
+
+  const questionGenerationArr = useMemo(() => {
+    return !generationsLoading && generations
+      ? Object.values(
+          generations.reduce<Record<number, QuestionGenerations>>(
+            (acc, curr, i) => {
+              if (!acc[curr.questions.id]) {
+                acc[curr.questions.id] = {
+                  question: curr.questions,
+                  player1Generation:
+                    curr.generations.userId === curr.questions.player1
+                      ? curr.generations
+                      : generations[i + 1].generations, // the generations are ordered by question id so instead of doing a search for the correct generation, we know that it is at the next index
+                  player2Generation:
+                    curr.generations.userId === curr.questions.player2
+                      ? curr.generations
+                      : generations[i + 1].generations,
+                };
+              }
+
+              return acc;
+            },
+            {}
+          )
+        )
+      : [];
+  }, [generations, generationsLoading]);
+
+  console.log("QUESTION GENERATIONS", questionGenerationArr);
+
+  const currFaceOffQuestion =
+    questionGenerationArr.length > 0
+      ? questionGenerationArr[faceOffQuestionIdx]
+      : undefined;
+
+  console.log("CURR FaceOff QUESTION", currFaceOffQuestion);
+
+  // Socket.io Effects
   useEffect(() => {
     socket.on("serverEvent", handleServerEvent);
     socket.on("submittedPlayers", handleOnSubmittedPlayers);
@@ -90,14 +140,21 @@ export default function Game({
     };
   }, [handleServerEvent, socket]);
 
+  // Testing Socket.io Event Handler
   const handleTestEvent = () => {
     socket.emit("testEvent", gameInfo.room.code);
   };
 
   // Game component shown based off state
   const currentComponent = useMemo(() => {
-    return getCurrentComponent(gameInfo, state, send, submittedPlayers);
-  }, [gameInfo, send, state, submittedPlayers]);
+    return getCurrentComponent(
+      gameInfo,
+      state,
+      send,
+      submittedPlayerIds,
+      currFaceOffQuestion
+    );
+  }, [gameInfo, state, send, submittedPlayerIds, currFaceOffQuestion]);
 
   return (
     <main className="flex min-h-screen flex-col justify-center">
