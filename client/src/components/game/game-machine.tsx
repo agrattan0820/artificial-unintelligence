@@ -189,7 +189,7 @@ export const getCurrentComponent = (
           gameInfo={gameInfo}
           state={state}
           send={send}
-          currQuestion={currFaceOffQuestion}
+          currQuestionGenerations={currFaceOffQuestion}
         />
       </TransitionWrapper>
     ),
