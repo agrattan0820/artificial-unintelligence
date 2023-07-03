@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { motion } from "framer-motion";
 import { EventFrom, StateFrom } from "xstate";
 
@@ -12,22 +12,26 @@ import Ellipsis from "@ai/components/ellipsis";
 import Timer from "./timer";
 import { GameInfo, QuestionGenerations } from "@ai/app/server-actions";
 import { gameMachine } from "./game-machine";
+import { useStore } from "@ai/utils/store";
+import { SocketContext } from "@ai/utils/socket-provider";
+
+type FaceOffProps = {
+  gameInfo: GameInfo;
+  state: StateFrom<typeof gameMachine>;
+  send: (event: EventFrom<typeof gameMachine>) => StateFrom<typeof gameMachine>;
+  currQuestionGenerations: QuestionGenerations | undefined;
+};
 
 const FaceOff = ({
   gameInfo,
   state,
   send,
-  currQuestion,
-}: {
-  gameInfo: GameInfo;
-  state: StateFrom<typeof gameMachine>;
-  send: (event: EventFrom<typeof gameMachine>) => StateFrom<typeof gameMachine>;
-  currQuestion: QuestionGenerations | undefined;
-}) => {
-  const gameId = gameInfo.game.id;
-  const round = state.context.round;
+  currQuestionGenerations,
+}: FaceOffProps) => {
+  const { user } = useStore();
+  const socket = useContext(SocketContext);
 
-  console.log("CURR QUESTION in FACE OFF", currQuestion);
+  console.log("CURR QUESTION GENERATIONS in FACE OFF", currQuestionGenerations);
 
   // 1. Query for generations from the current round
 
@@ -38,34 +42,57 @@ const FaceOff = ({
   const [loading, setLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState<ImageOption>();
 
-  const onImageChoice = async () => {};
+  const onImageChoice = async () => {
+    setLoading(true);
+
+    if (user && selectedImage && currQuestionGenerations) {
+      socket.emit("voteSubmitted", {
+        gameId: gameInfo.game.id,
+        questionId: currQuestionGenerations.question.id,
+        generationId:
+          selectedImage === 1
+            ? currQuestionGenerations.player1Generation.id
+            : currQuestionGenerations.player2Generation.id,
+        userId: user.id,
+      });
+    }
+
+    // send({ type: "SUBMIT" });
+
+    setLoading(false);
+  };
 
   return (
     <div className="mx-auto max-w-2xl">
       {/* <Timer totalSeconds={30} /> */}
-      <div className="relative mb-14">
-        <motion.h2
-          initial={{ y: 10, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: 10, opacity: 0 }}
-          className="text-center text-lg md:text-2xl"
-        >
-          Which is the funnier{" "}
-          <span className="text-indigo-700 dark:text-indigo-300">Dog</span>{" "}
-          image?
-        </motion.h2>
-      </div>
-      <ImageChoice
-        imageOption1={SadDog}
-        imageOption2={SadDog2}
-        selectedImage={selectedImage}
-        setSelectedImage={setSelectedImage}
-      />
-      <div>
-        <Button onClick={onImageChoice} disabled={!selectedImage || loading}>
-          {!loading ? "Confirm Vote" : <Ellipsis />}
-        </Button>
-      </div>
+      {currQuestionGenerations && (
+        <>
+          <div className="relative mb-14">
+            <motion.h2
+              initial={{ y: 10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 10, opacity: 0 }}
+              className="text-center text-lg md:text-2xl"
+            >
+              {currQuestionGenerations.question.text}
+            </motion.h2>
+          </div>
+          <ImageChoice
+            imageOption1={currQuestionGenerations.player1Generation.imageUrl}
+            imageOption2={currQuestionGenerations.player2Generation.imageUrl}
+            selectedImage={selectedImage}
+            setSelectedImage={setSelectedImage}
+          />
+          <div>
+            <Button
+              onClick={onImageChoice}
+              disabled={!selectedImage || loading}
+            >
+              {!loading ? "Confirm Vote" : <Ellipsis />}
+            </Button>
+          </div>
+        </>
+      )}
     </div>
   );
 };
