@@ -19,7 +19,7 @@ import Winner from "./winner";
 import Leaderboard from "./leaderboard";
 import NextRound from "./next-round";
 import PromptSubmitted from "./prompt-submitted";
-import { GameInfo } from "@ai/app/server-actions";
+import { GameInfo, QuestionGenerations } from "@ai/app/server-actions";
 
 // COMPONENTS
 const TransitionWrapper = ({ children }: { children: ReactNode }) => {
@@ -147,7 +147,8 @@ export const getCurrentComponent = (
   gameInfo: GameInfo,
   state: StateFrom<typeof gameMachine>,
   send: (event: EventFrom<typeof gameMachine>) => StateFrom<typeof gameMachine>,
-  submittedPlayers: Set<number>
+  submittedPlayerIds: Set<number>,
+  currFaceOffQuestion: QuestionGenerations | undefined
 ) => {
   const stateMachineComponentMap: Record<
     StateValueFrom<typeof gameMachine>,
@@ -173,7 +174,7 @@ export const getCurrentComponent = (
         <PromptSubmitted
           gameInfo={gameInfo}
           state={state}
-          submittedPlayers={submittedPlayers}
+          submittedPlayerIds={submittedPlayerIds}
         />
       </TransitionWrapper>
     ),
@@ -184,7 +185,12 @@ export const getCurrentComponent = (
     ),
     faceOff: (
       <TransitionWrapper key="faceOff">
-        <FaceOff />
+        <FaceOff
+          gameInfo={gameInfo}
+          state={state}
+          send={send}
+          currQuestion={currFaceOffQuestion}
+        />
       </TransitionWrapper>
     ),
     faceOffResults: (

@@ -57,6 +57,12 @@ export type CreateHostResponse = {
   room: Room;
 };
 
+export type QuestionGenerations = {
+  question: Question;
+  player1Generation: Generation;
+  player2Generation: Generation;
+};
+
 // ! ----------> USERS <----------
 
 export async function createHost(nickname: string) {
@@ -120,12 +126,26 @@ export async function getGameInfo(code: string) {
   return data;
 }
 
-// export type GenerateQuestionResponse = Question;
+// ! ----------> GENERATIONS <----------
 
-// export async function generateQuestion(id: number) {
-//   const response = await fetch(`${URL}/question/${id}`, { cache: "no-store" });
+export type GetGameRoundGenerationsResponse = {
+  generations: Generation;
+  questions: Question;
+}[];
 
-//   const data: GenerateQuestionResponse = await response.json();
+export async function getGameRoundGenerations({
+  gameId,
+  round,
+}: {
+  gameId: number;
+  round: number;
+}) {
+  const response = await fetch(
+    `${URL}/generations/gameId/${gameId}/round/${round}`,
+    { cache: "no-store" }
+  );
 
-//   return data;
-// }
+  const data: GetGameRoundGenerationsResponse = await response.json();
+
+  return data;
+}

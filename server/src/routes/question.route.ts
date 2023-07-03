@@ -1,6 +1,5 @@
 import type { Express } from "express";
 import {
-  // createQuestionController,
   getQuestionByIdController,
   getQuestionsByUserGameRoundController,
 } from "../controllers/question.controller";
@@ -12,6 +11,4 @@ export function questionRoutes(app: Express) {
     "/questions/user/:userId/game/:gameId/round/:round",
     getQuestionsByUserGameRoundController
   );
-
-  // app.post("/question", createQuestionController);
 }

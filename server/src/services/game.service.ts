@@ -1,4 +1,4 @@
-import { desc, eq } from "drizzle-orm";
+import { asc, desc, eq } from "drizzle-orm";
 import { db } from "../../db/db";
 import {
   NewGame,
@@ -82,7 +82,8 @@ export async function getLatestGameInfoByRoomCode({ code }: { code: string }) {
   const gameQuestions = await db
     .select()
     .from(questions)
-    .where(eq(questions.gameId, latestGame[0].game.id));
+    .where(eq(questions.gameId, latestGame[0].game.id))
+    .orderBy(asc(questions.round), asc(questions.id));
 
   return {
     game: latestGame[0].game,
