@@ -183,7 +183,7 @@ export function buildServer() {
         const gameInfo = await getGameInfo({ gameId: data.gameId });
 
         if (!gameInfo) {
-          socket.emit("message", `Unable to find game with gameId`);
+          socket.emit("error", `Unable to find game with gameId`);
           return;
         }
 
@@ -251,7 +251,7 @@ export function buildServer() {
         const gameInfo = await getGameInfo({ gameId: data.gameId });
 
         if (!gameInfo) {
-          socket.emit("message", `Unable to find game with gameId`);
+          socket.emit("error", `Unable to find game with gameId`);
           return;
         }
 
@@ -264,9 +264,10 @@ export function buildServer() {
           questionId: data.questionId,
         });
 
-        const totalNeeded = gameInfo.room.players.length - 2;
+        const totalNeeded = gameInfo.room.players.length - 2; // assuming 3+ players
+        const currentAmount = questionVotes.length;
 
-        if (questionVotes.length >= totalNeeded) {
+        if (currentAmount >= totalNeeded) {
           socket.emit("serverEvent", {
             type: "NEXT",
           });
