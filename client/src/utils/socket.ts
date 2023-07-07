@@ -1,7 +1,7 @@
 import type { EventFrom } from "xstate";
 import { Socket, io } from "socket.io-client";
 
-import { RoomInfo } from "@ai/app/server-actions";
+import { RoomInfo, User, UserVote, Vote } from "@ai/app/server-actions";
 import { gameMachine } from "@ai/components/game/game-machine";
 
 export interface ServerToClientEvents {
@@ -10,6 +10,7 @@ export interface ServerToClientEvents {
   startGame: () => void;
   serverEvent: (event: EventFrom<typeof gameMachine>) => void;
   submittedPlayers: (players: number[]) => void;
+  votedPlayers: (votes: UserVote[]) => void;
   error: (str: string) => void;
 }
 

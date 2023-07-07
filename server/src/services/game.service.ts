@@ -28,10 +28,10 @@ export async function getGameInfo({ gameId }: { gameId: number }) {
       room: rooms,
     })
     .from(games)
-    .fullJoin(rooms, eq(rooms.code, games.roomCode))
+    .innerJoin(rooms, eq(rooms.code, games.roomCode))
     .where(eq(games.id, gameId));
 
-  if (getGame.length === 0 || !getGame[0].room) {
+  if (getGame.length === 0) {
     return null;
   }
 
@@ -42,7 +42,7 @@ export async function getGameInfo({ gameId }: { gameId: number }) {
       createdAt: users.createdAt,
     })
     .from(userRooms)
-    .fullJoin(users, eq(userRooms.userId, users.id))
+    .innerJoin(users, eq(userRooms.userId, users.id))
     .where(eq(userRooms.roomCode, getGame[0].room.code))) as User[];
 
   return {
@@ -61,7 +61,7 @@ export async function getLatestGameInfoByRoomCode({ code }: { code: string }) {
       room: rooms,
     })
     .from(games)
-    .fullJoin(rooms, eq(rooms.code, games.roomCode))
+    .innerJoin(rooms, eq(rooms.code, games.roomCode))
     .where(eq(games.roomCode, code))
     .orderBy(desc(games.createdAt));
 
@@ -76,7 +76,7 @@ export async function getLatestGameInfoByRoomCode({ code }: { code: string }) {
       createdAt: users.createdAt,
     })
     .from(userRooms)
-    .fullJoin(users, eq(userRooms.userId, users.id))
+    .innerJoin(users, eq(userRooms.userId, users.id))
     .where(eq(userRooms.roomCode, latestGame[0].room.code))) as User[];
 
   const gameQuestions = await db

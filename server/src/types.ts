@@ -1,5 +1,5 @@
 import type { EventFrom } from "xstate";
-import { RoomInfo } from "../db/schema";
+import { RoomInfo, User, Vote } from "../db/schema";
 import { serverMachine } from "./server-machine";
 
 export interface ServerToClientEvents {
@@ -8,6 +8,7 @@ export interface ServerToClientEvents {
   startGame: () => void;
   serverEvent: (event: EventFrom<typeof serverMachine>) => void;
   submittedPlayers: (players: number[]) => void;
+  votedPlayers: (votes: { vote: Vote; user: User }[]) => void;
   error: (str: string) => void;
 }
 

@@ -31,16 +31,22 @@ const FaceOff = ({
   const { user } = useStore();
   const socket = useContext(SocketContext);
 
-  console.log("CURR QUESTION GENERATIONS in FACE OFF", currQuestionGenerations);
-
+  // DATA HANDLING
   // 1. Query for generations from the current round
-
   // 2. Iterate through each question, getting the generations associated with each
-
   // 3. Once complete with the questions do the transition to the next round
+
+  // AFTER A VOTE
+  // 1. Once a player votes on an image, show a "waiting" state
+  // 2.
 
   const [loading, setLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState<ImageOption>();
+  const [voteSubmitted, setVoteSubmitted] = useState(false);
+
+  const currUserInFaceOff =
+    user?.id === currQuestionGenerations?.player1.id ||
+    user?.id === currQuestionGenerations?.player2.id;
 
   const onImageChoice = async () => {
     setLoading(true);
@@ -60,7 +66,16 @@ const FaceOff = ({
     // send({ type: "SUBMIT" });
 
     setLoading(false);
+    setVoteSubmitted(true);
   };
+
+  if (!currQuestionGenerations) {
+    return (
+      <main className="mx-auto flex max-w-2xl items-center justify-center">
+        <p>Oops! There was an error loading the current face-off</p>
+      </main>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-2xl">
@@ -78,18 +93,29 @@ const FaceOff = ({
             </motion.h2>
           </div>
           <ImageChoice
-            imageOption1={currQuestionGenerations.player1Generation.imageUrl}
-            imageOption2={currQuestionGenerations.player2Generation.imageUrl}
+            imageOption1={{
+              src: currQuestionGenerations.player1Generation.imageUrl,
+              alt: currQuestionGenerations.player1Generation.text,
+            }}
+            imageOption2={{
+              src: currQuestionGenerations.player2Generation.imageUrl,
+              alt: currQuestionGenerations.player2Generation.text,
+            }}
             selectedImage={selectedImage}
             setSelectedImage={setSelectedImage}
+            disabled={currUserInFaceOff}
           />
-          <div>
-            <Button
-              onClick={onImageChoice}
-              disabled={!selectedImage || loading}
-            >
-              {!loading ? "Confirm Vote" : <Ellipsis />}
-            </Button>
+          <div className="mt-4">
+            {currUserInFaceOff || voteSubmitted ? (
+              <p>Waiting for other players to finishing voting...</p>
+            ) : (
+              <Button
+                onClick={onImageChoice}
+                disabled={!selectedImage || loading}
+              >
+                {!loading ? "Confirm Vote" : <Ellipsis />}
+              </Button>
+            )}
           </div>
         </>
       )}

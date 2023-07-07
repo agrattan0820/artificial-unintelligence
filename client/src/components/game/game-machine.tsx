@@ -19,7 +19,12 @@ import Winner from "./winner";
 import Leaderboard from "./leaderboard";
 import NextRound from "./next-round";
 import PromptSubmitted from "./prompt-submitted";
-import { GameInfo, QuestionGenerations } from "@ai/app/server-actions";
+import {
+  GameInfo,
+  QuestionGenerations,
+  UserVote,
+  Vote,
+} from "@ai/app/server-actions";
 
 // COMPONENTS
 const TransitionWrapper = ({ children }: { children: ReactNode }) => {
@@ -37,6 +42,8 @@ const TransitionWrapper = ({ children }: { children: ReactNode }) => {
 // TYPES
 type MachineContext = {
   round: number;
+  playerCount: number;
+  questionIdx: number;
 };
 type MachineEvent = { type: "NEXT" } | { type: "SUBMIT" } | { type: "MORE" };
 
@@ -54,6 +61,8 @@ export const gameMachine = createMachine(
     predictableActionArguments: true,
     context: {
       round: 1,
+      playerCount: 0,
+      questionIdx: 0,
     },
     states: {
       connectingToMainframe: {
@@ -88,27 +97,31 @@ export const gameMachine = createMachine(
 
       faceOff: {
         on: {
-          SUBMIT: "faceOffResults",
+          NEXT: "faceOffResults",
         },
       },
 
       faceOffResults: {
-        on: {
-          NEXT: [
+        after: {
+          20000: [
             {
               target: "winnerLeadUp",
               cond: "completedRounds",
             },
             {
               target: "nextRound",
+              cond: "completedCurrentRound",
+            },
+            {
+              target: "faceOff",
+              actions: "incrementQuestionIdx",
             },
           ],
-          MORE: "faceOff",
         },
       },
 
       nextRound: {
-        entry: "incrementRound",
+        entry: "startNewRound",
         after: {
           4000: "prompt",
         },
@@ -133,11 +146,24 @@ export const gameMachine = createMachine(
   },
   {
     actions: {
-      incrementRound: assign({ round: (context) => context.round + 1 }),
+      startNewRound: assign({
+        round: (context) => context.round + 1,
+        questionIdx: 0,
+      }),
+      incrementQuestionIdx: assign({
+        questionIdx: (context) => context.questionIdx + 1,
+      }),
     },
     guards: {
       completedRounds: (context, event) => {
-        return context.round === 3;
+        return (
+          context.round === 3 && context.playerCount === context.questionIdx + 1
+        );
+      },
+      completedCurrentRound: (context, event) => {
+        console.log("PLAYER COUNT", context.playerCount);
+        console.log("QUESTION IDX", context.questionIdx);
+        return context.playerCount === context.questionIdx + 1;
       },
     },
   }
@@ -148,7 +174,8 @@ export const getCurrentComponent = (
   state: StateFrom<typeof gameMachine>,
   send: (event: EventFrom<typeof gameMachine>) => StateFrom<typeof gameMachine>,
   submittedPlayerIds: Set<number>,
-  currFaceOffQuestion: QuestionGenerations | undefined
+  currFaceOffQuestion: QuestionGenerations | undefined,
+  votedPlayers: UserVote[]
 ) => {
   const stateMachineComponentMap: Record<
     StateValueFrom<typeof gameMachine>,
@@ -195,7 +222,13 @@ export const getCurrentComponent = (
     ),
     faceOffResults: (
       <TransitionWrapper key="faceOffResults">
-        <FaceOffResult />
+        <FaceOffResult
+          gameInfo={gameInfo}
+          state={state}
+          send={send}
+          currQuestionGenerations={currFaceOffQuestion}
+          votedPlayers={votedPlayers}
+        />
       </TransitionWrapper>
     ),
     nextRound: (

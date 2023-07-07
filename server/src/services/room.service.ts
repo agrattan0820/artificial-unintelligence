@@ -86,7 +86,7 @@ export async function getRoom({ code }: { code: string }) {
       createdAt: users.createdAt,
     })
     .from(userRooms)
-    .fullJoin(users, eq(userRooms.userId, users.id))
+    .innerJoin(users, eq(userRooms.userId, users.id))
     .where(eq(userRooms.roomCode, code))) as User[];
 
   return {

@@ -1,25 +1,18 @@
 "use client";
 
-import {
-  ChangeEvent,
-  FormEvent,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { ChangeEvent, FormEvent, useContext, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { EventFrom, StateFrom } from "xstate";
+import toast from "react-hot-toast";
 
 import Button, { SecondaryButton } from "@ai/components/button";
-import { generateImage, generatePrompt } from "@ai/utils/query";
+import { generateImage } from "@ai/utils/query";
 import Ellipsis from "@ai/components/ellipsis";
 import ImageChoice, { ImageOption } from "./image-choice";
 import Timer from "./timer";
 import { GameInfo } from "@ai/app/server-actions";
-import { EventFrom, StateFrom } from "xstate";
 import { gameMachine } from "./game-machine";
 import { useStore } from "@ai/utils/store";
-import toast from "react-hot-toast";
 import { SocketContext } from "@ai/utils/socket-provider";
 
 interface FormElementsType extends HTMLFormControlsCollection {
@@ -135,8 +128,14 @@ const Prompt = ({
         </AnimatePresence>
       </div>
       <ImageChoice
-        imageOption1={imageOption1}
-        imageOption2={imageOption2}
+        imageOption1={{
+          src: imageOption1,
+          alt: `Image option 1 with the prompt: ${imagePrompt}`,
+        }}
+        imageOption2={{
+          src: imageOption2,
+          alt: `Image option 2 with the prompt: ${imagePrompt}`,
+        }}
         selectedImage={selectedImage}
         setSelectedImage={setSelectedImage}
       />

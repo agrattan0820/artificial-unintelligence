@@ -61,6 +61,10 @@ export function buildServer() {
   io.on("connection", (socket) => {
     console.log("[CONNECTION]", socket.id);
 
+    if (socket.handshake.auth.roomCode) {
+      socket.join(socket.handshake.auth.roomCode);
+    }
+
     socket.on("connectToRoom", async (code) => {
       try {
         const userId = socket.handshake.auth.userId;
@@ -198,7 +202,7 @@ export function buildServer() {
         const userGenerationCountMap = new Map<number, number>();
         const submittedUsers = gameRoundGenerations.reduce<number[]>(
           (acc, curr) => {
-            const currUserId = curr.generations.userId;
+            const currUserId = curr.generation.userId;
 
             if (userGenerationCountMap.get(currUserId) === 1) {
               userGenerationCountMap.set(currUserId, 2);
@@ -263,6 +267,9 @@ export function buildServer() {
         const questionVotes = await getQuestionVotes({
           questionId: data.questionId,
         });
+
+        socket.emit("votedPlayers", questionVotes);
+        socket.to(gameInfo.room.code).emit("votedPlayers", questionVotes);
 
         const totalNeeded = gameInfo.room.players.length - 2; // assuming 3+ players
         const currentAmount = questionVotes.length;

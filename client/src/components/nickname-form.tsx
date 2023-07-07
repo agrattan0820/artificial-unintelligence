@@ -30,7 +30,7 @@ type NicknameFormProps =
     };
 
 const NicknameForm = ({ room, submitLabel, type }: NicknameFormProps) => {
-  const { user, setUser } = useStore();
+  const { user, setUser, setRoom } = useStore();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -44,12 +44,14 @@ const NicknameForm = ({ room, submitLabel, type }: NicknameFormProps) => {
     if (type === "HOME") {
       const hostData = await createHost(formNickname);
       setUser(hostData.host);
+      setRoom(hostData.room);
       router.push(`/room/${hostData.room.code}`);
     }
 
     if (type === "INVITE") {
       const joinData = await joinRoom(formNickname, room.code);
       setUser(joinData.user);
+      setRoom(room);
       if (room) router.push(`/room/${room.code}`);
     }
   };

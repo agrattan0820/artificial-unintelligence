@@ -5,6 +5,7 @@ import {
   User,
   generations,
   questions,
+  users,
   votes,
 } from "../../db/schema";
 import { openai } from "../openai";
@@ -122,8 +123,12 @@ export async function getQuestionVotes({ questionId }: { questionId: number }) {
     .where(and(eq(generations.questionId, questionId)));
 
   const questionVotes = await db
-    .select()
+    .select({
+      vote: votes,
+      user: users,
+    })
     .from(votes)
+    .innerJoin(users, eq(votes.userId, users.id))
     .where(
       inArray(
         votes.generationId,

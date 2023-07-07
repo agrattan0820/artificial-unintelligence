@@ -1,6 +1,6 @@
 import { and, asc, eq } from "drizzle-orm";
 import { db } from "../../db/db";
-import { NewGeneration, generations, questions } from "../../db/schema";
+import { NewGeneration, generations, questions, users } from "../../db/schema";
 
 export async function getGameRoundGenerations({
   gameId,
@@ -10,9 +10,14 @@ export async function getGameRoundGenerations({
   round: number;
 }) {
   const gameRoundGenerations = await db
-    .select()
+    .select({
+      generation: generations,
+      question: questions,
+      user: users,
+    })
     .from(generations)
-    .leftJoin(questions, eq(questions.id, generations.questionId))
+    .innerJoin(questions, eq(questions.id, generations.questionId))
+    .innerJoin(users, eq(users.id, generations.userId))
     .where(and(eq(questions.gameId, gameId), eq(questions.round, round)))
     .orderBy(asc(questions.id));
 

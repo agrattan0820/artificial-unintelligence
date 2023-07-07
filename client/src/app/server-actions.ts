@@ -44,6 +44,7 @@ export type Vote = {
   createdAt: string;
   id: number;
   userId: number;
+  generationId: number;
 };
 
 export type GameInfo = {
@@ -59,9 +60,13 @@ export type CreateHostResponse = {
 
 export type QuestionGenerations = {
   question: Question;
+  player1: User;
   player1Generation: Generation;
+  player2: User;
   player2Generation: Generation;
 };
+
+export type UserVote = { vote: Vote; user: User };
 
 // ! ----------> USERS <----------
 
@@ -129,8 +134,9 @@ export async function getGameInfo(code: string) {
 // ! ----------> GENERATIONS <----------
 
 export type GetGameRoundGenerationsResponse = {
-  generations: Generation;
-  questions: Question;
+  generation: Generation;
+  question: Question;
+  user: User;
 }[];
 
 export async function getGameRoundGenerations({
