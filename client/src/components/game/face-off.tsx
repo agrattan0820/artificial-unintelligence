@@ -107,7 +107,7 @@ const FaceOff = ({
           />
           <div className="mt-4">
             {currUserInFaceOff || voteSubmitted ? (
-              <p>Waiting for other players to finishing voting...</p>
+              <p>Waiting for other players to finish voting...</p>
             ) : (
               <Button
                 onClick={onImageChoice}
