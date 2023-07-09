@@ -31,15 +31,6 @@ const FaceOff = ({
   const { user } = useStore();
   const socket = useContext(SocketContext);
 
-  // DATA HANDLING
-  // 1. Query for generations from the current round
-  // 2. Iterate through each question, getting the generations associated with each
-  // 3. Once complete with the questions do the transition to the next round
-
-  // AFTER A VOTE
-  // 1. Once a player votes on an image, show a "waiting" state
-  // 2.
-
   const [loading, setLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState<ImageOption>();
   const [voteSubmitted, setVoteSubmitted] = useState(false);
@@ -62,8 +53,6 @@ const FaceOff = ({
         userId: user.id,
       });
     }
-
-    // send({ type: "SUBMIT" });
 
     setLoading(false);
     setVoteSubmitted(true);
