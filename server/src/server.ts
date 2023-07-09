@@ -18,14 +18,12 @@ import { ClientToServerEvents, ServerToClientEvents } from "./types";
 import {
   createGeneration,
   getGameRoundGenerations,
+  getSubmittedPlayers,
 } from "./services/generation.service";
-import {
-  assignQuestionsToPlayers,
-  getQuestionVotes,
-} from "./services/question.service";
+import { assignQuestionsToPlayers } from "./services/question.service";
 import { gameRoutes } from "./routes/game.route";
 import { questionRoutes } from "./routes/question.route";
-import { createVote } from "./services/vote.service";
+import { createVote, getVotesByQuestionId } from "./services/vote.service";
 import { generationRoutes } from "./routes/generation.route";
 
 export function buildServer() {
@@ -199,24 +197,7 @@ export function buildServer() {
         });
 
         // Player Submissions
-        const userGenerationCountMap = new Map<number, number>();
-        const submittedUsers = gameRoundGenerations.reduce<number[]>(
-          (acc, curr) => {
-            const currUserId = curr.generation.userId;
-
-            if (userGenerationCountMap.get(currUserId) === 1) {
-              userGenerationCountMap.set(currUserId, 2);
-              acc.push(currUserId);
-            }
-
-            if (!userGenerationCountMap.has(currUserId)) {
-              userGenerationCountMap.set(currUserId, 1);
-            }
-
-            return acc;
-          },
-          []
-        );
+        const submittedUsers = getSubmittedPlayers({ gameRoundGenerations });
 
         socket.emit("submittedPlayers", submittedUsers);
         socket.to(gameInfo.room.code).emit("submittedPlayers", submittedUsers);
@@ -264,7 +245,7 @@ export function buildServer() {
           generationId: data.generationId,
         });
 
-        const questionVotes = await getQuestionVotes({
+        const questionVotes = await getVotesByQuestionId({
           questionId: data.questionId,
         });
 

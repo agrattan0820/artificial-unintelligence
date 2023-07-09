@@ -42,7 +42,13 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
 
   // TODO: Fix this game machine error ✅
   // TODO: Test face offs to see if they go to the next question correctly ✅
-  // TODO: Ensure a user who refreshes is connected to the room socket-wise
+  // TODO: Ensure a user who refreshes is connected to the room socket-wise ✅
+  // TODO: Send submitted playerIds and votes from game info endpoint ✅
+  // TODO: Ensure user information in zustand state does not disappear
+  // TODO: Allow refresh in room lobby screen
+  // TODO: Fix Firefox round animation glitch
+  // TODO: "Finishing voting"
+  // TODO: Third round prompt has to include a particular word?
   // TODO: Start on game completion
 
   // State machine
@@ -81,13 +87,15 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
 
   // Store players who have submitted their prompts for a round
   const [submittedPlayerIds, setSubmittedPlayerIds] = useState<Set<number>>(
-    new Set([])
+    new Set(gameInfo.submittedPlayers)
   );
 
   const handleOnSubmittedPlayers = (players: number[]) => {
     console.log("HANDLE SUBMITTED PLAYERS", players);
     setSubmittedPlayerIds(new Set(players));
   };
+
+  console.log("SUBMITTED PLAYER IDS", submittedPlayerIds);
 
   // Construct Question Generation map for face-offs
   const gameId = gameInfo.game.id;
@@ -148,7 +156,9 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
   console.log("CURR FaceOff QUESTION", currFaceOffQuestion);
 
   // Store players who have submitted votes for the current question
-  const [votedPlayers, setVotedPlayers] = useState<UserVote[]>([]);
+  const [votedPlayers, setVotedPlayers] = useState<UserVote[]>(
+    gameInfo.votedPlayers
+  );
 
   const handleVotedPlayers = (votes: UserVote[]) => {
     console.log("HANDLE VOTED PLAYERS", votes);

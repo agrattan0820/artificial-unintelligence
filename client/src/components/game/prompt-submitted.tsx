@@ -1,16 +1,13 @@
 "use client";
 
-import { useContext, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FiCheck } from "react-icons/fi";
 
 import { cn } from "@ai/utils/cn";
-import Button from "@ai/components/button";
 import FriendWithLegs from "./friend-with-legs";
 import { GameInfo } from "@ai/app/server-actions";
 import { StateFrom } from "xstate";
 import { gameMachine } from "./game-machine";
-import { SocketContext } from "@ai/utils/socket-provider";
 import { useStore } from "@ai/utils/store";
 
 type PlayerBlockProps = {
@@ -57,7 +54,6 @@ const PromptSubmitted = ({
   submittedPlayerIds: Set<number>;
 }) => {
   const { user } = useStore();
-  // const socket = useContext(SocketContext);
 
   return (
     <div className="mx-auto flex min-h-screen flex-col items-center justify-center text-center">

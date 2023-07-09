@@ -134,8 +134,8 @@ export const gameMachine = createMachine(
       },
 
       winner: {
-        on: {
-          NEXT: "leaderboard",
+        after: {
+          10000: "leaderboard",
         },
       },
 
@@ -243,7 +243,7 @@ export const getCurrentComponent = (
     ),
     winner: (
       <TransitionWrapper key="winner">
-        <Winner />
+        <Winner gameInfo={gameInfo} state={state} send={send} />
       </TransitionWrapper>
     ),
     leaderboard: (

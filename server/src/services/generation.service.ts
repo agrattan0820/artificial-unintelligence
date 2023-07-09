@@ -1,6 +1,20 @@
 import { and, asc, eq } from "drizzle-orm";
 import { db } from "../../db/db";
-import { NewGeneration, generations, questions, users } from "../../db/schema";
+import {
+  Generation,
+  NewGeneration,
+  Question,
+  User,
+  generations,
+  questions,
+  users,
+} from "../../db/schema";
+
+type GameRoundGeneration = {
+  generation: Generation;
+  question: Question;
+  user: User;
+};
 
 export async function getGameRoundGenerations({
   gameId,
@@ -8,7 +22,7 @@ export async function getGameRoundGenerations({
 }: {
   gameId: number;
   round: number;
-}) {
+}): Promise<GameRoundGeneration[]> {
   const gameRoundGenerations = await db
     .select({
       generation: generations,
@@ -22,6 +36,30 @@ export async function getGameRoundGenerations({
     .orderBy(asc(questions.id));
 
   return gameRoundGenerations;
+}
+
+export function getSubmittedPlayers({
+  gameRoundGenerations,
+}: {
+  gameRoundGenerations: GameRoundGeneration[];
+}) {
+  const userGenerationCountMap = new Map<number, number>();
+  const submittedUsers = gameRoundGenerations.reduce<number[]>((acc, curr) => {
+    const currUserId = curr.generation.userId;
+
+    if (userGenerationCountMap.get(currUserId) === 1) {
+      userGenerationCountMap.set(currUserId, 2);
+      acc.push(currUserId);
+    }
+
+    if (!userGenerationCountMap.has(currUserId)) {
+      userGenerationCountMap.set(currUserId, 1);
+    }
+
+    return acc;
+  }, []);
+
+  return submittedUsers;
 }
 
 export async function createGeneration(data: NewGeneration) {

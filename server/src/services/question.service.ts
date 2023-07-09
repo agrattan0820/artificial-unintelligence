@@ -116,29 +116,6 @@ export async function getUserQuestionsForRound({
   return userQuestionsForRound;
 }
 
-export async function getQuestionVotes({ questionId }: { questionId: number }) {
-  const getAssociatedGenerations = await db
-    .select()
-    .from(generations)
-    .where(and(eq(generations.questionId, questionId)));
-
-  const questionVotes = await db
-    .select({
-      vote: votes,
-      user: users,
-    })
-    .from(votes)
-    .innerJoin(users, eq(votes.userId, users.id))
-    .where(
-      inArray(
-        votes.generationId,
-        getAssociatedGenerations.map((generation) => generation.id)
-      )
-    );
-
-  return questionVotes;
-}
-
 // UTILS
 
 function getRandomInt(min: number, max: number) {

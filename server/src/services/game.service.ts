@@ -3,12 +3,18 @@ import { db } from "../../db/db";
 import {
   NewGame,
   User,
+  Vote,
   games,
   questions,
   rooms,
   userRooms,
   users,
 } from "../../db/schema";
+import {
+  getGameRoundGenerations,
+  getSubmittedPlayers,
+} from "./generation.service";
+import { getVotesByGameRound } from "./vote.service";
 
 export async function createGame({ code }: { code: string }) {
   const newGame: NewGame = {
@@ -55,7 +61,7 @@ export async function getGameInfo({ gameId }: { gameId: number }) {
 }
 
 export async function getLatestGameInfoByRoomCode({ code }: { code: string }) {
-  const latestGame = await db
+  const latestGames = await db
     .select({
       game: games,
       room: rooms,
@@ -65,9 +71,15 @@ export async function getLatestGameInfoByRoomCode({ code }: { code: string }) {
     .where(eq(games.roomCode, code))
     .orderBy(desc(games.createdAt));
 
-  if (latestGame.length === 0 || !latestGame[0].room || !latestGame[0].game) {
+  if (
+    latestGames.length === 0 ||
+    !latestGames[0].room ||
+    !latestGames[0].game
+  ) {
     return null;
   }
+
+  const latestGame = latestGames[0];
 
   const players = (await db
     .select({
@@ -77,21 +89,39 @@ export async function getLatestGameInfoByRoomCode({ code }: { code: string }) {
     })
     .from(userRooms)
     .innerJoin(users, eq(userRooms.userId, users.id))
-    .where(eq(userRooms.roomCode, latestGame[0].room.code))) as User[];
+    .where(eq(userRooms.roomCode, latestGame.room.code))) as User[];
 
   const gameQuestions = await db
     .select()
     .from(questions)
-    .where(eq(questions.gameId, latestGame[0].game.id))
+    .where(eq(questions.gameId, latestGame.game.id))
     .orderBy(asc(questions.round), asc(questions.id));
 
+  const gameRoundGenerations = await getGameRoundGenerations({
+    gameId: latestGame.game.id,
+    round: latestGame.game.round,
+  });
+
+  let submittedPlayers: number[] = [];
+  let votedPlayers: { user: User; vote: Vote }[] = [];
+
+  if (gameRoundGenerations.length > 0) {
+    submittedPlayers = getSubmittedPlayers({ gameRoundGenerations });
+    votedPlayers = await getVotesByGameRound({
+      gameId: latestGame.game.id,
+      round: latestGame.game.round,
+    });
+  }
+
   return {
-    game: latestGame[0].game,
+    game: latestGame.game,
     room: {
-      ...latestGame[0].room,
+      ...latestGame.room,
       players,
     },
     questions: gameQuestions,
+    submittedPlayers,
+    votedPlayers,
   };
 }
 

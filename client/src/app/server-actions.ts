@@ -47,10 +47,14 @@ export type Vote = {
   generationId: number;
 };
 
+export type UserVote = { vote: Vote; user: User };
+
 export type GameInfo = {
   game: Game;
   room: RoomInfo;
   questions: Question[];
+  submittedPlayers: number[];
+  votedPlayers: UserVote[];
 };
 
 export type CreateHostResponse = {
@@ -65,8 +69,6 @@ export type QuestionGenerations = {
   player2: User;
   player2Generation: Generation;
 };
-
-export type UserVote = { vote: Vote; user: User };
 
 // ! ----------> USERS <----------
 
