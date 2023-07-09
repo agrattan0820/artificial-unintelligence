@@ -40,17 +40,6 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
       ? gameMachine.resolveState(State.create(JSON.parse(gameInfo.game.state)))
       : undefined;
 
-  // TODO: Fix this game machine error ✅
-  // TODO: Test face offs to see if they go to the next question correctly ✅
-  // TODO: Ensure a user who refreshes is connected to the room socket-wise ✅
-  // TODO: Send submitted playerIds and votes from game info endpoint ✅
-  // TODO: Ensure user information in zustand state does not disappear
-  // TODO: Allow refresh in room lobby screen
-  // TODO: Fix Firefox round animation glitch
-  // TODO: "Finishing voting"
-  // TODO: Third round prompt has to include a particular word?
-  // TODO: Start on game completion
-
   // State machine
   const [state, send] = useMachine(gameMachine, {
     state: serverState,
