@@ -26,8 +26,6 @@ export type Generation = {
   id: number;
   text: string;
   imageUrl: string;
-  round: number;
-  gameId: number;
   userId: number;
   questionId: number;
   createdAt: string;
@@ -36,22 +34,43 @@ export type Question = {
   id: number;
   text: string;
   createdAt: string;
+  gameId: number;
+  round: number;
+  player1: number;
+  player2: number;
+  votedOn: boolean;
 };
 export type Vote = {
   createdAt: string;
   id: number;
   userId: number;
+  generationId: number;
 };
+
+export type UserVote = { vote: Vote; user: User };
 
 export type GameInfo = {
   game: Game;
   room: RoomInfo;
+  questions: Question[];
+  submittedPlayers: number[];
+  votedPlayers: UserVote[];
 };
 
 export type CreateHostResponse = {
   host: User;
   room: Room;
 };
+
+export type QuestionGenerations = {
+  question: Question;
+  player1: User;
+  player1Generation: Generation;
+  player2: User;
+  player2Generation: Generation;
+};
+
+// ! ----------> USERS <----------
 
 export async function createHost(nickname: string) {
   const response = await fetch(`${URL}/user/createHost`, {
@@ -68,6 +87,8 @@ export async function createHost(nickname: string) {
 
   return data;
 }
+
+// ! ----------> ROOMS <----------
 
 export type JoinRoomResponse = {
   user: User;
@@ -102,6 +123,8 @@ export async function getRoomInfo(code: string) {
 
 export type GetGameInfoResponse = GameInfo;
 
+// ! ----------> GAMES <----------
+
 export async function getGameInfo(code: string) {
   const response = await fetch(`${URL}/game/${code}`, { cache: "no-store" });
 
@@ -110,12 +133,27 @@ export async function getGameInfo(code: string) {
   return data;
 }
 
-export type GenerateQuestionResponse = Question;
+// ! ----------> GENERATIONS <----------
 
-export async function generateQuestion(id: number) {
-  const response = await fetch(`${URL}/question/${id}`, { cache: "no-store" });
+export type GetGameRoundGenerationsResponse = {
+  generation: Generation;
+  question: Question;
+  user: User;
+}[];
 
-  const data: GenerateQuestionResponse = await response.json();
+export async function getGameRoundGenerations({
+  gameId,
+  round,
+}: {
+  gameId: number;
+  round: number;
+}) {
+  const response = await fetch(
+    `${URL}/generations/gameId/${gameId}/round/${round}`,
+    { cache: "no-store" }
+  );
+
+  const data: GetGameRoundGenerationsResponse = await response.json();
 
   return data;
 }

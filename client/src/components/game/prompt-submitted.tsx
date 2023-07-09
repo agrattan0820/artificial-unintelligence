@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
 import { motion } from "framer-motion";
 import { FiCheck } from "react-icons/fi";
 
 import { cn } from "@ai/utils/cn";
-import Button from "@ai/components/button";
 import FriendWithLegs from "./friend-with-legs";
+import { GameInfo } from "@ai/app/server-actions";
+import { StateFrom } from "xstate";
+import { gameMachine } from "./game-machine";
+import { useStore } from "@ai/utils/store";
 
 type PlayerBlockProps = {
   nickname: string;
@@ -42,8 +44,16 @@ const PlayerBlock = ({ nickname, submitted }: PlayerBlockProps) => {
   );
 };
 
-const PromptSubmitted = () => {
-  const [bigAlSubmitted, setBigAlSubmitted] = useState(false);
+const PromptSubmitted = ({
+  gameInfo,
+  state,
+  submittedPlayerIds,
+}: {
+  gameInfo: GameInfo;
+  state: StateFrom<typeof gameMachine>;
+  submittedPlayerIds: Set<number>;
+}) => {
+  const { user } = useStore();
 
   return (
     <div className="mx-auto flex min-h-screen flex-col items-center justify-center text-center">
@@ -54,14 +64,16 @@ const PromptSubmitted = () => {
         layout
         className="mb-4 flex flex-wrap items-center justify-center gap-6"
       >
-        <PlayerBlock nickname="Big Al" submitted={bigAlSubmitted} />
-        <PlayerBlock nickname="Kylie" submitted={true} />
-        <PlayerBlock nickname="Roy" submitted={false} />
-        <PlayerBlock nickname="Lifeguard Dan" submitted={true} />
-        <PlayerBlock nickname="Kev" submitted={false} />
-        <PlayerBlock nickname="Big T" submitted={true} />
+        {gameInfo.room.players.map((player, i) => (
+          <PlayerBlock
+            key={i}
+            nickname={player.nickname}
+            submitted={
+              submittedPlayerIds.has(player.id) || player.id === user?.id
+            }
+          />
+        ))}
       </motion.ul>
-      <Button onClick={() => setBigAlSubmitted(!bigAlSubmitted)}>Submit</Button>
     </div>
   );
 };

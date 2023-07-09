@@ -4,146 +4,10 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { MotionStyle, Variants, motion } from "framer-motion";
 import Image, { StaticImageData } from "next/image";
 import { BsTrophy } from "react-icons/bs";
-import { EventFrom, StateFrom } from "xstate";
 
+import SadDog from "@ai/images/sad-dog.webp";
+import SadDog2 from "@ai/images/sad-dog-2.webp";
 import { cn } from "@ai/utils/cn";
-import FriendWithLegs from "./friend-with-legs";
-import {
-  GameInfo,
-  QuestionGenerations,
-  UserVote,
-} from "@ai/app/server-actions";
-import { gameMachine } from "./game-machine";
-
-type FaceOffResultProps = {
-  gameInfo: GameInfo;
-  state: StateFrom<typeof gameMachine>;
-  send: (event: EventFrom<typeof gameMachine>) => StateFrom<typeof gameMachine>;
-  currQuestionGenerations: QuestionGenerations | undefined;
-  votedPlayers: UserVote[];
-};
-
-const FaceOffResult = ({
-  gameInfo,
-  state,
-  send,
-  currQuestionGenerations,
-  votedPlayers,
-}: FaceOffResultProps) => {
-  const player1 = currQuestionGenerations?.player1;
-  const player2 = currQuestionGenerations?.player2;
-  const image1 = currQuestionGenerations?.player1Generation;
-  const image2 = currQuestionGenerations?.player2Generation;
-
-  const voteMap = votedPlayers.reduce<{
-    player1Votes: UserVote[];
-    player2Votes: UserVote[];
-  }>(
-    (acc, curr) => {
-      if (curr.vote.generationId === image1?.id) {
-        acc.player1Votes.push(curr);
-      }
-
-      if (curr.vote.generationId === image2?.id) {
-        acc.player2Votes.push(curr);
-      }
-
-      return acc;
-    },
-    { player1Votes: [], player2Votes: [] }
-  );
-
-  const image1VotePercentage =
-    Math.round(voteMap.player1Votes.length / votedPlayers.length) * 100;
-  const image2VotePercentage =
-    Math.round(voteMap.player2Votes.length / votedPlayers.length) * 100;
-
-  const winningImage: 1 | 2 =
-    voteMap.player1Votes.length > voteMap.player2Votes.length ? 1 : 2;
-
-  const [showImage1, setShowImage1] = useState(false);
-  const [showImage2, setShowImage2] = useState(false);
-  const [showWinner, setShowWinner] = useState(false);
-
-  const bothShown = showImage1 && showImage2;
-
-  useEffect(() => {
-    let winnerTimeout: NodeJS.Timeout;
-    if (showImage1 && showImage2) {
-      winnerTimeout = setTimeout(() => {
-        setShowWinner(true);
-      }, 2000);
-    }
-
-    return () => {
-      clearTimeout(winnerTimeout);
-    };
-  }, [showImage1, showImage2]);
-
-  if (!image1 || !image2 || !player1 || !player2) {
-    return (
-      <main className="mx-auto flex max-w-2xl items-center justify-center">
-        <p>Oops! There was an error loading the current face-off results</p>
-      </main>
-    );
-  }
-
-  return (
-    <div className="mx-auto max-w-2xl">
-      <div className="relative mb-14">
-        <div className="rounded-xl p-4">
-          <motion.h2
-            initial={{ y: 10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 10, opacity: 0 }}
-            className="text-center text-lg md:text-2xl"
-          >
-            {currQuestionGenerations.question.text}
-          </motion.h2>
-        </div>
-        <motion.div
-          initial={{ x: 10, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          className="flex justify-end"
-        >
-          <FriendWithLegs />
-        </motion.div>
-      </div>
-      <div className="mb-16 flex gap-6">
-        <FaceOffResultImage
-          id={1}
-          prompt={image1.text}
-          nickname={player1.nickname}
-          percentage={image1VotePercentage}
-          image={image1.imageUrl}
-          bothImagesShown={bothShown}
-          showWinner={showWinner}
-          winningImage={winningImage}
-          votes={voteMap.player1Votes.map(
-            (votedPlayer) => votedPlayer.user.nickname
-          )}
-          setShowImage={setShowImage1}
-        />
-        <FaceOffResultImage
-          id={2}
-          prompt={image2.text}
-          nickname={player2.nickname}
-          percentage={image2VotePercentage}
-          image={image2.imageUrl}
-          bothImagesShown={bothShown}
-          showWinner={showWinner}
-          winningImage={winningImage}
-          votes={voteMap.player2Votes.map(
-            (votedPlayer) => votedPlayer.user.nickname
-          )}
-          setShowImage={setShowImage2}
-        />
-      </div>
-    </div>
-  );
-};
-
-export default FaceOffResult;
 
 const FaceOffResultImage = ({
   id,
@@ -353,3 +217,72 @@ const FaceOffResultImage = ({
     </motion.figure>
   );
 };
+
+const FaceOffResultImages = ({
+  image1Url,
+  image2Url,
+}: {
+  image1Url: string;
+  image2Url: string;
+}) => {
+  const [showImage1, setShowImage1] = useState(false);
+  const [showImage2, setShowImage2] = useState(false);
+
+  const [showWinner, setShowWinner] = useState(false);
+
+  const bothShown = showImage1 && showImage2;
+
+  const winningImage: 1 | 2 = 1;
+
+  useEffect(() => {
+    let winnerTimeout: NodeJS.Timeout;
+    if (showImage1 && showImage2) {
+      winnerTimeout = setTimeout(() => {
+        setShowWinner(true);
+      }, 2000);
+    }
+
+    return () => {
+      clearTimeout(winnerTimeout);
+    };
+  }, [showImage1, showImage2]);
+
+  return (
+    <>
+      <FaceOffResultImage
+        id={1}
+        prompt="A dog dressed as a detective solving a murder at a McDonald's."
+        nickname="Big Al"
+        percentage={75}
+        image={SadDog}
+        bothImagesShown={bothShown}
+        showWinner={showWinner}
+        winningImage={winningImage}
+        votes={[
+          "Big Al Dos",
+          "billy joel",
+          "Lego Pirate",
+          "Lego Yoda",
+          "boyyyyy",
+          "holaaaa",
+        ]}
+        setShowImage={setShowImage1}
+      />
+      <FaceOffResultImage
+        id={2}
+        prompt="Saint Bernard shaking its chubby cheeks while it gets splashed by
+              a hose."
+        nickname="Lifeguard Dan"
+        percentage={25}
+        image={SadDog2}
+        bothImagesShown={bothShown}
+        showWinner={showWinner}
+        winningImage={winningImage}
+        votes={["Kylie", "Roy"]}
+        setShowImage={setShowImage2}
+      />
+    </>
+  );
+};
+
+export default FaceOffResultImages;

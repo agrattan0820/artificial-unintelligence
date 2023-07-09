@@ -1,4 +1,4 @@
-import { generateQuestion, getGameInfo } from "@ai/app/server-actions";
+import { getGameInfo } from "@ai/app/server-actions";
 import Game from "./game";
 
 export default async function GamePage({
@@ -8,5 +8,7 @@ export default async function GamePage({
 }) {
   const gameInfo = await getGameInfo(params.code);
 
-  return <Game gameInfo={gameInfo} />;
+  console.log("GAME INFO", gameInfo);
+
+  return <Game roomCode={params.code} gameInfo={gameInfo} />;
 }

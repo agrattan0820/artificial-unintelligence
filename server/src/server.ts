@@ -4,10 +4,11 @@ import express, {
   Request,
   Response,
 } from "express";
-import { Server } from "socket.io";
+import { Server, Socket } from "socket.io";
 import { createServer } from "http";
 import cors from "cors";
 import morgan from "morgan";
+import helmet from "helmet";
 
 import { userRoutes } from "./routes/user.route";
 import { roomRoutes } from "./routes/room.route";
@@ -17,11 +18,13 @@ import { ClientToServerEvents, ServerToClientEvents } from "./types";
 import {
   createGeneration,
   getGameRoundGenerations,
+  getSubmittedPlayers,
 } from "./services/generation.service";
-import { getQuestionVotes } from "./services/question.service";
+import { assignQuestionsToPlayers } from "./services/question.service";
 import { gameRoutes } from "./routes/game.route";
 import { questionRoutes } from "./routes/question.route";
-import { createVote } from "./services/vote.service";
+import { createVote, getVotesByQuestionId } from "./services/vote.service";
+import { generationRoutes } from "./routes/generation.route";
 
 export function buildServer() {
   const app: Express = express();
@@ -32,6 +35,7 @@ export function buildServer() {
 
   app.use(express.json());
   app.use(cors());
+  app.use(helmet());
   app.use(morgan("tiny"));
 
   const io = new Server<ClientToServerEvents, ServerToClientEvents>(server, {
@@ -40,158 +44,260 @@ export function buildServer() {
     },
   });
 
+  const handleSocketIOError = (
+    e: Error,
+    socket: Socket<ClientToServerEvents, ServerToClientEvents>,
+    code?: string
+  ) => {
+    console.error("Socket.io Error: ", e);
+    socket.emit("error", e.message);
+    if (code) socket.to(code).emit("error", e.message);
+  };
+
+  io.engine.use(helmet());
+
   io.on("connection", (socket) => {
     console.log("[CONNECTION]", socket.id);
 
+    if (socket.handshake.auth.roomCode) {
+      socket.join(socket.handshake.auth.roomCode);
+    }
+
     socket.on("connectToRoom", async (code) => {
-      const userId = socket.handshake.auth.userId;
-      let roomInfo = await getRoom({ code });
+      try {
+        const userId = socket.handshake.auth.userId;
+        let roomInfo = await getRoom({ code });
 
-      if (
-        roomInfo &&
-        !roomInfo.players.find((player) => player.id === userId)
-      ) {
-        await joinRoom({ userId: userId, code });
-        roomInfo = await getRoom({ code });
+        if (
+          roomInfo &&
+          !roomInfo.players.find((player) => player.id === userId)
+        ) {
+          await joinRoom({ userId: userId, code });
+          roomInfo = await getRoom({ code });
+        }
+
+        if (!roomInfo) {
+          socket.emit("message", `Unable to connect to room`);
+          return;
+        }
+
+        socket.join(code);
+        socket.to(code).emit("message", `${userId} joined`);
+        socket.to(code).emit("roomState", roomInfo);
+      } catch (error) {
+        if (error instanceof Error) handleSocketIOError(error, socket, code);
       }
-
-      if (!roomInfo) {
-        socket.emit("message", `Unable to connect to room`);
-        return;
-      }
-
-      socket.join(code);
-      socket.to(code).emit("message", `${userId} joined`);
-      socket.to(code).emit("roomState", roomInfo);
     });
 
     socket.on("leaveRoom", async ({ userId, code }) => {
-      await leaveRoom({ userId, code });
-      const roomInfo = await getRoom({ code });
+      try {
+        await leaveRoom({ userId, code });
+        const roomInfo = await getRoom({ code });
 
-      if (!roomInfo) {
-        socket.emit("message", `Unable to get room info when leaving`);
-        return;
+        if (!roomInfo) {
+          socket.emit("message", `Unable to get room info when leaving`);
+          return;
+        }
+
+        socket.leave(code);
+        socket.to(code).emit("message", `${socket.handshake.auth.userId} left`);
+        socket.to(code).emit("roomState", roomInfo);
+      } catch (error) {
+        if (error instanceof Error) handleSocketIOError(error, socket, code);
       }
-
-      socket.leave(code);
-      socket.to(code).emit("message", `${socket.handshake.auth.userId} left`);
-      socket.to(code).emit("roomState", roomInfo);
     });
 
     socket.on("initiateGame", async (code) => {
-      inProgressRoomSet.add(code);
+      try {
+        inProgressRoomSet.add(code);
 
-      const newGame = await createGame({ code });
+        const newGame = await createGame({ code });
 
-      gameStateMap.set(newGame.id, {
-        state: newGame.state,
-        round: newGame.round,
-      });
+        gameStateMap.set(newGame.id, {
+          state: newGame.state,
+          round: newGame.round,
+        });
 
-      // TODO: `socket.in` which is supposed to send to members including the sender is not working as expected, using two emits as a workaround
-      socket.emit("startGame");
-      socket.to(code).emit("startGame");
+        const roomInfo = await getRoom({ code });
+
+        if (!roomInfo?.players) {
+          throw new Error(
+            "The room's players were not defined when initiating the game"
+          );
+        }
+
+        const sockets = await io.in(code).fetchSockets();
+
+        console.log(
+          "SOCKETS IN ROOM",
+          sockets.map((socket) => socket.handshake.auth.userId)
+        );
+
+        await assignQuestionsToPlayers({
+          gameId: newGame.id,
+          players: roomInfo?.players,
+        });
+
+        // TODO: `socket.in` which is supposed to send to members including the sender is not working as expected, using two emits as a workaround
+        socket.emit("startGame");
+        socket.to(code).emit("startGame");
+      } catch (error) {
+        if (error instanceof Error) handleSocketIOError(error, socket, code);
+      }
     });
 
     socket.on("clientEvent", async ({ state, gameId, round }) => {
-      const gameState = gameStateMap.get(gameId);
+      try {
+        const gameState = gameStateMap.get(gameId);
 
-      if (gameState && gameState?.state !== state) {
-        gameStateMap.set(gameId, { state, round });
-        await updateGame({ state, gameId, round });
+        if (gameState && gameState?.state !== state) {
+          gameStateMap.set(gameId, { state, round });
+          await updateGame({ state, gameId, round });
+        }
+      } catch (error) {
+        if (error instanceof Error) handleSocketIOError(error, socket);
       }
     });
 
+    socket.on("testEvent", async (code) => {
+      console.log("GOT TEST EVENT", code);
+
+      const sockets = await io.in(code).fetchSockets();
+
+      console.log(
+        "SOCKETS IN ROOM",
+        sockets.map((socket) => socket.handshake.auth.userId)
+      );
+
+      // socket.emit("serverEvent", {
+      //   type: "SUBMIT",
+      // });
+      // socket.to(code).emit("serverEvent", {
+      //   type: "SUBMIT",
+      // });
+    });
+
     socket.on("generationSubmitted", async (data) => {
-      // Receive gameId, and current round number
-      // Check if game has all possible generations submitted for the current round
-      // 2 x # of players is number of total needed generations
-      const gameInfo = await getGameInfo({ gameId: data.gameId });
+      try {
+        // Receive gameId, and current round number
+        // Check if game has all possible generations submitted for the current round
+        // 2 x # of players is number of total needed generations
+        const gameInfo = await getGameInfo({ gameId: data.gameId });
 
-      if (!gameInfo) {
-        socket.emit("message", `Unable to find game with gameId`);
-        return;
-      }
+        if (!gameInfo) {
+          socket.emit("error", `Unable to find game with gameId`);
+          return;
+        }
 
-      await createGeneration(data);
+        await createGeneration(data);
 
-      const gameRoundGenerations = await getGameRoundGenerations({
-        gameId: data.gameId,
-        round: data.round,
-      });
-
-      const totalNeeded = gameInfo.room.players.length * 2;
-      const currentAmount = gameRoundGenerations.length;
-
-      if (currentAmount >= totalNeeded) {
-        socket.emit("serverEvent", {
-          type: "NEXT",
+        const gameRoundGenerations = await getGameRoundGenerations({
+          gameId: data.gameId,
+          round: data.round,
         });
-        socket.to(gameInfo.room.code).emit("serverEvent", {
-          type: "NEXT",
-        });
+
+        // Player Submissions
+        const submittedUsers = getSubmittedPlayers({ gameRoundGenerations });
+
+        socket.emit("submittedPlayers", submittedUsers);
+        socket.to(gameInfo.room.code).emit("submittedPlayers", submittedUsers);
+
+        const totalNeeded = gameInfo.room.players.length * 2;
+        const currentAmount = gameRoundGenerations.length;
+
+        console.log("TOTAL NEEDED", totalNeeded);
+
+        const sockets = await io.in(gameInfo.room.code).fetchSockets();
+
+        console.log(
+          "SOCKETS IN ROOM",
+          sockets.map((socket) => socket.handshake.auth.userId)
+        );
+
+        if (currentAmount >= totalNeeded) {
+          console.log("SENDING SERVER EVENTS", gameInfo.room.code);
+          socket.emit("serverEvent", {
+            type: "NEXT",
+          });
+          socket.to(gameInfo.room.code).emit("serverEvent", {
+            type: "NEXT",
+          });
+        }
+      } catch (error) {
+        if (error instanceof Error) handleSocketIOError(error, socket);
       }
     });
 
     socket.on("voteSubmitted", async (data) => {
-      // Receive gameId, questionId
-      // Check if all votes are supplied for the given question
-      // # of players - 2 is number of total votes needed
-      const gameInfo = await getGameInfo({ gameId: data.gameId });
+      try {
+        // Receive gameId, questionId
+        // Check if all votes are supplied for the given question
+        // # of players - 2 is number of total votes needed
+        const gameInfo = await getGameInfo({ gameId: data.gameId });
 
-      if (!gameInfo) {
-        socket.emit("message", `Unable to find game with gameId`);
-        return;
-      }
+        if (!gameInfo) {
+          socket.emit("error", `Unable to find game with gameId`);
+          return;
+        }
 
-      await createVote({
-        userId: data.userId,
-        generationId: data.generationId,
-      });
-
-      const questionVotes = await getQuestionVotes({
-        gameId: data.gameId,
-        questionId: data.questionId,
-      });
-
-      const totalNeeded = gameInfo.room.players.length - 2;
-
-      if (questionVotes.length >= totalNeeded) {
-        socket.emit("serverEvent", {
-          type: "NEXT",
+        await createVote({
+          userId: data.userId,
+          generationId: data.generationId,
         });
-        socket.to(gameInfo.room.code).emit("serverEvent", {
-          type: "NEXT",
+
+        const questionVotes = await getVotesByQuestionId({
+          questionId: data.questionId,
         });
+
+        socket.emit("votedPlayers", questionVotes);
+        socket.to(gameInfo.room.code).emit("votedPlayers", questionVotes);
+
+        const totalNeeded = gameInfo.room.players.length - 2; // assuming 3+ players
+        const currentAmount = questionVotes.length;
+
+        if (currentAmount >= totalNeeded) {
+          socket.emit("serverEvent", {
+            type: "NEXT",
+          });
+          socket.to(gameInfo.room.code).emit("serverEvent", {
+            type: "NEXT",
+          });
+        }
+      } catch (error) {
+        if (error instanceof Error) handleSocketIOError(error, socket);
       }
     });
 
     socket.on("disconnecting", async () => {
-      const userNotInInProgressRoom =
-        new Set([...socket.rooms].filter((room) => inProgressRoomSet.has(room)))
-          .size === 0;
+      try {
+        const userNotInInProgressRoom =
+          new Set(
+            [...socket.rooms].filter((room) => inProgressRoomSet.has(room))
+          ).size === 0;
 
-      if (userNotInInProgressRoom) {
-        await Promise.all(
-          [...socket.rooms].map(async (room) => {
-            await leaveRoom({
-              userId: socket.handshake.auth.userId,
-              code: room,
-            });
-            const roomInfo = await getRoom({ code: room });
+        if (userNotInInProgressRoom) {
+          await Promise.all(
+            [...socket.rooms].map(async (room) => {
+              await leaveRoom({
+                userId: socket.handshake.auth.userId,
+                code: room,
+              });
+              const roomInfo = await getRoom({ code: room });
 
-            if (!roomInfo) {
-              socket.emit("message", `Unable to fully disconnect from room`);
-              return;
-            }
+              if (!roomInfo) {
+                socket.emit("message", `Unable to fully disconnect from room`);
+                return;
+              }
 
-            socket
-              .to(room)
-              .emit("message", `${socket.handshake.auth.userId} left`);
-            socket.to(room).emit("roomState", roomInfo);
-          })
-        );
+              socket
+                .to(room)
+                .emit("message", `${socket.handshake.auth.userId} left`);
+              socket.to(room).emit("roomState", roomInfo);
+            })
+          );
+        }
+      } catch (error) {
+        if (error instanceof Error) handleSocketIOError(error, socket);
       }
     });
   });
@@ -207,8 +313,9 @@ export function buildServer() {
   roomRoutes(app);
   gameRoutes(app);
   questionRoutes(app);
+  generationRoutes(app);
 
-  const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
+  const expressErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     if (res.headersSent) {
       return next(err);
     }
@@ -216,7 +323,7 @@ export function buildServer() {
     const status = "status" in err ? (err.status as number) : 500;
     res.status(status).send(err.message);
   };
-  app.use(errorHandler);
+  app.use(expressErrorHandler);
 
   return server;
 }

@@ -1,4 +1,7 @@
-import { ImagesResponseDataInner } from "openai";
+import {
+  CreateCompletionResponseChoicesInner,
+  ImagesResponseDataInner,
+} from "openai";
 
 // generate an AI image
 export const generateImage = async (prompt: string) => {
@@ -11,7 +14,27 @@ export const generateImage = async (prompt: string) => {
       body: JSON.stringify({ prompt }),
     });
 
+    if (response.status !== 200) {
+      throw new Error(`Request failed with status ${response.status}`);
+    }
+
     const data: { result: ImagesResponseDataInner[] } = await response.json();
+
+    return data.result;
+  } catch (error) {
+    console.error(error);
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
+  }
+};
+
+export const generatePrompt = async () => {
+  try {
+    const response = await fetch("/api/completion");
+
+    const data: { result: CreateCompletionResponseChoicesInner[] } =
+      await response.json();
     if (response.status !== 200) {
       throw new Error(`Request failed with status ${response.status}`);
     }
@@ -20,7 +43,7 @@ export const generateImage = async (prompt: string) => {
   } catch (error) {
     console.error(error);
     if (error instanceof Error) {
-      alert(error.message);
+      console.error(error.message);
     }
   }
 };

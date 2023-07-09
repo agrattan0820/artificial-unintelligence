@@ -1,22 +1,24 @@
 "use client";
 
-import { User } from "@ai/app/server-actions";
-import Button, { SecondaryButton } from "@ai/components/button";
-import useIsMounted from "@ai/utils/hooks/use-is-mounted";
-import useShare from "@ai/utils/hooks/use-share";
-import { useStore } from "@ai/utils/store";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { FiCheckSquare, FiPlusSquare, FiPlay } from "react-icons/fi";
+
+import { User } from "@ai/app/server-actions";
+import Button, { SecondaryButton } from "@ai/components/button";
+import Ellipsis from "@ai/components/ellipsis";
+import useShare from "@ai/utils/hooks/use-share";
 
 const StartGame = ({
   players,
   code,
   onStartGame,
+  loading,
 }: {
   players: User[];
   code: string;
   onStartGame: () => void;
+  loading: boolean;
 }) => {
   const { copying, setCopying, onClick } = useShare(`/invite/${code}`, () =>
     toast("Invite Link Copied to Clipboard")
@@ -33,9 +35,15 @@ const StartGame = ({
 
   return (
     <div className="mt-8 flex items-center justify-center gap-2">
-      {players.length > 1 && (
+      {players.length > 2 && (
         <Button onClick={onStartGame} className="flex items-center gap-2">
-          Start Game <FiPlay />
+          {loading ? (
+            <Ellipsis />
+          ) : (
+            <>
+              Start Game <FiPlay />
+            </>
+          )}
         </Button>
       )}
       <SecondaryButton onClick={onClick} className="flex items-center gap-2">

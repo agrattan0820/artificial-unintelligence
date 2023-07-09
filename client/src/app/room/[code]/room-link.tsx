@@ -8,8 +8,6 @@ import useShare from "@ai/utils/hooks/use-share";
 const RoomLink = ({ code }: { code: string }) => {
   const { link, copying, setCopying, onClick } = useShare(`/invite/${code}`);
 
-  console.log("hello");
-
   useEffect(() => {
     if (copying) {
       const timer = setTimeout(() => setCopying(false), 2000);

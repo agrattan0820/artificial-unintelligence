@@ -9,10 +9,11 @@ import { FiCheck } from "react-icons/fi";
 export type ImageOption = 1 | 2;
 
 type ImageChoiceProps = {
-  imageOption1: string | StaticImageData;
-  imageOption2: string | StaticImageData;
+  imageOption1: { src: string; alt: string };
+  imageOption2: { src: string; alt: string };
   selectedImage: ImageOption | undefined;
   setSelectedImage: Dispatch<SetStateAction<ImageOption | undefined>>;
+  disabled?: boolean;
 };
 
 const ImageChoice = ({
@@ -20,6 +21,7 @@ const ImageChoice = ({
   imageOption2,
   selectedImage,
   setSelectedImage,
+  disabled,
 }: ImageChoiceProps) => {
   const [showImage1, setShowImage1] = useState(false);
   const [showImage2, setShowImage2] = useState(false);
@@ -60,8 +62,8 @@ const ImageChoice = ({
   };
 
   return (
-    <div className="mb-16 flex gap-6">
-      {imageOption1 && (
+    <div className="flex gap-6">
+      {imageOption1.src && (
         <motion.div
           initial={false}
           animate={bothShown ? "visible" : "hidden"}
@@ -69,7 +71,7 @@ const ImageChoice = ({
         >
           <button
             className="relative"
-            disabled={!showImage1}
+            disabled={disabled ?? !showImage1}
             onClick={() => setSelectedImage(1)}
           >
             <Image
@@ -77,8 +79,8 @@ const ImageChoice = ({
                 `aspect-square rounded-xl transition`,
                 selectedImage === 1 && "ring ring-indigo-600"
               )}
-              src={imageOption1}
-              alt="OpenAI Image"
+              src={imageOption1.src}
+              alt={imageOption1.alt}
               onLoad={() => setShowImage1(true)}
               width={1024}
               height={1024}
@@ -92,7 +94,7 @@ const ImageChoice = ({
           </button>
         </motion.div>
       )}
-      {imageOption2 && (
+      {imageOption2.src && (
         <motion.div
           initial={false}
           animate={bothShown ? "visible" : "hidden"}
@@ -100,7 +102,7 @@ const ImageChoice = ({
         >
           <button
             className="relative"
-            disabled={!showImage2}
+            disabled={disabled ?? !showImage2}
             onClick={() => setSelectedImage(2)}
           >
             <Image
@@ -108,8 +110,8 @@ const ImageChoice = ({
                 `aspect-square rounded-xl transition`,
                 selectedImage === 2 && "ring ring-indigo-600"
               )}
-              src={imageOption2}
-              alt="OpenAI Image"
+              src={imageOption2.src}
+              alt={imageOption2.alt}
               onLoad={() => setShowImage2(true)}
               width={1024}
               height={1024}

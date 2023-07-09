@@ -39,6 +39,17 @@ export const userRooms = pgTable(
 export const questions = pgTable("questions", {
   id: serial("id").primaryKey(),
   text: text("text").notNull(),
+  gameId: integer("game_id")
+    .references(() => games.id)
+    .notNull(),
+  round: integer("round").notNull(),
+  player1: integer("player_1")
+    .references(() => users.id)
+    .notNull(),
+  player2: integer("player_2")
+    .references(() => users.id)
+    .notNull(),
+  votedOn: boolean("voted_on").default(false).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -55,19 +66,14 @@ export const games = pgTable("games", {
 
 export const generations = pgTable("generations", {
   id: serial("id").primaryKey(),
-  gameId: integer("game_id")
-    .references(() => games.id)
-    .notNull(),
   userId: integer("user_id")
     .references(() => users.id)
     .notNull(),
   questionId: integer("question_id")
     .references(() => questions.id)
     .notNull(),
-  round: integer("round").notNull(),
   text: text("text").notNull(),
   imageUrl: text("image_url").notNull(),
-  votedOn: boolean("voted_on").default(false).notNull(), // change to datetime to track which generations were voted on first?
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

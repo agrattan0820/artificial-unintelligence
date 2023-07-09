@@ -1,5 +1,5 @@
 import type { EventFrom } from "xstate";
-import { NewGeneration, NewVote, RoomInfo } from "../db/schema";
+import { RoomInfo, User, Vote } from "../db/schema";
 import { serverMachine } from "./server-machine";
 
 export interface ServerToClientEvents {
@@ -7,6 +7,8 @@ export interface ServerToClientEvents {
   roomState: (roomInfo: RoomInfo) => void;
   startGame: () => void;
   serverEvent: (event: EventFrom<typeof serverMachine>) => void;
+  submittedPlayers: (players: number[]) => void;
+  votedPlayers: (votes: { vote: Vote; user: User }[]) => void;
   error: (str: string) => void;
 }
 
@@ -14,6 +16,7 @@ export interface ClientToServerEvents {
   connectToRoom: (code: string) => void;
   initiateGame: (code: string) => void;
   clientEvent: (data: { state: string; gameId: number; round: number }) => void;
+  testEvent: (code: string) => void;
   generationSubmitted: (data: {
     gameId: number;
     round: number;

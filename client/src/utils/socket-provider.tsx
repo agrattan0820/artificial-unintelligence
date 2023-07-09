@@ -13,24 +13,30 @@ export default function SocketProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const { user } = useStore();
+  const { user, room } = useStore();
 
-  const message = (msg: string) => {
-    console.log("Received messages:", msg);
+  const socketMessage = (msg: string) => {
+    console.log("Received socket message:", msg);
     toast(msg);
+  };
+  const socketError = (err: string) => {
+    console.error("Received socket error:", err);
+    toast.error("An error occurred.");
   };
 
   useEffect(() => {
-    socket.auth = { userId: user?.id };
+    socket.auth = { userId: user?.id, roomCode: room?.code };
     socket.connect();
-    socket.on("message", message);
+    socket.on("message", socketMessage);
+    socket.on("error", socketError);
     console.log("PROVIDER SOCKET", socket.id);
 
     return () => {
-      socket.off("message", message);
+      socket.off("message", socketMessage);
+      socket.off("error", socketError);
       socket.disconnect();
     };
-  }, [user?.id]);
+  }, [user?.id, room?.code]);
 
   return (
     <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>

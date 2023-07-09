@@ -1,11 +1,11 @@
 import type { NextFunction, Request, Response } from "express";
 import { getLatestGameInfoByRoomCode } from "../services/game.service";
 
-export const getLatestGameByRoomCodeController = async (
+export async function getLatestGameByRoomCodeController(
   req: Request<{ code: string }>,
   res: Response,
   next: NextFunction
-) => {
+) {
   try {
     const code = req.params.code;
 
@@ -21,4 +21,4 @@ export const getLatestGameByRoomCodeController = async (
   } catch (error) {
     next(error);
   }
-};
+}

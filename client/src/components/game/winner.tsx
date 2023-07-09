@@ -1,22 +1,29 @@
 "use client";
 
-import { BsTrophy } from "react-icons/bs";
 import Image from "next/image";
 import {
   motion,
   animate,
   useMotionValue,
   useTransform,
-  AnimatePresence,
   Variants,
 } from "framer-motion";
 import { useEffect, useState } from "react";
-import Friend from "./friend";
+import { EventFrom, StateFrom } from "xstate";
+
 import SadDog from "@ai/images/sad-dog.webp";
 import SadDog2 from "@ai/images/sad-dog-2.webp";
 import Crown from "@ai/images/crown.webp";
+import { GameInfo } from "@ai/app/server-actions";
+import { gameMachine } from "./game-machine";
 
-const Winner = () => {
+type WinnerProps = {
+  gameInfo: GameInfo;
+  state: StateFrom<typeof gameMachine>;
+  send: (event: EventFrom<typeof gameMachine>) => StateFrom<typeof gameMachine>;
+};
+
+const Winner = ({ gameInfo, state, send }: WinnerProps) => {
   const count = useMotionValue(0);
   const animatedPoints = useTransform(count, (latest) => Math.round(latest));
   const [showImages, setShowImages] = useState(false);

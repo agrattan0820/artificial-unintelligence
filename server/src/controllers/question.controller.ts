@@ -1,11 +1,14 @@
 import type { NextFunction, Request, Response } from "express";
-import { createQuestion, getQuestionById } from "../services/question.service";
+import {
+  getQuestionById,
+  getUserQuestionsForRound,
+} from "../services/question.service";
 
-export const getQuestionByIdController = async (
+export async function getQuestionByIdController(
   req: Request<{ id: number }>,
   res: Response,
   next: NextFunction
-) => {
+) {
   try {
     const id = req.params.id;
 
@@ -21,20 +24,42 @@ export const getQuestionByIdController = async (
   } catch (error) {
     next(error);
   }
-};
+}
 
-export const createQuestionController = async (
-  req: Request<{}, {}, { text: string }>,
+export async function getQuestionsByUserGameRoundController(
+  req: Request<{ userId: number; gameId: number; round: number }>,
   res: Response,
   next: NextFunction
-) => {
+) {
   try {
-    const body = req.body;
+    const params = req.params;
 
-    const question = await createQuestion(body);
+    const questions = await getUserQuestionsForRound(params);
 
-    res.status(200).send(question);
+    if (questions.length === 0) {
+      res.status(404).send({
+        error: `Questions for the user: ${params.userId} could not be found for this game: ${params.gameId}, and round: ${params.round}`,
+      });
+    }
+
+    res.status(200).send(questions);
   } catch (error) {
     next(error);
   }
-};
+}
+
+// export const createQuestionController = async (
+//   req: Request<{}, {}, { text: string }>,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//   try {
+//     const body = req.body;
+
+//     const question = await createQuestion(body);
+
+//     res.status(200).send(question);
+//   } catch (error) {
+//     next(error);
+//   }
+// };
