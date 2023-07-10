@@ -64,6 +64,13 @@
       "when": 1687913822823,
       "tag": "0008_striped_smasher",
       "breakpoints": false
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1688989889781,
+      "tag": "0009_flippant_peter_quill",
+      "breakpoints": false
     }
   ]
 }

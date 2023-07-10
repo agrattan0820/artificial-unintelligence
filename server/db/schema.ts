@@ -88,6 +88,22 @@ export const votes = pgTable("votes", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+export const userGame = pgTable(
+  "user_games",
+  {
+    userId: integer("user_id")
+      .references(() => users.id)
+      .notNull(),
+    gameId: integer("game_id")
+      .references(() => games.id)
+      .notNull(),
+    points: integer("points").default(0).notNull(),
+  },
+  (table) => ({
+    cpk: primaryKey(table.userId, table.gameId),
+  })
+);
+
 export type User = InferModel<typeof users>;
 export type NewUser = InferModel<typeof users, "insert">;
 
