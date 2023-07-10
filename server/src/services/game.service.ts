@@ -142,3 +142,12 @@ export async function updateGame({
 
   return updatedGame[0];
 }
+
+export async function getGameWinnerById({ gameId }: { gameId: number }) {
+  // INFO WE NEED
+  // - user information for winner
+  // - their winning images
+  // game -> user -> point value
+
+  return true;
+}

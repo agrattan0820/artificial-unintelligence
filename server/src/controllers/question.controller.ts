@@ -5,12 +5,12 @@ import {
 } from "../services/question.service";
 
 export async function getQuestionByIdController(
-  req: Request<{ id: number }>,
+  req: Request<{ id: string }>,
   res: Response,
   next: NextFunction
 ) {
   try {
-    const id = req.params.id;
+    const id = Number.parseInt(req.params.id);
 
     const question = await getQuestionById({ id });
 
@@ -27,18 +27,20 @@ export async function getQuestionByIdController(
 }
 
 export async function getQuestionsByUserGameRoundController(
-  req: Request<{ userId: number; gameId: number; round: number }>,
+  req: Request<{ userId: string; gameId: string; round: string }>,
   res: Response,
   next: NextFunction
 ) {
   try {
-    const params = req.params;
+    const userId = Number.parseInt(req.params.userId);
+    const gameId = Number.parseInt(req.params.gameId);
+    const round = Number.parseInt(req.params.round);
 
-    const questions = await getUserQuestionsForRound(params);
+    const questions = await getUserQuestionsForRound({ userId, gameId, round });
 
     if (questions.length === 0) {
       res.status(404).send({
-        error: `Questions for the user: ${params.userId} could not be found for this game: ${params.gameId}, and round: ${params.round}`,
+        error: `Questions for the user: ${userId} could not be found for this game: ${gameId}, and round: ${round}`,
       });
     }
 
