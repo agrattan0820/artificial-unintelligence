@@ -9,6 +9,8 @@
 
 ## In Progress
 
+- [ ] Connect "Winner" related components to data
+
 ## Done ✓
 
 - [x] Test face offs to see if they go to the next question correctly
