@@ -7,6 +7,7 @@ import {
   games,
   questions,
   rooms,
+  userGames,
   userRooms,
   users,
 } from "../../db/schema";
@@ -150,4 +151,23 @@ export async function getGameWinnerById({ gameId }: { gameId: number }) {
   // game -> user -> point value
 
   return true;
+}
+
+export async function addUsersToGame({
+  players,
+  gameId,
+}: {
+  players: User[];
+  gameId: number;
+}) {
+  const usersToGame = await db
+    .insert(userGames)
+    .values(
+      players.map((player) => {
+        return { userId: player.id, gameId };
+      })
+    )
+    .returning();
+
+  return usersToGame;
 }

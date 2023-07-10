@@ -13,7 +13,12 @@ import helmet from "helmet";
 import { userRoutes } from "./routes/user.route";
 import { roomRoutes } from "./routes/room.route";
 import { getRoom, joinRoom, leaveRoom } from "./services/room.service";
-import { createGame, getGameInfo, updateGame } from "./services/game.service";
+import {
+  addUsersToGame,
+  createGame,
+  getGameInfo,
+  updateGame,
+} from "./services/game.service";
 import { ClientToServerEvents, ServerToClientEvents } from "./types";
 import {
   createGeneration,
@@ -132,6 +137,11 @@ export function buildServer() {
           "SOCKETS IN ROOM",
           sockets.map((socket) => socket.handshake.auth.userId)
         );
+
+        await addUsersToGame({
+          gameId: newGame.id,
+          players: roomInfo?.players,
+        });
 
         await assignQuestionsToPlayers({
           gameId: newGame.id,

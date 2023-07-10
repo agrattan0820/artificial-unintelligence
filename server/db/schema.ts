@@ -88,7 +88,7 @@ export const votes = pgTable("votes", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
-export const userGame = pgTable(
+export const userGames = pgTable(
   "user_games",
   {
     userId: integer("user_id")
