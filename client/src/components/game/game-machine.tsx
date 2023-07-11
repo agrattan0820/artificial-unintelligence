@@ -21,6 +21,7 @@ import NextRound from "./next-round";
 import PromptSubmitted from "./prompt-submitted";
 import {
   GameInfo,
+  GetGameLeaderboardResponse,
   QuestionGenerations,
   UserVote,
   Vote,
@@ -175,7 +176,8 @@ export const getCurrentComponent = (
   send: (event: EventFrom<typeof gameMachine>) => StateFrom<typeof gameMachine>,
   submittedPlayerIds: Set<number>,
   currFaceOffQuestion: QuestionGenerations | undefined,
-  votedPlayers: UserVote[]
+  votedPlayers: UserVote[],
+  leaderboard: GetGameLeaderboardResponse | undefined
 ) => {
   const stateMachineComponentMap: Record<
     StateValueFrom<typeof gameMachine>,
@@ -243,12 +245,22 @@ export const getCurrentComponent = (
     ),
     winner: (
       <TransitionWrapper key="winner">
-        <Winner gameInfo={gameInfo} state={state} send={send} />
+        <Winner
+          gameInfo={gameInfo}
+          state={state}
+          send={send}
+          leaderboard={leaderboard}
+        />
       </TransitionWrapper>
     ),
     leaderboard: (
       <TransitionWrapper key="leaderboard">
-        <Leaderboard />
+        <Leaderboard
+          gameInfo={gameInfo}
+          state={state}
+          send={send}
+          leaderboard={leaderboard}
+        />
       </TransitionWrapper>
     ),
   };

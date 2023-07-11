@@ -14,16 +14,17 @@ import { EventFrom, StateFrom } from "xstate";
 import SadDog from "@ai/images/sad-dog.webp";
 import SadDog2 from "@ai/images/sad-dog-2.webp";
 import Crown from "@ai/images/crown.webp";
-import { GameInfo } from "@ai/app/server-actions";
+import { GameInfo, GetGameLeaderboardResponse } from "@ai/app/server-actions";
 import { gameMachine } from "./game-machine";
 
 type WinnerProps = {
   gameInfo: GameInfo;
   state: StateFrom<typeof gameMachine>;
   send: (event: EventFrom<typeof gameMachine>) => StateFrom<typeof gameMachine>;
+  leaderboard: GetGameLeaderboardResponse | undefined;
 };
 
-const Winner = ({ gameInfo, state, send }: WinnerProps) => {
+const Winner = ({ gameInfo, state, send, leaderboard }: WinnerProps) => {
   const count = useMotionValue(0);
   const animatedPoints = useTransform(count, (latest) => Math.round(latest));
   const [showImages, setShowImages] = useState(false);

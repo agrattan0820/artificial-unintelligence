@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import {
-  getGameWinnerById,
+  getLeaderboardById,
   getLatestGameInfoByRoomCode,
 } from "../services/game.service";
 
@@ -26,7 +26,7 @@ export async function getLatestGameByRoomCodeController(
   }
 }
 
-export async function getGameWinnerByIdController(
+export async function getLeaderboardByIdController(
   req: Request<{ id: string }>,
   res: Response,
   next: NextFunction
@@ -36,7 +36,7 @@ export async function getGameWinnerByIdController(
 
     console.log("TYPEOF ID", typeof id);
 
-    const gameInfo = await getGameWinnerById({ gameId: id });
+    const gameInfo = await getLeaderboardById({ gameId: id });
 
     if (!gameInfo) {
       res.status(404).send({ error: `Game with an id of ${id} was not found` });

@@ -5,8 +5,18 @@ import FriendWithLegs from "./friend-with-legs";
 import Crown from "@ai/images/crown.webp";
 import { motion, Variants } from "framer-motion";
 import { BsTrophy } from "react-icons/bs";
+import { GameInfo, GetGameLeaderboardResponse } from "@ai/app/server-actions";
+import { EventFrom, StateFrom } from "xstate";
+import { gameMachine } from "./game-machine";
 
-const Leaderboard = () => {
+type LeaderboardProps = {
+  gameInfo: GameInfo;
+  state: StateFrom<typeof gameMachine>;
+  send: (event: EventFrom<typeof gameMachine>) => StateFrom<typeof gameMachine>;
+  leaderboard: GetGameLeaderboardResponse | undefined;
+};
+
+const Leaderboard = ({ leaderboard }: LeaderboardProps) => {
   const leaderboardListVariants: Variants = {
     hidden: {},
     visible: {

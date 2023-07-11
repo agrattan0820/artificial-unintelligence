@@ -1,10 +1,11 @@
-import { asc, desc, eq } from "drizzle-orm";
+import { and, asc, desc, eq } from "drizzle-orm";
 import { db } from "../../db/db";
 import {
   NewGame,
   User,
   Vote,
   games,
+  generations,
   questions,
   rooms,
   userGames,
@@ -144,13 +145,37 @@ export async function updateGame({
   return updatedGame[0];
 }
 
-export async function getGameWinnerById({ gameId }: { gameId: number }) {
-  // INFO WE NEED
-  // - user information for winner
-  // - their winning images
-  // game -> user -> point value
+export async function getLeaderboardById({ gameId }: { gameId: number }) {
+  const userListOrderedByPoints = await db
+    .select({
+      user: users,
+      points: userGames.points,
+    })
+    .from(users)
+    .innerJoin(userGames, eq(users.id, userGames.userId))
+    .where(eq(userGames.gameId, gameId))
+    .orderBy(desc(userGames.points));
 
-  return true;
+  const winningUser = userListOrderedByPoints[0];
+
+  const winningUserGenerations = await db
+    .select({
+      question: questions,
+      generation: generations,
+    })
+    .from(generations)
+    .innerJoin(questions, eq(generations.questionId, questions.id))
+    .where(
+      and(
+        eq(generations.userId, winningUser.user.id),
+        eq(questions.gameId, gameId)
+      )
+    );
+
+  return {
+    leaderboard: userListOrderedByPoints,
+    winningGenerations: winningUserGenerations,
+  };
 }
 
 export async function addUsersToGame({

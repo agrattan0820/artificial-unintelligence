@@ -1,10 +1,10 @@
 import type { Express } from "express";
 import {
-  getGameWinnerByIdController,
+  getLeaderboardByIdController,
   getLatestGameByRoomCodeController,
 } from "../controllers/game.controller";
 
 export function gameRoutes(app: Express) {
   app.get("/game/:code", getLatestGameByRoomCodeController);
-  app.get("/game/:id/winner", getGameWinnerByIdController);
+  app.get("/game/:id/leaderboard", getLeaderboardByIdController);
 }

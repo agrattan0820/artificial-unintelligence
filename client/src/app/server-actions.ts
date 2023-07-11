@@ -133,6 +133,21 @@ export async function getGameInfo(code: string) {
   return data;
 }
 
+export type GetGameLeaderboardResponse = {
+  leaderboard: { user: User; points: number }[];
+  winningGenerations: { question: Question; generation: Generation }[];
+};
+
+export async function getLeaderboardById({ gameId }: { gameId: number }) {
+  const response = await fetch(`${URL}/game/${gameId}/leaderboard`, {
+    cache: "no-store",
+  });
+
+  const data: GetGameLeaderboardResponse = await response.json();
+
+  return data;
+}
+
 // ! ----------> GENERATIONS <----------
 
 export type GetGameRoundGenerationsResponse = {
