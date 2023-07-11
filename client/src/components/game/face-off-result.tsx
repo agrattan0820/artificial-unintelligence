@@ -1,7 +1,15 @@
 "use client";
 
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { MotionStyle, Variants, motion } from "framer-motion";
+import {
+  AnimationPlaybackControls,
+  MotionStyle,
+  Variants,
+  animate,
+  motion,
+  useMotionValue,
+  useTransform,
+} from "framer-motion";
 import Image, { StaticImageData } from "next/image";
 import { BsTrophy } from "react-icons/bs";
 import { EventFrom, StateFrom } from "xstate";
@@ -53,10 +61,14 @@ const FaceOffResult = ({
     { player1Votes: [], player2Votes: [] }
   );
 
+  const pointsPerOnePercent = 10;
+
   const image1VotePercentage =
     Math.round(voteMap.player1Votes.length / votedPlayers.length) * 100;
+  const image1Points = image1VotePercentage * pointsPerOnePercent;
   const image2VotePercentage =
     Math.round(voteMap.player2Votes.length / votedPlayers.length) * 100;
+  const image2Points = image2VotePercentage * pointsPerOnePercent;
 
   const winningImage: 1 | 2 =
     voteMap.player1Votes.length > voteMap.player2Votes.length ? 1 : 2;
@@ -122,6 +134,7 @@ const FaceOffResult = ({
           votes={voteMap.player1Votes.map(
             (votedPlayer) => votedPlayer.user.nickname
           )}
+          pointIncrease={image1Points}
           setShowImage={setShowImage1}
         />
         <FaceOffResultImage
@@ -136,6 +149,7 @@ const FaceOffResult = ({
           votes={voteMap.player2Votes.map(
             (votedPlayer) => votedPlayer.user.nickname
           )}
+          pointIncrease={image2Points}
           setShowImage={setShowImage2}
         />
       </div>
@@ -155,6 +169,7 @@ const FaceOffResultImage = ({
   showWinner,
   winningImage,
   votes,
+  pointIncrease,
   setShowImage,
 }: {
   id: 1 | 2;
@@ -166,22 +181,36 @@ const FaceOffResultImage = ({
   showWinner: boolean;
   winningImage: 1 | 2;
   votes: string[];
+  pointIncrease: number;
   setShowImage: Dispatch<SetStateAction<boolean>>;
 }) => {
   const [showVotes, setShowVotes] = useState(false);
+  const [showPoints, setShowPoints] = useState(false);
+
+  const points = useMotionValue(0);
+  const animatedPoints = useTransform(points, (latest) => Math.round(latest));
 
   useEffect(() => {
     let votesTimeout: NodeJS.Timeout;
+    let pointsTimeout: NodeJS.Timeout;
+    let controls: AnimationPlaybackControls;
     if (bothImagesShown) {
       votesTimeout = setTimeout(() => {
         setShowVotes(true);
       }, 6000);
+      pointsTimeout = setTimeout(() => {
+        setShowPoints(true);
+        controls = animate(points, pointIncrease, { duration: 3 });
+      }, 8000);
     }
 
     return () => {
       clearTimeout(votesTimeout);
+      clearTimeout(pointsTimeout);
+      controls && controls.stop();
     };
-  }, [bothImagesShown]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bothImagesShown, pointIncrease]);
 
   const imageVariants: Variants = {
     hidden: {
@@ -264,6 +293,16 @@ const FaceOffResultImage = ({
       y: 0,
     },
   };
+  const pointVariants: Variants = {
+    hidden: {
+      opacity: 0,
+      y: 20,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+    },
+  };
 
   const isWinner = winningImage === id && showWinner;
   const isLoser = winningImage !== id && showWinner;
@@ -293,6 +332,14 @@ const FaceOffResultImage = ({
       transition={{ when: "beforeChildren" }}
       className="relative"
     >
+      <motion.p
+        initial={false}
+        animate={showPoints ? "visible" : "hidden"}
+        variants={pointVariants}
+        className="absolute -top-8 left-0 right-0 z-0 text-center"
+      >
+        <motion.span>{animatedPoints}</motion.span>+
+      </motion.p>
       <motion.ul
         initial={false}
         animate={showVotes ? "visible" : "hidden"}

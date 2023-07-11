@@ -6,10 +6,13 @@
 - [ ] Fix Firefox round animation glitch
 - [ ] Third round prompt has to include a particular word?
 - [ ] Connect "Winner" related components to data
+- [ ] How-to-play screen
+- [ ] Fix hydration error when the page is reloaded during the game and a different state is shown
 
 ## In Progress
 
 - [ ] Connect "Winner" related components to data
+- [ ] Show point increase in face off result
 
 ## Done ✓
 
