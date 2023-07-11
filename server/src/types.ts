@@ -33,3 +33,5 @@ export interface ClientToServerEvents {
   }) => void;
   leaveRoom: (data: { userId: number; code: string }) => void;
 }
+
+export type UserVote = { vote: Vote; user: User };

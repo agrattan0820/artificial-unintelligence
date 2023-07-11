@@ -28,8 +28,13 @@ import {
 import { assignQuestionsToPlayers } from "./services/question.service";
 import { gameRoutes } from "./routes/game.route";
 import { questionRoutes } from "./routes/question.route";
-import { createVote, getVotesByQuestionId } from "./services/vote.service";
+import {
+  calculateVotePoints,
+  createVote,
+  getVotesByQuestionId,
+} from "./services/vote.service";
 import { generationRoutes } from "./routes/generation.route";
+import { Generation } from "../db/schema";
 
 export function buildServer() {
   const app: Express = express();
@@ -266,6 +271,28 @@ export function buildServer() {
         const currentAmount = questionVotes.length;
 
         if (currentAmount >= totalNeeded) {
+          const gameRoundGenerations = await getGameRoundGenerations({
+            gameId: data.gameId,
+            round: gameInfo.game.round,
+          });
+
+          const filteredGenerations = gameRoundGenerations.reduce<Generation[]>(
+            (acc, curr) => {
+              if (curr.question.id === data.questionId) {
+                acc.push(curr.generation);
+              }
+
+              return acc;
+            },
+            []
+          );
+
+          await calculateVotePoints({
+            generations: filteredGenerations,
+            userVotes: questionVotes,
+            gameId: data.gameId,
+          });
+
           socket.emit("serverEvent", {
             type: "NEXT",
           });
