@@ -12,7 +12,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
-    "drizzle-orm": "^0.25.4",
+    "drizzle-orm": "^0.27.2",
     "express": "^4.18.2",
     "helmet": "^7.0.0",
     "morgan": "^1.10.0",
@@ -29,7 +29,7 @@
     "@typescript-eslint/eslint-plugin": "^5.60.0",
     "@typescript-eslint/parser": "^5.60.0",
     "cross-env": "^7.0.3",
-    "drizzle-kit": "^0.17.6",
+    "drizzle-kit": "^0.19.4",
     "eslint": "^8.43.0",
     "eslint-config-prettier": "^8.8.0",
     "nodemon": "^2.0.22",

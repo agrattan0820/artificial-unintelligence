@@ -5,7 +5,7 @@ import {
   NewUserRoom,
   User,
   rooms,
-  userRooms,
+  usersRooms,
   users,
 } from "../../db/schema";
 import { and, eq } from "drizzle-orm";
@@ -50,7 +50,7 @@ export async function joinRoom({
   };
 
   const addUserToRoom = await db
-    .insert(userRooms)
+    .insert(usersRooms)
     .values(newUserRoomRelationship)
     .returning();
 
@@ -65,8 +65,8 @@ export async function leaveRoom({
   code: string;
 }) {
   const removeUserFromRoom = await db
-    .delete(userRooms)
-    .where(and(eq(userRooms.userId, userId), eq(userRooms.roomCode, code)))
+    .delete(usersRooms)
+    .where(and(eq(usersRooms.userId, userId), eq(usersRooms.roomCode, code)))
     .returning();
 
   return removeUserFromRoom[0];
@@ -85,9 +85,9 @@ export async function getRoom({ code }: { code: string }) {
       nickname: users.nickname,
       createdAt: users.createdAt,
     })
-    .from(userRooms)
-    .innerJoin(users, eq(userRooms.userId, users.id))
-    .where(eq(userRooms.roomCode, code))) as User[];
+    .from(usersRooms)
+    .innerJoin(users, eq(usersRooms.userId, users.id))
+    .where(eq(usersRooms.roomCode, code))) as User[];
 
   return {
     ...room[0],

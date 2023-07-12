@@ -8,8 +8,8 @@ import {
   generations,
   questions,
   rooms,
-  userGames,
-  userRooms,
+  usersGames,
+  usersRooms,
   users,
 } from "../../db/schema";
 import {
@@ -49,9 +49,9 @@ export async function getGameInfo({ gameId }: { gameId: number }) {
       nickname: users.nickname,
       createdAt: users.createdAt,
     })
-    .from(userRooms)
-    .innerJoin(users, eq(userRooms.userId, users.id))
-    .where(eq(userRooms.roomCode, getGame[0].room.code))) as User[];
+    .from(usersRooms)
+    .innerJoin(users, eq(usersRooms.userId, users.id))
+    .where(eq(usersRooms.roomCode, getGame[0].room.code))) as User[];
 
   return {
     game: getGame[0].game,
@@ -89,9 +89,9 @@ export async function getLatestGameInfoByRoomCode({ code }: { code: string }) {
       nickname: users.nickname,
       createdAt: users.createdAt,
     })
-    .from(userRooms)
-    .innerJoin(users, eq(userRooms.userId, users.id))
-    .where(eq(userRooms.roomCode, latestGame.room.code))) as User[];
+    .from(usersRooms)
+    .innerJoin(users, eq(usersRooms.userId, users.id))
+    .where(eq(usersRooms.roomCode, latestGame.room.code))) as User[];
 
   const gameQuestions = await db
     .select()
@@ -149,12 +149,12 @@ export async function getLeaderboardById({ gameId }: { gameId: number }) {
   const userListOrderedByPoints = await db
     .select({
       user: users,
-      points: userGames.points,
+      points: usersGames.points,
     })
     .from(users)
-    .innerJoin(userGames, eq(users.id, userGames.userId))
-    .where(eq(userGames.gameId, gameId))
-    .orderBy(desc(userGames.points));
+    .innerJoin(usersGames, eq(users.id, usersGames.userId))
+    .where(eq(usersGames.gameId, gameId))
+    .orderBy(desc(usersGames.points));
 
   const winningUser = userListOrderedByPoints[0];
 
@@ -186,7 +186,7 @@ export async function addUsersToGame({
   gameId: number;
 }) {
   const usersToGame = await db
-    .insert(userGames)
+    .insert(usersGames)
     .values(
       players.map((player) => {
         return { userId: player.id, gameId };
