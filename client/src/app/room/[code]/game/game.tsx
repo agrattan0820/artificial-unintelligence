@@ -8,10 +8,9 @@ import { AnimatePresence } from "framer-motion";
 import {
   GetGameInfoResponse,
   QuestionGenerations,
-  User,
   UserVote,
-  Vote,
   getGameRoundGenerations,
+  getLeaderboardById,
 } from "@ai/app/server-actions";
 import Button from "@ai/components/button";
 import {
@@ -100,6 +99,15 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
     }
   );
 
+  const { data: leaderboard, isLoading: leaderboardLoading } = useQuery(
+    ["leaderboard", "gameId", gameId],
+    async () => await getLeaderboardById({ gameId }),
+    {
+      enabled:
+        !!gameId && (state.matches("winnerLeadUp") || state.matches("winner")),
+    }
+  );
+
   const questionGenerationArr = useMemo(() => {
     return !generationsLoading && generations
       ? Object.values(
@@ -181,7 +189,8 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
       send,
       submittedPlayerIds,
       currFaceOffQuestion,
-      votedPlayers
+      votedPlayers,
+      leaderboard
     );
   }, [
     gameInfo,
@@ -190,6 +199,7 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
     submittedPlayerIds,
     currFaceOffQuestion,
     votedPlayers,
+    leaderboard,
   ]);
 
   return (

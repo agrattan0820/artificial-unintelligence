@@ -2,18 +2,19 @@ import type { NextFunction, Request, Response } from "express";
 import { getGameRoundGenerations } from "../services/generation.service";
 
 export async function getGameRoundGenerationsController(
-  req: Request<{ gameId: number; round: number }>,
+  req: Request<{ gameId: string; round: string }>,
   res: Response,
   next: NextFunction
 ) {
   try {
-    const params = req.params;
+    const gameId = Number.parseInt(req.params.gameId);
+    const round = Number.parseInt(req.params.round);
 
-    const generations = await getGameRoundGenerations(params);
+    const generations = await getGameRoundGenerations({ gameId, round });
 
     if (!generations) {
       res.status(404).send({
-        error: `Generations with gameId of ${params.gameId} and round of ${params.round} were not found`,
+        error: `Generations with gameId of ${gameId} and round of ${round} were not found`,
       });
     }
 

@@ -1,12 +1,23 @@
 "use client";
 
 import Image from "next/image";
+import { EventFrom, StateFrom } from "xstate";
+import { BsTrophy } from "react-icons/bs";
+import { motion, Variants } from "framer-motion";
+
 import FriendWithLegs from "./friend-with-legs";
 import Crown from "@ai/images/crown.webp";
-import { motion, Variants } from "framer-motion";
-import { BsTrophy } from "react-icons/bs";
+import { GameInfo, GetGameLeaderboardResponse } from "@ai/app/server-actions";
+import { gameMachine } from "./game-machine";
 
-const Leaderboard = () => {
+type LeaderboardProps = {
+  gameInfo: GameInfo;
+  state: StateFrom<typeof gameMachine>;
+  send: (event: EventFrom<typeof gameMachine>) => StateFrom<typeof gameMachine>;
+  leaderboard: GetGameLeaderboardResponse | undefined;
+};
+
+const Leaderboard = ({ leaderboard }: LeaderboardProps) => {
   const leaderboardListVariants: Variants = {
     hidden: {},
     visible: {
@@ -27,10 +38,9 @@ const Leaderboard = () => {
     },
   };
 
-  const results = [
-    { nickname: "Big Al", points: 1500 },
-    { nickname: "Some Long Nickname Woahhhh", points: 1200 },
-  ];
+  if (!leaderboard) {
+    return null;
+  }
 
   return (
     <div className="mx-auto max-w-2xl text-center">
@@ -66,7 +76,7 @@ const Leaderboard = () => {
         animate="visible"
         variants={leaderboardListVariants}
       >
-        {results.map((result, i) => (
+        {leaderboard.leaderboard.map((result, i) => (
           <motion.li
             key={i}
             className="relative flex items-center justify-center gap-4"
@@ -75,7 +85,7 @@ const Leaderboard = () => {
             {i + 1}.
             <div className="flex w-full justify-between gap-2 rounded-xl p-4 text-left text-xl dark:bg-slate-800">
               <p className="flex items-center gap-4">
-                {result.nickname}{" "}
+                {result.user.nickname}{" "}
                 {i === 0 && (
                   <span className="rounded-full bg-yellow-600 p-2 text-white">
                     <BsTrophy />
