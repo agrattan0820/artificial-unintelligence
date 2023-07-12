@@ -34,8 +34,6 @@ export async function getLeaderboardByIdController(
   try {
     const id = Number.parseInt(req.params.id);
 
-    console.log("TYPEOF ID", typeof id);
-
     const gameInfo = await getLeaderboardById({ gameId: id });
 
     if (!gameInfo) {

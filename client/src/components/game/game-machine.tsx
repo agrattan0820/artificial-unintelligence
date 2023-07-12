@@ -162,8 +162,6 @@ export const gameMachine = createMachine(
         );
       },
       completedCurrentRound: (context, event) => {
-        console.log("PLAYER COUNT", context.playerCount);
-        console.log("QUESTION IDX", context.questionIdx);
         return context.playerCount === context.questionIdx + 1;
       },
     },

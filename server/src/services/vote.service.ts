@@ -137,6 +137,4 @@ export async function calculateVotePoints({
         );
     })
   );
-
-  // const updatePoints = await db.update(userGames).set({points:})
 }
