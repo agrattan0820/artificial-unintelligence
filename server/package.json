@@ -4,6 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
+    "build": "tsc",
+    "start": "node ./dist/src/app.js",
     "dev": "cross-env NODE_ENV=development nodemon src/app.ts",
     "migrate": "drizzle-kit generate:pg --out drizzle --schema db/schema.ts"
   },
