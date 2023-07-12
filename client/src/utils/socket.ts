@@ -36,10 +36,7 @@ export interface ClientToServerEvents {
   leaveRoom: (code: string) => void;
 }
 
-export const URL =
-  process.env.NODE_ENV === "production"
-    ? "http://localhost:8080" // TODO: change to API_URL
-    : "http://localhost:8080";
+export const URL = process.env.API_URL ?? "http://localhost:8080";
 
 export const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(
   URL,
