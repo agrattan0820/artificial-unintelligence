@@ -92,7 +92,6 @@ export function buildServer() {
         }
 
         socket.join(code);
-        socket.to(code).emit("message", `${userId} joined`);
         socket.to(code).emit("roomState", roomInfo);
       } catch (error) {
         if (error instanceof Error) handleSocketIOError(error, socket, code);
