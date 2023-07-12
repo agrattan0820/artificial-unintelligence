@@ -12,8 +12,6 @@ import {
 import { useEffect, useState } from "react";
 import { EventFrom, StateFrom } from "xstate";
 
-import SadDog from "@ai/images/sad-dog.webp";
-import SadDog2 from "@ai/images/sad-dog-2.webp";
 import Crown from "@ai/images/crown.webp";
 import { GameInfo, GetGameLeaderboardResponse } from "@ai/app/server-actions";
 import { gameMachine } from "./game-machine";
@@ -145,6 +143,7 @@ const Winner = ({ gameInfo, state, send, leaderboard }: WinnerProps) => {
                 alt={image.generation.text}
                 className="mb-2 w-40 rounded-xl"
                 width={160}
+                height={160}
               />
               <figcaption className="line-clamp-3 text-sm">
                 {image.generation.text}
