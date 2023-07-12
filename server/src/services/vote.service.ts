@@ -5,7 +5,7 @@ import {
   games,
   generations,
   questions,
-  userGames,
+  usersGames,
   users,
   votes,
 } from "../../db/schema";
@@ -115,9 +115,12 @@ export async function calculateVotePoints({
 
   const previousPoints = await db
     .select()
-    .from(userGames)
+    .from(usersGames)
     .where(
-      and(eq(userGames.gameId, gameId), inArray(userGames.userId, userIdArray))
+      and(
+        eq(usersGames.gameId, gameId),
+        inArray(usersGames.userId, userIdArray)
+      )
     );
 
   await Promise.all(
@@ -127,12 +130,12 @@ export async function calculateVotePoints({
       );
       const newValue = prev.points + percentage * pointsPerOnePercent;
       await db
-        .update(userGames)
+        .update(usersGames)
         .set({ points: newValue })
         .where(
           and(
-            eq(userGames.userId, prev.userId),
-            eq(userGames.gameId, prev.gameId)
+            eq(usersGames.userId, prev.userId),
+            eq(usersGames.gameId, prev.gameId)
           )
         );
     })

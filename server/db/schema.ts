@@ -20,8 +20,8 @@ export const rooms = pgTable("rooms", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
-export const userRooms = pgTable(
-  "user_rooms",
+export const usersRooms = pgTable(
+  "users_rooms",
   {
     userId: integer("user_id")
       .references(() => users.id)
@@ -88,8 +88,8 @@ export const votes = pgTable("votes", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
-export const userGames = pgTable(
-  "user_games",
+export const usersGames = pgTable(
+  "users_games",
   {
     userId: integer("user_id")
       .references(() => users.id)
@@ -115,8 +115,8 @@ export type RoomInfo = {
   players: User[];
 };
 
-export type UserRoom = InferModel<typeof userRooms>;
-export type NewUserRoom = InferModel<typeof userRooms, "insert">;
+export type UserRoom = InferModel<typeof usersRooms>;
+export type NewUserRoom = InferModel<typeof usersRooms, "insert">;
 
 export type Question = InferModel<typeof questions>;
 export type NewQuestion = InferModel<typeof questions, "insert">;
