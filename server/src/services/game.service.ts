@@ -8,8 +8,8 @@ import {
   generations,
   questions,
   rooms,
-  usersGames,
-  usersRooms,
+  usersToGames,
+  usersToRooms,
   users,
 } from "../../db/schema";
 import {
@@ -49,9 +49,9 @@ export async function getGameInfo({ gameId }: { gameId: number }) {
       nickname: users.nickname,
       createdAt: users.createdAt,
     })
-    .from(usersRooms)
-    .innerJoin(users, eq(usersRooms.userId, users.id))
-    .where(eq(usersRooms.roomCode, getGame[0].room.code))) as User[];
+    .from(usersToRooms)
+    .innerJoin(users, eq(usersToRooms.userId, users.id))
+    .where(eq(usersToRooms.roomCode, getGame[0].room.code))) as User[];
 
   return {
     game: getGame[0].game,
@@ -89,9 +89,9 @@ export async function getLatestGameInfoByRoomCode({ code }: { code: string }) {
       nickname: users.nickname,
       createdAt: users.createdAt,
     })
-    .from(usersRooms)
-    .innerJoin(users, eq(usersRooms.userId, users.id))
-    .where(eq(usersRooms.roomCode, latestGame.room.code))) as User[];
+    .from(usersToRooms)
+    .innerJoin(users, eq(usersToRooms.userId, users.id))
+    .where(eq(usersToRooms.roomCode, latestGame.room.code))) as User[];
 
   const gameQuestions = await db
     .select()
@@ -149,12 +149,12 @@ export async function getLeaderboardById({ gameId }: { gameId: number }) {
   const userListOrderedByPoints = await db
     .select({
       user: users,
-      points: usersGames.points,
+      points: usersToGames.points,
     })
     .from(users)
-    .innerJoin(usersGames, eq(users.id, usersGames.userId))
-    .where(eq(usersGames.gameId, gameId))
-    .orderBy(desc(usersGames.points));
+    .innerJoin(usersToGames, eq(users.id, usersToGames.userId))
+    .where(eq(usersToGames.gameId, gameId))
+    .orderBy(desc(usersToGames.points));
 
   const winningUser = userListOrderedByPoints[0];
 
@@ -186,7 +186,7 @@ export async function addUsersToGame({
   gameId: number;
 }) {
   const usersToGame = await db
-    .insert(usersGames)
+    .insert(usersToGames)
     .values(
       players.map((player) => {
         return { userId: player.id, gameId };
