@@ -64,7 +64,7 @@ const PromptSubmitted = ({
         layout
         className="mb-4 flex flex-wrap items-center justify-center gap-6"
       >
-        {gameInfo.room.players.map((player, i) => (
+        {gameInfo.players.map((player, i) => (
           <PlayerBlock
             key={i}
             nickname={player.nickname}

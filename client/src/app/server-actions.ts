@@ -51,7 +51,7 @@ export type UserVote = { vote: Vote; user: User };
 
 export type GameInfo = {
   game: Game;
-  room: RoomInfo;
+  players: User[];
   questions: Question[];
   submittedPlayers: number[];
   votedPlayers: UserVote[];

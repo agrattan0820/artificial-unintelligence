@@ -80,22 +80,6 @@ const Winner = ({ gameInfo, state, send, leaderboard }: WinnerProps) => {
 
   return (
     <motion.div layout className="mx-auto max-w-2xl text-center">
-      {/* <div className="mb-40">
-        <motion.h2
-          initial={{ y: 15, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          className="text-2xl"
-        >
-          And my winning Ai trainer is...
-        </motion.h2>
-        <motion.div
-          initial={{ x: 15, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          className="flex justify-end"
-        >
-          <Friend />
-        </motion.div>
-      </div> */}
       <motion.div layout className="relative">
         <motion.div
           initial={{ y: -15, opacity: 0 }}

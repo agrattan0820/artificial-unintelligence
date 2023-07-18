@@ -1,13 +1,6 @@
-import { and, eq, inArray, or } from "drizzle-orm";
+import { and, eq, or } from "drizzle-orm";
 import { db } from "../../db/db";
-import {
-  NewQuestion,
-  User,
-  generations,
-  questions,
-  users,
-  votes,
-} from "../../db/schema";
+import { NewQuestion, User, questions } from "../../db/schema";
 import { openai } from "../openai";
 
 export async function getQuestionById({ id }: { id: number }) {

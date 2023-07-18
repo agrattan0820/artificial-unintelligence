@@ -24,7 +24,7 @@ export interface ClientToServerEvents {
   connectToRoom: (code: string) => void;
   leaveRoom: (data: { userId: number; code: string }) => void;
   initiateGame: (code: string) => void;
-  playAnotherGame: (gameId: number) => void;
+  playAnotherGame: (code: string) => void;
   clientEvent: (data: { state: string; gameId: number; round: number }) => void;
   testEvent: (code: string) => void;
   generationSubmitted: (data: {

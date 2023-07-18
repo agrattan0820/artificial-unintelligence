@@ -44,7 +44,7 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
     state: serverState,
     context: {
       round: serverState ? serverState.context.round : gameInfo.game.round,
-      playerCount: gameInfo.room.players.length,
+      playerCount: gameInfo.players.length,
       questionIdx: serverState ? serverState.context.questionIdx : 0,
     },
   });
@@ -175,11 +175,6 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
     };
   }, [handleServerEvent, socket]);
 
-  // Testing Socket.io Event Handler
-  const handleTestEvent = () => {
-    socket.emit("testEvent", gameInfo.room.code);
-  };
-
   // Game component shown based off state
   // TODO: test transforming this into a React component
   const currentComponent = useMemo(() => {
@@ -207,12 +202,6 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
       <section className="container mx-auto px-4">
         <AnimatePresence mode="wait">{currentComponent}</AnimatePresence>
       </section>
-      <div className="fixed bottom-8 right-8 flex gap-2">
-        <Button onClick={handleTestEvent}>Test Event</Button>
-        <Button onClick={() => send("NEXT")}>Next</Button>
-        <Button onClick={() => send("SUBMIT")}>Submit</Button>
-        <Button onClick={() => send("MORE")}>More</Button>
-      </div>
     </main>
   );
 }
