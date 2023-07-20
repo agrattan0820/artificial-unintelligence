@@ -4,6 +4,8 @@ import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { EventFrom, State } from "xstate";
 import { useMachine } from "@xstate/react";
 import { AnimatePresence } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 import {
   GetGameInfoResponse,
@@ -12,14 +14,11 @@ import {
   getGameRoundGenerations,
   getLeaderboardById,
 } from "@ai/app/server-actions";
-import Button from "@ai/components/button";
 import {
   gameMachine,
   getCurrentComponent,
 } from "@ai/components/game/game-machine";
 import { SocketContext } from "@ai/utils/socket-provider";
-import { useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
 
 // ! ----------> TYPES <----------
 
@@ -212,10 +211,19 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
     leaderboard,
   ]);
 
+  // Wait until the client mounts to avoid hydration errors
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   return (
     <main className="flex min-h-screen flex-col justify-center">
       <section className="container mx-auto px-4">
-        <AnimatePresence mode="wait">{currentComponent}</AnimatePresence>
+        <AnimatePresence mode="wait">
+          {isMounted ? currentComponent : null}
+        </AnimatePresence>
       </section>
     </main>
   );
