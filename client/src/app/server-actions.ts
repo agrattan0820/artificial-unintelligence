@@ -16,7 +16,7 @@ export type RoomInfo = {
 };
 export type Game = {
   id: number;
-  roomCode: string | null;
+  roomCode: string;
   state: string;
   round: number;
   createdAt: string;

@@ -1,5 +1,6 @@
 "use client";
 
+import { useContext } from "react";
 import Image from "next/image";
 import { EventFrom, StateFrom } from "xstate";
 import { BsTrophy } from "react-icons/bs";
@@ -9,6 +10,8 @@ import FriendWithLegs from "./friend-with-legs";
 import Crown from "@ai/images/crown.webp";
 import { GameInfo, GetGameLeaderboardResponse } from "@ai/app/server-actions";
 import { gameMachine } from "./game-machine";
+import Button, { LinkSecondaryButton } from "../button";
+import { SocketContext } from "@ai/utils/socket-provider";
 
 type LeaderboardProps = {
   gameInfo: GameInfo;
@@ -17,7 +20,9 @@ type LeaderboardProps = {
   leaderboard: GetGameLeaderboardResponse | undefined;
 };
 
-const Leaderboard = ({ leaderboard }: LeaderboardProps) => {
+const Leaderboard = ({ gameInfo, leaderboard }: LeaderboardProps) => {
+  const socket = useContext(SocketContext);
+
   const leaderboardListVariants: Variants = {
     hidden: {},
     visible: {
@@ -41,6 +46,10 @@ const Leaderboard = ({ leaderboard }: LeaderboardProps) => {
   if (!leaderboard) {
     return null;
   }
+
+  const handlePlayAgainOnClick = () => {
+    socket.emit("initiatePlayAnotherGame", gameInfo.game.roomCode);
+  };
 
   return (
     <div className="mx-auto max-w-2xl text-center">
@@ -97,6 +106,12 @@ const Leaderboard = ({ leaderboard }: LeaderboardProps) => {
           </motion.li>
         ))}
       </motion.ol>
+      <div className="mt-8 flex justify-center gap-2">
+        <Button onClick={handlePlayAgainOnClick}>
+          Play Again With Same Players
+        </Button>
+        <LinkSecondaryButton href="/">Go Back Home</LinkSecondaryButton>
+      </div>
     </div>
   );
 };

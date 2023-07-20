@@ -53,12 +53,12 @@ export function buildServer() {
     },
   });
 
-  const handleSocketIOError = (
+  const handleSocketError = (
     e: Error,
     socket: Socket<ClientToServerEvents, ServerToClientEvents>,
     code?: string
   ) => {
-    console.error("Socket.io Error: ", e);
+    console.error("Socket Error: ", e);
     socket.emit("error", e.message);
     if (code) socket.to(code).emit("error", e.message);
   };
@@ -86,7 +86,7 @@ export function buildServer() {
           socket.to(code).emit("roomState", updatedRoomInfo);
         }
       } catch (error) {
-        if (error instanceof Error) handleSocketIOError(error, socket, code);
+        if (error instanceof Error) handleSocketError(error, socket, code);
       }
     }
 
@@ -111,7 +111,7 @@ export function buildServer() {
         socket.join(code);
         socket.to(code).emit("roomState", roomInfo);
       } catch (error) {
-        if (error instanceof Error) handleSocketIOError(error, socket, code);
+        if (error instanceof Error) handleSocketError(error, socket, code);
       }
     });
 
@@ -129,7 +129,7 @@ export function buildServer() {
         socket.to(code).emit("message", `${socket.handshake.auth.userId} left`);
         socket.to(code).emit("roomState", roomInfo);
       } catch (error) {
-        if (error instanceof Error) handleSocketIOError(error, socket, code);
+        if (error instanceof Error) handleSocketError(error, socket, code);
       }
     });
 
@@ -163,12 +163,12 @@ export function buildServer() {
         socket.emit("startGame"); // `socket.in` which is supposed to send to members including the sender is not working as expected, using two emits as a workaround
         socket.to(code).emit("startGame");
       } catch (error) {
-        if (error instanceof Error) handleSocketIOError(error, socket, code);
+        if (error instanceof Error) handleSocketError(error, socket, code);
       }
     });
 
     // TODO: this code uses the same functions as `initiateGame`, think about refactoring
-    socket.on("playAnotherGame", async (code) => {
+    socket.on("initiatePlayAnotherGame", async (code) => {
       try {
         const newGame = await createGame({ code });
 
@@ -197,29 +197,37 @@ export function buildServer() {
           players: roomInfo?.players,
         });
 
-        socket.emit("serverEvent", {
-          type: "NEXT",
-        });
-        socket.to(code).emit("serverEvent", {
-          type: "NEXT",
-        });
+        socket.emit("playAnotherGame");
+        socket.to(code).emit("playAnotherGame");
       } catch (error) {
-        if (error instanceof Error) handleSocketIOError(error, socket);
+        if (error instanceof Error) handleSocketError(error, socket);
       }
     });
 
-    // TODO: add `socket.on("gameFinished")
-
-    socket.on("clientEvent", async ({ state, gameId, round }) => {
+    socket.on("clientEvent", async ({ state, gameId, round, completedAt }) => {
       try {
-        const gameState = gameStateMap.get(gameId);
+        const mapValue = gameStateMap.get(gameId);
 
-        if (gameState && gameState?.state !== state) {
-          gameStateMap.set(gameId, { state, round });
-          await updateGame({ state, gameId, round });
+        if (mapValue) {
+          const gameStateValue =
+            mapValue.state !== "START_GAME"
+              ? JSON.parse(mapValue.state).value
+              : mapValue.state;
+          const clientStateValue =
+            state !== "START_GAME" ? JSON.parse(state).value : state;
+
+          if (gameStateValue !== clientStateValue) {
+            gameStateMap.set(gameId, { state, round });
+            await updateGame({
+              state,
+              gameId,
+              round,
+              completedAt: completedAt ? new Date(completedAt) : undefined,
+            });
+          }
         }
       } catch (error) {
-        if (error instanceof Error) handleSocketIOError(error, socket);
+        if (error instanceof Error) handleSocketError(error, socket);
       }
     });
 
@@ -282,7 +290,7 @@ export function buildServer() {
           });
         }
       } catch (error) {
-        if (error instanceof Error) handleSocketIOError(error, socket);
+        if (error instanceof Error) handleSocketError(error, socket);
       }
     });
 
@@ -344,7 +352,7 @@ export function buildServer() {
           });
         }
       } catch (error) {
-        if (error instanceof Error) handleSocketIOError(error, socket);
+        if (error instanceof Error) handleSocketError(error, socket);
       }
     });
 
@@ -363,14 +371,11 @@ export function buildServer() {
               return;
             }
 
-            socket
-              .to(room)
-              .emit("message", `${socket.handshake.auth.userId} left`);
             socket.to(room).emit("roomState", roomInfo);
           })
         );
       } catch (error) {
-        if (error instanceof Error) handleSocketIOError(error, socket);
+        if (error instanceof Error) handleSocketError(error, socket);
       }
     });
   });

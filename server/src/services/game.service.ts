@@ -110,14 +110,16 @@ export async function updateGame({
   state,
   gameId,
   round,
+  completedAt,
 }: {
   state: string;
   gameId: number;
   round: number;
+  completedAt?: Date;
 }) {
   const updatedGame = await db
     .update(games)
-    .set({ state, round })
+    .set({ state, round, completedAt })
     .where(eq(games.id, gameId))
     .returning();
 
