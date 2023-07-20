@@ -45,4 +45,19 @@ export const LinkButton = (
   );
 };
 
+export const LinkSecondaryButton = (
+  props: LinkProps & LinkHTMLAttributes<HTMLAnchorElement>
+) => {
+  return (
+    <Link
+      {...props}
+      className={cn(
+        `rounded-md bg-gray-300 px-4 py-1 text-black transition hover:bg-gray-200 active:bg-gray-400 disabled:cursor-not-allowed disabled:opacity-50 ${
+          props.className ?? ""
+        }`
+      )}
+    />
+  );
+};
+
 export default Button;
