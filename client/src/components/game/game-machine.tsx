@@ -141,12 +141,7 @@ export const gameMachine = createMachine(
       },
 
       leaderboard: {
-        on: {
-          NEXT: {
-            target: "connectingToMainframe",
-            actions: "playAnotherGame",
-          },
-        },
+        type: "final",
       },
     },
   },
@@ -158,10 +153,6 @@ export const gameMachine = createMachine(
       }),
       incrementQuestionIdx: assign({
         questionIdx: (context) => context.questionIdx + 1,
-      }),
-      playAnotherGame: assign({
-        round: 1,
-        questionIdx: 0,
       }),
     },
     guards: {

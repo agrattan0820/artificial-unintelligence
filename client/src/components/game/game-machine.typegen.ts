@@ -35,7 +35,6 @@ export interface Typegen0 {
   };
   eventsCausingActions: {
     incrementQuestionIdx: "xstate.after(20000)#Machine.faceOffResults";
-    playAnotherGame: "NEXT";
     startNewRound: "xstate.after(20000)#Machine.faceOffResults";
   };
   eventsCausingDelays: {};
