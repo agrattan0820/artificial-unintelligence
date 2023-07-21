@@ -16,7 +16,7 @@ export type RoomInfo = {
 };
 export type Game = {
   id: number;
-  roomCode: string | null;
+  roomCode: string;
   state: string;
   round: number;
   createdAt: string;
@@ -51,7 +51,7 @@ export type UserVote = { vote: Vote; user: User };
 
 export type GameInfo = {
   game: Game;
-  room: RoomInfo;
+  players: User[];
   questions: Question[];
   submittedPlayers: number[];
   votedPlayers: UserVote[];

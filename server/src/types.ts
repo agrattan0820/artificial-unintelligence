@@ -1,12 +1,21 @@
-import type { EventFrom } from "xstate";
 import { RoomInfo, User, Vote } from "../db/schema";
-import { serverMachine } from "./server-machine";
 
+type StateMachineEvent =
+  | {
+      type: "NEXT";
+    }
+  | {
+      type: "SUBMIT";
+    }
+  | {
+      type: "MORE";
+    };
 export interface ServerToClientEvents {
   message: (str: string) => void;
   roomState: (roomInfo: RoomInfo) => void;
   startGame: () => void;
-  serverEvent: (event: EventFrom<typeof serverMachine>) => void;
+  playAnotherGame: () => void;
+  serverEvent: (event: StateMachineEvent) => void;
   submittedPlayers: (players: number[]) => void;
   votedPlayers: (votes: { vote: Vote; user: User }[]) => void;
   error: (str: string) => void;
@@ -14,8 +23,15 @@ export interface ServerToClientEvents {
 
 export interface ClientToServerEvents {
   connectToRoom: (code: string) => void;
+  leaveRoom: (data: { userId: number; code: string }) => void;
   initiateGame: (code: string) => void;
-  clientEvent: (data: { state: string; gameId: number; round: number }) => void;
+  initiatePlayAnotherGame: (code: string) => void;
+  clientEvent: (data: {
+    state: string;
+    gameId: number;
+    round: number;
+    completedAt?: string;
+  }) => void;
   testEvent: (code: string) => void;
   generationSubmitted: (data: {
     gameId: number;
@@ -31,7 +47,6 @@ export interface ClientToServerEvents {
     gameId: number;
     questionId: number;
   }) => void;
-  leaveRoom: (data: { userId: number; code: string }) => void;
 }
 
 export type UserVote = { vote: Vote; user: User };

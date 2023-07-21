@@ -7,9 +7,7 @@ import {
   games,
   generations,
   questions,
-  rooms,
   usersToGames,
-  usersToRooms,
   users,
 } from "../../db/schema";
 import {
@@ -30,18 +28,13 @@ export async function createGame({ code }: { code: string }) {
 }
 
 export async function getGameInfo({ gameId }: { gameId: number }) {
-  const getGame = await db
-    .select({
-      game: games,
-      room: rooms,
-    })
-    .from(games)
-    .innerJoin(rooms, eq(rooms.code, games.roomCode))
-    .where(eq(games.id, gameId));
+  const getGame = await db.select().from(games).where(eq(games.id, gameId));
 
   if (getGame.length === 0) {
     return null;
   }
+
+  const game = getGame[0];
 
   const players = (await db
     .select({
@@ -49,35 +42,24 @@ export async function getGameInfo({ gameId }: { gameId: number }) {
       nickname: users.nickname,
       createdAt: users.createdAt,
     })
-    .from(usersToRooms)
-    .innerJoin(users, eq(usersToRooms.userId, users.id))
-    .where(eq(usersToRooms.roomCode, getGame[0].room.code))) as User[];
+    .from(usersToGames)
+    .innerJoin(users, eq(usersToGames.userId, users.id))
+    .where(eq(usersToGames.gameId, game.id))) as User[];
 
   return {
-    game: getGame[0].game,
-    room: {
-      ...getGame[0].room,
-      players,
-    },
+    game,
+    players,
   };
 }
 
 export async function getLatestGameInfoByRoomCode({ code }: { code: string }) {
   const latestGames = await db
-    .select({
-      game: games,
-      room: rooms,
-    })
+    .select()
     .from(games)
-    .innerJoin(rooms, eq(rooms.code, games.roomCode))
     .where(eq(games.roomCode, code))
     .orderBy(desc(games.createdAt));
 
-  if (
-    latestGames.length === 0 ||
-    !latestGames[0].room ||
-    !latestGames[0].game
-  ) {
+  if (latestGames.length === 0) {
     return null;
   }
 
@@ -89,19 +71,19 @@ export async function getLatestGameInfoByRoomCode({ code }: { code: string }) {
       nickname: users.nickname,
       createdAt: users.createdAt,
     })
-    .from(usersToRooms)
-    .innerJoin(users, eq(usersToRooms.userId, users.id))
-    .where(eq(usersToRooms.roomCode, latestGame.room.code))) as User[];
+    .from(usersToGames)
+    .innerJoin(users, eq(usersToGames.userId, users.id))
+    .where(eq(usersToGames.gameId, latestGame.id))) as User[];
 
   const gameQuestions = await db
     .select()
     .from(questions)
-    .where(eq(questions.gameId, latestGame.game.id))
+    .where(eq(questions.gameId, latestGame.id))
     .orderBy(asc(questions.round), asc(questions.id));
 
   const gameRoundGenerations = await getGameRoundGenerations({
-    gameId: latestGame.game.id,
-    round: latestGame.game.round,
+    gameId: latestGame.id,
+    round: latestGame.round,
   });
 
   let submittedPlayers: number[] = [];
@@ -110,17 +92,14 @@ export async function getLatestGameInfoByRoomCode({ code }: { code: string }) {
   if (gameRoundGenerations.length > 0) {
     submittedPlayers = getSubmittedPlayers({ gameRoundGenerations });
     votedPlayers = await getVotesByGameRound({
-      gameId: latestGame.game.id,
-      round: latestGame.game.round,
+      gameId: latestGame.id,
+      round: latestGame.round,
     });
   }
 
   return {
-    game: latestGame.game,
-    room: {
-      ...latestGame.room,
-      players,
-    },
+    game: latestGame,
+    players: players,
     questions: gameQuestions,
     submittedPlayers,
     votedPlayers,
@@ -131,14 +110,16 @@ export async function updateGame({
   state,
   gameId,
   round,
+  completedAt,
 }: {
   state: string;
   gameId: number;
   round: number;
+  completedAt?: Date;
 }) {
   const updatedGame = await db
     .update(games)
-    .set({ state, round })
+    .set({ state, round, completedAt })
     .where(eq(games.id, gameId))
     .returning();
 

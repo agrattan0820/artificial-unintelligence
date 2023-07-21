@@ -47,6 +47,7 @@ export default function Lobby({ roomInfo }: { roomInfo: RoomInfo }) {
     return () => {
       socket.off("roomState", handleRoomState);
       socket.off("startGame", handleStartGame);
+      socket.off("error", handleError);
     };
   }, [handleStartGame, roomInfo.code, socket, user?.id]);
 

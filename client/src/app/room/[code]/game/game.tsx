@@ -4,6 +4,8 @@ import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { EventFrom, State } from "xstate";
 import { useMachine } from "@xstate/react";
 import { AnimatePresence } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 import {
   GetGameInfoResponse,
@@ -12,13 +14,11 @@ import {
   getGameRoundGenerations,
   getLeaderboardById,
 } from "@ai/app/server-actions";
-import Button from "@ai/components/button";
 import {
   gameMachine,
   getCurrentComponent,
 } from "@ai/components/game/game-machine";
 import { SocketContext } from "@ai/utils/socket-provider";
-import { useQuery } from "@tanstack/react-query";
 
 // ! ----------> TYPES <----------
 
@@ -33,6 +33,9 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
   // Socket for real-time communication
   const socket = useContext(SocketContext);
 
+  // Next.js router
+  const router = useRouter();
+
   // Persisted state from server for state machine
   const serverState =
     gameInfo.game.state !== "START_GAME"
@@ -44,12 +47,12 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
     state: serverState,
     context: {
       round: serverState ? serverState.context.round : gameInfo.game.round,
-      playerCount: gameInfo.room.players.length,
+      playerCount: gameInfo.players.length,
       questionIdx: serverState ? serverState.context.questionIdx : 0,
     },
   });
 
-  console.log("CURR STATE", state);
+  console.log("[CURR STATE]", state);
 
   // Send updated state to server
   const handleStateChange = useCallback(() => {
@@ -57,6 +60,9 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
       state: JSON.stringify(state),
       gameId: gameInfo.game.id,
       round: state.context.round,
+      completedAt: state.matches("leaderboard")
+        ? new Date().toISOString()
+        : undefined,
     });
   }, [gameInfo.game.id, socket, state]);
 
@@ -67,7 +73,7 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
   // Receive state changes from server
   const handleServerEvent = useCallback(
     (event: EventFrom<typeof gameMachine>) => {
-      console.log("RECEIVED EVENT", event);
+      console.log("[RECEIVED EVENT]", event);
       send(event);
     },
     [send]
@@ -79,11 +85,11 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
   );
 
   const handleOnSubmittedPlayers = (players: number[]) => {
-    console.log("HANDLE SUBMITTED PLAYERS", players);
+    console.log("[HANDLE SUBMITTED PLAYERS]", players);
     setSubmittedPlayerIds(new Set(players));
   };
 
-  console.log("SUBMITTED PLAYER IDS", submittedPlayerIds);
+  console.log("[SUBMITTED PLAYER IDS]", submittedPlayerIds);
 
   // Construct Question Generation map for face-offs
   const gameId = gameInfo.game.id;
@@ -143,14 +149,14 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
       : [];
   }, [generations, generationsLoading]);
 
-  console.log("QUESTION GENERATIONS", questionGenerationArr);
+  console.log("[QUESTION GENERATIONS]", questionGenerationArr);
 
   const currFaceOffQuestion =
     questionGenerationArr.length > 0
       ? questionGenerationArr[state.context.questionIdx]
       : undefined;
 
-  console.log("CURR FaceOff QUESTION", currFaceOffQuestion);
+  console.log("[CURR FACEOFF QUESTION]", currFaceOffQuestion);
 
   // Store players who have submitted votes for the current question
   const [votedPlayers, setVotedPlayers] = useState<UserVote[]>(
@@ -158,27 +164,30 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
   );
 
   const handleVotedPlayers = (votes: UserVote[]) => {
-    console.log("HANDLE VOTED PLAYERS", votes);
+    console.log("[HANDLE VOTED PLAYERS]", votes);
     setVotedPlayers(votes);
   };
+
+  // Handle play another game request from server
+  // Refresh page to acquire new server-rendered `gameInfo`
+  const handlePlayAnotherGame = useCallback(() => {
+    router.refresh();
+  }, [router]);
 
   // Socket.io Effects
   useEffect(() => {
     socket.on("serverEvent", handleServerEvent);
     socket.on("submittedPlayers", handleOnSubmittedPlayers);
     socket.on("votedPlayers", handleVotedPlayers);
+    socket.on("playAnotherGame", handlePlayAnotherGame);
 
     return () => {
       socket.off("serverEvent", handleServerEvent);
       socket.off("submittedPlayers", handleOnSubmittedPlayers);
       socket.off("votedPlayers", handleVotedPlayers);
+      socket.off("playAnotherGame", handlePlayAnotherGame);
     };
-  }, [handleServerEvent, socket]);
-
-  // Testing Socket.io Event Handler
-  const handleTestEvent = () => {
-    socket.emit("testEvent", gameInfo.room.code);
-  };
+  }, [handlePlayAnotherGame, handleServerEvent, socket]);
 
   // Game component shown based off state
   // TODO: test transforming this into a React component
@@ -202,17 +211,20 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
     leaderboard,
   ]);
 
+  // Wait until the client mounts to avoid hydration errors
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   return (
     <main className="flex min-h-screen flex-col justify-center">
       <section className="container mx-auto px-4">
-        <AnimatePresence mode="wait">{currentComponent}</AnimatePresence>
+        <AnimatePresence mode="wait">
+          {isMounted ? currentComponent : null}
+        </AnimatePresence>
       </section>
-      <div className="fixed bottom-8 right-8 flex gap-2">
-        <Button onClick={handleTestEvent}>Test Event</Button>
-        <Button onClick={() => send("NEXT")}>Next</Button>
-        <Button onClick={() => send("SUBMIT")}>Submit</Button>
-        <Button onClick={() => send("MORE")}>More</Button>
-      </div>
     </main>
   );
 }

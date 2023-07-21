@@ -49,19 +49,3 @@ export async function getQuestionsByUserGameRoundController(
     next(error);
   }
 }
-
-// export const createQuestionController = async (
-//   req: Request<{}, {}, { text: string }>,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   try {
-//     const body = req.body;
-
-//     const question = await createQuestion(body);
-
-//     res.status(200).send(question);
-//   } catch (error) {
-//     next(error);
-//   }
-// };

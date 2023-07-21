@@ -40,7 +40,6 @@ export function buildServer() {
   const app: Express = express();
   const server = createServer(app);
 
-  const inProgressRoomSet = new Set<string>();
   const gameStateMap = new Map<number, { state: string; round: number }>();
 
   app.use(express.json());
@@ -54,33 +53,51 @@ export function buildServer() {
     },
   });
 
-  const handleSocketIOError = (
+  const handleSocketError = (
     e: Error,
     socket: Socket<ClientToServerEvents, ServerToClientEvents>,
     code?: string
   ) => {
-    console.error("Socket.io Error: ", e);
+    console.error("Socket Error: ", e);
     socket.emit("error", e.message);
     if (code) socket.to(code).emit("error", e.message);
   };
 
   io.engine.use(helmet());
 
-  io.on("connection", (socket) => {
+  io.on("connection", async (socket) => {
     console.log("[CONNECTION]", socket.id);
 
-    if (socket.handshake.auth.roomCode) {
-      socket.join(socket.handshake.auth.roomCode);
+    if (socket.handshake.auth.userId && socket.handshake.auth.roomCode) {
+      const userId = Number(socket.handshake.auth.userId);
+      const code: string = socket.handshake.auth.roomCode;
+      socket.join(code);
+      try {
+        console.log(`[CHECKING IF ${userId} IS IN ROOM ${code}]`);
+        const roomInfo = await getRoom({ code });
+        if (
+          roomInfo &&
+          !roomInfo.players.some((player) => player.id === userId)
+        )
+          await joinRoom({ userId, code });
+        const updatedRoomInfo = await getRoom({ code });
+        if (updatedRoomInfo) {
+          socket.emit("roomState", updatedRoomInfo);
+          socket.to(code).emit("roomState", updatedRoomInfo);
+        }
+      } catch (error) {
+        if (error instanceof Error) handleSocketError(error, socket, code);
+      }
     }
 
     socket.on("connectToRoom", async (code) => {
       try {
-        const userId = socket.handshake.auth.userId;
+        const userId = Number(socket.handshake.auth.userId);
         let roomInfo = await getRoom({ code });
 
         if (
           roomInfo &&
-          !roomInfo.players.find((player) => player.id === userId)
+          !roomInfo.players.some((player) => player.id === userId)
         ) {
           await joinRoom({ userId: userId, code });
           roomInfo = await getRoom({ code });
@@ -94,7 +111,7 @@ export function buildServer() {
         socket.join(code);
         socket.to(code).emit("roomState", roomInfo);
       } catch (error) {
-        if (error instanceof Error) handleSocketIOError(error, socket, code);
+        if (error instanceof Error) handleSocketError(error, socket, code);
       }
     });
 
@@ -112,14 +129,12 @@ export function buildServer() {
         socket.to(code).emit("message", `${socket.handshake.auth.userId} left`);
         socket.to(code).emit("roomState", roomInfo);
       } catch (error) {
-        if (error instanceof Error) handleSocketIOError(error, socket, code);
+        if (error instanceof Error) handleSocketError(error, socket, code);
       }
     });
 
     socket.on("initiateGame", async (code) => {
       try {
-        inProgressRoomSet.add(code);
-
         const newGame = await createGame({ code });
 
         gameStateMap.set(newGame.id, {
@@ -135,12 +150,42 @@ export function buildServer() {
           );
         }
 
-        const sockets = await io.in(code).fetchSockets();
+        await addUsersToGame({
+          gameId: newGame.id,
+          players: roomInfo?.players,
+        });
 
-        console.log(
-          "SOCKETS IN ROOM",
-          sockets.map((socket) => socket.handshake.auth.userId)
-        );
+        await assignQuestionsToPlayers({
+          gameId: newGame.id,
+          players: roomInfo?.players,
+        });
+
+        socket.emit("startGame"); // `socket.in` which is supposed to send to members including the sender is not working as expected, using two emits as a workaround
+        socket.to(code).emit("startGame");
+      } catch (error) {
+        if (error instanceof Error) handleSocketError(error, socket, code);
+      }
+    });
+
+    // TODO: this code uses the same functions as `initiateGame`, think about refactoring
+    socket.on("initiatePlayAnotherGame", async (code) => {
+      try {
+        const newGame = await createGame({ code });
+
+        console.log("[PLAY ANOTHER GAME]", newGame);
+
+        gameStateMap.set(newGame.id, {
+          state: newGame.state,
+          round: newGame.round,
+        });
+
+        const roomInfo = await getRoom({ code });
+
+        if (!roomInfo?.players) {
+          throw new Error(
+            "The room's players were not defined when initiating the game"
+          );
+        }
 
         await addUsersToGame({
           gameId: newGame.id,
@@ -152,29 +197,42 @@ export function buildServer() {
           players: roomInfo?.players,
         });
 
-        // TODO: `socket.in` which is supposed to send to members including the sender is not working as expected, using two emits as a workaround
-        socket.emit("startGame");
-        socket.to(code).emit("startGame");
+        socket.emit("playAnotherGame");
+        socket.to(code).emit("playAnotherGame");
       } catch (error) {
-        if (error instanceof Error) handleSocketIOError(error, socket, code);
+        if (error instanceof Error) handleSocketError(error, socket);
       }
     });
 
-    socket.on("clientEvent", async ({ state, gameId, round }) => {
+    socket.on("clientEvent", async ({ state, gameId, round, completedAt }) => {
       try {
-        const gameState = gameStateMap.get(gameId);
+        const mapValue = gameStateMap.get(gameId);
 
-        if (gameState && gameState?.state !== state) {
-          gameStateMap.set(gameId, { state, round });
-          await updateGame({ state, gameId, round });
+        if (mapValue) {
+          const gameStateValue =
+            mapValue.state !== "START_GAME"
+              ? JSON.parse(mapValue.state).value
+              : mapValue.state;
+          const clientStateValue =
+            state !== "START_GAME" ? JSON.parse(state).value : state;
+
+          if (gameStateValue !== clientStateValue) {
+            gameStateMap.set(gameId, { state, round });
+            await updateGame({
+              state,
+              gameId,
+              round,
+              completedAt: completedAt ? new Date(completedAt) : undefined,
+            });
+          }
         }
       } catch (error) {
-        if (error instanceof Error) handleSocketIOError(error, socket);
+        if (error instanceof Error) handleSocketError(error, socket);
       }
     });
 
     socket.on("testEvent", async (code) => {
-      console.log("GOT TEST EVENT", code);
+      console.log("[TEST EVENT]", code);
 
       const sockets = await io.in(code).fetchSockets();
 
@@ -182,13 +240,6 @@ export function buildServer() {
         "SOCKETS IN ROOM",
         sockets.map((socket) => socket.handshake.auth.userId)
       );
-
-      // socket.emit("serverEvent", {
-      //   type: "SUBMIT",
-      // });
-      // socket.to(code).emit("serverEvent", {
-      //   type: "SUBMIT",
-      // });
     });
 
     socket.on("generationSubmitted", async (data) => {
@@ -210,35 +261,36 @@ export function buildServer() {
           round: data.round,
         });
 
-        // Player Submissions
         const submittedUsers = getSubmittedPlayers({ gameRoundGenerations });
 
         socket.emit("submittedPlayers", submittedUsers);
-        socket.to(gameInfo.room.code).emit("submittedPlayers", submittedUsers);
+        socket
+          .to(gameInfo.game.roomCode)
+          .emit("submittedPlayers", submittedUsers);
 
-        const totalNeeded = gameInfo.room.players.length * 2;
+        const totalNeeded = gameInfo.players.length * 2;
         const currentAmount = gameRoundGenerations.length;
 
-        console.log("TOTAL NEEDED", totalNeeded);
+        console.log("[TOTAL NEEDED]", totalNeeded);
 
-        const sockets = await io.in(gameInfo.room.code).fetchSockets();
+        const sockets = await io.in(gameInfo.game.roomCode).fetchSockets();
 
         console.log(
-          "SOCKETS IN ROOM",
+          "[SOCKETS IN ROOM]",
           sockets.map((socket) => socket.handshake.auth.userId)
         );
 
         if (currentAmount >= totalNeeded) {
-          console.log("SENDING SERVER EVENTS", gameInfo.room.code);
+          console.log("[SENDING SERVER EVENTS]", gameInfo.game.roomCode);
           socket.emit("serverEvent", {
             type: "NEXT",
           });
-          socket.to(gameInfo.room.code).emit("serverEvent", {
+          socket.to(gameInfo.game.roomCode).emit("serverEvent", {
             type: "NEXT",
           });
         }
       } catch (error) {
-        if (error instanceof Error) handleSocketIOError(error, socket);
+        if (error instanceof Error) handleSocketError(error, socket);
       }
     });
 
@@ -264,9 +316,9 @@ export function buildServer() {
         });
 
         socket.emit("votedPlayers", questionVotes);
-        socket.to(gameInfo.room.code).emit("votedPlayers", questionVotes);
+        socket.to(gameInfo.game.roomCode).emit("votedPlayers", questionVotes);
 
-        const totalNeeded = gameInfo.room.players.length - 2; // assuming 3+ players
+        const totalNeeded = gameInfo.players.length - 2; // assuming 3+ players
         const currentAmount = questionVotes.length;
 
         if (currentAmount >= totalNeeded) {
@@ -295,51 +347,41 @@ export function buildServer() {
           socket.emit("serverEvent", {
             type: "NEXT",
           });
-          socket.to(gameInfo.room.code).emit("serverEvent", {
+          socket.to(gameInfo.game.roomCode).emit("serverEvent", {
             type: "NEXT",
           });
         }
       } catch (error) {
-        if (error instanceof Error) handleSocketIOError(error, socket);
+        if (error instanceof Error) handleSocketError(error, socket);
       }
     });
 
     socket.on("disconnecting", async () => {
       try {
-        const userNotInInProgressRoom =
-          new Set(
-            [...socket.rooms].filter((room) => inProgressRoomSet.has(room))
-          ).size === 0;
+        await Promise.all(
+          [...socket.rooms].map(async (room) => {
+            await leaveRoom({
+              userId: Number(socket.handshake.auth.userId),
+              code: room,
+            });
+            const roomInfo = await getRoom({ code: room });
 
-        if (userNotInInProgressRoom) {
-          await Promise.all(
-            [...socket.rooms].map(async (room) => {
-              await leaveRoom({
-                userId: socket.handshake.auth.userId,
-                code: room,
-              });
-              const roomInfo = await getRoom({ code: room });
+            if (!roomInfo) {
+              socket.emit("error", `Unable to fully disconnect from room`);
+              return;
+            }
 
-              if (!roomInfo) {
-                socket.emit("message", `Unable to fully disconnect from room`);
-                return;
-              }
-
-              socket
-                .to(room)
-                .emit("message", `${socket.handshake.auth.userId} left`);
-              socket.to(room).emit("roomState", roomInfo);
-            })
-          );
-        }
+            socket.to(room).emit("roomState", roomInfo);
+          })
+        );
       } catch (error) {
-        if (error instanceof Error) handleSocketIOError(error, socket);
+        if (error instanceof Error) handleSocketError(error, socket);
       }
     });
   });
 
   app.get("/", (req: Request, res: Response) => {
-    res.send("Express + TypeScript Server");
+    res.send("beeeeeeeep server");
   });
   app.get("/ping", (req: Request, res: Response) => {
     res.status(200).send("pong");

@@ -307,7 +307,7 @@ const FaceOffResultImage = ({
   const isWinner = winningImage === id && showWinner;
   const isLoser = winningImage !== id && showWinner;
 
-  const voteLayouts: MotionStyle[] = [
+  const votePositions: MotionStyle[] = [
     { top: "5%", left: "5%", rotate: 12 },
     { top: "10%", left: "52%", rotate: -15 },
     { top: "25%", left: "8%", rotate: -2 },
@@ -351,7 +351,7 @@ const FaceOffResultImage = ({
             key={i}
             className="absolute inline-block rounded-md bg-indigo-300 p-4 shadow-md"
             variants={voteItemVariants}
-            style={voteLayouts[i]}
+            style={votePositions[i]}
           >
             <p className="text-sm text-black">{vote}</p>
           </motion.li>

@@ -4,9 +4,7 @@ import Lobby from "./lobby";
 export default async function Room({ params }: { params: { code: string } }) {
   const roomInfo = await getRoomInfo(params.code);
 
-  return (
-    <>
-      <Lobby roomInfo={roomInfo} />
-    </>
-  );
+  console.log("[ROOM INFO]", roomInfo);
+
+  return <Lobby roomInfo={roomInfo} />;
 }
