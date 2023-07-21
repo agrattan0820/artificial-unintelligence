@@ -49,7 +49,6 @@ export const questions = pgTable("questions", {
   player2: integer("player_2")
     .references(() => users.id)
     .notNull(),
-  votedOn: boolean("voted_on").default(false).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
