@@ -4,6 +4,8 @@
 
 ## In Progress
 
+- [] Rethink question generation and usage
+
 ## Done ✓
 
 - [x] Send submitted playerIds and votes from game info endpoint

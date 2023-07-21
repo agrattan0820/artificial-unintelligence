@@ -5,11 +5,11 @@
 - [ ] Third round prompt has to include a particular word?
 - [ ] How-to-play screen
 - [ ] Connect state for `face-off` and `face-off-result` so that a transition between components doesn't need to happen
-- [ ] Animation for new players arriving in room
 
 ## In Progress
 
 - [ ] Test `GameMachineComponent`
+- [ ] Animation for new players arriving in room
 
 ## Done ✓
 
