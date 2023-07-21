@@ -37,8 +37,6 @@ export async function joinRoomController(
       userId: createdUser.id,
       code,
     });
-    // Unsure right now if it's necessary to return the room info
-    // const roomInfo = await getRoom({ roomCode: room.code });
 
     console.log("[ADD USER TO ROOM]:", addUserToRoom);
 
