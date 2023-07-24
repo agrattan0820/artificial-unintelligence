@@ -10,7 +10,7 @@ import {
   users,
 } from "../../db/schema";
 
-type GameRoundGeneration = {
+export type GameRoundGeneration = {
   generation: Generation;
   question: Question;
   user: User;
@@ -38,6 +38,7 @@ export async function getGameRoundGenerations({
   return gameRoundGenerations;
 }
 
+// TODO: Test this function
 export function getSubmittedPlayers({
   gameRoundGenerations,
 }: {
@@ -74,4 +75,25 @@ export async function createGeneration(data: NewGeneration) {
     .returning();
 
   return newGeneration[0];
+}
+
+export function filterGameRoundGenerationsByQuestionId({
+  questionId,
+  gameRoundGenerations,
+}: {
+  questionId: number;
+  gameRoundGenerations: GameRoundGeneration[];
+}) {
+  const filteredGenerations = gameRoundGenerations.reduce<Generation[]>(
+    (acc, curr) => {
+      if (curr.question.id === questionId) {
+        acc.push(curr.generation);
+      }
+
+      return acc;
+    },
+    []
+  );
+
+  return filteredGenerations;
 }

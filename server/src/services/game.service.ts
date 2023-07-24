@@ -52,6 +52,7 @@ export async function getGameInfo({ gameId }: { gameId: number }) {
   };
 }
 
+// TODO: create reusuable function with game info query logic?
 export async function getLatestGameInfoByRoomCode({ code }: { code: string }) {
   const latestGames = await db
     .select()

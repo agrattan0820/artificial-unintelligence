@@ -96,3 +96,21 @@ export async function getRoom({ code }: { code: string }) {
     players,
   };
 }
+
+export async function checkRoomForUserAndAdd({
+  userId,
+  roomCode,
+}: {
+  userId: number;
+  roomCode: string;
+}) {
+  let roomInfo = await getRoom({ code: roomCode });
+  const playerInRoom = roomInfo
+    ? roomInfo.players.some((player) => player.id === userId)
+    : false;
+  if (roomInfo && !playerInRoom) {
+    await joinRoom({ userId, code: roomCode });
+    roomInfo = await getRoom({ code: roomCode });
+  }
+  return roomInfo;
+}

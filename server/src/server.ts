@@ -12,7 +12,12 @@ import helmet from "helmet";
 
 import { userRoutes } from "./routes/user.route";
 import { roomRoutes } from "./routes/room.route";
-import { getRoom, joinRoom, leaveRoom } from "./services/room.service";
+import {
+  checkRoomForUserAndAdd,
+  getRoom,
+  joinRoom,
+  leaveRoom,
+} from "./services/room.service";
 import {
   addUsersToGame,
   createGame,
@@ -22,6 +27,7 @@ import {
 import { ClientToServerEvents, ServerToClientEvents } from "./types";
 import {
   createGeneration,
+  filterGameRoundGenerationsByQuestionId,
   getGameRoundGenerations,
   getSubmittedPlayers,
 } from "./services/generation.service";
@@ -29,12 +35,12 @@ import { assignQuestionsToPlayers } from "./services/question.service";
 import { gameRoutes } from "./routes/game.route";
 import { questionRoutes } from "./routes/question.route";
 import {
-  calculateVotePoints,
+  saveVotePoints,
   createVote,
+  createVoteMap,
   getVotesByQuestionId,
 } from "./services/vote.service";
 import { generationRoutes } from "./routes/generation.route";
-import { Generation } from "../db/schema";
 
 export function buildServer() {
   const app: Express = express();
@@ -70,23 +76,20 @@ export function buildServer() {
 
     if (socket.handshake.auth.userId && socket.handshake.auth.roomCode) {
       const userId = Number(socket.handshake.auth.userId);
-      const code: string = socket.handshake.auth.roomCode;
-      socket.join(code);
+      const roomCode: string = socket.handshake.auth.roomCode;
+      socket.join(roomCode);
       try {
-        console.log(`[CHECKING IF ${userId} IS IN ROOM ${code}]`);
-        const roomInfo = await getRoom({ code });
-        if (
-          roomInfo &&
-          !roomInfo.players.some((player) => player.id === userId)
-        )
-          await joinRoom({ userId, code });
-        const updatedRoomInfo = await getRoom({ code });
+        console.log(`[CHECKING IF ${userId} IS IN ROOM ${roomCode}]`);
+        const updatedRoomInfo = await checkRoomForUserAndAdd({
+          userId,
+          roomCode,
+        });
         if (updatedRoomInfo) {
           socket.emit("roomState", updatedRoomInfo);
-          socket.to(code).emit("roomState", updatedRoomInfo);
+          socket.to(roomCode).emit("roomState", updatedRoomInfo);
         }
       } catch (error) {
-        if (error instanceof Error) handleSocketError(error, socket, code);
+        if (error instanceof Error) handleSocketError(error, socket, roomCode);
       }
     }
 
@@ -327,20 +330,19 @@ export function buildServer() {
             round: gameInfo.game.round,
           });
 
-          const filteredGenerations = gameRoundGenerations.reduce<Generation[]>(
-            (acc, curr) => {
-              if (curr.question.id === data.questionId) {
-                acc.push(curr.generation);
-              }
+          const filteredGenerations = filterGameRoundGenerationsByQuestionId({
+            questionId: data.questionId,
+            gameRoundGenerations,
+          });
 
-              return acc;
-            },
-            []
-          );
-
-          await calculateVotePoints({
+          const voteMap = createVoteMap({
             generations: filteredGenerations,
             userVotes: questionVotes,
+          });
+
+          await saveVotePoints({
+            voteMap,
+            totalVotes: questionVotes.length,
             gameId: data.gameId,
           });
 

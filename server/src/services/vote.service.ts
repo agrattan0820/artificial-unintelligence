@@ -74,23 +74,13 @@ export async function getVotesByGameRound({
   return votesByGameRound;
 }
 
-/**
- * The scoring system (along with the rest of the game) is
- * inspired by Quiplash from the Jackbox Party Pack
- *
- * Source: https://jackboxgames.fandom.com/wiki/Quiplash_(series)
- */
-export async function calculateVotePoints({
+export function createVoteMap({
   generations,
   userVotes,
-  gameId,
 }: {
   generations: Generation[];
   userVotes: UserVote[];
-  gameId: number;
 }) {
-  const pointsPerOnePercent = 10;
-
   const userGenerationMap = generations.reduce<Record<number, number>>(
     (acc, curr) => {
       acc[curr.id] = curr.userId;
@@ -111,6 +101,41 @@ export async function calculateVotePoints({
     return acc;
   }, {});
 
+  return voteMap;
+}
+
+/**
+ * The scoring system (along with the rest of the game) is
+ * inspired by Quiplash from the Jackbox Party Pack
+ *
+ * Source: https://jackboxgames.fandom.com/wiki/Quiplash_(series)
+ */
+export function calculateVotePoints({
+  previousPointsValue,
+  userVoteCount,
+  totalVotes,
+}: {
+  previousPointsValue: number;
+  userVoteCount: number;
+  totalVotes: number;
+}) {
+  const pointsPerOnePercent = 10;
+
+  const percentage = Math.round((userVoteCount / totalVotes) * 100);
+  const newPointsValue = previousPointsValue + percentage * pointsPerOnePercent;
+
+  return newPointsValue;
+}
+
+export async function saveVotePoints({
+  voteMap,
+  totalVotes,
+  gameId,
+}: {
+  voteMap: Record<number, number>;
+  totalVotes: number;
+  gameId: number;
+}) {
   const userIdArray = Object.keys(voteMap).map((id) => Number.parseInt(id));
 
   const previousPoints = await db
@@ -125,10 +150,11 @@ export async function calculateVotePoints({
 
   await Promise.all(
     previousPoints.map(async (prev) => {
-      const percentage = Math.round(
-        (voteMap[prev.userId] / userVotes.length) * 100
-      );
-      const newValue = prev.points + percentage * pointsPerOnePercent;
+      const newValue = calculateVotePoints({
+        previousPointsValue: prev.points,
+        userVoteCount: voteMap[prev.userId],
+        totalVotes,
+      });
       await db
         .update(usersToGames)
         .set({ points: newValue })

@@ -2,6 +2,7 @@ import { and, eq, or } from "drizzle-orm";
 import { db } from "../../db/db";
 import { NewQuestion, User, questions } from "../../db/schema";
 import { openai } from "../openai";
+import { shuffleArray } from "../utils";
 
 export async function getQuestionById({ id }: { id: number }) {
   const question = await db
@@ -35,6 +36,7 @@ export async function generateAIQuestions(questionAmount: number) {
   return [];
 }
 
+// TODO: Test this function (and separate it)
 export async function assignQuestionsToPlayers({
   gameId,
   players,
@@ -107,23 +109,4 @@ export async function getUserQuestionsForRound({
     );
 
   return userQuestionsForRound;
-}
-
-// UTILS
-
-function getRandomInt(min: number, max: number) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
-}
-
-function shuffleArray<T>(arr: T[]) {
-  for (let i = 0; i < arr.length - 2; i++) {
-    const randNum = getRandomInt(i, arr.length);
-    const temp = arr[i];
-    arr[i] = arr[randNum];
-    arr[randNum] = temp;
-  }
-
-  return arr;
 }
