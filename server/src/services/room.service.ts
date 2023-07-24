@@ -125,7 +125,8 @@ export async function updateRoomHost({
 }) {
   const updatedRoomInfo = await db
     .update(rooms)
-    .set({ hostId: newHostId, code: roomCode })
+    .set({ hostId: newHostId })
+    .where(eq(rooms.code, roomCode))
     .returning();
 
   return updatedRoomInfo[0];

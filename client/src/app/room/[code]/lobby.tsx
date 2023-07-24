@@ -14,6 +14,7 @@ import { SocketContext } from "@ai/utils/socket-provider";
 export default function Lobby({ roomInfo }: { roomInfo: RoomInfo }) {
   const router = useRouter();
   const { user } = useStore();
+  const [hostId, setHostId] = useState<number | null>(roomInfo.hostId);
   const [players, setPlayers] = useState<User[]>(roomInfo.players);
   const [startGameLoading, setStartGameLoading] = useState(false);
 
@@ -21,11 +22,12 @@ export default function Lobby({ roomInfo }: { roomInfo: RoomInfo }) {
 
   const handleRoomState = (roomInfo: RoomInfo) => {
     console.log("[ROOM INFO]", roomInfo);
+    setHostId(roomInfo.hostId);
     setPlayers(roomInfo.players);
   };
 
   const handleStartGame = useCallback(() => {
-    console.log("RECEIVED START GAME");
+    console.log("[RECEIVED START GAME]");
     router.push(`/room/${roomInfo.code}/game`);
   }, [roomInfo.code, router]);
 
@@ -63,6 +65,7 @@ export default function Lobby({ roomInfo }: { roomInfo: RoomInfo }) {
         <StartGame
           players={players}
           code={roomInfo.code}
+          hostId={hostId}
           onStartGame={initiateStartGame}
           loading={startGameLoading}
         />
