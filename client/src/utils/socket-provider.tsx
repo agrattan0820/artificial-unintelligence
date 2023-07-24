@@ -29,7 +29,6 @@ export default function SocketProvider({
     socket.connect();
     socket.on("message", socketMessage);
     socket.on("error", socketError);
-    console.log("PROVIDER SOCKET", socket.id);
 
     return () => {
       socket.off("message", socketMessage);

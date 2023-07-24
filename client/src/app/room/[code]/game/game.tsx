@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import {
   GetGameInfoResponse,
   QuestionGenerations,
+  RoomInfo,
   UserVote,
   getGameRoundGenerations,
   getLeaderboardById,
@@ -53,6 +54,14 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
   });
 
   console.log("[CURR STATE]", state);
+
+  // Id of the user who is the current host of the game
+  const [hostId, setHostId] = useState<number | null>(gameInfo.hostId);
+
+  const handleRoomState = (roomInfo: RoomInfo) => {
+    console.log("[ROOM INFO]", roomInfo);
+    setHostId(roomInfo.hostId);
+  };
 
   // Send updated state to server
   const handleStateChange = useCallback(() => {
@@ -176,12 +185,14 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
 
   // Socket.io Effects
   useEffect(() => {
+    socket.on("roomState", handleRoomState);
     socket.on("serverEvent", handleServerEvent);
     socket.on("submittedPlayers", handleOnSubmittedPlayers);
     socket.on("votedPlayers", handleVotedPlayers);
     socket.on("playAnotherGame", handlePlayAnotherGame);
 
     return () => {
+      socket.off("roomState", handleRoomState);
       socket.off("serverEvent", handleServerEvent);
       socket.off("submittedPlayers", handleOnSubmittedPlayers);
       socket.off("votedPlayers", handleVotedPlayers);
@@ -196,6 +207,7 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
       gameInfo,
       state,
       send,
+      hostId,
       submittedPlayerIds,
       currFaceOffQuestion,
       votedPlayers,
@@ -205,6 +217,7 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
     gameInfo,
     state,
     send,
+    hostId,
     submittedPlayerIds,
     currFaceOffQuestion,
     votedPlayers,

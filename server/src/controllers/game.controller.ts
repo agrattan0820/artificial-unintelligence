@@ -1,10 +1,10 @@
 import type { NextFunction, Request, Response } from "express";
 import {
   getLeaderboardById,
-  getLatestGameInfoByRoomCode,
+  getPageGameInfoByRoomCode,
 } from "../services/game.service";
 
-export async function getLatestGameByRoomCodeController(
+export async function getPageGameInfoByRoomCodeController(
   req: Request<{ code: string }>,
   res: Response,
   next: NextFunction
@@ -12,7 +12,7 @@ export async function getLatestGameByRoomCodeController(
   try {
     const code = req.params.code;
 
-    const gameInfo = await getLatestGameInfoByRoomCode({ code });
+    const gameInfo = await getPageGameInfoByRoomCode({ code });
 
     if (!gameInfo) {
       res

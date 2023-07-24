@@ -172,6 +172,7 @@ export const getCurrentComponent = (
   gameInfo: GameInfo,
   state: StateFrom<typeof gameMachine>,
   send: (event: EventFrom<typeof gameMachine>) => StateFrom<typeof gameMachine>,
+  hostId: number | null,
   submittedPlayerIds: Set<number>,
   currFaceOffQuestion: QuestionGenerations | undefined,
   votedPlayers: UserVote[],
@@ -258,6 +259,7 @@ export const getCurrentComponent = (
           state={state}
           send={send}
           leaderboard={leaderboard}
+          hostId={hostId}
         />
       </TransitionWrapper>
     ),

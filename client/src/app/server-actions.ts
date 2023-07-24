@@ -52,6 +52,7 @@ export type Vote = {
 export type UserVote = { vote: Vote; user: User };
 
 export type GameInfo = {
+  hostId: number | null;
   game: Game;
   players: User[];
   questions: Question[];
