@@ -386,7 +386,7 @@ export function buildServer() {
                 console.log(`[NO OTHER PLAYERS REMAIN IN ${room}]`);
                 return;
               }
-              updateRoomHost({ newHostId: newHost.id, roomCode: room });
+              await updateRoomHost({ newHostId: newHost.id, roomCode: room });
             }
 
             socket.to(room).emit("roomState", roomInfo);
