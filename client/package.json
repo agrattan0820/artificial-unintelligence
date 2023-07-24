@@ -6,11 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "generate-types": "supabase gen types typescript --project-id zeysnhkedtlcujotecnw > src/types/supabase.types.ts"
+    "lint": "next lint"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.23.0",
     "@tanstack/react-query": "^4.29.15",
     "@types/node": "18.16.1",
     "@types/react": "18.2.0",
@@ -40,7 +38,6 @@
   "devDependencies": {
     "eslint-config-prettier": "^8.8.0",
     "prettier": "^2.8.8",
-    "prettier-plugin-tailwindcss": "^0.2.7",
-    "supabase": "^1.64.2"
+    "prettier-plugin-tailwindcss": "^0.2.7"
   }
 }

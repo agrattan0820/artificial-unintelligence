@@ -53,14 +53,12 @@ export default function Lobby({ roomInfo }: { roomInfo: RoomInfo }) {
 
   return (
     <main className="flex min-h-screen flex-col justify-center">
-      {/* <PlayerPresence code={room.code} /> */}
       <section className="container mx-auto px-4">
         <p className="mb-2 text-center text-xl">Your Room Link is</p>
         <RoomLink code={roomInfo.code} />
         <div className="absolute left-8 top-8">
           <UserCount count={players.length} />
         </div>
-        {/* <ConnectionStatus code={params.code} /> */}
         <UserList players={players} />
         <StartGame
           players={players}
