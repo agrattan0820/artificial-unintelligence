@@ -6,10 +6,12 @@ export type User = {
   nickname: string;
 };
 export type Room = {
+  hostId: number | null;
   code: string;
   createdAt: string;
 };
 export type RoomInfo = {
+  hostId: number | null;
   code: string;
   createdAt: string;
   players: User[];

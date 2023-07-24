@@ -1,6 +1,5 @@
 import { InferModel } from "drizzle-orm";
 import {
-  boolean,
   integer,
   pgTable,
   primaryKey,
@@ -17,6 +16,7 @@ export const users = pgTable("users", {
 
 export const rooms = pgTable("rooms", {
   code: text("code").primaryKey(),
+  hostId: integer("host_id").references(() => users.id),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -109,6 +109,7 @@ export type NewUser = InferModel<typeof users, "insert">;
 export type Room = InferModel<typeof rooms>;
 export type NewRoom = InferModel<typeof rooms, "insert">;
 export type RoomInfo = {
+  hostId: number | null;
   code: string;
   createdAt: Date;
   players: User[];
