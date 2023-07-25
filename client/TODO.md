@@ -22,3 +22,4 @@
 - [x] Loop leaderboard screen back to home or new game
 - [x] Fix Firefox round animation glitch
 - [x] Fix hydration error when the page is reloaded during the game and a different state is shown
+- [x] Only a host can start a game from the lobby
