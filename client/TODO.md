@@ -5,6 +5,7 @@
 - [ ] Third round prompt has to include a particular word?
 - [ ] How-to-play screen
 - [ ] Connect state for `face-off` and `face-off-result` so that a transition between components doesn't need to happen
+- [ ] Protect game pages from players who are not a part of it
 
 ## In Progress
 
@@ -21,3 +22,4 @@
 - [x] Loop leaderboard screen back to home or new game
 - [x] Fix Firefox round animation glitch
 - [x] Fix hydration error when the page is reloaded during the game and a different state is shown
+- [x] Only a host can start a game from the lobby

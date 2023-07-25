@@ -12,16 +12,21 @@ import { GameInfo, GetGameLeaderboardResponse } from "@ai/app/server-actions";
 import { gameMachine } from "./game-machine";
 import Button, { LinkSecondaryButton } from "../button";
 import { SocketContext } from "@ai/utils/socket-provider";
+import { useStore } from "@ai/utils/store";
 
 type LeaderboardProps = {
   gameInfo: GameInfo;
   state: StateFrom<typeof gameMachine>;
   send: (event: EventFrom<typeof gameMachine>) => StateFrom<typeof gameMachine>;
   leaderboard: GetGameLeaderboardResponse | undefined;
+  hostId: number | null;
 };
 
-const Leaderboard = ({ gameInfo, leaderboard }: LeaderboardProps) => {
+const Leaderboard = ({ gameInfo, leaderboard, hostId }: LeaderboardProps) => {
   const socket = useContext(SocketContext);
+  const { user } = useStore();
+
+  const currUserIsHost = user && user?.id === hostId;
 
   const leaderboardListVariants: Variants = {
     hidden: {},
@@ -107,9 +112,11 @@ const Leaderboard = ({ gameInfo, leaderboard }: LeaderboardProps) => {
         ))}
       </motion.ol>
       <div className="mt-8 flex justify-center gap-2">
-        <Button onClick={handlePlayAgainOnClick}>
-          Play Again With Same Players
-        </Button>
+        {currUserIsHost && (
+          <Button onClick={handlePlayAgainOnClick}>
+            Play Again With Same Players
+          </Button>
+        )}
         <LinkSecondaryButton href="/">Go Back Home</LinkSecondaryButton>
       </div>
     </div>

@@ -13,7 +13,7 @@ export async function createHostController(
 
     const newUser = await createUser(body);
 
-    const newRoom = await createRoom();
+    const newRoom = await createRoom({ hostId: newUser.id });
 
     await joinRoom({
       userId: newUser.id,

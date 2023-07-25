@@ -6,10 +6,12 @@ export type User = {
   nickname: string;
 };
 export type Room = {
+  hostId: number | null;
   code: string;
   createdAt: string;
 };
 export type RoomInfo = {
+  hostId: number | null;
   code: string;
   createdAt: string;
   players: User[];
@@ -50,6 +52,7 @@ export type Vote = {
 export type UserVote = { vote: Vote; user: User };
 
 export type GameInfo = {
+  hostId: number | null;
   game: Game;
   players: User[];
   questions: Question[];

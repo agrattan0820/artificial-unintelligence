@@ -10,7 +10,7 @@ import {
 } from "../../db/schema";
 import { and, eq } from "drizzle-orm";
 
-export async function createRoom() {
+export async function createRoom({ hostId }: { hostId: number }) {
   let validRoomCode = false;
 
   let roomCode = crypto.randomBytes(4).toString("hex");
@@ -30,6 +30,7 @@ export async function createRoom() {
   }
 
   const newRoom: NewRoom = {
+    hostId,
     code: roomCode,
   };
   const createRoom = await db.insert(rooms).values(newRoom).returning();
@@ -113,4 +114,32 @@ export async function checkRoomForUserAndAdd({
     roomInfo = await getRoom({ code: roomCode });
   }
   return roomInfo;
+}
+
+export async function updateRoomHost({
+  newHostId,
+  roomCode,
+}: {
+  newHostId: number;
+  roomCode: string;
+}) {
+  const updatedRoomInfo = await db
+    .update(rooms)
+    .set({ hostId: newHostId })
+    .where(eq(rooms.code, roomCode))
+    .returning();
+
+  return updatedRoomInfo[0];
+}
+
+export function findNextHost({
+  prevHostId,
+  players,
+}: {
+  prevHostId: number;
+  players: User[];
+}) {
+  const nextHost = players.find((player) => player.id !== prevHostId);
+
+  return nextHost;
 }

@@ -14,9 +14,11 @@ import { userRoutes } from "./routes/user.route";
 import { roomRoutes } from "./routes/room.route";
 import {
   checkRoomForUserAndAdd,
+  findNextHost,
   getRoom,
   joinRoom,
   leaveRoom,
+  updateRoomHost,
 } from "./services/room.service";
 import {
   addUsersToGame,
@@ -362,8 +364,10 @@ export function buildServer() {
       try {
         await Promise.all(
           [...socket.rooms].map(async (room) => {
+            const userId = Number(socket.handshake.auth.userId);
+
             await leaveRoom({
-              userId: Number(socket.handshake.auth.userId),
+              userId,
               code: room,
             });
             const roomInfo = await getRoom({ code: room });
@@ -371,6 +375,18 @@ export function buildServer() {
             if (!roomInfo) {
               socket.emit("error", `Unable to fully disconnect from room`);
               return;
+            }
+
+            if (roomInfo.hostId === userId) {
+              const newHost = findNextHost({
+                prevHostId: roomInfo.hostId,
+                players: roomInfo.players,
+              });
+              if (!newHost) {
+                console.log(`[NO OTHER PLAYERS REMAIN IN ${room}]`);
+                return;
+              }
+              await updateRoomHost({ newHostId: newHost.id, roomCode: room });
             }
 
             socket.to(room).emit("roomState", roomInfo);

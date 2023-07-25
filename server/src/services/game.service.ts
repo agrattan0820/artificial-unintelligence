@@ -9,6 +9,7 @@ import {
   questions,
   usersToGames,
   users,
+  rooms,
 } from "../../db/schema";
 import {
   getGameRoundGenerations,
@@ -53,7 +54,13 @@ export async function getGameInfo({ gameId }: { gameId: number }) {
 }
 
 // TODO: create reusuable function with game info query logic?
-export async function getLatestGameInfoByRoomCode({ code }: { code: string }) {
+export async function getPageGameInfoByRoomCode({ code }: { code: string }) {
+  const hostResponse = await db
+    .select({ hostId: rooms.hostId })
+    .from(rooms)
+    .where(eq(rooms.code, code));
+  const hostId = hostResponse.length > 0 ? hostResponse[0].hostId : null;
+
   const latestGames = await db
     .select()
     .from(games)
@@ -99,6 +106,7 @@ export async function getLatestGameInfoByRoomCode({ code }: { code: string }) {
   }
 
   return {
+    hostId,
     game: latestGame,
     players: players,
     questions: gameQuestions,
