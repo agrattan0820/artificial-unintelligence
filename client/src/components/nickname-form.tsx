@@ -39,8 +39,6 @@ const NicknameForm = ({ room, submitLabel, type }: NicknameFormProps) => {
     setLoading(true);
     const formNickname = e.currentTarget.elements.nickname.value;
 
-    // alert(formNickname);
-
     if (type === "HOME") {
       const hostData = await createHost(formNickname);
       setUser(hostData.host);
@@ -61,7 +59,7 @@ const NicknameForm = ({ room, submitLabel, type }: NicknameFormProps) => {
       <Input
         id="nickname"
         type="text"
-        placeholder="enter a nickname"
+        placeholder="Enter a cool nickname"
         defaultValue={user?.nickname ?? ""}
         maxLength={50}
         required
