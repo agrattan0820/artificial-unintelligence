@@ -4,10 +4,10 @@ import {
   Generation,
   games,
   generations,
-  questions,
   usersToGames,
   users,
   votes,
+  questionsToGames,
 } from "../../db/schema";
 import { UserVote } from "../types";
 
@@ -67,8 +67,11 @@ export async function getVotesByGameRound({
     .from(votes)
     .innerJoin(users, eq(votes.userId, users.id))
     .innerJoin(generations, eq(votes.generationId, generations.id))
-    .innerJoin(questions, eq(generations.questionId, questions.id))
-    .innerJoin(games, eq(questions.gameId, games.id))
+    .innerJoin(
+      questionsToGames,
+      eq(generations.questionId, questionsToGames.questionId)
+    )
+    .innerJoin(games, eq(questionsToGames.gameId, games.id))
     .where(and(eq(games.id, gameId), eq(games.round, round)));
 
   return votesByGameRound;
