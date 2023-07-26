@@ -6,10 +6,11 @@ import {
   Vote,
   games,
   generations,
-  questions,
   usersToGames,
   users,
   rooms,
+  questionsToGames,
+  questions,
 } from "../../db/schema";
 import {
   getGameRoundGenerations,
@@ -84,10 +85,19 @@ export async function getPageGameInfoByRoomCode({ code }: { code: string }) {
     .where(eq(usersToGames.gameId, latestGame.id))) as User[];
 
   const gameQuestions = await db
-    .select()
-    .from(questions)
-    .where(eq(questions.gameId, latestGame.id))
-    .orderBy(asc(questions.round), asc(questions.id));
+    .select({
+      id: questions.id,
+      text: questions.text,
+      round: questionsToGames.round,
+      gameId: questionsToGames.gameId,
+      player1: questionsToGames.player1,
+      player2: questionsToGames.player2,
+      createdAt: questionsToGames.createdAt,
+    })
+    .from(questionsToGames)
+    .innerJoin(questions, eq(questions.id, questionsToGames.questionId))
+    .where(eq(questionsToGames.gameId, latestGame.id))
+    .orderBy(asc(questionsToGames.round), asc(questionsToGames.createdAt));
 
   const gameRoundGenerations = await getGameRoundGenerations({
     gameId: latestGame.id,
@@ -150,15 +160,18 @@ export async function getLeaderboardById({ gameId }: { gameId: number }) {
 
   const winningUserGenerations = await db
     .select({
-      question: questions,
+      question: questionsToGames,
       generation: generations,
     })
     .from(generations)
-    .innerJoin(questions, eq(generations.questionId, questions.id))
+    .innerJoin(
+      questionsToGames,
+      eq(generations.questionId, questionsToGames.questionId)
+    )
     .where(
       and(
         eq(generations.userId, winningUser.user.id),
-        eq(questions.gameId, gameId)
+        eq(questionsToGames.gameId, gameId)
       )
     );
 

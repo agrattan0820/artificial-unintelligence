@@ -3,16 +3,24 @@ import { db } from "../../db/db";
 import {
   Generation,
   NewGeneration,
-  Question,
   User,
   generations,
   questions,
+  questionsToGames,
   users,
 } from "../../db/schema";
 
 export type GameRoundGeneration = {
   generation: Generation;
-  question: Question;
+  question: {
+    id: number;
+    text: string;
+    round: number;
+    gameId: number;
+    player1: number;
+    player2: number;
+    createdAt: Date;
+  };
   user: User;
 };
 
@@ -26,14 +34,31 @@ export async function getGameRoundGenerations({
   const gameRoundGenerations = await db
     .select({
       generation: generations,
-      question: questions,
+      question: {
+        id: questions.id,
+        text: questions.text,
+        round: questionsToGames.round,
+        gameId: questionsToGames.gameId,
+        player1: questionsToGames.player1,
+        player2: questionsToGames.player2,
+        createdAt: questionsToGames.createdAt,
+      },
       user: users,
     })
     .from(generations)
+    .innerJoin(
+      questionsToGames,
+      eq(questionsToGames.questionId, generations.questionId)
+    )
     .innerJoin(questions, eq(questions.id, generations.questionId))
     .innerJoin(users, eq(users.id, generations.userId))
-    .where(and(eq(questions.gameId, gameId), eq(questions.round, round)))
-    .orderBy(asc(questions.id));
+    .where(
+      and(
+        eq(questionsToGames.gameId, gameId),
+        eq(questionsToGames.round, round)
+      )
+    )
+    .orderBy(asc(questionsToGames.createdAt));
 
   return gameRoundGenerations;
 }

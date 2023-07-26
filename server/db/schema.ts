@@ -39,16 +39,6 @@ export const usersToRooms = pgTable(
 export const questions = pgTable("questions", {
   id: serial("id").primaryKey(),
   text: text("text").notNull(),
-  gameId: integer("game_id")
-    .references(() => games.id)
-    .notNull(),
-  round: integer("round").notNull(),
-  player1: integer("player_1")
-    .references(() => users.id)
-    .notNull(),
-  player2: integer("player_2")
-    .references(() => users.id)
-    .notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -62,6 +52,29 @@ export const games = pgTable("games", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   completedAt: timestamp("completed_at"),
 });
+
+export const questionsToGames = pgTable(
+  "questions_to_games",
+  {
+    questionId: integer("question_id")
+      .references(() => questions.id)
+      .notNull(),
+    gameId: integer("game_id")
+      .references(() => games.id)
+      .notNull(),
+    round: integer("round").notNull(),
+    player1: integer("player_1")
+      .references(() => users.id)
+      .notNull(),
+    player2: integer("player_2")
+      .references(() => users.id)
+      .notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => ({
+    cpk: primaryKey(table.gameId, table.questionId),
+  })
+);
 
 export const generations = pgTable("generations", {
   id: serial("id").primaryKey(),
@@ -123,6 +136,9 @@ export type NewQuestion = InferModel<typeof questions, "insert">;
 
 export type Game = InferModel<typeof games>;
 export type NewGame = InferModel<typeof games, "insert">;
+
+export type QuestionToGame = InferModel<typeof questionsToGames>;
+export type NewQuestionToGame = InferModel<typeof questionsToGames, "insert">;
 
 export type Generation = InferModel<typeof generations>;
 export type NewGeneration = InferModel<typeof generations, "insert">;

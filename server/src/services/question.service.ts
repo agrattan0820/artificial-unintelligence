@@ -1,6 +1,12 @@
-import { and, eq, or } from "drizzle-orm";
+import { and, eq, inArray, or, sql } from "drizzle-orm";
 import { db } from "../../db/db";
-import { NewQuestion, User, questions } from "../../db/schema";
+import {
+  NewQuestion,
+  NewQuestionToGame,
+  User,
+  questions,
+  questionsToGames,
+} from "../../db/schema";
 import { openai } from "../openai";
 import { shuffleArray } from "../utils";
 
@@ -15,6 +21,15 @@ export async function getQuestionById({ id }: { id: number }) {
 
 export async function createQuestions(data: NewQuestion[]) {
   const newQuestions = await db.insert(questions).values(data).returning();
+
+  return newQuestions;
+}
+
+export async function createQuestionsToGames(data: NewQuestionToGame[]) {
+  const newQuestions = await db
+    .insert(questionsToGames)
+    .values(data)
+    .returning();
 
   return newQuestions;
 }
@@ -36,7 +51,69 @@ export async function generateAIQuestions(questionAmount: number) {
   return [];
 }
 
-// TODO: Test this function (and separate it)
+export async function getLeastAppearingQuestions({
+  players,
+}: {
+  players: User[];
+}) {
+  const userIds = players.map((player) => player.id);
+
+  const leastAppearingQuestions = await db
+    .select({
+      count: sql<number>`count(${questionsToGames.gameId})`,
+      questionId: questions.id,
+    })
+    .from(questions)
+    .leftJoin(
+      questionsToGames,
+      and(
+        eq(questionsToGames.questionId, questions.id),
+        or(
+          inArray(questionsToGames.player1, userIds),
+          inArray(questionsToGames.player2, userIds)
+        )
+      )
+    )
+    .groupBy(({ questionId }) => questionId)
+    .orderBy(({ count, questionId }) => [count, questionId]);
+
+  return leastAppearingQuestions;
+}
+
+// TODO: test this function
+export function prepareQuestionsForGame({
+  gameId,
+  questions,
+  players,
+}: {
+  gameId: number;
+  questions: { count: number; questionId: number }[];
+  players: User[];
+}) {
+  let roundCount = 0;
+
+  let shuffledPlayers = [...players];
+
+  const questionsToGameData = questions.map((question, i) => {
+    if (i % players.length === 0) {
+      roundCount++;
+      shuffledPlayers = shuffleArray(shuffledPlayers);
+    }
+    return {
+      questionId: question.questionId,
+      gameId,
+      round: roundCount,
+      player1: shuffledPlayers[i % players.length].id,
+      player2:
+        i % players.length === players.length - 1
+          ? shuffledPlayers[0].id
+          : shuffledPlayers[(i % players.length) + 1].id,
+    } as NewQuestionToGame;
+  });
+
+  return questionsToGameData;
+}
+
 export async function assignQuestionsToPlayers({
   gameId,
   players,
@@ -44,46 +121,22 @@ export async function assignQuestionsToPlayers({
   gameId: number;
   players: User[];
 }) {
-  let shuffledArray: User[] = shuffleArray([...players]);
-
   const amountOfRounds = 3;
 
-  const generatedQuestions = await generateAIQuestions(
+  const leastAppearingQuestions = await getLeastAppearingQuestions({ players });
+
+  const questionsForGame = leastAppearingQuestions.slice(
+    0,
     players.length * amountOfRounds
   );
 
-  console.log("GENERATED QUESTIONS", generatedQuestions);
-
-  if (players.length * amountOfRounds !== generatedQuestions.length) {
-    throw new Error("The incorrect amount of questions were generated");
-  }
-
-  const normalizeQuestionText = (question: string) => {
-    return question.trim().endsWith(".")
-      ? question.trim().slice(0, question.length - 1)
-      : question.trim();
-  };
-
-  let roundCount = 0;
-
-  const questionData: NewQuestion[] = generatedQuestions.map((question, i) => {
-    if (i % players.length === 0) {
-      roundCount++;
-      shuffledArray = shuffleArray(shuffledArray);
-    }
-    return {
-      text: normalizeQuestionText(question),
-      gameId,
-      round: roundCount,
-      player1: shuffledArray[i % players.length].id,
-      player2:
-        i % players.length === players.length - 1
-          ? shuffledArray[0].id
-          : shuffledArray[(i % players.length) + 1].id,
-    };
+  const questionsToGameData = prepareQuestionsForGame({
+    gameId,
+    questions: questionsForGame,
+    players,
   });
 
-  const createdQuestions = await createQuestions(questionData);
+  const createdQuestions = await createQuestionsToGames(questionsToGameData);
 
   return createdQuestions;
 }
@@ -99,12 +152,15 @@ export async function getUserQuestionsForRound({
 }) {
   const userQuestionsForRound = await db
     .select()
-    .from(questions)
+    .from(questionsToGames)
     .where(
       and(
-        eq(questions.gameId, gameId),
-        eq(questions.round, round),
-        or(eq(questions.player1, userId), eq(questions.player2, userId))
+        eq(questionsToGames.gameId, gameId),
+        eq(questionsToGames.round, round),
+        or(
+          eq(questionsToGames.player1, userId),
+          eq(questionsToGames.player2, userId)
+        )
       )
     );
 
