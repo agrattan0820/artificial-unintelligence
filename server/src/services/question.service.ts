@@ -90,11 +90,14 @@ export function prepareQuestionsForGame({
   questions: { count: number; questionId: number }[];
   players: User[];
 }) {
+  const amountOfRounds = 3;
   let roundCount = 0;
-
   let shuffledPlayers = [...players];
+  const questionsForGame = shuffleArray(
+    questions.slice(0, players.length * amountOfRounds)
+  );
 
-  const questionsToGameData = questions.map((question, i) => {
+  const questionsToGameData = questionsForGame.map((question, i) => {
     if (i % players.length === 0) {
       roundCount++;
       shuffledPlayers = shuffleArray(shuffledPlayers);
@@ -121,18 +124,11 @@ export async function assignQuestionsToPlayers({
   gameId: number;
   players: User[];
 }) {
-  const amountOfRounds = 3;
-
   const leastAppearingQuestions = await getLeastAppearingQuestions({ players });
-
-  const questionsForGame = leastAppearingQuestions.slice(
-    0,
-    players.length * amountOfRounds
-  );
 
   const questionsToGameData = prepareQuestionsForGame({
     gameId,
-    questions: questionsForGame,
+    questions: leastAppearingQuestions,
     players,
   });
 
