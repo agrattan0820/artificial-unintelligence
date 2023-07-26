@@ -80,7 +80,6 @@ export async function getLeastAppearingQuestions({
   return leastAppearingQuestions;
 }
 
-// TODO: test this function
 export function prepareQuestionsForGame({
   gameId,
   questions,

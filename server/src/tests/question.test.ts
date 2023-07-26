@@ -68,7 +68,6 @@ describe("prepareQuestionsForGame", () => {
     };
     const preparedQuestions = prepareQuestionsForGame(params);
 
-    // TODO: finish test
     expect(preparedQuestions.length).toBe(9);
   });
 });
