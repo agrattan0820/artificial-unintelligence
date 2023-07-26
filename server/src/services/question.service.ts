@@ -51,6 +51,12 @@ export async function generateAIQuestions(questionAmount: number) {
   return [];
 }
 
+export const normalizeAIQuestionText = (question: string) => {
+  return question.trim().endsWith(".")
+    ? question.trim().slice(0, question.length - 1)
+    : question.trim();
+};
+
 export async function getLeastAppearingQuestions({
   players,
 }: {
