@@ -1,4 +1,4 @@
-import { RoomInfo, User, Vote } from "../db/schema";
+import { Generation, RoomInfo, User, Vote } from "../db/schema";
 
 type StateMachineEvent =
   | {
@@ -50,3 +50,17 @@ export interface ClientToServerEvents {
 }
 
 export type UserVote = { vote: Vote; user: User };
+
+export type GameRoundGeneration = {
+  generation: Generation;
+  question: {
+    id: number;
+    text: string;
+    round: number;
+    gameId: number;
+    player1: number;
+    player2: number;
+    createdAt: Date;
+  };
+  user: User;
+};

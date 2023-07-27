@@ -1,8 +1,6 @@
 import { describe, expect, test } from "@jest/globals";
-import {
-  GameRoundGeneration,
-  filterGameRoundGenerationsByQuestionId,
-} from "../services/generation.service";
+import { filterGameRoundGenerationsByQuestionId } from "../services/generation.service";
+import { GameRoundGeneration } from "../types";
 
 describe("filterGameRoundGenerationsByQuestionId", () => {
   test("expects the filtered array to not have any generations from other questions", () => {
