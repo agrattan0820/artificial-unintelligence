@@ -3,26 +3,12 @@ import { db } from "../../db/db";
 import {
   Generation,
   NewGeneration,
-  User,
   generations,
   questions,
   questionsToGames,
   users,
 } from "../../db/schema";
-
-export type GameRoundGeneration = {
-  generation: Generation;
-  question: {
-    id: number;
-    text: string;
-    round: number;
-    gameId: number;
-    player1: number;
-    player2: number;
-    createdAt: Date;
-  };
-  user: User;
-};
+import { GameRoundGeneration } from "../types";
 
 export async function getGameRoundGenerations({
   gameId,
