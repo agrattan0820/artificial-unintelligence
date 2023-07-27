@@ -42,6 +42,7 @@ export async function getQuestionsByUserGameRoundController(
       res.status(404).send({
         error: `Questions for the user: ${userId} could not be found for this game: ${gameId}, and round: ${round}`,
       });
+      return;
     }
 
     res.status(200).send(questions);

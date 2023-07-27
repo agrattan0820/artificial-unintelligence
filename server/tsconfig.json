@@ -6,6 +6,11 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "sourceMap": true,
+    "inlineSources": true,
+    // Set `sourceRoot` to  "/" to strip the build path prefix from
+    // generated source code references. This will improve issue grouping in Sentry.
+    "sourceRoot": "/"
   }
 }

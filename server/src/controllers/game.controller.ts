@@ -18,6 +18,7 @@ export async function getPageGameInfoByRoomCodeController(
       res
         .status(404)
         .send({ error: `Game with room code of ${code} was not found` });
+      return;
     }
 
     res.status(200).send(gameInfo);
@@ -38,6 +39,7 @@ export async function getLeaderboardByIdController(
 
     if (!gameInfo) {
       res.status(404).send({ error: `Game with an id of ${id} was not found` });
+      return;
     }
 
     res.status(200).send(gameInfo);

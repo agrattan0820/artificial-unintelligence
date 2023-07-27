@@ -9,6 +9,7 @@ import { createServer } from "http";
 import cors from "cors";
 import morgan from "morgan";
 import helmet from "helmet";
+import * as Sentry from "@sentry/node";
 
 import { userRoutes } from "./routes/user.route";
 import { roomRoutes } from "./routes/room.route";
@@ -47,6 +48,25 @@ import { generationRoutes } from "./routes/generation.route";
 export function buildServer() {
   const app: Express = express();
   const server = createServer(app);
+
+  Sentry.init({
+    dsn: "https://94861f92f5354fe0ae1a921b9a55d909@o4505598670209024.ingest.sentry.io/4505598751211520",
+    integrations: [
+      // enable HTTP calls tracing
+      new Sentry.Integrations.Http({
+        tracing: true,
+      }),
+      // enable Express.js middleware tracing
+      new Sentry.Integrations.Express({
+        app,
+      }),
+    ],
+    // Performance Monitoring
+    tracesSampleRate: 1.0, // Capture 100% of the transactions, reduce in production!,
+  });
+
+  app.use(Sentry.Handlers.requestHandler());
+  app.use(Sentry.Handlers.tracingHandler());
 
   const gameStateMap = new Map<number, { state: string; round: number }>();
 
@@ -410,6 +430,8 @@ export function buildServer() {
   gameRoutes(app);
   questionRoutes(app);
   generationRoutes(app);
+
+  app.use(Sentry.Handlers.errorHandler());
 
   const expressErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     if (res.headersSent) {

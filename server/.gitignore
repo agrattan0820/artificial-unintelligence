@@ -8,3 +8,6 @@
 
 # yarn errors
 yarn-error.log
+
+# Sentry Auth Token
+.sentryclirc

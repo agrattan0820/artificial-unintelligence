@@ -8,7 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 import {
-  GetGameInfoResponse,
+  GameInfo,
   QuestionGenerations,
   RoomInfo,
   UserVote,
@@ -25,7 +25,7 @@ import { SocketContext } from "@ai/utils/socket-provider";
 
 type GameProps = {
   roomCode: string;
-  gameInfo: GetGameInfoResponse;
+  gameInfo: GameInfo;
 };
 
 // ! ----------> COMPONENTS <----------
