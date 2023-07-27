@@ -21,7 +21,7 @@ export default function SocketProvider({
   };
   const socketError = (err: string) => {
     console.error("Received socket error:", err);
-    toast.error("An error occurred.");
+    toast.error("An Error Occurred");
   };
 
   useEffect(() => {

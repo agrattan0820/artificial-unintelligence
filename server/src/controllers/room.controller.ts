@@ -13,9 +13,8 @@ export async function getRoomController(
     const roomInfo = await getRoom({ code });
 
     if (!roomInfo) {
-      res
-        .status(404)
-        .send({ error: `Room with room code of ${code} was not found` });
+      res.status(404).send({ error: `Room with code ${code} was not found` });
+      return;
     }
 
     res.status(200).send(roomInfo);
@@ -31,6 +30,13 @@ export async function joinRoomController(
 ) {
   try {
     const { nickname, code } = req.body;
+
+    const checkRoomExists = await getRoom({ code });
+
+    if (!checkRoomExists) {
+      res.status(404).send(`Room with the code ${code} was not found`);
+      return;
+    }
 
     const createdUser = await createUser({ nickname });
     const addUserToRoom = await joinRoom({

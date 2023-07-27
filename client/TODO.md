@@ -8,6 +8,7 @@
 - [ ] Protect game pages from players who are not a part of it
 - [ ] Auth/Remember users when joining a new game
 - [ ] Change image generator endpoint to use `openai-edge`
+- [ ] Safari title font kerning bug
 
 ## In Progress
 

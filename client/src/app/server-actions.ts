@@ -60,11 +60,6 @@ export type GameInfo = {
   votedPlayers: UserVote[];
 };
 
-export type CreateHostResponse = {
-  host: User;
-  room: Room;
-};
-
 export type QuestionGenerations = {
   question: Question;
   player1: User;
@@ -73,7 +68,14 @@ export type QuestionGenerations = {
   player2Generation: Generation;
 };
 
+type ErrorResponse = { error: string };
+
 // ! ----------> USERS <----------
+
+export type CreateHostResponse = {
+  host: User;
+  room: Room;
+};
 
 export async function createHost(nickname: string) {
   const response = await fetch(`${URL}/user/createHost`, {
@@ -87,6 +89,26 @@ export async function createHost(nickname: string) {
   });
 
   const data: CreateHostResponse = await response.json();
+
+  return data;
+}
+
+export type ExistingHostResponse = {
+  room: Room;
+};
+
+export async function existingHost(userId: number) {
+  const response = await fetch(`${URL}/user/existingHost`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      userId,
+    }),
+  });
+
+  const data: ExistingHostResponse = await response.json();
 
   return data;
 }
@@ -114,7 +136,7 @@ export async function joinRoom(nickname: string, code: string) {
   return data;
 }
 
-export type GetRoomInfoResponse = RoomInfo;
+export type GetRoomInfoResponse = RoomInfo | ErrorResponse;
 
 export async function getRoomInfo(code: string) {
   const response = await fetch(`${URL}/room/${code}`, { cache: "no-store" });
@@ -124,9 +146,9 @@ export async function getRoomInfo(code: string) {
   return data;
 }
 
-export type GetGameInfoResponse = GameInfo;
-
 // ! ----------> GAMES <----------
+
+export type GetGameInfoResponse = GameInfo | ErrorResponse;
 
 export async function getGameInfo(code: string) {
   const response = await fetch(`${URL}/game/${code}`, { cache: "no-store" });

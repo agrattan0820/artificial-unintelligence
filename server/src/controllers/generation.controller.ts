@@ -16,6 +16,7 @@ export async function getGameRoundGenerationsController(
       res.status(404).send({
         error: `Generations with gameId of ${gameId} and round of ${round} were not found`,
       });
+      return;
     }
 
     res.status(200).send(generations);
