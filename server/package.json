@@ -4,12 +4,11 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && yarn run sentry:sourcemaps",
     "start": "node ./dist/src/app.js",
     "dev": "cross-env NODE_ENV=development nodemon src/app.ts",
     "migrate": "drizzle-kit generate:pg --out drizzle --schema db/schema.ts",
     "test": "jest",
-    "sourcemaps": "yarn run build && yarn run sentry:sourcemaps",
     "sentry:sourcemaps": "sentry-cli sourcemaps inject --org alexander-grattan --project artificial-unintelligence-server ./dist && sentry-cli sourcemaps upload --org alexander-grattan --project artificial-unintelligence-server ./dist"
   },
   "dependencies": {
