@@ -4,7 +4,9 @@
   </a>
 </div>
 
-# Artificial Unintelligence 👾
+<!-- ![Friend from Artificial Unintelligence!](./client/src/images/friend.svg "Friend from Artificial Unintelligence") -->
+
+# Artificial Unintelligence
 
 > Online multiplayer game where players compete against eachother to create the funniest AI-generated images.
 
