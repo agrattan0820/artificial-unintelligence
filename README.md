@@ -8,11 +8,52 @@
 
 # Artificial Unintelligence
 
-> Online multiplayer game where players compete against eachother to create the funniest AI-generated images.
+> Online multiplayer game where players compete against eachother to create the funniest AI-generated images in response to amusing prompts.
+>
+> Some prompts you might encounter:
+>
+> - A cancelled children's toy
+> - The creature hidden in IKEA
+> - The newly discovered animal in Australia
 
 ## How to Play
 
-WIP 🚧
+Artificial Unintelligence is a game inspired by party games like [Jackbox Party Pack’s Quiplash](https://www.jackboxgames.com/quiplash/) and [Onrizon’s Garticphone](https://garticphone.com/) where.
+
+Starting a game of Artificial Unintelligence will create a room with a unique room code and an invite link to join the room. The player who starts the game and creates the room is also known as the room’s “host.”
+
+The host can share the room’s invite link with other players so that they can join their room.
+
+Once there are at least 3 players in the room (max of 8 players), the game is allowed to begin, initiated by the host of the room.
+
+A game consists of three rounds, and each round is split into two phases:
+
+1. Generation
+2. Face-Off
+
+### Generation Phase
+
+During the “Generation” phase, each player will be given two prompts that they will base off of for the AI-generated images. Both prompts each player receives is shared with another player in the game and the two resulting images submitted by both players for a given prompt will compete for votes from other players during the “Face-Off” phase.
+
+To generate an image, describe an interesting picture within the provided text input and press the submit button. After a few seconds, two images based off of your description will appear. You can decide to either submit one of these images as a response to the prompt, or generate a new set of two images with a new description.
+
+> To submit an image, click or tap on the image you want to appear in the face-off and then press the submit button.
+
+### Face-Off Phase
+
+The "Face-Off" phase showcases all of player-submitted images in 1v1 duels where all players excluding those who have an image in the duel vote on which one is the funniest.
+
+> To vote on an image, click or tap on the image and then press the "Confirm Vote" button.
+
+Once all votes have been tallied for a duel, the winner is revealed, along with the original prompts the players used to generate the images.
+
+For each 1% of the votes a player's image receives in the duel, they will receive 10 points (e.g. if an image receives 50% of the votes, 500 points will be awarded to the player who submitted the image).
+
+Once all duels have been completed for the round, the game will return to the "Generation" phase until a total of 3 rounds have been completed.
+
+### Scoring and Winning the Game
+
+Once 3 rounds have been completed, all points are tallied up from the votes the players garnered and the player with the most points at the end wins the game.
 
 ## Dev Tutorial
 
