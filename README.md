@@ -22,7 +22,9 @@ Artificial Unintelligence is a game inspired by party games like [Jackbox Party 
 
 Starting a game of Artificial Unintelligence will create a room with a unique room code and an invite link to join the room. The player who starts the game and creates the room is also known as the room’s “host.”
 
-The host can share the room’s invite link with other players so that they can join their room.
+The host can share the unique invite link with other prospective players to have them join their room.
+
+> To share the invite link: press the "Invite Players" button to copy the link to your clipboard or open the share menu, depending on which device you are playing on.
 
 Once there are at least 3 players in the room (max of 8 players), the game is allowed to begin, initiated by the host of the room.
 
