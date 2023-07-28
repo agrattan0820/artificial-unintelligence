@@ -8,17 +8,17 @@
 
 # Artificial Unintelligence
 
-> Online multiplayer game where players compete against eachother to create the funniest AI-generated images in response to amusing prompts.
+> Online multiplayer game where players compete against each other to create the funniest AI-generated images in response to amusing prompts.
 >
 > Some prompts you might encounter:
 >
-> - A cancelled children's toy
+> - A canceled children's toy
 > - The creature hidden in IKEA
 > - The newly discovered animal in Australia
 
 ## How to Play
 
-Artificial Unintelligence is a game inspired by party games like [Jackbox Party Pack’s Quiplash](https://www.jackboxgames.com/quiplash/) and [Onrizon’s Garticphone](https://garticphone.com/) where.
+Artificial Unintelligence is a game inspired by party games like [Jackbox Party Pack’s Quiplash](https://www.jackboxgames.com/quiplash/) and [Onrizon’s Garticphone](https://garticphone.com/).
 
 Starting a game of Artificial Unintelligence will create a room with a unique room code and an invite link to join the room. The player who starts the game and creates the room is also known as the room’s “host.”
 
@@ -26,7 +26,7 @@ The host can share the unique invite link with other prospective players to have
 
 > To share the invite link: press the "Invite Players" button to copy the link to your clipboard or open the share menu, depending on which device you are playing on.
 
-Once there are at least 3 players in the room (max of 8 players), the game is allowed to begin, initiated by the host of the room.
+Once at least 3 players are in the room (max of 8 players), the game is allowed to begin, initiated by the host of the room.
 
 A game consists of three rounds, and each round is split into two phases:
 
@@ -37,17 +37,17 @@ A game consists of three rounds, and each round is split into two phases:
 
 During the “Generation” phase, each player will be given two prompts that they will base off of for the AI-generated images. Both prompts each player receives is shared with another player in the game and the two resulting images submitted by both players for a given prompt will compete for votes from other players during the “Face-Off” phase.
 
-To generate an image, describe an interesting picture within the provided text input and press the submit button. After a few seconds, two images based off of your description will appear. You can decide to either submit one of these images as a response to the prompt, or generate a new set of two images with a new description.
+To generate an image, describe an interesting picture within the provided text input and press the submit button. After a few seconds, two images based on your description will appear. You can decide to either submit one of these images as a response to the prompt or generate a new set of two images with a new description.
 
 > To submit an image, click or tap on the image you want to appear in the face-off and then press the submit button.
 
 ### Face-Off Phase
 
-The "Face-Off" phase showcases all of player-submitted images in 1v1 duels where all players excluding those who have an image in the duel vote on which one is the funniest.
+The "Face-Off" phase showcases all of the player-submitted images in 1v1 duels where all players excluding those who have an image in the duel vote on which one is the funniest.
 
 > To vote on an image, click or tap on the image and then press the "Confirm Vote" button.
 
-Once all votes have been tallied for a duel, the winner is revealed, along with the original prompts the players used to generate the images.
+Once all votes have been tallied for a duel, the winner and the original prompts the players used to generate the images are revealed.
 
 For each 1% of the votes a player's image receives in the duel, they will receive 10 points (e.g. if an image receives 50% of the votes, 500 points will be awarded to the player who submitted the image).
 
@@ -62,7 +62,7 @@ Once 3 rounds have been completed, all points are tallied up from the votes the 
 1. Configure your environment variables (`.env` for the server folder and `.env.local` for the client folder):
 
    1. Server:
-      1. `PORT` - port the http server runs on
+      1. `PORT` - port the HTTP server runs on
       2. `DATABASE_URL` - connection string to your PostgreSQL database
       3. `OPENAI_API_KEY` - authorization key for the OpenAI API
    1. Client:
