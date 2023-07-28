@@ -1,8 +1,16 @@
+<div align="center" style="padding-bottom:20px">
+  <a href="https://beeeeeeeep.vercel.app/">
+    <img src="./client/src/images/friend.svg" width="150" height="auto" alt="Friend from Artificial Unintelligence"/>
+  </a>
+</div>
+
 # Artificial Unintelligence 👾
 
 > Online multiplayer game where players compete against eachother to create the funniest AI-generated images.
 
 ## How to Play
+
+WIP 🚧
 
 ## Dev Tutorial
 
