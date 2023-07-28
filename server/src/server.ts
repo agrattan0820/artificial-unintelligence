@@ -62,7 +62,7 @@ export function buildServer() {
       }),
     ],
     // Performance Monitoring
-    tracesSampleRate: 1.0, // Capture 100% of the transactions, reduce in production!,
+    tracesSampleRate: process.env.NODE_ENV === "production" ? 0.5 : 1.0, // Capture 100% of the transactions, reduce in production!,
   });
 
   app.use(Sentry.Handlers.requestHandler());

@@ -8,7 +8,7 @@ Sentry.init({
   dsn: "https://a2ba8b67a2b34a83a517773ed9ff1567@o4505598670209024.ingest.sentry.io/4505598672175104",
 
   // Adjust this value in production, or use tracesSampler for greater control
-  tracesSampleRate: 1,
+  tracesSampleRate: process.env.NODE_ENV === "production" ? 0.5 : 1,
 
   // Setting this option to true will print useful information to the console while you're setting up Sentry.
   debug: false,
