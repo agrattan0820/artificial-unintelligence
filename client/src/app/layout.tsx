@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import "./globals.css";
-import { Inter, Roboto, Space_Mono, Gluten } from "next/font/google";
+import { Space_Mono } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 
 const spaceMono = Space_Mono({
@@ -8,20 +8,6 @@ const spaceMono = Space_Mono({
   weight: ["400", "700"],
   style: ["normal", "italic"],
   variable: "--font-space",
-});
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-});
-const roboto = Roboto({
-  subsets: ["latin"],
-  variable: "--font-roboto",
-  weight: ["100", "300", "400", "500", "700", "900"],
-});
-const gluten = Gluten({
-  subsets: ["latin"],
-  variable: "--font-gluten",
-  weight: ["100", "200", "300", "400", "500", "700", "800", "900"],
 });
 
 export const metadata: Metadata = {
@@ -41,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${spaceMono.variable} ${inter.variable} ${roboto.variable} ${gluten.variable} font-space dark:bg-slate-900 dark:text-white`}
+        className={`${spaceMono.variable} font-space antialiased dark:bg-slate-900 dark:text-white`}
       >
         <Toaster />
         {children}
