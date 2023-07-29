@@ -91,7 +91,7 @@ export default function HowToPlay() {
           end wins the game.
         </p>
       </section>
-      <div className="mt-8">
+      <div className="mx-auto mt-8 max-w-prose">
         <LinkButton href="/">Back to Homepage</LinkButton>
       </div>
     </main>
