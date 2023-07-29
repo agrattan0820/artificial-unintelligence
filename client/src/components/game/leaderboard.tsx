@@ -111,7 +111,7 @@ const Leaderboard = ({ gameInfo, leaderboard, hostId }: LeaderboardProps) => {
           </motion.li>
         ))}
       </motion.ol>
-      <div className="mt-8 flex justify-center gap-2">
+      <div className="mt-8 flex flex-col justify-center gap-2 sm:flex-row">
         {currUserIsHost && (
           <Button onClick={handlePlayAgainOnClick}>
             Play Again With Same Players
