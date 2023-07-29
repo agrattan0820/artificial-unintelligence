@@ -11,7 +11,7 @@ import {
   existingHost,
   joinRoom,
 } from "@ai/app/server-actions";
-import Button, { SecondaryButton } from "./button";
+import Button, { LinkSecondaryButton, SecondaryButton } from "./button";
 import Input from "./input";
 import { toast } from "react-hot-toast";
 
@@ -95,7 +95,9 @@ const NicknameForm = ({ room, submitLabel, type }: NicknameFormProps) => {
         <Button type="submit" disabled={loading}>
           {!loading ? <>{submitLabel}</> : <Ellipsis />}
         </Button>
-        <SecondaryButton disabled={loading}>How to Play</SecondaryButton>
+        <LinkSecondaryButton href="/how-to-play">
+          How to Play
+        </LinkSecondaryButton>
       </div>
     </form>
   );
