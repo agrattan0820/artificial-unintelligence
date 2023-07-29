@@ -98,9 +98,23 @@ export function prepareQuestionsForGame({
   const amountOfRounds = 3;
   let roundCount = 0;
   let shuffledPlayers = [...players];
-  const questionsForGame = shuffleArray(
-    questions.slice(0, players.length * amountOfRounds)
-  );
+
+  const lowestCount = questions[0].count;
+  const lowCountArr: { count: number; questionId: number }[] = [];
+
+  for (
+    let i = 0;
+    i < questions.length && questions[i].count === lowestCount;
+    i++
+  ) {
+    lowCountArr.push(questions[i]);
+  }
+
+  // if there are enough questions with a low count, we want to shuffle through all of them to make it so that the first questions for players are always varied
+  const questionsForGame =
+    lowCountArr.length >= players.length * amountOfRounds
+      ? shuffleArray(lowCountArr).splice(0, players.length * amountOfRounds)
+      : shuffleArray(questions.slice(0, players.length * amountOfRounds));
 
   const questionsToGameData = questionsForGame.map((question, i) => {
     if (i % players.length === 0) {
