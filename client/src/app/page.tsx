@@ -8,7 +8,8 @@ export default function Home() {
       <section className="container mx-auto flex flex-col-reverse items-start justify-center gap-8 px-4 lg:flex-row lg:gap-24">
         <div>
           <h1 className="mb-8 text-4xl md:text-6xl">
-            artif<span className="">i</span>cial <br /> unintelligence
+            artif<span className="ml-0.5 inline-block">i</span>cial <br />{" "}
+            unintelligence
           </h1>
           <NicknameForm submitLabel="Start Game" type="HOME" />
         </div>
