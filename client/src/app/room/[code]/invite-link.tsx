@@ -19,7 +19,7 @@ const InviteLink = ({ code }: { code: string }) => {
 
   return (
     <button
-      className="mx-auto flex w-full max-w-xl items-center justify-center gap-2 rounded-xl border-2 border-indigo-600 p-8 text-sm underline-offset-2 hover:underline md:text-xl"
+      className="mx-auto flex items-center justify-center gap-2 rounded-xl border-2 border-indigo-600 p-8 text-sm underline-offset-2 hover:underline md:text-xl"
       onClick={onClick}
     >
       {link}
