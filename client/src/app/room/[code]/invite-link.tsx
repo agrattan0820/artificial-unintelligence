@@ -5,7 +5,7 @@ import { FiCheckSquare, FiCopy } from "react-icons/fi";
 
 import useShare from "@ai/utils/hooks/use-share";
 
-const RoomLink = ({ code }: { code: string }) => {
+const InviteLink = ({ code }: { code: string }) => {
   const { link, copying, setCopying, onClick } = useShare(`/invite/${code}`);
 
   useEffect(() => {
@@ -19,12 +19,15 @@ const RoomLink = ({ code }: { code: string }) => {
 
   return (
     <button
-      className="mx-auto flex w-full max-w-xl items-center justify-center gap-1 rounded-xl border-2 border-indigo-600 p-8 text-xl underline-offset-2 hover:underline"
+      className="mx-auto flex w-full max-w-xl items-center justify-center gap-2 rounded-xl border-2 border-indigo-600 p-8 text-sm underline-offset-2 hover:underline md:text-xl"
       onClick={onClick}
     >
-      {link} {copying ? <FiCheckSquare /> : <FiCopy />}
+      {link}
+      <span className="hidden md:inline-block">
+        {copying ? <FiCheckSquare /> : <FiCopy />}
+      </span>
     </button>
   );
 };
 
-export default RoomLink;
+export default InviteLink;
