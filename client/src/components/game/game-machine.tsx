@@ -104,7 +104,7 @@ export const gameMachine = createMachine(
 
       faceOffResults: {
         after: {
-          20000: [
+          15000: [
             {
               target: "winnerLeadUp",
               cond: "completedRounds",
