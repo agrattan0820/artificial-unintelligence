@@ -4,11 +4,11 @@ import { motion } from "framer-motion";
 import { FiCheck } from "react-icons/fi";
 
 import { cn } from "@ai/utils/cn";
-import FriendWithLegs from "./friend-with-legs";
 import { GameInfo } from "@ai/app/server-actions";
 import { StateFrom } from "xstate";
 import { gameMachine } from "./game-machine";
 import { useStore } from "@ai/utils/store";
+import Friend from "./friend";
 
 type PlayerBlockProps = {
   nickname: string;
@@ -57,9 +57,11 @@ const PromptSubmitted = ({
 
   return (
     <div className="mx-auto flex min-h-screen flex-col items-center justify-center text-center">
-      <FriendWithLegs />
-      <h2 className="mb-12 text-4xl">We Got Your Images!</h2>
-      <p className="mb-6 text-lg">Waiting on your fellow testers to submit</p>
+      <Friend className="mb-4 w-32" />
+      <h2 className="mb-8 text-2xl md:text-4xl">We got your images!</h2>
+      <p className="mb-6 md:text-lg">
+        Waiting on your fellow testers to submit
+      </p>
       <motion.ul
         layout
         className="mb-4 flex flex-wrap items-center justify-center gap-6"
