@@ -57,8 +57,8 @@ const FriendWithLegs = () => {
       <path
         d="M29 39C29 39 33.5 42 36.5 42C39.5 42 44 39 44 39"
         stroke="#A5B4FC"
-        stroke-width="2"
-        stroke-linecap="round"
+        strokeWidth="2"
+        strokeLinecap="round"
       />
     </svg>
   );
