@@ -20,13 +20,13 @@ const PlayerBlock = ({ nickname, submitted }: PlayerBlockProps) => {
     <motion.li
       layout
       className={cn(
-        "rounded-md bg-indigo-300 p-4 shadow-md",
+        "rounded-xl border-2 border-indigo-600 p-4 shadow-md",
         !submitted && "opacity-50"
       )}
     >
       <motion.p
         layout
-        className="flex items-center justify-center gap-2 text-sm text-black"
+        className="flex items-center justify-center gap-2 text-sm"
       >
         <motion.span layout="position">{nickname}</motion.span>{" "}
         {submitted && (
@@ -34,7 +34,7 @@ const PlayerBlock = ({ nickname, submitted }: PlayerBlockProps) => {
             layout
             initial={{ opacity: 0, scale: 0 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="block rounded-full bg-white p-0.5 text-lg text-green-600"
+            className="block rounded-full bg-green-600 p-0.5 text-lg text-white"
           >
             <FiCheck />
           </motion.span>
