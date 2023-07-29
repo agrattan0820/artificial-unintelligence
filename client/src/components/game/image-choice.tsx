@@ -70,15 +70,12 @@ const ImageChoice = ({
           variants={image1Variants}
         >
           <button
-            className="relative"
+            className="group relative rounded-xl transition hover:ring hover:ring-indigo-600"
             disabled={disabled ?? !showImage1}
             onClick={() => setSelectedImage(1)}
           >
             <Image
-              className={cn(
-                `aspect-square rounded-xl transition`,
-                selectedImage === 1 && "ring ring-indigo-600"
-              )}
+              className="aspect-square rounded-xl transition group-hover:brightness-110 group-focus-visible:brightness-110"
               src={imageOption1.src}
               alt={imageOption1.alt}
               onLoad={() => setShowImage1(true)}
@@ -101,15 +98,12 @@ const ImageChoice = ({
           variants={image2Variants}
         >
           <button
-            className="relative"
+            className="group relative rounded-xl transition hover:ring hover:ring-indigo-600"
             disabled={disabled ?? !showImage2}
             onClick={() => setSelectedImage(2)}
           >
             <Image
-              className={cn(
-                `aspect-square rounded-xl transition`,
-                selectedImage === 2 && "ring ring-indigo-600"
-              )}
+              className="aspect-square rounded-xl transition group-hover:brightness-105 group-focus-visible:brightness-105"
               src={imageOption2.src}
               alt={imageOption2.alt}
               onLoad={() => setShowImage2(true)}
