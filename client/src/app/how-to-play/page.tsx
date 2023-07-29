@@ -1,4 +1,13 @@
+import Image from "next/image";
+
 import { LinkButton } from "@ai/components/button";
+import InviteLink from "@ai/images/invite-link.png";
+import Prompt from "@ai/images/prompt.png";
+import ImagePrompt from "@ai/images/image-prompt.png";
+import ImageVoting from "@ai/images/image-voting.png";
+import VotingPoints from "@ai/images/voting-points.png";
+import WinningImages from "@ai/images/winning-images.png";
+import Leaderboard from "@ai/images/leaderboard.png";
 
 export default function HowToPlay() {
   return (
@@ -27,6 +36,16 @@ export default function HowToPlay() {
           to copy the link to your clipboard or open the share menu, depending
           on which device you are playing on.
         </blockquote>
+        <figure className="relative rounded-xl ring ring-indigo-600">
+          <Image
+            className="rounded-xl"
+            src={InviteLink}
+            alt="Artificial Unintelligence invite link"
+          />
+          <figcaption className="absolute bottom-4 left-4 m-0 italic">
+            The room lobby
+          </figcaption>
+        </figure>
         <p>
           Once at least 3 players are in the room (max of 8 players), the game
           is allowed to begin, initiated by the host of the room.
@@ -48,6 +67,16 @@ export default function HowToPlay() {
           prompt will compete for votes from other players during the
           &quot;Face-Off&quot; phase.
         </p>
+        <figure className="relative rounded-xl ring ring-indigo-600">
+          <Image
+            className="rounded-xl"
+            src={Prompt}
+            alt="Artificial Unintelligence prompt screen"
+          />
+          <figcaption className="absolute bottom-4 left-4 m-0 italic">
+            The entered text is transformed into an image
+          </figcaption>
+        </figure>
         <p>
           To generate an image, describe an interesting picture within the
           provided text input and press the submit button. After a few seconds,
@@ -55,6 +84,16 @@ export default function HowToPlay() {
           either submit one of these images as a response to the prompt or
           generate a new set of two images with a new description.
         </p>
+        <figure className="relative rounded-xl py-8 ring ring-indigo-600">
+          <Image
+            className="rounded-xl"
+            src={ImagePrompt}
+            alt="Artificial Unintelligence image prompt screen"
+          />
+          <figcaption className="absolute bottom-4 left-4 m-0 italic">
+            You can select between two generated images
+          </figcaption>
+        </figure>
         <blockquote>
           To submit an image, click or tap on the image you want to appear in
           the face-off and then press the submit button.
@@ -65,6 +104,16 @@ export default function HowToPlay() {
           images in 1v1 duels where all players excluding those who have an
           image in the duel vote on which one is the funniest.
         </p>
+        <figure className="relative rounded-xl py-8 ring ring-indigo-600">
+          <Image
+            className="rounded-xl"
+            src={ImageVoting}
+            alt="Artificial Unintelligence image voting screen"
+          />
+          <figcaption className="absolute bottom-4 left-4 m-0 italic">
+            Players outside of the ones who generated the images vote
+          </figcaption>
+        </figure>
         <blockquote>
           To vote on an image, click or tap on the image and then press the
           &quot;Confirm Vote&quot; button.
@@ -73,6 +122,16 @@ export default function HowToPlay() {
           Once all votes have been tallied for a duel, the winner and the
           original prompts the players used to generate the images are revealed.
         </p>
+        <figure className="relative rounded-xl py-8 ring ring-indigo-600">
+          <Image
+            className="rounded-xl"
+            src={VotingPoints}
+            alt="Artificial Unintelligence voting results screen"
+          />
+          <figcaption className="absolute bottom-4 left-4 m-0 italic">
+            The winning image is highlighted along with the original prompts
+          </figcaption>
+        </figure>
         <p>
           For each 1% of the votes a player&apos;s image receives in the duel,
           they will receive 10 points (e.g. if an image receives 50% of the
@@ -90,6 +149,16 @@ export default function HowToPlay() {
           votes the players garnered and the player with the most points at the
           end wins the game.
         </p>
+        <figure className="relative rounded-xl py-8 ring ring-indigo-600">
+          <Image
+            className="rounded-xl"
+            src={WinningImages}
+            alt="Artificial Unintelligence winning images screen"
+          />
+          <figcaption className="absolute bottom-4 left-4 m-0 italic">
+            Show the winner and all of their images
+          </figcaption>
+        </figure>
       </section>
       <div className="mx-auto mt-8 max-w-prose">
         <LinkButton href="/">Back to Homepage</LinkButton>

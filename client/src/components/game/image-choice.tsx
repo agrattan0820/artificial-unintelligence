@@ -19,6 +19,7 @@ type ImageChoiceProps = {
 
 const ImageChoiceOption = ({
   image,
+  option,
   onClick,
   onLoad,
   disabled,
@@ -28,6 +29,7 @@ const ImageChoiceOption = ({
   selectedImage,
 }: {
   image: { src: string; alt: string };
+  option: ImageOption;
   onClick: () => void;
   onLoad: () => void;
   disabled: boolean | undefined;
@@ -58,7 +60,7 @@ const ImageChoiceOption = ({
         <FiCheck
           className={cn(
             "absolute -right-2 -top-2 scale-0 transform rounded-full bg-green-600 p-0.5 text-xl text-white transition",
-            selectedImage === 1 && "scale-100"
+            selectedImage === option && "scale-100"
           )}
         />
       </button>
@@ -116,6 +118,7 @@ const ImageChoice = ({
       {imageOption1.src && (
         <ImageChoiceOption
           image={imageOption1}
+          option={1}
           onClick={() => setSelectedImage(1)}
           onLoad={() => setShowImage1(true)}
           disabled={disabled}
@@ -128,6 +131,7 @@ const ImageChoice = ({
       {imageOption2.src && (
         <ImageChoiceOption
           image={imageOption2}
+          option={2}
           onClick={() => setSelectedImage(2)}
           onLoad={() => setShowImage2(true)}
           disabled={disabled}
