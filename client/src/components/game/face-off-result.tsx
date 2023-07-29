@@ -93,11 +93,7 @@ const FaceOffResult = ({
   }, [showImage1, showImage2]);
 
   if (!image1 || !image2 || !player1 || !player2) {
-    return (
-      <main className="mx-auto flex max-w-2xl items-center justify-center">
-        <p>Oops! There was an error loading the current face-off results</p>
-      </main>
-    );
+    return null;
   }
 
   return (
@@ -113,13 +109,13 @@ const FaceOffResult = ({
             {currQuestionGenerations.question.text}
           </motion.h2>
         </div>
-        <motion.div
+        {/* <motion.div
           initial={{ x: 10, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           className="flex justify-end"
         >
           <FriendWithLegs />
-        </motion.div>
+        </motion.div> */}
       </div>
       <div className="mb-16 flex gap-6">
         <FaceOffResultImage

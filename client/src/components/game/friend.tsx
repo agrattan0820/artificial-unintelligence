@@ -1,8 +1,10 @@
-const Friend = () => {
+import { cn } from "@ai/utils/cn";
+import { ClassValue } from "clsx";
+
+const Friend = ({ className }: { className: ClassValue }) => {
   return (
     <svg
-      width="88"
-      height="60"
+      className={cn(className)}
       viewBox="0 0 88 60"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -31,8 +33,8 @@ const Friend = () => {
       <path
         d="M29 39C29 39 33.5 42 36.5 42C39.5 42 44 39 44 39"
         stroke="#A5B4FC"
-        stroke-width="2"
-        stroke-linecap="round"
+        strokeWidth="2"
+        strokeLinecap="round"
       />
     </svg>
   );

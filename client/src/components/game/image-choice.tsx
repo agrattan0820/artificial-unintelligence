@@ -1,10 +1,11 @@
 "use client";
 
-import { cn } from "@ai/utils/cn";
 import { Variants, motion } from "framer-motion";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import Image, { StaticImageData } from "next/image";
+import Image from "next/image";
 import { FiCheck } from "react-icons/fi";
+
+import { cn } from "@ai/utils/cn";
 
 export type ImageOption = 1 | 2;
 
@@ -14,6 +15,55 @@ type ImageChoiceProps = {
   selectedImage: ImageOption | undefined;
   setSelectedImage: Dispatch<SetStateAction<ImageOption | undefined>>;
   disabled?: boolean;
+};
+
+const ImageChoiceOption = ({
+  image,
+  onClick,
+  onLoad,
+  disabled,
+  variants,
+  showImage,
+  bothShown,
+  selectedImage,
+}: {
+  image: { src: string; alt: string };
+  onClick: () => void;
+  onLoad: () => void;
+  disabled: boolean | undefined;
+  variants: Variants;
+  showImage: boolean;
+  bothShown: boolean;
+  selectedImage: ImageOption | undefined;
+}) => {
+  return (
+    <motion.div
+      initial={false}
+      animate={bothShown ? "visible" : "hidden"}
+      variants={variants}
+    >
+      <button
+        className="group relative rounded-xl transition hover:ring hover:ring-indigo-600 disabled:hover:ring-0"
+        disabled={disabled ?? !showImage}
+        onClick={onClick}
+      >
+        <Image
+          className="aspect-square rounded-xl transition group-hover:brightness-105 group-focus-visible:brightness-105 group-disabled:group-hover:brightness-100 group-disabled:group-focus-visible:brightness-100"
+          src={image.src}
+          alt={image.alt}
+          onLoad={onLoad}
+          width={1024}
+          height={1024}
+        />
+        <FiCheck
+          className={cn(
+            "absolute -right-2 -top-2 scale-0 transform rounded-full bg-green-600 p-0.5 text-xl text-white transition",
+            selectedImage === 1 && "scale-100"
+          )}
+        />
+      </button>
+    </motion.div>
+  );
 };
 
 const ImageChoice = ({
@@ -64,66 +114,28 @@ const ImageChoice = ({
   return (
     <div className="flex gap-6">
       {imageOption1.src && (
-        <motion.div
-          initial={false}
-          animate={bothShown ? "visible" : "hidden"}
+        <ImageChoiceOption
+          image={imageOption1}
+          onClick={() => setSelectedImage(1)}
+          onLoad={() => setShowImage1(true)}
+          disabled={disabled}
           variants={image1Variants}
-        >
-          <button
-            className="relative"
-            disabled={disabled ?? !showImage1}
-            onClick={() => setSelectedImage(1)}
-          >
-            <Image
-              className={cn(
-                `aspect-square rounded-xl transition`,
-                selectedImage === 1 && "ring ring-indigo-600"
-              )}
-              src={imageOption1.src}
-              alt={imageOption1.alt}
-              onLoad={() => setShowImage1(true)}
-              width={1024}
-              height={1024}
-            />
-            <FiCheck
-              className={cn(
-                "absolute -right-2 -top-2 scale-0 transform rounded-full bg-green-600 p-0.5 text-xl text-white transition",
-                selectedImage === 1 && "scale-100"
-              )}
-            />
-          </button>
-        </motion.div>
+          showImage={showImage1}
+          bothShown={bothShown}
+          selectedImage={selectedImage}
+        />
       )}
       {imageOption2.src && (
-        <motion.div
-          initial={false}
-          animate={bothShown ? "visible" : "hidden"}
+        <ImageChoiceOption
+          image={imageOption2}
+          onClick={() => setSelectedImage(2)}
+          onLoad={() => setShowImage2(true)}
+          disabled={disabled}
           variants={image2Variants}
-        >
-          <button
-            className="relative"
-            disabled={disabled ?? !showImage2}
-            onClick={() => setSelectedImage(2)}
-          >
-            <Image
-              className={cn(
-                `aspect-square rounded-xl transition`,
-                selectedImage === 2 && "ring ring-indigo-600"
-              )}
-              src={imageOption2.src}
-              alt={imageOption2.alt}
-              onLoad={() => setShowImage2(true)}
-              width={1024}
-              height={1024}
-            />
-            <FiCheck
-              className={cn(
-                "absolute -right-2 -top-2 scale-0 transform rounded-full bg-green-600 p-0.5 text-xl text-white transition",
-                selectedImage === 2 && "scale-100"
-              )}
-            />
-          </button>
-        </motion.div>
+          showImage={showImage2}
+          bothShown={bothShown}
+          selectedImage={selectedImage}
+        />
       )}
     </div>
   );
