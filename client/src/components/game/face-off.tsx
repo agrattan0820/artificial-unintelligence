@@ -58,14 +58,6 @@ const FaceOff = ({
     setVoteSubmitted(true);
   };
 
-  if (!currQuestionGenerations) {
-    return (
-      <main className="mx-auto flex max-w-2xl items-center justify-center">
-        <p>Oops! There was an error loading the current face-off</p>
-      </main>
-    );
-  }
-
   return (
     <div className="mx-auto max-w-2xl">
       {/* <Timer totalSeconds={30} /> */}
