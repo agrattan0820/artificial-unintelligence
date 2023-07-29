@@ -58,7 +58,7 @@ export default function Lobby({ roomInfo }: { roomInfo: RoomInfo }) {
       <section className="container mx-auto px-4">
         <p className="mb-2 text-center text-xl">Your Invite Link is</p>
         <InviteLink code={roomInfo.code} />
-        <div className="absolute left-8 top-8">
+        <div className="mx-auto mt-4 flex items-center justify-center md:absolute md:left-8 md:top-8">
           <UserCount count={players.length} />
         </div>
         <UserList hostId={hostId} players={players} />
