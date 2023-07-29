@@ -44,7 +44,7 @@ export async function getGameRoundGenerations({
         eq(questionsToGames.round, round)
       )
     )
-    .orderBy(asc(questionsToGames.createdAt));
+    .orderBy(asc(questionsToGames.createdAt), asc(questionsToGames.questionId));
 
   return gameRoundGenerations;
 }
