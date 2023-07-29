@@ -11,9 +11,9 @@ const spaceMono = Space_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "beeeeeeeep",
+  title: "Artificial Unintelligence",
   description:
-    "Multiplayer Jackbox-style game with an artificial intelligence twist.",
+    "Multiplayer game where players compete against eachother to create the funniest AI-generated images.",
   icons: {
     icon: "/favicon.ico",
   },

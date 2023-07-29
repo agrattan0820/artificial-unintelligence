@@ -1,5 +1,5 @@
 <div align="center" style="padding-bottom:20px">
-  <a href="https://beeeeeeeep.vercel.app/">
+  <a href="https://artificial-unintelligence.vercel.app/">
     <img src="./client/src/images/friend.svg" width="150" height="auto" alt="Friend from Artificial Unintelligence"/>
   </a>
 </div>

@@ -419,7 +419,7 @@ export function buildServer() {
   });
 
   app.get("/", (req: Request, res: Response) => {
-    res.send("beeeeeeeep server");
+    res.send("Artificial Unintelligence Server");
   });
   app.get("/ping", (req: Request, res: Response) => {
     res.status(200).send("pong");

@@ -13,7 +13,7 @@ export default function useShare(slug: string, callback?: () => void) {
     if (navigator.share) {
       navigator
         .share({
-          title: `Join My beeeeeeeep Room`,
+          title: `Join My Artificial Unintelligence Room`,
           url: link,
         })
         .then(() => {
