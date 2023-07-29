@@ -54,14 +54,14 @@ export default function Lobby({ roomInfo }: { roomInfo: RoomInfo }) {
   }, [handleStartGame, roomInfo.code, socket, user?.id]);
 
   return (
-    <main className="flex min-h-screen flex-col justify-center">
+    <main className="pt-32 md:flex md:min-h-screen md:flex-col md:justify-center">
       <section className="container mx-auto px-4">
         <p className="mb-2 text-center text-xl">Your Invite Link is</p>
         <InviteLink code={roomInfo.code} />
         <div className="absolute left-8 top-8">
           <UserCount count={players.length} />
         </div>
-        <UserList players={players} />
+        <UserList hostId={hostId} players={players} />
         <StartGame
           players={players}
           code={roomInfo.code}

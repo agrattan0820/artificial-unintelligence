@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FiCheckSquare, FiPlusSquare, FiPlay } from "react-icons/fi";
 
@@ -24,6 +24,7 @@ const StartGame = ({
   loading: boolean;
 }) => {
   const { user } = useStore();
+  const [isMounted, setIsMounted] = useState(false);
 
   const { copying, setCopying, onClick } = useShare(`/invite/${code}`, () =>
     toast("Invite Link Copied to Clipboard")
@@ -37,6 +38,10 @@ const StartGame = ({
       };
     }
   }, [copying, setCopying]);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   return (
     <>
@@ -56,13 +61,15 @@ const StartGame = ({
           Invite Players {copying ? <FiCheckSquare /> : <FiPlusSquare />}
         </SecondaryButton>
       </div>
-      <p className="mt-8 text-center text-xs">
-        {players.length <= 2
-          ? `Need ${3 - players.length} more player${
-              3 - players.length !== 1 ? "s" : ""
-            } to start a game`
-          : user && user.id !== hostId && "Waiting on host to start game..."}
-      </p>
+      {isMounted && (
+        <p className="mt-8 text-center text-xs">
+          {players.length <= 2
+            ? `Need ${3 - players.length} more player${
+                3 - players.length !== 1 ? "s" : ""
+              } to start a game`
+            : user && user.id !== hostId && "Waiting on host to start game..."}
+        </p>
+      )}
     </>
   );
 };
