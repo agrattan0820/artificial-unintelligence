@@ -53,8 +53,6 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
     },
   });
 
-  console.log("[CURR STATE]", state);
-
   // Id of the user who is the current host of the game
   const [hostId, setHostId] = useState<number | null>(gameInfo.hostId);
 
@@ -158,14 +156,10 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
       : [];
   }, [generations, generationsLoading]);
 
-  console.log("[QUESTION GENERATIONS]", questionGenerationArr);
-
   const currFaceOffQuestion =
     questionGenerationArr.length > 0
       ? questionGenerationArr[state.context.questionIdx]
       : undefined;
-
-  console.log("[CURR FACEOFF QUESTION]", currFaceOffQuestion);
 
   // Store players who have submitted votes for the current question
   const [votedPlayers, setVotedPlayers] = useState<UserVote[]>(
