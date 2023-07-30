@@ -1,3 +1,6 @@
+import { Socket } from "socket.io";
+import { ClientToServerEvents, ServerToClientEvents } from "./types";
+
 export function getRandomInt(min: number, max: number) {
   min = Math.ceil(min);
   max = Math.floor(max);
@@ -13,4 +16,14 @@ export function shuffleArray<T>(arr: T[]) {
   }
 
   return arr;
+}
+
+export function handleSocketError(
+  e: Error,
+  socket: Socket<ClientToServerEvents, ServerToClientEvents>,
+  code?: string
+) {
+  console.error("Socket Error: ", e);
+  socket.emit("error", e.message);
+  if (code) socket.to(code).emit("error", e.message);
 }
