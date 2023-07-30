@@ -77,7 +77,7 @@ export function buildServer() {
 
     await checkIfExistingUser(socket);
 
-    connectionSocketHandlers(io, socket);
+    connectionSocketHandlers(io, socket, gameStateMap);
     roomSocketHandlers(io, socket);
     gameSocketHandlers(io, socket, gameStateMap);
     generationSocketHandlers(io, socket);
