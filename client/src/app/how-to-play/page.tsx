@@ -7,7 +7,6 @@ import ImagePrompt from "@ai/images/image-prompt.png";
 import ImageVoting from "@ai/images/image-voting.png";
 import VotingPoints from "@ai/images/voting-points.png";
 import WinningImages from "@ai/images/winning-images.png";
-import Leaderboard from "@ai/images/leaderboard.png";
 
 const ImageFigure = ({
   image,
