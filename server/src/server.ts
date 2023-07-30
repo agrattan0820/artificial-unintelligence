@@ -43,7 +43,7 @@ export function buildServer() {
       }),
     ],
     // Performance Monitoring
-    tracesSampleRate: process.env.NODE_ENV === "production" ? 0.5 : 1.0, // Capture 100% of the transactions, reduce in production!,
+    tracesSampleRate: process.env.NODE_ENV === "production" ? 0.5 : 1.0,
   });
 
   // express middleware
@@ -62,7 +62,7 @@ export function buildServer() {
   // map to track and memoize the state of running games
   const gameStateMap = new Map<number, { state: string; round: number }>();
 
-  // socket.io
+  // websockets with socket.io
   const io = new Server<ClientToServerEvents, ServerToClientEvents>(server, {
     cors: {
       origin: "*",
