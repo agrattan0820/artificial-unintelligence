@@ -52,6 +52,7 @@ export function buildServer() {
   app.use(express.json());
   app.use(
     cors({
+      methods: ["GET", "POST"],
       origin: process.env.APP_URL ?? "https://un-ai.vercel.app",
     })
   );
