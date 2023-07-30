@@ -20,6 +20,7 @@ import {
   getCurrentComponent,
 } from "@ai/components/game/game-machine";
 import { SocketContext } from "@ai/utils/socket-provider";
+import { useStore } from "@ai/utils/store";
 
 // ! ----------> TYPES <----------
 
@@ -37,6 +38,20 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
   // Next.js router
   const router = useRouter();
 
+  // game id store state
+  const { setGameId } = useStore();
+
+  // Wait until the client mounts to avoid hydration errors
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Id of the user who is the current host of the game
+  const [hostId, setHostId] = useState<number | null>(gameInfo.hostId);
+
+  // Store players who have submitted their prompts for a round
+  const [submittedPlayerIds, setSubmittedPlayerIds] = useState<Set<number>>(
+    new Set(gameInfo.submittedPlayers)
+  );
+
   // Persisted state from server for state machine
   const serverState =
     gameInfo.game.state !== "START_GAME"
@@ -52,9 +67,6 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
       questionIdx: serverState ? serverState.context.questionIdx : 0,
     },
   });
-
-  // Id of the user who is the current host of the game
-  const [hostId, setHostId] = useState<number | null>(gameInfo.hostId);
 
   const handleRoomState = (roomInfo: RoomInfo) => {
     console.log("[ROOM INFO]", roomInfo);
@@ -86,17 +98,10 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
     [send]
   );
 
-  // Store players who have submitted their prompts for a round
-  const [submittedPlayerIds, setSubmittedPlayerIds] = useState<Set<number>>(
-    new Set(gameInfo.submittedPlayers)
-  );
-
   const handleOnSubmittedPlayers = (players: number[]) => {
     console.log("[HANDLE SUBMITTED PLAYERS]", players);
     setSubmittedPlayerIds(new Set(players));
   };
-
-  console.log("[SUBMITTED PLAYER IDS]", submittedPlayerIds);
 
   // Construct Question Generation map for face-offs
   const gameId = gameInfo.game.id;
@@ -177,6 +182,11 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
     router.refresh();
   }, [router]);
 
+  // set gameId state
+  useEffect(() => {
+    setGameId(gameId);
+  }, [gameId, setGameId]);
+
   // Socket.io Effects
   useEffect(() => {
     socket.on("roomState", handleRoomState);
@@ -195,7 +205,6 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
   }, [handlePlayAnotherGame, handleServerEvent, socket]);
 
   // Game component shown based off state
-  // TODO: test transforming this into a React component
   const currentComponent = useMemo(() => {
     return getCurrentComponent(
       gameInfo,
@@ -217,9 +226,6 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
     votedPlayers,
     leaderboard,
   ]);
-
-  // Wait until the client mounts to avoid hydration errors
-  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);

@@ -13,7 +13,7 @@ export default function SocketProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const { user, room } = useStore();
+  const { user, room, gameId } = useStore();
 
   const socketMessage = (msg: string) => {
     console.log("Received socket message:", msg);
@@ -25,7 +25,7 @@ export default function SocketProvider({
   };
 
   useEffect(() => {
-    socket.auth = { userId: user?.id, roomCode: room?.code };
+    socket.auth = { userId: user?.id, roomCode: room?.code, gameId };
     socket.connect();
     socket.on("message", socketMessage);
     socket.on("error", socketError);
@@ -35,7 +35,7 @@ export default function SocketProvider({
       socket.off("error", socketError);
       socket.disconnect();
     };
-  }, [user?.id, room?.code]);
+  }, [user?.id, room?.code, gameId]);
 
   return (
     <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>

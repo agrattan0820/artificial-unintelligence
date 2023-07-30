@@ -35,7 +35,8 @@ export async function checkIfExistingUser(
 
 export async function connectionSocketHandlers(
   io: Server<ClientToServerEvents, ServerToClientEvents>,
-  socket: Socket<ClientToServerEvents, ServerToClientEvents>
+  socket: Socket<ClientToServerEvents, ServerToClientEvents>,
+  gameStateMap: Map<number, { state: string; round: number }>
 ) {
   socket.on("disconnecting", async () => {
     try {
@@ -61,6 +62,14 @@ export async function connectionSocketHandlers(
             });
             if (!newHost) {
               console.log(`[NO OTHER PLAYERS REMAIN IN ${room}]`);
+
+              const gameId = socket.handshake.auth.gameId
+                ? Number(socket.handshake.auth.gameId)
+                : null;
+              if (gameId) {
+                gameStateMap.delete(gameId);
+              }
+
               return;
             }
             await updateRoomHost({ newHostId: newHost.id, roomCode: room });

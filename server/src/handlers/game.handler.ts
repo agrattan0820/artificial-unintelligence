@@ -89,22 +89,26 @@ export function gameSocketHandlers(
     try {
       const mapValue = gameStateMap.get(gameId);
 
-      if (mapValue) {
-        const gameStateValue =
-          mapValue.state !== "START_GAME"
-            ? JSON.parse(mapValue.state).value
-            : mapValue.state;
-        const clientStateValue =
-          state !== "START_GAME" ? JSON.parse(state).value : state;
+      const gameStateValue = mapValue
+        ? mapValue.state !== "START_GAME"
+          ? JSON.parse(mapValue.state).value
+          : mapValue.state
+        : null;
+      const clientStateValue =
+        state !== "START_GAME" ? JSON.parse(state).value : state;
 
-        if (gameStateValue !== clientStateValue) {
+      if (gameStateValue !== clientStateValue) {
+        await updateGame({
+          state,
+          gameId,
+          round,
+          completedAt: completedAt ? new Date(completedAt) : undefined,
+        });
+
+        if (completedAt && mapValue) {
+          gameStateMap.delete(gameId);
+        } else {
           gameStateMap.set(gameId, { state, round });
-          await updateGame({
-            state,
-            gameId,
-            round,
-            completedAt: completedAt ? new Date(completedAt) : undefined,
-          });
         }
       }
     } catch (error) {

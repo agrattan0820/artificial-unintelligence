@@ -7,8 +7,8 @@ export type StoreState = {
   setUser: (user: User | null) => void;
   room: Room | null;
   setRoom: (room: Room) => void;
-  game: Game | null;
-  setGame: (game: Game) => void;
+  gameId: number | null;
+  setGameId: (gameId: number | null) => void;
   players: User[];
   setPlayers: (players: User[]) => void;
 };
@@ -21,8 +21,8 @@ export const useStore = create<StoreState>()(
         setUser: (user) => set(() => ({ user: user })),
         room: null,
         setRoom: (room) => set(() => ({ room: room })),
-        game: null,
-        setGame: (game) => set(() => ({ game: game })),
+        gameId: null,
+        setGameId: (gameId) => set(() => ({ gameId: gameId })),
         players: [],
         setPlayers: (players) => set(() => ({ players: players })),
       }),
