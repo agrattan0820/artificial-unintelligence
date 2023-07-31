@@ -1,7 +1,8 @@
 import { Metadata } from "next";
-import "./globals.css";
 import { Space_Mono } from "next/font/google";
 import { Toaster } from "react-hot-toast";
+import { Analytics } from "@vercel/analytics/react";
+import "./globals.css";
 
 const spaceMono = Space_Mono({
   subsets: ["latin"],
@@ -31,6 +32,7 @@ export default function RootLayout({
       >
         <Toaster />
         {children}
+        <Analytics />
       </body>
     </html>
   );
