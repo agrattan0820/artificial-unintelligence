@@ -1,7 +1,7 @@
-import {
+import type {
   CreateCompletionResponseChoicesInner,
   ImagesResponseDataInner,
-} from "openai";
+} from "openai-edge";
 
 // generate an AI image
 export const generateImage = async (prompt: string) => {
