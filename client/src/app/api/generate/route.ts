@@ -1,16 +1,16 @@
-import { AxiosError } from "axios";
 import { NextResponse } from "next/server";
-import { Configuration, OpenAIApi } from "openai";
+import { Configuration, OpenAIApi, ResponseTypes } from "openai-edge";
+
+export const runtime = "edge";
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
+
 const openai = new OpenAIApi(configuration);
 
 export async function POST(req: Request) {
   const body = await req.json();
-
-  const { searchParams } = new URL(req.url);
 
   if (!configuration.apiKey) {
     return new Response("API Key is not defined", {
@@ -26,19 +26,20 @@ export async function POST(req: Request) {
   }
 
   try {
-    const images = await openai.createImage({
+    const imagesResponse = await openai.createImage({
       prompt,
       n: 2,
       size: "1024x1024",
     });
 
-    return NextResponse.json({ result: images.data.data });
+    const images: ResponseTypes["createImage"] = await imagesResponse.json();
+
+    return NextResponse.json({ result: images.data });
   } catch (error) {
-    // Consider adjusting the error handling logic for your use case
-    if (error instanceof AxiosError && error.response) {
-      console.error(error.response.status, error.response.data);
-      return new Response(error.response.data, {
-        status: error.response.status,
+    if (error instanceof Error) {
+      console.error(error.message);
+      return new Response(error.message, {
+        status: 500,
       });
     }
     return new Response("An error occured during your request", {
