@@ -1,4 +1,4 @@
-import type { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { Configuration, OpenAIApi, ResponseTypes } from "openai-edge";
 
 export const runtime = "edge";
