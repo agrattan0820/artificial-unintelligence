@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -54,7 +55,7 @@ export default function Lobby({ roomInfo }: { roomInfo: RoomInfo }) {
   }, [handleStartGame, roomInfo.code, socket, user?.id]);
 
   return (
-    <main className="flex min-h-[100dvh] flex-col justify-center">
+    <motion.main layout className="flex min-h-[100dvh] flex-col justify-center">
       <section className="container mx-auto px-4">
         <p className="mb-2 text-center text-xl">Your Invite Link is</p>
         <InviteLink code={roomInfo.code} />
@@ -70,6 +71,6 @@ export default function Lobby({ roomInfo }: { roomInfo: RoomInfo }) {
           loading={startGameLoading}
         />
       </section>
-    </main>
+    </motion.main>
   );
 }
