@@ -232,7 +232,7 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
   }, []);
 
   return (
-    <main className="flex min-h-screen flex-col justify-center">
+    <main className="flex min-h-[100dvh] flex-col justify-center">
       <section className="container mx-auto px-4">
         <AnimatePresence mode="wait">
           {isMounted ? currentComponent : null}

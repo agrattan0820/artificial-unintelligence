@@ -1,10 +1,9 @@
 import Friend from "@ai/components/game/friend";
-import FriendWithLegs from "@ai/components/game/friend-with-legs";
 import NicknameForm from "@ai/components/nickname-form";
 
 export default function Home() {
   return (
-    <main className="pt-36 md:flex md:min-h-screen md:flex-col md:justify-center md:pt-0">
+    <main className="flex min-h-[100dvh] flex-col justify-center">
       <section className="container mx-auto flex flex-col-reverse items-start justify-center gap-8 px-4 lg:flex-row lg:gap-24">
         <div>
           <h1 className="mb-8 text-4xl md:text-6xl">

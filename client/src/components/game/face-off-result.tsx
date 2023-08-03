@@ -22,6 +22,7 @@ import {
   UserVote,
 } from "@ai/app/server-actions";
 import { gameMachine } from "./game-machine";
+import { shuffleArray } from "@ai/utils/helpers";
 
 type FaceOffResultProps = {
   gameInfo: GameInfo;
@@ -109,13 +110,6 @@ const FaceOffResult = ({
             {currQuestionGenerations.question.text}
           </motion.h2>
         </div>
-        {/* <motion.div
-          initial={{ x: 10, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          className="flex justify-end"
-        >
-          <FriendWithLegs />
-        </motion.div> */}
       </div>
       <div className="mb-16 flex gap-6">
         <FaceOffResultImage
@@ -312,6 +306,8 @@ const FaceOffResultImage = ({
     { top: "52%", left: "48%", rotate: 3 },
   ];
 
+  const shuffledPositions = shuffleArray(votePositions);
+
   return (
     <motion.figure
       initial={false}
@@ -347,7 +343,7 @@ const FaceOffResultImage = ({
             key={i}
             className="absolute inline-block rounded-md bg-indigo-300 p-4 shadow-md"
             variants={voteItemVariants}
-            style={votePositions[i]}
+            style={shuffledPositions[i]}
           >
             <p className="text-sm text-black">{vote}</p>
           </motion.li>

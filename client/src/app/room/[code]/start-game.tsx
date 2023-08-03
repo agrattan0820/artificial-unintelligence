@@ -43,14 +43,10 @@ const StartGame = ({
     setIsMounted(true);
   }, []);
 
-  if (!isMounted) {
-    return null;
-  }
-
   return (
     <>
       <div className="mt-8 flex flex-col items-center justify-center gap-2 sm:flex-row">
-        {players.length > 2 && user && user.id == hostId && (
+        {isMounted && players.length > 2 && user && user.id == hostId && (
           <Button onClick={onStartGame} className="flex items-center gap-2">
             {loading ? (
               <Ellipsis />
@@ -67,11 +63,15 @@ const StartGame = ({
       </div>
 
       <p className="mt-8 text-center text-xs">
-        {players.length <= 2
-          ? `Need ${3 - players.length} more player${
-              3 - players.length !== 1 ? "s" : ""
-            } to start a game`
-          : user && user.id !== hostId && "Waiting on host to start game..."}
+        {!isMounted ? (
+          <Ellipsis />
+        ) : players.length <= 2 ? (
+          `Need ${3 - players.length} more player${
+            3 - players.length !== 1 ? "s" : ""
+          } to start a game`
+        ) : (
+          user && user.id !== hostId && "Waiting on host to start game..."
+        )}
       </p>
     </>
   );

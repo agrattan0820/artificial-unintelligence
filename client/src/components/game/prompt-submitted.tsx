@@ -56,7 +56,7 @@ const PromptSubmitted = ({
   const { user } = useStore();
 
   return (
-    <div className="mx-auto flex min-h-screen flex-col items-center justify-center text-center">
+    <div className="mx-auto flex min-h-[100dvh] flex-col items-center justify-center text-center">
       <Friend className="mb-4 w-32" />
       <h2 className="mb-8 text-2xl md:text-4xl">We got your images!</h2>
       <p className="mb-6 md:text-lg">

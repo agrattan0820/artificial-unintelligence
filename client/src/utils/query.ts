@@ -1,7 +1,5 @@
-import type {
-  CreateCompletionResponseChoicesInner,
-  ImagesResponseDataInner,
-} from "openai-edge";
+import type { ImagesResponseDataInner } from "openai-edge";
+import * as Sentry from "@sentry/nextjs";
 
 // generate an AI image
 export const generateImage = async (prompt: string) => {
@@ -23,25 +21,7 @@ export const generateImage = async (prompt: string) => {
     return data.result;
   } catch (error) {
     console.error(error);
-    if (error instanceof Error) {
-      console.error(error.message);
-    }
-  }
-};
-
-export const generatePrompt = async () => {
-  try {
-    const response = await fetch("/api/completion");
-
-    const data: { result: CreateCompletionResponseChoicesInner[] } =
-      await response.json();
-    if (response.status !== 200) {
-      throw new Error(`Request failed with status ${response.status}`);
-    }
-
-    return data.result;
-  } catch (error) {
-    console.error(error);
+    Sentry.captureException(error);
     if (error instanceof Error) {
       console.error(error.message);
     }

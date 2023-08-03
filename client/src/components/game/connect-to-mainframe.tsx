@@ -3,7 +3,7 @@ import TypewriterText from "@ai/components/typewriter";
 
 const ConnectToMainframe = () => {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center">
+    <div className="flex min-h-[100dvh] flex-col items-center justify-center">
       <h2 className="mb-6 w-fit text-lg md:text-4xl">
         <TypewriterText>Connecting to the mainframe...</TypewriterText>
       </h2>
