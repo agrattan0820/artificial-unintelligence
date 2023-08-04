@@ -6,9 +6,10 @@
 - [ ] Connect state for `face-off` and `face-off-result` so that a transition between components doesn't need to happen
 - [ ] Protect game pages from players who are not a part of it
 - [ ] Optional user auth
-- [ ] Add donate button
 
 ## In Progress
+
+- [ ] Maximum on amount of regenerations (3 per game?)
 
 ## Done ✓
 
@@ -26,3 +27,4 @@
 - [x] Safari title font kerning bug
 - [x] Change image generator endpoint to use `openai-edge`
 - [x] How-to-play screen
+- [x] Add donate button
