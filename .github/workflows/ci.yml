@@ -6,13 +6,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
           node-version: "18.x"
+          cache: "pnpm"
       - name: Install server modules
         working-directory: ./server
-        run: yarn install --frozen-lockfile
+        run: pnpm install
       - name: Run server unit tests
         working-directory: ./server
-        run: yarn test
+        run: pnpm run test
