@@ -73,14 +73,14 @@ Once 3 rounds have been completed, all points are tallied up from the votes the 
 
    ```bash
    # Run in both client and server
-   yarn
+   pnpm install
    ```
 
 3. Start the development instances of both the client and server:
 
    ```bash
    # Run in both client and server
-   yarn dev
+   pnpm run dev
    ```
 
 4. This opens the client on <http://localhost:3000> and the server on <http://localhost:8080>, navigate to these links to see your code changes in real-time.
