@@ -15,7 +15,7 @@ export default function Home() {
         <Friend className="w-32 lg:w-1/4" />
       </section>
       <section className="absolute bottom-8 left-1/2 -translate-x-1/2">
-        <div className="flex flex-col items-center justify-center gap-4 text-sm">
+        <div className="flex flex-col items-center justify-center gap-2 text-sm">
           <p>
             Free and{" "}
             <a

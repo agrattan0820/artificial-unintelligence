@@ -117,8 +117,15 @@ const Leaderboard = ({ gameInfo, leaderboard, hostId }: LeaderboardProps) => {
             Play Again With Same Players
           </Button>
         )}
-        <LinkSecondaryButton href="/">Go Back Home</LinkSecondaryButton>
+        <LinkSecondaryButton href="https://www.buymeacoffee.com/agrattan">
+          Donate Cereal to Creator 🥣
+        </LinkSecondaryButton>
       </div>
+      {!currUserIsHost && (
+        <p className="mt-4 max-w-sm w-full mx-auto text-sm">
+          If you&apos;d like to play again, ask the host to start another game.
+        </p>
+      )}
     </div>
   );
 };
