@@ -12,7 +12,7 @@ import {
   QuestionGenerations,
   RoomInfo,
   UserVote,
-  getGameRoundGenerations,
+  getFaceOffs,
   getLeaderboardById,
 } from "@ai/app/server-actions";
 import {
@@ -52,6 +52,11 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
     new Set(gameInfo.submittedPlayers)
   );
 
+  // Store players who have submitted votes for the current question
+  const [votedPlayers, setVotedPlayers] = useState<UserVote[]>(
+    gameInfo.votedPlayers
+  );
+
   // Persisted state from server for state machine
   const serverState =
     gameInfo.game.state !== "START_GAME"
@@ -85,10 +90,6 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
     });
   }, [gameInfo.game.id, socket, state]);
 
-  useEffect(() => {
-    handleStateChange();
-  }, [handleStateChange, state]);
-
   // Receive state changes from server
   const handleServerEvent = useCallback(
     (event: EventFrom<typeof gameMachine>) => {
@@ -98,17 +99,17 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
     [send]
   );
 
+  // Update which players have submitted their generations
   const handleOnSubmittedPlayers = (players: number[]) => {
     console.log("[HANDLE SUBMITTED PLAYERS]", players);
     setSubmittedPlayerIds(new Set(players));
   };
 
-  // Construct Question Generation map for face-offs
   const gameId = gameInfo.game.id;
   const round = state.context.round;
-  const { data: generations, isLoading: generationsLoading } = useQuery(
-    ["generations", "gameId", gameId, "round", round],
-    async () => await getGameRoundGenerations({ gameId, round }),
+  const { data: faceOffs, isLoading: faceOffsLoading } = useQuery(
+    ["faceOffs", "gameId", gameId, "round", round],
+    () => getFaceOffs({ gameId, round }),
     {
       enabled:
         !!gameId &&
@@ -116,73 +117,38 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
         (state.matches("faceOff") || state.matches("faceOffResults")),
     }
   );
-
   const { data: leaderboard, isLoading: leaderboardLoading } = useQuery(
     ["leaderboard", "gameId", gameId],
-    async () => await getLeaderboardById({ gameId }),
+    () => getLeaderboardById({ gameId }),
     {
       enabled:
         !!gameId && (state.matches("winnerLeadUp") || state.matches("winner")),
     }
   );
 
-  const questionGenerationArr = useMemo(() => {
-    return !generationsLoading && generations
-      ? Object.values(
-          generations.reduce<Record<number, QuestionGenerations>>(
-            (acc, curr, i) => {
-              if (!acc[curr.question.id]) {
-                acc[curr.question.id] = {
-                  question: curr.question,
-                  player1:
-                    curr.generation.userId === curr.question.player1
-                      ? curr.user
-                      : generations[i + 1].user,
-                  player1Generation:
-                    curr.generation.userId === curr.question.player1
-                      ? curr.generation
-                      : generations[i + 1].generation, // the generations are ordered by question id so instead of doing a search for the correct generation, we know that it is at the next index
-                  player2:
-                    curr.generation.userId === curr.question.player2
-                      ? curr.user
-                      : generations[i + 1].user,
-                  player2Generation:
-                    curr.generation.userId === curr.question.player2
-                      ? curr.generation
-                      : generations[i + 1].generation,
-                };
-              }
-
-              return acc;
-            },
-            {}
-          )
-        )
-      : [];
-  }, [generations, generationsLoading]);
-
   const currFaceOffQuestion =
-    questionGenerationArr.length > 0
-      ? questionGenerationArr[state.context.questionIdx]
+    !faceOffsLoading && faceOffs && faceOffs.length > 0
+      ? faceOffs[state.context.questionIdx]
       : undefined;
 
-  // Store players who have submitted votes for the current question
-  const [votedPlayers, setVotedPlayers] = useState<UserVote[]>(
-    gameInfo.votedPlayers
-  );
-
+  // Update which players have voted for the current face off
   const handleVotedPlayers = (votes: UserVote[]) => {
     console.log("[HANDLE VOTED PLAYERS]", votes);
     setVotedPlayers(votes);
   };
 
-  // Handle play another game request from server
+  // Handle "play another game" request from server
   // Refresh page to acquire new server-rendered `gameInfo`
   const handlePlayAnotherGame = useCallback(() => {
     router.refresh();
   }, [router]);
 
-  // set gameId state
+  // Send new state to server
+  useEffect(() => {
+    handleStateChange();
+  }, [handleStateChange, state]);
+
+  // Set gameId state
   useEffect(() => {
     setGameId(gameId);
   }, [gameId, setGameId]);
@@ -227,6 +193,7 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
     leaderboard,
   ]);
 
+  // Avoid hydration issues by ensuring app has mounted
   useEffect(() => {
     setIsMounted(true);
   }, []);

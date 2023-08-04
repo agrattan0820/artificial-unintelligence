@@ -175,13 +175,9 @@ export async function getLeaderboardById({ gameId }: { gameId: number }) {
 
 // ! ----------> GENERATIONS <----------
 
-export type GetGameRoundGenerationsResponse = {
-  generation: Generation;
-  question: Question;
-  user: User;
-}[];
+export type GetFaceOffsResponse = QuestionGenerations[];
 
-export async function getGameRoundGenerations({
+export async function getFaceOffs({
   gameId,
   round,
 }: {
@@ -193,7 +189,7 @@ export async function getGameRoundGenerations({
     { cache: "no-store" }
   );
 
-  const data: GetGameRoundGenerationsResponse = await response.json();
+  const data: GetFaceOffsResponse = await response.json();
 
   return data;
 }

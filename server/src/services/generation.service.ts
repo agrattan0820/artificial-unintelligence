@@ -8,7 +8,7 @@ import {
   questionsToGames,
   users,
 } from "../../db/schema";
-import { GameRoundGeneration } from "../types";
+import { GameRoundGeneration, QuestionGenerations } from "../types";
 
 export async function getGameRoundGenerations({
   gameId,
@@ -49,6 +49,45 @@ export async function getGameRoundGenerations({
   return gameRoundGenerations;
 }
 
+// TODO: test this function
+export function mapGenerationsByQuestion({
+  gameRoundGenerations,
+}: {
+  gameRoundGenerations: GameRoundGeneration[];
+}) {
+  const questionGenerationMap = gameRoundGenerations.reduce<
+    Record<number, QuestionGenerations>
+  >((acc, curr, i) => {
+    if (!acc[curr.question.id]) {
+      acc[curr.question.id] = {
+        question: curr.question,
+        player1:
+          curr.generation.userId === curr.question.player1
+            ? curr.user
+            : gameRoundGenerations[i + 1].user,
+        player1Generation:
+          curr.generation.userId === curr.question.player1
+            ? curr.generation
+            : gameRoundGenerations[i + 1].generation, // the generations are ordered by question id so instead of doing a search for the correct generation, we know that it is at the next index
+        player2:
+          curr.generation.userId === curr.question.player2
+            ? curr.user
+            : gameRoundGenerations[i + 1].user,
+        player2Generation:
+          curr.generation.userId === curr.question.player2
+            ? curr.generation
+            : gameRoundGenerations[i + 1].generation,
+      };
+    }
+
+    return acc;
+  }, {});
+
+  const questionGenerations = Object.values(questionGenerationMap);
+
+  return questionGenerations;
+}
+
 // TODO: Test this function
 export function getSubmittedPlayers({
   gameRoundGenerations,
@@ -60,12 +99,12 @@ export function getSubmittedPlayers({
     const currUserId = curr.generation.userId;
 
     if (userGenerationCountMap.get(currUserId) === 1) {
-      userGenerationCountMap.set(currUserId, 2);
-      acc.push(currUserId);
+      userGenerationCountMap.set(currUserId, 2); // player has created two generations, they are "submitted"
+      acc.push(currUserId); // add them to the array of submitted players
     }
 
     if (!userGenerationCountMap.has(currUserId)) {
-      userGenerationCountMap.set(currUserId, 1);
+      userGenerationCountMap.set(currUserId, 1); // player has created one generation, not yet "submitted"
     }
 
     return acc;
