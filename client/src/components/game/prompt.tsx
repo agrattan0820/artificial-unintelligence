@@ -91,7 +91,7 @@ const Prompt = ({
     });
   }, [currRound, gameInfo.questions, user?.id]);
 
-  // State machine to handle the two questions of the current round
+  // State to handle the two questions of the current round
   const [stage, setStage] = useState<"FIRST" | "SECOND">("FIRST");
 
   const currQuestion = stage === "FIRST" ? questions[0] : questions[1];
@@ -172,9 +172,11 @@ const Prompt = ({
 
     if (stage === "FIRST") {
       setStage("SECOND");
-      setImagePrompt("");
       resetImageAndPrompt();
     } else {
+      window.localStorage.removeItem("prompt");
+      window.localStorage.removeItem("image1");
+      window.localStorage.removeItem("image2");
       send({ type: "SUBMIT" });
     }
 
