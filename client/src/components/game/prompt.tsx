@@ -4,13 +4,18 @@ import { ChangeEvent, FormEvent, useContext, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { EventFrom, StateFrom } from "xstate";
 import toast from "react-hot-toast";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import Button, { SecondaryButton } from "@ai/components/button";
 import { generateImage } from "@ai/utils/query";
 import Ellipsis from "@ai/components/ellipsis";
 import ImageChoice, { ImageOption } from "./image-choice";
 import Timer from "./timer";
-import { GameInfo } from "@ai/app/server-actions";
+import {
+  GameInfo,
+  getRegenerationCount,
+  incrementUserRegenerationCount,
+} from "@ai/app/server-actions";
 import { gameMachine } from "./game-machine";
 import { useStore } from "@ai/utils/store";
 import { SocketContext } from "@ai/utils/socket-provider";
@@ -35,6 +40,80 @@ const Prompt = ({
   const { user } = useStore();
   const socket = useContext(SocketContext);
 
+  const queryClient = useQueryClient();
+
+  const gameId = gameInfo.game.id;
+  const userId = user?.id;
+  const regenerationCountQueryKey = [
+    "regenerationCount",
+    "gameId",
+    gameId,
+    "userId",
+    userId,
+  ];
+
+  const { data: regenerationCount, isLoading: regenerationCountLoading } =
+    useQuery(
+      regenerationCountQueryKey,
+      () =>
+        getRegenerationCount({
+          gameId: gameId,
+          userId: userId ?? 0,
+        }),
+      {
+        enabled: !!gameId && !!userId,
+      }
+    );
+
+  // Mutation that follows TanStack Query's guide on optimistic updates
+  // https://tanstack.com/query/v4/docs/react/guides/optimistic-updates
+  const incrementRegenerationCountMutation = useMutation({
+    mutationFn: ({ gameId, userId }: { gameId: number; userId: number }) => {
+      return incrementUserRegenerationCount({ gameId, userId });
+    },
+    onMutate: async ({ gameId, userId }) => {
+      // Cancel any outgoing refetches
+      // (so they don't overwrite our optimistic update)
+      await queryClient.cancelQueries({
+        queryKey: regenerationCountQueryKey,
+      });
+
+      // Snapshot the previous value
+      const previousCount = queryClient.getQueryData(regenerationCountQueryKey);
+
+      // Optimistically update to the new value
+      queryClient.setQueryData(regenerationCountQueryKey, (old) =>
+        typeof old === "object" &&
+        old &&
+        "count" in old &&
+        typeof old.count === "number"
+          ? { count: old.count + 1 }
+          : old
+      );
+
+      // Return a context object with the snapshotted value
+      return { previousCount };
+    },
+    // If the mutation fails,
+    // use the context returned from onMutate to roll back
+    onError: (err, { gameId, userId }, context) => {
+      queryClient.setQueryData(
+        regenerationCountQueryKey,
+        context?.previousCount
+      );
+    },
+    // Always refetch after error or success:
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: regenerationCountQueryKey });
+    },
+  });
+
+  const maxRegenerations = 3;
+  const outOfRegenerations =
+    !regenerationCountLoading && regenerationCount !== undefined
+      ? regenerationCount.count >= maxRegenerations
+      : true;
+
   const currRound = state.context.round;
 
   const questions = useMemo(() => {
@@ -46,7 +125,7 @@ const Prompt = ({
     });
   }, [currRound, gameInfo.questions, user?.id]);
 
-  // STATE MACHINE TO HANDLE THE TWO QUESTIONS OF THE CURRENT ROUND
+  // State machine to handle the two questions of the current round
   const [stage, setStage] = useState<"FIRST" | "SECOND">("FIRST");
 
   const currQuestion = stage === "FIRST" ? questions[0] : questions[1];
@@ -87,6 +166,16 @@ const Prompt = ({
     setSelectedImage(undefined);
   };
 
+  const onTryAnotherPrompt = () => {
+    if (userId !== undefined) {
+      resetImages();
+      incrementRegenerationCountMutation.mutate({ gameId, userId });
+      return;
+    }
+
+    toast.error("Unable to try another prompt");
+  };
+
   const onImageSubmit = async () => {
     setLoading(true);
 
@@ -111,6 +200,8 @@ const Prompt = ({
 
     setLoading(false);
   };
+
+  console.log("[REGENERATION COUNT]", regenerationCount);
 
   return (
     <motion.div layout className="max-w-2xl">
@@ -180,8 +271,27 @@ const Prompt = ({
               >
                 {!loading ? "Submit Image" : <Ellipsis />}
               </Button>
-              <SecondaryButton onClick={resetImages} disabled={loading}>
-                {!loading ? "Try New Prompt" : <Ellipsis />}
+              <SecondaryButton
+                onClick={onTryAnotherPrompt}
+                disabled={loading || outOfRegenerations}
+              >
+                {!loading ? (
+                  `Try New Prompt ${
+                    !regenerationCountLoading &&
+                    regenerationCount !== undefined &&
+                    typeof regenerationCount?.count === "number" ? (
+                      `${
+                        maxRegenerations - regenerationCount?.count
+                      }/${maxRegenerations}`
+                    ) : (
+                      <span>
+                        <Ellipsis />/{maxRegenerations}
+                      </span>
+                    )
+                  }`
+                ) : (
+                  <Ellipsis />
+                )}
               </SecondaryButton>
             </div>
           </div>

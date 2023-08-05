@@ -110,6 +110,7 @@ export const usersToGames = pgTable(
       .references(() => games.id)
       .notNull(),
     points: integer("points").default(0).notNull(),
+    regenerationCount: integer("regeneration_count").default(0).notNull(),
   },
   (table) => ({
     cpk: primaryKey(table.userId, table.gameId),

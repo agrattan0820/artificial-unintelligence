@@ -173,6 +173,57 @@ export async function getLeaderboardById({ gameId }: { gameId: number }) {
   return data;
 }
 
+export type GetRegenerationCountResponse = { count: number };
+
+export async function getRegenerationCount({
+  gameId,
+  userId,
+}: {
+  gameId: number;
+  userId: number;
+}) {
+  const response = await fetch(
+    `${URL}/game/${gameId}/regenerations/${userId}`,
+    {
+      cache: "no-store",
+    }
+  );
+
+  const data: GetRegenerationCountResponse = await response.json();
+
+  return data;
+}
+
+export type incrementUserRegenerationCountResponse = {
+  room: Room;
+};
+
+export async function incrementUserRegenerationCount({
+  gameId,
+  userId,
+}: {
+  gameId: number;
+  userId: number;
+}) {
+  const response = await fetch(
+    `${URL}/game/${gameId}/regenerations/${userId}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId,
+        gameId,
+      }),
+    }
+  );
+
+  const data: incrementUserRegenerationCountResponse = await response.json();
+
+  return data;
+}
+
 // ! ----------> GENERATIONS <----------
 
 export type GetFaceOffsResponse = QuestionGenerations[];
