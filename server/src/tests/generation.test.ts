@@ -14,6 +14,7 @@ describe("filterGameRoundGenerationsByQuestionId", () => {
           userId: 5,
           text: "A dog eating a burger",
           questionId: 2,
+          gameId: 2,
           imageUrl: "LINK TO IMAGE",
         },
         question: {
@@ -38,6 +39,7 @@ describe("filterGameRoundGenerationsByQuestionId", () => {
           userId: 6,
           text: "A dog eating a salmon",
           questionId: 2,
+          gameId: 2,
           imageUrl: "LINK TO IMAGE",
         },
         question: {
@@ -62,6 +64,7 @@ describe("filterGameRoundGenerationsByQuestionId", () => {
           userId: 7,
           text: "A dog eating a pop tart",
           questionId: 2,
+          gameId: 2,
           imageUrl: "LINK TO IMAGE",
         },
         question: {
@@ -86,6 +89,7 @@ describe("filterGameRoundGenerationsByQuestionId", () => {
           userId: 8,
           text: "A dog eating a hot dog",
           questionId: 2,
+          gameId: 2,
           imageUrl: "LINK TO IMAGE",
         },
         question: {

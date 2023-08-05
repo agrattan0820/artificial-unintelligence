@@ -30,6 +30,7 @@ export type Generation = {
   imageUrl: string;
   userId: number;
   questionId: number;
+  gameId: number;
   createdAt: string;
 };
 export type Question = {
