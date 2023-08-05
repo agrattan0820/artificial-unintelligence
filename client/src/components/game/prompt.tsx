@@ -131,9 +131,15 @@ const Prompt = ({
   const currQuestion = stage === "FIRST" ? questions[0] : questions[1];
 
   const [loading, setLoading] = useState(false);
-  const [imagePrompt, setImagePrompt] = useState("");
-  const [imageOption1, setImageOption1] = useState("");
-  const [imageOption2, setImageOption2] = useState("");
+  const [imagePrompt, setImagePrompt] = useState(
+    window.localStorage.getItem("prompt") ?? ""
+  );
+  const [imageOption1, setImageOption1] = useState(
+    window.localStorage.getItem("image1") ?? ""
+  );
+  const [imageOption2, setImageOption2] = useState(
+    window.localStorage.getItem("image2") ?? ""
+  );
   const [selectedImage, setSelectedImage] = useState<ImageOption>();
 
   const imagesLoaded = imageOption1 && imageOption2;
@@ -151,29 +157,34 @@ const Prompt = ({
     } else {
       setImageOption1(images[0].url ?? "");
       setImageOption2(images[1].url ?? "");
+      setImagePrompt(formPrompt);
+
+      window.localStorage.setItem("prompt", formPrompt ?? "");
+      window.localStorage.setItem("image1", images[0].url ?? "");
+      window.localStorage.setItem("image2", images[1].url ?? "");
     }
 
     setLoading(false);
   };
 
-  const handleImagePromptChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setImagePrompt(e.target.value);
-  };
-
-  const resetImages = () => {
+  const resetImageAndPrompt = () => {
+    setImagePrompt("");
     setImageOption1("");
     setImageOption2("");
     setSelectedImage(undefined);
+    window.localStorage.removeItem("prompt");
+    window.localStorage.removeItem("image1");
+    window.localStorage.removeItem("image2");
   };
 
   const onTryAnotherPrompt = () => {
     if (userId !== undefined) {
-      resetImages();
+      resetImageAndPrompt();
       incrementRegenerationCountMutation.mutate({ gameId, userId });
       return;
     }
-
-    toast.error("Unable to try another prompt");
+    console.error("User was not defined when trying to use another prompt");
+    toast.error("Oops, unable to try another prompt.");
   };
 
   const onImageSubmit = async () => {
@@ -188,20 +199,21 @@ const Prompt = ({
         text: imagePrompt,
         userId: user?.id,
       });
+    } else {
+      console.error("User was not defined when trying to submit a generation");
+      toast.error("Oops, we can't submit your generation.");
     }
 
     if (stage === "FIRST") {
       setStage("SECOND");
       setImagePrompt("");
-      resetImages();
+      resetImageAndPrompt();
     } else {
       send({ type: "SUBMIT" });
     }
 
     setLoading(false);
   };
-
-  console.log("[REGENERATION COUNT]", regenerationCount);
 
   return (
     <motion.div layout className="max-w-2xl">
@@ -246,7 +258,9 @@ const Prompt = ({
                 cols={33}
                 maxLength={500}
                 className="peer w-full resize-none rounded-xl border-2 border-gray-300 bg-transparent p-4 placeholder-transparent focus:border-indigo-600 focus:outline-none focus:dark:border-indigo-300"
-                onChange={handleImagePromptChange}
+                defaultValue={
+                  window.localStorage.getItem("prompt") ?? undefined
+                }
                 required
               />
               <label
