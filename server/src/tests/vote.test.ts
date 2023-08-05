@@ -41,6 +41,7 @@ describe("createVoteMap", () => {
         userId: 3,
         text: "A dog eating a Pop Tart",
         questionId: 2,
+        gameId: 2,
         imageUrl: "LINK TO IMAGE",
       },
       {
@@ -49,6 +50,7 @@ describe("createVoteMap", () => {
         userId: 4,
         text: "A dog eating a burger",
         questionId: 2,
+        gameId: 2,
         imageUrl: "LINK TO IMAGE",
       },
     ];

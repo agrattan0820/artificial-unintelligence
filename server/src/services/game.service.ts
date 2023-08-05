@@ -199,3 +199,39 @@ export async function addUsersToGame({
 
   return usersToGame;
 }
+
+export async function getUserRegenerationCount({
+  gameId,
+  userId,
+}: {
+  gameId: number;
+  userId: number;
+}) {
+  const regenerationCount = await db
+    .select({ count: usersToGames.regenerationCount })
+    .from(usersToGames)
+    .where(
+      and(eq(usersToGames.userId, userId), eq(usersToGames.gameId, gameId))
+    );
+
+  return regenerationCount[0].count;
+}
+
+export async function incrementUserRegenerationCount({
+  gameId,
+  userId,
+}: {
+  gameId: number;
+  userId: number;
+}) {
+  const currentCount = await getUserRegenerationCount({ gameId, userId });
+  const incrementedCount = await db
+    .update(usersToGames)
+    .set({ regenerationCount: currentCount + 1 })
+    .where(
+      and(eq(usersToGames.userId, userId), eq(usersToGames.gameId, gameId))
+    )
+    .returning();
+
+  return incrementedCount[0].regenerationCount;
+}

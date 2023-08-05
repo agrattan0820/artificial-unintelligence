@@ -30,6 +30,7 @@ export type Generation = {
   imageUrl: string;
   userId: number;
   questionId: number;
+  gameId: number;
   createdAt: string;
 };
 export type Question = {
@@ -169,6 +170,57 @@ export async function getLeaderboardById({ gameId }: { gameId: number }) {
   });
 
   const data: GetGameLeaderboardResponse = await response.json();
+
+  return data;
+}
+
+export type GetRegenerationCountResponse = { count: number };
+
+export async function getRegenerationCount({
+  gameId,
+  userId,
+}: {
+  gameId: number;
+  userId: number;
+}) {
+  const response = await fetch(
+    `${URL}/game/${gameId}/regenerations/${userId}`,
+    {
+      cache: "no-store",
+    }
+  );
+
+  const data: GetRegenerationCountResponse = await response.json();
+
+  return data;
+}
+
+export type incrementUserRegenerationCountResponse = {
+  room: Room;
+};
+
+export async function incrementUserRegenerationCount({
+  gameId,
+  userId,
+}: {
+  gameId: number;
+  userId: number;
+}) {
+  const response = await fetch(
+    `${URL}/game/${gameId}/regenerations/${userId}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId,
+        gameId,
+      }),
+    }
+  );
+
+  const data: incrementUserRegenerationCountResponse = await response.json();
 
   return data;
 }

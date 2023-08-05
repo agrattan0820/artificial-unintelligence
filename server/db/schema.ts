@@ -81,6 +81,7 @@ export const generations = pgTable("generations", {
   userId: integer("user_id")
     .references(() => users.id)
     .notNull(),
+  gameId: integer("game_id").references(() => games.id), // TODO make gameId not null
   questionId: integer("question_id")
     .references(() => questions.id)
     .notNull(),
@@ -110,6 +111,7 @@ export const usersToGames = pgTable(
       .references(() => games.id)
       .notNull(),
     points: integer("points").default(0).notNull(),
+    regenerationCount: integer("regeneration_count").default(0).notNull(),
   },
   (table) => ({
     cpk: primaryKey(table.userId, table.gameId),
