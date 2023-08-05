@@ -34,15 +34,15 @@ export async function getGameRoundGenerations({
     .from(generations)
     .innerJoin(
       questionsToGames,
-      eq(questionsToGames.questionId, generations.questionId)
+      and(
+        eq(questionsToGames.gameId, generations.gameId),
+        eq(questionsToGames.questionId, generations.questionId)
+      )
     )
     .innerJoin(questions, eq(questions.id, generations.questionId))
     .innerJoin(users, eq(users.id, generations.userId))
     .where(
-      and(
-        eq(questionsToGames.gameId, gameId),
-        eq(questionsToGames.round, round)
-      )
+      and(eq(generations.gameId, gameId), eq(questionsToGames.round, round))
     )
     .orderBy(asc(questionsToGames.createdAt), asc(questionsToGames.questionId));
 
