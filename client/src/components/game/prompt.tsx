@@ -65,44 +65,10 @@ const Prompt = ({
       }
     );
 
-  // Mutation that follows TanStack Query's guide on optimistic updates
-  // https://tanstack.com/query/v4/docs/react/guides/optimistic-updates
   const incrementRegenerationCountMutation = useMutation({
     mutationFn: ({ gameId, userId }: { gameId: number; userId: number }) => {
       return incrementUserRegenerationCount({ gameId, userId });
     },
-    onMutate: async ({ gameId, userId }) => {
-      // Cancel any outgoing refetches
-      // (so they don't overwrite our optimistic update)
-      await queryClient.cancelQueries({
-        queryKey: regenerationCountQueryKey,
-      });
-
-      // Snapshot the previous value
-      const previousCount = queryClient.getQueryData(regenerationCountQueryKey);
-
-      // Optimistically update to the new value
-      queryClient.setQueryData(regenerationCountQueryKey, (old) =>
-        typeof old === "object" &&
-        old &&
-        "count" in old &&
-        typeof old.count === "number"
-          ? { count: old.count + 1 }
-          : old
-      );
-
-      // Return a context object with the snapshotted value
-      return { previousCount };
-    },
-    // If the mutation fails,
-    // use the context returned from onMutate to roll back
-    onError: (err, { gameId, userId }, context) => {
-      queryClient.setQueryData(
-        regenerationCountQueryKey,
-        context?.previousCount
-      );
-    },
-    // Always refetch after error or success:
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: regenerationCountQueryKey });
     },
