@@ -119,6 +119,7 @@ export async function createGeneration(data: NewGeneration) {
     .values({
       imageUrl: data.imageUrl,
       questionId: data.questionId,
+      gameId: data.gameId,
       text: data.text,
       userId: data.userId,
     })
