@@ -1,4 +1,5 @@
 import { Socket } from "socket.io";
+import * as Sentry from "@sentry/node";
 import { ClientToServerEvents, ServerToClientEvents } from "./types";
 
 export function getRandomInt(min: number, max: number) {
@@ -25,5 +26,6 @@ export function handleSocketError(
 ) {
   console.error("Socket Error: ", e);
   socket.emit("error", e.message);
+  Sentry.captureException(e);
   if (code) socket.to(code).emit("error", e.message);
 }
