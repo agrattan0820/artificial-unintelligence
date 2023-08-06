@@ -34,6 +34,7 @@ export function voteSocketHandlers(
 
       const questionVotes = await getVotesByQuestionId({
         questionId: data.questionId,
+        gameId: data.gameId,
       });
 
       socket.emit("votedPlayers", questionVotes);
@@ -72,7 +73,8 @@ export function voteSocketHandlers(
         });
       }
     } catch (error) {
-      if (error instanceof Error) handleSocketError(error, socket);
+      if (error instanceof Error)
+        handleSocketError(error, socket, socket.handshake.auth.roomCode);
     }
   });
 }
