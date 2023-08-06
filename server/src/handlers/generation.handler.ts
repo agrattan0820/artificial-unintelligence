@@ -51,7 +51,8 @@ export function generationSocketHandlers(
         });
       }
     } catch (error) {
-      if (error instanceof Error) handleSocketError(error, socket);
+      if (error instanceof Error)
+        handleSocketError(error, socket, socket.handshake.auth.roomCode);
     }
   });
 }
