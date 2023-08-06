@@ -27,13 +27,20 @@ export async function createVote({
 
 export async function getVotesByQuestionId({
   questionId,
+  gameId,
 }: {
   questionId: number;
+  gameId: number;
 }) {
   const getAssociatedGenerations = await db
     .select()
     .from(generations)
-    .where(and(eq(generations.questionId, questionId)));
+    .where(
+      and(
+        eq(generations.questionId, questionId),
+        eq(generations.gameId, gameId)
+      )
+    );
 
   const questionVotes = await db
     .select({
