@@ -81,7 +81,7 @@ export function gameSocketHandlers(
       socket.emit("playAnotherGame");
       socket.to(code).emit("playAnotherGame");
     } catch (error) {
-      if (error instanceof Error) handleSocketError(error, socket);
+      if (error instanceof Error) handleSocketError(error, socket, code);
     }
   });
 
@@ -112,7 +112,8 @@ export function gameSocketHandlers(
         }
       }
     } catch (error) {
-      if (error instanceof Error) handleSocketError(error, socket);
+      if (error instanceof Error)
+        handleSocketError(error, socket, socket.handshake.auth.roomCode);
     }
   });
 }
