@@ -10,7 +10,7 @@ export default function Home() {
             artif<span className="ml-0.5 inline-block">i</span>cial <br />{" "}
             unintelligence
           </h1>
-          <NicknameForm submitLabel="Start Game" type="HOME" />
+          <NicknameForm submitLabel="Host Game" type="HOME" />
         </div>
         <Friend className="w-32 lg:w-1/4" />
       </section>

@@ -22,7 +22,11 @@ export default async function Invite({ params }: { params: { code: string } }) {
             artif<span className="ml-0.5 inline-block">i</span>cial <br />{" "}
             unintelligence
           </h1>
-          <NicknameForm room={roomInfo} type="INVITE" submitLabel="Join Game" />
+          <NicknameForm
+            room={roomInfo}
+            type="INVITE"
+            submitLabel={`Join Game: ${params.code}`}
+          />
         </div>
         <Friend className="w-32 lg:w-1/4" />
       </section>

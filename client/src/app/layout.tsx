@@ -30,7 +30,7 @@ export default function RootLayout({
       <body
         className={`${spaceMono.variable} font-space antialiased dark:bg-slate-900 dark:text-white`}
       >
-        <Toaster />
+        <Toaster containerStyle={{ textAlign: "center" }} />
         {children}
         <Analytics />
       </body>

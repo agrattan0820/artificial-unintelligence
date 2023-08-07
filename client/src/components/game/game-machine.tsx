@@ -104,7 +104,7 @@ export const gameMachine = createMachine(
 
       faceOffResults: {
         after: {
-          15000: [
+          20000: [
             {
               target: "winnerLeadUp",
               cond: "completedRounds",
@@ -130,18 +130,20 @@ export const gameMachine = createMachine(
 
       winnerLeadUp: {
         after: {
-          5000: "winner",
+          6000: "winner",
         },
       },
 
       winner: {
         after: {
-          10000: "leaderboard",
+          20000: "leaderboard",
         },
       },
 
       leaderboard: {
-        type: "final",
+        on: {
+          NEXT: { target: "connectingToMainframe", actions: "resetContext" },
+        },
       },
     },
   },
@@ -153,6 +155,10 @@ export const gameMachine = createMachine(
       }),
       incrementQuestionIdx: assign({
         questionIdx: (context) => context.questionIdx + 1,
+      }),
+      resetContext: assign({
+        round: 1,
+        questionIdx: 0,
       }),
     },
     guards: {
@@ -208,7 +214,7 @@ export const getCurrentComponent = (
     ),
     promptDone: (
       <TransitionWrapper key="promptDone">
-        <AnnouncementText text="All Participants Have Submitted!" />
+        <AnnouncementText text="All participants have submitted!" />
       </TransitionWrapper>
     ),
     faceOff: (

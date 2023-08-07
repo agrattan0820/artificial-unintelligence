@@ -4,7 +4,7 @@ import { FormEvent, useState } from "react";
 import Ellipsis from "./ellipsis";
 import { useStore } from "@ai/utils/store";
 import { useRouter } from "next/navigation";
-// import { createHost, joinRoom } from "@ai/app/supabase-actions";
+
 import {
   RoomInfo,
   createHost,
@@ -91,7 +91,7 @@ const NicknameForm = ({ room, submitLabel, type }: NicknameFormProps) => {
         required
         label="Enter a cool nickname"
       />
-      <div className="mt-8 space-x-2">
+      <div className="mt-8 gap-x-2 gap-y-4 flex flex-wrap">
         <Button type="submit" disabled={loading}>
           {!loading ? <>{submitLabel}</> : <Ellipsis />}
         </Button>

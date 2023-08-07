@@ -68,7 +68,7 @@ const FaceOff = ({
               initial={{ y: 10, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 10, opacity: 0 }}
-              className="text-center text-lg md:text-2xl"
+              className="text-2xl"
             >
               {currQuestionGenerations.question.text}
             </motion.h2>
@@ -86,9 +86,9 @@ const FaceOff = ({
             setSelectedImage={setSelectedImage}
             disabled={currUserInFaceOff}
           />
-          <div className="mt-4">
+          <div className="mt-8">
             {currUserInFaceOff || voteSubmitted ? (
-              <p>Waiting for other players to finish voting...</p>
+              <p>Waiting for other AI trainers to finish voting...</p>
             ) : (
               <Button
                 onClick={onImageChoice}
