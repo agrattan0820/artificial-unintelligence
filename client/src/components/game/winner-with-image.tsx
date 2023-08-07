@@ -14,6 +14,7 @@ const Winner = () => {
     const controls = animate(count, 1500, { duration: 3 });
 
     return controls.stop;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

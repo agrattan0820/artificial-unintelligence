@@ -31,7 +31,7 @@ const UserList = ({
             <motion.span className="rounded-full border-2 border-black">
               <FiUser className="text-2xl" />
             </motion.span>
-            <motion.span className="flex flex-col text-xl">
+            <motion.span className="flex flex-col md:text-xl">
               {player.nickname}
               <span className="text-xs">{player.id === hostId && "host"}</span>
             </motion.span>

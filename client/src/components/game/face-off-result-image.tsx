@@ -2,6 +2,7 @@
 
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import {
+  AnimatePresence,
   AnimationPlaybackControls,
   MotionStyle,
   Variants,
@@ -26,12 +27,12 @@ const imageVariants: Variants = {
     y: 0,
   },
   winner: {
-    scale: 1.1,
+    // scale: 1.1,
     opacity: 1,
     y: 0,
   },
   loser: {
-    scale: 0.8,
+    // scale: 0.8,
     opacity: 1,
     y: 0,
   },
@@ -47,32 +48,14 @@ const captionVariants: Variants = {
     y: 0,
     transition: {
       delayChildren: 1,
-      staggerChildren: 0.5,
     },
   },
   loser: {
     opacity: 1,
     y: 0,
     transition: {
-      delay: 2.5,
       delayChildren: 2.5,
-      staggerChildren: 0.5,
     },
-  },
-};
-
-const captionItemVariants: Variants = {
-  hidden: {
-    opacity: 0,
-    y: -25,
-  },
-  winner: {
-    opacity: 1,
-    y: 0,
-  },
-  loser: {
-    opacity: 1,
-    y: 0,
   },
 };
 
@@ -127,6 +110,7 @@ const FaceOffResultImage = ({
   image,
   bothImagesShown,
   showWinner,
+  showLoser,
   winningImage,
   votes,
   pointIncrease,
@@ -139,6 +123,7 @@ const FaceOffResultImage = ({
   image: string | StaticImageData;
   bothImagesShown: boolean;
   showWinner: boolean;
+  showLoser: boolean;
   winningImage: 1 | 2;
   votes: string[];
   pointIncrease: number;
@@ -173,10 +158,11 @@ const FaceOffResultImage = ({
   }, [bothImagesShown, pointIncrease]);
 
   const isWinner = winningImage === id && showWinner;
-  const isLoser = winningImage !== id && showWinner;
+  const isLoser = winningImage !== id && showLoser;
 
   return (
     <motion.figure
+      layout="position"
       initial={false}
       animate={
         isWinner
@@ -238,23 +224,44 @@ const FaceOffResultImage = ({
         <BsTrophy />
       </div>
       <motion.figcaption
+        layout="position"
         initial={false}
         animate={isWinner ? "winner" : isLoser ? "loser" : "hidden"}
         variants={captionVariants}
         className="py-4"
       >
-        <motion.p variants={captionItemVariants} className="mb-4">
-          {prompt}
-        </motion.p>
-        <motion.div
-          variants={captionItemVariants}
-          className="flex justify-between"
-        >
-          <h3 className="text-lg text-indigo-700 dark:text-indigo-300">
-            {nickname}
-          </h3>{" "}
-          <p>{percentage.toLocaleString()}%</p>
-        </motion.div>
+        <AnimatePresence>
+          {(isWinner || isLoser) && (
+            <motion.p
+              key="prompt"
+              initial={{ opacity: 0, y: -25 }}
+              animate={{
+                opacity: 1,
+                y: 0,
+              }}
+              className="mb-4"
+            >
+              {prompt}
+            </motion.p>
+          )}
+          {(isWinner || isLoser) && (
+            <motion.div
+              key="nickname"
+              initial={{ opacity: 0, y: -25 }}
+              animate={{
+                opacity: 1,
+                y: 0,
+                transition: { delay: 0.5 },
+              }}
+              className="flex justify-between"
+            >
+              <h3 className="text-lg text-indigo-700 dark:text-indigo-300">
+                {nickname}
+              </h3>{" "}
+              <p>{percentage.toLocaleString()}%</p>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.figcaption>
     </motion.figure>
   );

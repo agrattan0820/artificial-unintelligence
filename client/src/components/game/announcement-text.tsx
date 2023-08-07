@@ -12,7 +12,7 @@ const AnnouncementText = ({ text }: AnnouncementTextProps) => {
       <motion.h2
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
-        className="text-6xl"
+        className="text-3xl md:text-5xl"
       >
         {text}
       </motion.h2>

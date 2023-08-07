@@ -37,14 +37,14 @@ export async function getLeaderboardByIdController(
   try {
     const id = Number.parseInt(req.params.id);
 
-    const gameInfo = await getLeaderboardById({ gameId: id });
+    const leaderboard = await getLeaderboardById({ gameId: id });
 
-    if (!gameInfo) {
+    if (!leaderboard) {
       res.status(404).send({ error: `Game with an id of ${id} was not found` });
       return;
     }
 
-    res.status(200).send(gameInfo);
+    res.status(200).send(leaderboard);
   } catch (error) {
     next(error);
   }

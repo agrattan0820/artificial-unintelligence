@@ -34,8 +34,13 @@ export default function HowToPlay() {
           Artificial Unintelligence is a game inspired by party games like{" "}
           <a href="https://www.jackboxgames.com/quiplash/">
             Jackbox Party Pack&apos;s Quiplash
-          </a>{" "}
-          and <a href="https://garticphone.com/">Onrizon&apos;s Garticphone</a>.
+          </a>
+          , <a href="https://garticphone.com/">Onrizon&apos;s Garticphone</a>,
+          and
+          <a href="https://fishbowl-game.com/">
+            Avi Moondra&apos;s Fishbowl Game
+          </a>
+          .
         </p>
         <p>
           Starting a game of Artificial Unintelligence will create a room with a
@@ -71,14 +76,16 @@ export default function HowToPlay() {
           <li>Generation</li>
           <li>Face-Off</li>
         </ol>
-        <h2>Generation Phase</h2>
+        <h2 id="generation">Generation Phase</h2>
         <p>
           During the &quot;Generation&quot; phase, each player will be given two
-          prompts that they will base off of for the AI-generated images. Both
-          prompts each player receives is shared with another player in the game
-          and the two resulting images submitted by both players for a given
-          prompt will compete for votes from other players during the
-          &quot;Face-Off&quot; phase.
+          prompts. These prompts will be the basis for the AI-generated images
+          the players create. Each of the two prompts a player receives is
+          shared with another player in the game. Once all players create and
+          submit images for their two assigned prompts, the game transitions to
+          the <a href="#faceOff">&quot;Face-Off&quot;</a> phase where the image
+          generations compete against whichever counterpart shared the same
+          original prompt.
         </p>
         <ImageFigure
           image={{
@@ -105,7 +112,7 @@ export default function HowToPlay() {
           To submit an image, click or tap on the image you want to appear in
           the face-off and then press the submit button.
         </blockquote>
-        <h2>Face-Off Phase</h2>
+        <h2 id="faceOff">Face-Off Phase</h2>
         <p>
           The &quot;Face-Off&quot; phase showcases all of the player-submitted
           images in 1v1 duels where all players excluding those who have an
@@ -141,8 +148,8 @@ export default function HowToPlay() {
         </p>
         <p>
           Once all duels have been completed for the round, the game will return
-          to the &quot;Generation&quot; phase until a total of 3 rounds have
-          been completed.
+          to the <a href="#generation">&quot;Generation&quot;</a> phase until a
+          total of 3 rounds have been completed.
         </p>
         <h2>Scoring and Winning the Game</h2>
         <p>

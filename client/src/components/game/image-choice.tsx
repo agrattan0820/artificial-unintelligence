@@ -114,7 +114,7 @@ const ImageChoice = ({
   };
 
   return (
-    <div className="flex gap-6">
+    <div className="flex flex-col md:flex-row gap-6">
       {imageOption1.src && (
         <ImageChoiceOption
           image={imageOption1}
