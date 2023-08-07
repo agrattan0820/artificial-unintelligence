@@ -59,7 +59,7 @@ const Leaderboard = ({ gameInfo, leaderboard, hostId }: LeaderboardProps) => {
   return (
     <div className="mx-auto max-w-2xl text-center">
       <div className="mb-16">
-        <motion.div className="relative mb-2 flex justify-center">
+        <motion.div className="relative mb-4 flex justify-center">
           <motion.div
             className="absolute top-[-52px]"
             initial={{ rotate: 12, y: -15, opacity: 0 }}
@@ -79,7 +79,7 @@ const Leaderboard = ({ gameInfo, leaderboard, hostId }: LeaderboardProps) => {
         <motion.h2
           initial={{ y: 15, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="text-3xl md:text-4xl"
+          className="text-2xl md:text-4xl [text-wrap:balance]"
         >
           Thanks for training with us!
         </motion.h2>
@@ -97,7 +97,7 @@ const Leaderboard = ({ gameInfo, leaderboard, hostId }: LeaderboardProps) => {
             variants={leaderboardListItemVariants}
           >
             {i + 1}.
-            <div className="flex w-full justify-between gap-2 rounded-xl p-4 text-left text-xl dark:bg-slate-800">
+            <div className="flex w-full justify-between gap-2 rounded-xl p-4 text-left md:text-xl dark:bg-slate-800">
               <p className="flex items-center gap-4">
                 {result.user.nickname}{" "}
                 {i === 0 && (
@@ -106,7 +106,9 @@ const Leaderboard = ({ gameInfo, leaderboard, hostId }: LeaderboardProps) => {
                   </span>
                 )}
               </p>
-              <p>{result.points.toLocaleString()} points</p>
+              <p className="flex justify-center items-center">
+                {result.points.toLocaleString()} points
+              </p>
             </div>
           </motion.li>
         ))}

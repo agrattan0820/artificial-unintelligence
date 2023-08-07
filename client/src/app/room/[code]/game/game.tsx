@@ -122,7 +122,10 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
     () => getLeaderboardById({ gameId }),
     {
       enabled:
-        !!gameId && (state.matches("winnerLeadUp") || state.matches("winner")),
+        !!gameId &&
+        (state.matches("winnerLeadUp") ||
+          state.matches("winner") ||
+          state.matches("leaderboard")),
     }
   );
 
@@ -140,8 +143,9 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
   // Handle "play another game" request from server
   // Refresh page to acquire new server-rendered `gameInfo`
   const handlePlayAnotherGame = useCallback(() => {
+    send("NEXT");
     router.refresh();
-  }, [router]);
+  }, [router, send]);
 
   // Send new state to server
   useEffect(() => {
@@ -200,7 +204,7 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
 
   return (
     <main className="flex min-h-[100dvh] flex-col justify-center">
-      <section className="container mx-auto px-4">
+      <section className="container mx-auto px-4 py-16">
         <AnimatePresence mode="wait">
           {isMounted ? currentComponent : null}
         </AnimatePresence>

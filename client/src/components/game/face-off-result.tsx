@@ -65,19 +65,25 @@ const FaceOffResult = ({
   const [showImage1, setShowImage1] = useState(false);
   const [showImage2, setShowImage2] = useState(false);
   const [showWinner, setShowWinner] = useState(false);
+  const [showLoser, setShowLoser] = useState(false);
 
   const bothShown = showImage1 && showImage2;
 
   useEffect(() => {
     let winnerTimeout: NodeJS.Timeout;
+    let loserTimeout: NodeJS.Timeout;
     if (showImage1 && showImage2) {
       winnerTimeout = setTimeout(() => {
         setShowWinner(true);
       }, 2000);
+      loserTimeout = setTimeout(() => {
+        setShowLoser(true);
+      }, 4500);
     }
 
     return () => {
       clearTimeout(winnerTimeout);
+      clearTimeout(loserTimeout);
     };
   }, [showImage1, showImage2]);
 
@@ -88,18 +94,19 @@ const FaceOffResult = ({
   return (
     <div className="mx-auto max-w-2xl">
       <div className="relative mb-14">
-        <div className="rounded-xl p-4">
-          <motion.h2
-            initial={{ y: 10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 10, opacity: 0 }}
-            className="text-center text-lg md:text-2xl"
-          >
-            {currQuestionGenerations.question.text}
-          </motion.h2>
-        </div>
+        <motion.h2
+          initial={{ y: 10, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: 10, opacity: 0 }}
+          className="text-2xl"
+        >
+          {currQuestionGenerations.question.text}
+        </motion.h2>
       </div>
-      <div className="mb-16 flex gap-6">
+      <motion.div
+        layout="position"
+        className="mb-16 flex flex-col md:flex-row gap-y-4 gap-x-6"
+      >
         <FaceOffResultImage
           id={1}
           prompt={image1.text}
@@ -108,6 +115,7 @@ const FaceOffResult = ({
           image={image1.imageUrl}
           bothImagesShown={bothShown}
           showWinner={showWinner}
+          showLoser={showLoser}
           winningImage={winningImage}
           votes={voteMap.player1Votes.map(
             (votedPlayer) => votedPlayer.user.nickname
@@ -123,6 +131,7 @@ const FaceOffResult = ({
           image={image2.imageUrl}
           bothImagesShown={bothShown}
           showWinner={showWinner}
+          showLoser={showLoser}
           winningImage={winningImage}
           votes={voteMap.player2Votes.map(
             (votedPlayer) => votedPlayer.user.nickname
@@ -130,7 +139,7 @@ const FaceOffResult = ({
           pointIncrease={image2Points}
           setShowImage={setShowImage2}
         />
-      </div>
+      </motion.div>
     </div>
   );
 };

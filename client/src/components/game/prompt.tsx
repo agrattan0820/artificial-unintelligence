@@ -184,11 +184,12 @@ const Prompt = ({
   };
 
   return (
-    <motion.div layout className="max-w-2xl">
+    <motion.div layout="position" className="max-w-2xl">
       {/* <Timer totalSeconds={90} /> */}
       <div className="relative mb-14">
         <AnimatePresence>
           <motion.h2
+            layout="position"
             initial={{ y: 10, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 10, opacity: 0 }}
@@ -246,7 +247,7 @@ const Prompt = ({
         {imagesLoaded && (
           <div className="mt-4">
             <p className="mb-8">{imagePrompt}</p>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-y-4 gap-x-2">
               <Button
                 onClick={onImageSubmit}
                 disabled={!selectedImage || loading}

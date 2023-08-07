@@ -9,7 +9,7 @@ type NextRoundProps = {
 
 const NextRound = ({ nextQueryNum, totalQueries }: NextRoundProps) => {
   return (
-    <h2 className="relative text-center text-5xl">
+    <h2 className="relative text-center text-3xl md:text-5xl">
       Round{" "}
       <span className="relative">
         <span className="opacity-0">{nextQueryNum}</span>
