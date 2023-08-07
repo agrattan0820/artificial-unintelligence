@@ -37,7 +37,10 @@ export default function HowToPlay() {
           </a>
           , <a href="https://garticphone.com/">Onrizon&apos;s Garticphone</a>,
           and
-          <a href="https://fishbowl-game.com/">Avi Moondra's Fishbowl Game</a>.
+          <a href="https://fishbowl-game.com/">
+            Avi Moondra&apos;s Fishbowl Game
+          </a>
+          .
         </p>
         <p>
           Starting a game of Artificial Unintelligence will create a room with a
