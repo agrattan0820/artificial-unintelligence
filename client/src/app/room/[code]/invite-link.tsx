@@ -23,11 +23,10 @@ const InviteLink = ({ code }: { code: string }) => {
 
   return (
     <button
-      className="mx-auto flex w-full items-center justify-center gap-2 rounded-xl border-2 border-indigo-600 p-8 text-xl underline-offset-2 hover:underline sm:w-auto"
+      className="mx-auto hidden sm:flex w-full items-center justify-center gap-2 rounded-xl border-2 border-indigo-600 p-8 text-xl underline-offset-2 hover:underline sm:w-auto"
       onClick={onClick}
     >
-      <span className="sm:hidden">{code}</span>
-      <span className="hidden sm:inline-block">{link}</span>
+      <span>{link}</span>
       <span>{copying ? <FiCheckSquare /> : <FiCopy />}</span>
     </button>
   );

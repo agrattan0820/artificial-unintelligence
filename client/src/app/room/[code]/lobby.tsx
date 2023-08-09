@@ -55,13 +55,10 @@ export default function Lobby({ roomInfo }: { roomInfo: RoomInfo }) {
   }, [handleStartGame, roomInfo.code, socket, user?.id]);
 
   return (
-    <motion.main layout className="flex min-h-[100dvh] flex-col justify-center">
-      <section className="container mx-auto px-4">
-        <p className="hidden md:block mb-2 text-center md:text-xl">
+    <main className="flex min-h-[100dvh] flex-col justify-center">
+      <motion.section layout="position" className="container mx-auto px-4">
+        <p className="hidden sm:block mb-2 text-center text-xl">
           Your Invite Link is
-        </p>
-        <p className="md:hidden mb-2 text-center md:text-xl">
-          Your Room Code is
         </p>
         <InviteLink code={roomInfo.code} />
         <div className="mx-auto mt-4 flex items-center justify-center md:absolute md:left-8 md:top-8">
@@ -75,7 +72,7 @@ export default function Lobby({ roomInfo }: { roomInfo: RoomInfo }) {
           onStartGame={initiateStartGame}
           loading={startGameLoading}
         />
-      </section>
-    </motion.main>
+      </motion.section>
+    </main>
   );
 }
