@@ -21,7 +21,7 @@ const UserList = ({
       <AnimatePresence>
         {players.map((player, i) => (
           <motion.li
-            layout
+            layout="position"
             key={i}
             className={cn(
               "flex items-center gap-3 rounded-xl border-2 bg-slate-900 p-4",
