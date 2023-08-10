@@ -1,4 +1,4 @@
-import { and, asc, desc, eq } from "drizzle-orm";
+import { and, asc, desc, eq, inArray } from "drizzle-orm";
 import { db } from "../../db/db";
 import {
   NewGame,
@@ -156,7 +156,23 @@ export async function getLeaderboardById({ gameId }: { gameId: number }) {
     .where(eq(usersToGames.gameId, gameId))
     .orderBy(desc(usersToGames.points));
 
-  const winningUser = userListOrderedByPoints[0];
+  let standing = 0;
+  const userListWithStandings = userListOrderedByPoints.map((result, i) => {
+    if (i === 0 || userListOrderedByPoints[i - 1].points !== result.points) {
+      standing++;
+    }
+
+    return {
+      ...result,
+      standing,
+    };
+  });
+
+  const winners = userListWithStandings.filter(
+    (player) => player.standing === 1
+  );
+
+  const winningUserIds = winners.map((winner) => winner.user.id);
 
   const winningUserGenerations = await db
     .select({
@@ -170,13 +186,13 @@ export async function getLeaderboardById({ gameId }: { gameId: number }) {
     )
     .where(
       and(
-        eq(generations.userId, winningUser.user.id),
+        inArray(generations.userId, winningUserIds),
         eq(questionsToGames.gameId, gameId)
       )
     );
 
   return {
-    leaderboard: userListOrderedByPoints,
+    leaderboard: userListWithStandings,
     winningGenerations: winningUserGenerations,
   };
 }

@@ -9,7 +9,7 @@ import {
   Variants,
   AnimationPlaybackControls,
 } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { EventFrom, StateFrom } from "xstate";
 
 import Crown from "@ai/images/crown.webp";
@@ -21,6 +21,25 @@ type WinnerProps = {
   state: StateFrom<typeof gameMachine>;
   send: (event: EventFrom<typeof gameMachine>) => StateFrom<typeof gameMachine>;
   leaderboard: GetGameLeaderboardResponse | undefined;
+};
+
+const imageListVariants: Variants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.3,
+    },
+  },
+};
+const imageListItemVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 15,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+  },
 };
 
 const Winner = ({ gameInfo, state, send, leaderboard }: WinnerProps) => {
@@ -52,31 +71,38 @@ const Winner = ({ gameInfo, state, send, leaderboard }: WinnerProps) => {
     };
   }, []);
 
-  const imageListVariants: Variants = {
-    hidden: {},
-    visible: {
-      transition: {
-        staggerChildren: 0.3,
-      },
-    },
-  };
-  const imageListItemVariants: Variants = {
-    hidden: {
-      opacity: 0,
-      y: 15,
-    },
-    visible: {
-      opacity: 1,
-      y: 0,
-    },
-  };
+  const winners = useMemo(
+    () =>
+      leaderboard
+        ? leaderboard.leaderboard.filter((player) => player.standing === 1)
+        : [],
+    [leaderboard]
+  );
+
+  const winningImages = leaderboard ? leaderboard.winningGenerations : [];
+
+  const winnerTitle = useMemo(() => {
+    if (!leaderboard) {
+      return "";
+    }
+
+    if (winners.length === 1) {
+      return winners[0].user.nickname;
+    }
+
+    if (winners.length === 2) {
+      return `${winners[0].user.nickname} and ${winners[1].user.nickname}`;
+    }
+
+    return `${winners
+      .map((winner) => winner.user.nickname)
+      .slice(0, winners.length - 1)
+      .join(", ")}, and ${winners[winners.length - 1].user.nickname}`;
+  }, [leaderboard, winners]);
 
   if (!leaderboard) {
     return null;
   }
-
-  const winnningUser = leaderboard.leaderboard[0];
-  const winningImages = leaderboard.winningGenerations;
 
   return (
     <motion.div layout className="mx-auto max-w-2xl text-center">
@@ -98,7 +124,7 @@ const Winner = ({ gameInfo, state, send, leaderboard }: WinnerProps) => {
           transition={{ delay: 1 }}
           className="mb-5 text-4xl md:text-7xl"
         >
-          {winnningUser.user.nickname}
+          {winnerTitle}
         </motion.h3>
         <motion.p
           initial={{ scale: 0, opacity: 0 }}
