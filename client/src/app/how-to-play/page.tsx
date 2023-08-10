@@ -36,7 +36,7 @@ export default function HowToPlay() {
             Jackbox Party Pack&apos;s Quiplash
           </a>
           , <a href="https://garticphone.com/">Onrizon&apos;s Garticphone</a>,
-          and
+          and{" "}
           <a href="https://fishbowl-game.com/">
             Avi Moondra&apos;s Fishbowl Game
           </a>
