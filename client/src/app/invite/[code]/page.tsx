@@ -1,5 +1,6 @@
 import { getRoomInfo } from "@ai/app/server-actions";
 import ErrorScreen from "@ai/components/error-screen";
+import Footer from "@ai/components/footer";
 import Friend from "@ai/components/game/friend";
 import NicknameForm from "@ai/components/nickname-form";
 
@@ -25,11 +26,12 @@ export default async function Invite({ params }: { params: { code: string } }) {
           <NicknameForm
             room={roomInfo}
             type="INVITE"
-            submitLabel={`Join Game: ${params.code}`}
+            submitLabel={`Join Game`}
           />
         </div>
         <Friend className="w-32 lg:w-1/4" />
       </section>
+      <Footer />
     </main>
   );
 }

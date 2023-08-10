@@ -160,7 +160,7 @@ export async function getGameInfo(code: string) {
 }
 
 export type GetGameLeaderboardResponse = {
-  leaderboard: { user: User; points: number }[];
+  leaderboard: { user: User; points: number; standing: number }[];
   winningGenerations: { question: Question; generation: Generation }[];
 };
 
