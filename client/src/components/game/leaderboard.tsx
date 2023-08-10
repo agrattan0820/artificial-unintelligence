@@ -96,7 +96,7 @@ const Leaderboard = ({ gameInfo, leaderboard, hostId }: LeaderboardProps) => {
             className="relative flex items-center justify-center gap-4"
             variants={leaderboardListItemVariants}
           >
-            {i + 1}.
+            {result.standing}.
             <div className="flex w-full justify-between gap-2 rounded-xl p-4 text-left md:text-xl dark:bg-slate-800">
               <p className="flex items-center gap-4">
                 {result.user.nickname}{" "}
