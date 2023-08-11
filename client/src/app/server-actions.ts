@@ -161,7 +161,8 @@ export async function getGameInfo(code: string) {
 
 export type GetGameLeaderboardResponse = {
   leaderboard: { user: User; points: number; standing: number }[];
-  winningGenerations: { question: Question; generation: Generation }[];
+  // winningGenerations: { question: Question; generation: Generation }[];
+  allGenerations: { question: Question; generation: Generation; user: User }[];
 };
 
 export async function getLeaderboardById({ gameId }: { gameId: number }) {

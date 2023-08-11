@@ -1,7 +1,26 @@
 import { useState } from "react";
 import useIsMounted from "./use-is-mounted";
 
-export default function useShare(slug: string, callback?: () => void) {
+type UseLinkShareProps =
+  | {
+      title: string;
+      customLink: string;
+      slug?: never;
+      callback?: () => void;
+    }
+  | {
+      title: string;
+      customLink?: never;
+      slug: string;
+      callback?: () => void;
+    };
+
+export default function useLinkShare({
+  title,
+  customLink,
+  slug,
+  callback,
+}: UseLinkShareProps) {
   const [copying, setCopying] = useState(false);
   const isMounted = useIsMounted();
 
@@ -13,8 +32,8 @@ export default function useShare(slug: string, callback?: () => void) {
     if (navigator.share) {
       navigator
         .share({
-          title: `Join My Artificial Unintelligence Room`,
-          url: link,
+          title: title,
+          url: customLink ?? link,
         })
         .then(() => {
           console.log(`Thanks for sharing!`);
