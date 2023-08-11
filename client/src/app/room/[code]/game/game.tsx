@@ -9,7 +9,6 @@ import { useRouter } from "next/navigation";
 
 import {
   GameInfo,
-  QuestionGenerations,
   RoomInfo,
   UserVote,
   getFaceOffs,

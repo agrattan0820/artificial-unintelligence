@@ -13,7 +13,6 @@ import { gameMachine } from "./game-machine";
 import Button, { LinkSecondaryButton } from "../button";
 import { SocketContext } from "@ai/utils/socket-provider";
 import { useStore } from "@ai/utils/store";
-import SadDog from "@ai/images/sad-dog.webp";
 import { FiDownload } from "react-icons/fi";
 import useImageShare from "@ai/utils/hooks/use-image-share";
 
@@ -28,7 +27,8 @@ type LeaderboardProps = {
 const Leaderboard = ({ gameInfo, leaderboard, hostId }: LeaderboardProps) => {
   const socket = useContext(SocketContext);
   const { user } = useStore();
-  const { onClick } = useImageShare();
+  // TODO: working mobile image share (likely will have to use base64 images)
+  // const { onClick } = useImageShare();
 
   const currUserIsHost = user && user?.id === hostId;
 
@@ -143,7 +143,9 @@ const Leaderboard = ({ gameInfo, leaderboard, hostId }: LeaderboardProps) => {
               <div className="relative overflow-hidden rounded-xl">
                 <Image
                   className="aspect-square"
-                  src={SadDog}
+                  src={generation.generation.imageUrl}
+                  width={1024}
+                  height={1024}
                   alt={`Image generated with the prompt: ${generation.generation.text}`}
                 />
                 <p className="absolute -left-1 -top-1 max-w-[160px] rounded-b-md rounded-r-md bg-slate-800/75 py-1 pb-2 pl-3 pr-2 pt-3 text-white">
@@ -153,11 +155,12 @@ const Leaderboard = ({ gameInfo, leaderboard, hostId }: LeaderboardProps) => {
                   href={generation.generation.imageUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="absolute -right-1 -top-1 hidden rounded-b-md rounded-l-md bg-slate-800/75 pb-2 pl-2 pr-3 pt-3 text-xl text-white transition hover:ring-2 hover:ring-white md:block"
+                  className="absolute -right-1 -top-1 block rounded-b-md rounded-l-md bg-slate-800/75 pb-2 pl-2 pr-3 pt-3 text-xl text-white transition hover:ring-2 hover:ring-white"
                 >
                   <FiDownload />
                 </a>
-                <button
+                {/* TODO: working mobile share for images */}
+                {/* <button
                   onClick={() =>
                     onClick(
                       "Check out this AI-generated image from Artificial Unintelligence",
@@ -167,7 +170,7 @@ const Leaderboard = ({ gameInfo, leaderboard, hostId }: LeaderboardProps) => {
                   className="absolute -right-1 -top-1 rounded-b-md rounded-l-md bg-slate-800/75 pb-2 pl-2 pr-3 pt-3 text-xl text-white transition hover:ring-2 hover:ring-white md:hidden"
                 >
                   <FiDownload />
-                </button>
+                </button> */}
               </div>
               <p className="mt-2">{generation.generation.text}</p>
             </li>
