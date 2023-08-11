@@ -169,26 +169,6 @@ export async function getLeaderboardById({ gameId }: { gameId: number }) {
     };
   });
 
-  // const winners = userListWithStandings.filter(
-  //   (player) => player.standing === 1
-  // );
-
-  // const winningUserIds = winners.map((winner) => winner.user.id);
-
-  // const winningUserGenerations = await db
-  //   .select({
-  //     question: questions,
-  //     generation: generations,
-  //   })
-  //   .from(generations)
-  //   .innerJoin(questions, eq(generations.questionId, questions.id))
-  //   .where(
-  //     and(
-  //       inArray(generations.userId, winningUserIds),
-  //       eq(generations.gameId, gameId)
-  //     )
-  //   );
-
   const allGenerations = await db
     .select({
       question: questions,
@@ -203,11 +183,8 @@ export async function getLeaderboardById({ gameId }: { gameId: number }) {
     .where(eq(generations.gameId, gameId))
     .groupBy(generations.id, questions.id, users.id);
 
-  console.log("[ALL GENERATIONS]", allGenerations);
-
   return {
     leaderboard: userListWithStandings,
-    // winningGenerations: winningUserGenerations,
     allGenerations,
   };
 }
