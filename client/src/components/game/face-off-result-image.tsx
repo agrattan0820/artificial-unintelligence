@@ -1,6 +1,6 @@
 "use client";
 
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import {
   AnimatePresence,
   AnimationPlaybackControls,
@@ -197,7 +197,7 @@ const FaceOffResultImage = ({
         className={cn(
           `aspect-square transform rounded-xl filter transition`,
           isWinner && "ring ring-yellow-600",
-          isLoser && "grayscale filter",
+          winningImage !== id && showWinner && "grayscale filter", // do black+white transition immediately when winner is shown
           showVotes && "brightness-50"
         )}
         src={image}
