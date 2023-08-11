@@ -7,7 +7,7 @@ import { FiCheckSquare, FiPlusSquare, FiPlay } from "react-icons/fi";
 import { User } from "@ai/app/server-actions";
 import Button, { SecondaryButton } from "@ai/components/button";
 import Ellipsis from "@ai/components/ellipsis";
-import useShare from "@ai/utils/hooks/use-share";
+import useLinkShare from "@ai/utils/hooks/use-link-share";
 import { useStore } from "@ai/utils/store";
 
 const StartGame = ({
@@ -26,9 +26,11 @@ const StartGame = ({
   const { user } = useStore();
   const [isMounted, setIsMounted] = useState(false);
 
-  const { copying, setCopying, onClick } = useShare(`/invite/${code}`, () =>
-    toast("Invite Link Copied to Clipboard")
-  );
+  const { copying, setCopying, onClick } = useLinkShare({
+    title: "Join My Artificial Unintelligence Room",
+    slug: `/invite/${code}`,
+    callback: () => toast("Invite Link Copied to Clipboard"),
+  });
 
   useEffect(() => {
     if (copying) {

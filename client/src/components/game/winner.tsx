@@ -79,7 +79,7 @@ const Winner = ({ gameInfo, state, send, leaderboard }: WinnerProps) => {
     [leaderboard]
   );
 
-  const winningImages = leaderboard ? leaderboard.winningGenerations : [];
+  // const winningImages = leaderboard ? leaderboard.winningGenerations : [];
 
   const winnerTitle = useMemo(() => {
     if (!leaderboard) {
@@ -135,7 +135,7 @@ const Winner = ({ gameInfo, state, send, leaderboard }: WinnerProps) => {
           <motion.span>{animatedPoints}</motion.span> points
         </motion.p>
       </motion.div>
-      {showImages && (
+      {/* {showImages && (
         <motion.div
           initial="hidden"
           animate="visible"
@@ -161,7 +161,7 @@ const Winner = ({ gameInfo, state, send, leaderboard }: WinnerProps) => {
             </motion.figure>
           ))}
         </motion.div>
-      )}
+      )} */}
     </motion.div>
   );
 };

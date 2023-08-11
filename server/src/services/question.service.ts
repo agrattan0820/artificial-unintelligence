@@ -66,7 +66,7 @@ export async function getLeastAppearingQuestions({
 
   const leastAppearingQuestions = await db
     .select({
-      count: sql<number>`count(${questionsToGames.gameId})`,
+      count: sql<number>`count(${questionsToGames.gameId})::int`,
       questionId: questions.id,
     })
     .from(questions)

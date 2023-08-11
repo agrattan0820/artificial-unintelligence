@@ -247,7 +247,7 @@ const Prompt = ({
         {imagesLoaded && (
           <div className="mt-4">
             <p className="mb-8">{imagePrompt}</p>
-            <div className="flex flex-wrap gap-y-4 gap-x-2">
+            <div className="flex flex-wrap gap-x-2 gap-y-4">
               <Button
                 onClick={onImageSubmit}
                 disabled={!selectedImage || loading}

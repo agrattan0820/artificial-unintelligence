@@ -1,6 +1,6 @@
 "use client";
 
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import {
   AnimatePresence,
   AnimationPlaybackControls,
@@ -111,6 +111,8 @@ const FaceOffResultImage = ({
   bothImagesShown,
   showWinner,
   showLoser,
+  showVotes,
+  showPoints,
   winningImage,
   votes,
   pointIncrease,
@@ -124,38 +126,27 @@ const FaceOffResultImage = ({
   bothImagesShown: boolean;
   showWinner: boolean;
   showLoser: boolean;
+  showVotes: boolean;
+  showPoints: boolean;
   winningImage: 1 | 2;
   votes: string[];
   pointIncrease: number;
   setShowImage: Dispatch<SetStateAction<boolean>>;
 }) => {
-  const [showVotes, setShowVotes] = useState(false);
-  const [showPoints, setShowPoints] = useState(false);
-
   const points = useMotionValue(0);
   const animatedPoints = useTransform(points, (latest) => Math.round(latest));
 
   useEffect(() => {
-    let votesTimeout: NodeJS.Timeout;
-    let pointsTimeout: NodeJS.Timeout;
     let controls: AnimationPlaybackControls;
-    if (bothImagesShown) {
-      votesTimeout = setTimeout(() => {
-        setShowVotes(true);
-      }, 6000);
-      pointsTimeout = setTimeout(() => {
-        setShowPoints(true);
-        controls = animate(points, pointIncrease, { duration: 3 });
-      }, 8000);
+    if (showPoints) {
+      controls = animate(points, pointIncrease, { duration: 3 });
     }
 
     return () => {
-      clearTimeout(votesTimeout);
-      clearTimeout(pointsTimeout);
       controls && controls.stop();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bothImagesShown, pointIncrease]);
+  }, [pointIncrease, showPoints]);
 
   const isWinner = winningImage === id && showWinner;
   const isLoser = winningImage !== id && showLoser;
@@ -206,7 +197,7 @@ const FaceOffResultImage = ({
         className={cn(
           `aspect-square transform rounded-xl filter transition`,
           isWinner && "ring ring-yellow-600",
-          isLoser && "grayscale filter",
+          winningImage !== id && showWinner && "grayscale filter", // do black+white transition immediately when winner is shown
           showVotes && "brightness-50"
         )}
         src={image}
