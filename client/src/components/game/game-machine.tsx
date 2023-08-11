@@ -136,7 +136,7 @@ export const gameMachine = createMachine(
 
       winner: {
         after: {
-          20000: "leaderboard",
+          10000: "leaderboard",
         },
       },
 

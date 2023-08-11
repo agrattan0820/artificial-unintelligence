@@ -3,11 +3,11 @@
 export interface Typegen0 {
   "@@xstate/typegen": true;
   internalEvents: {
+    "xstate.after(10000)#Machine.winner": {
+      type: "xstate.after(10000)#Machine.winner";
+    };
     "xstate.after(20000)#Machine.faceOffResults": {
       type: "xstate.after(20000)#Machine.faceOffResults";
-    };
-    "xstate.after(20000)#Machine.winner": {
-      type: "xstate.after(20000)#Machine.winner";
     };
     "xstate.after(4000)#Machine.nextRound": {
       type: "xstate.after(4000)#Machine.nextRound";

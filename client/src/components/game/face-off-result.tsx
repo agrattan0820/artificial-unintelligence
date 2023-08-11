@@ -66,24 +66,36 @@ const FaceOffResult = ({
   const [showImage2, setShowImage2] = useState(false);
   const [showWinner, setShowWinner] = useState(false);
   const [showLoser, setShowLoser] = useState(false);
+  const [showVotes, setShowVotes] = useState(false);
+  const [showPoints, setShowPoints] = useState(false);
 
   const bothShown = showImage1 && showImage2;
 
   useEffect(() => {
     let winnerTimeout: NodeJS.Timeout;
     let loserTimeout: NodeJS.Timeout;
+    let votesTimeout: NodeJS.Timeout;
+    let pointsTimeout: NodeJS.Timeout;
     if (showImage1 && showImage2) {
       winnerTimeout = setTimeout(() => {
         setShowWinner(true);
       }, 2000);
       loserTimeout = setTimeout(() => {
         setShowLoser(true);
-      }, 4500);
+      }, 4000);
+      votesTimeout = setTimeout(() => {
+        setShowVotes(true);
+      }, 6000);
+      pointsTimeout = setTimeout(() => {
+        setShowPoints(true);
+      }, 8000);
     }
 
     return () => {
       clearTimeout(winnerTimeout);
       clearTimeout(loserTimeout);
+      clearTimeout(votesTimeout);
+      clearTimeout(pointsTimeout);
     };
   }, [showImage1, showImage2]);
 
@@ -116,6 +128,8 @@ const FaceOffResult = ({
           bothImagesShown={bothShown}
           showWinner={showWinner}
           showLoser={showLoser}
+          showVotes={showVotes}
+          showPoints={showPoints}
           winningImage={winningImage}
           votes={voteMap.player1Votes.map(
             (votedPlayer) => votedPlayer.user.nickname
@@ -132,6 +146,8 @@ const FaceOffResult = ({
           bothImagesShown={bothShown}
           showWinner={showWinner}
           showLoser={showLoser}
+          showVotes={showVotes}
+          showPoints={showPoints}
           winningImage={winningImage}
           votes={voteMap.player2Votes.map(
             (votedPlayer) => votedPlayer.user.nickname

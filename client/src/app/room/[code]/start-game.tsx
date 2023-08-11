@@ -26,9 +26,11 @@ const StartGame = ({
   const { user } = useStore();
   const [isMounted, setIsMounted] = useState(false);
 
-  const { copying, setCopying, onClick } = useShare(`/invite/${code}`, () =>
-    toast("Invite Link Copied to Clipboard")
-  );
+  const { copying, setCopying, onClick } = useShare({
+    title: "Join My Artificial Unintelligence Room",
+    slug: `/invite/${code}`,
+    callback: () => toast("Invite Link Copied to Clipboard"),
+  });
 
   useEffect(() => {
     if (copying) {

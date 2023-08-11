@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, inArray } from "drizzle-orm";
+import { and, asc, desc, eq, sql } from "drizzle-orm";
 import { db } from "../../db/db";
 import {
   NewGame,
@@ -11,6 +11,7 @@ import {
   rooms,
   questionsToGames,
   questions,
+  votes,
 } from "../../db/schema";
 import {
   getGameRoundGenerations,
@@ -168,32 +169,46 @@ export async function getLeaderboardById({ gameId }: { gameId: number }) {
     };
   });
 
-  const winners = userListWithStandings.filter(
-    (player) => player.standing === 1
-  );
+  // const winners = userListWithStandings.filter(
+  //   (player) => player.standing === 1
+  // );
 
-  const winningUserIds = winners.map((winner) => winner.user.id);
+  // const winningUserIds = winners.map((winner) => winner.user.id);
 
-  const winningUserGenerations = await db
+  // const winningUserGenerations = await db
+  //   .select({
+  //     question: questions,
+  //     generation: generations,
+  //   })
+  //   .from(generations)
+  //   .innerJoin(questions, eq(generations.questionId, questions.id))
+  //   .where(
+  //     and(
+  //       inArray(generations.userId, winningUserIds),
+  //       eq(generations.gameId, gameId)
+  //     )
+  //   );
+
+  const allGenerations = await db
     .select({
-      question: questionsToGames,
+      question: questions,
       generation: generations,
+      user: users,
+      voteCount: sql<number>`count(${votes.id})::int`,
     })
     .from(generations)
-    .innerJoin(
-      questionsToGames,
-      eq(generations.questionId, questionsToGames.questionId)
-    )
-    .where(
-      and(
-        inArray(generations.userId, winningUserIds),
-        eq(questionsToGames.gameId, gameId)
-      )
-    );
+    .innerJoin(questions, eq(generations.questionId, questions.id))
+    .innerJoin(users, eq(generations.userId, users.id))
+    .leftJoin(votes, eq(generations.id, votes.generationId))
+    .where(eq(generations.gameId, gameId))
+    .groupBy(generations.id, questions.id, users.id);
+
+  console.log("[ALL GENERATIONS]", allGenerations);
 
   return {
     leaderboard: userListWithStandings,
-    winningGenerations: winningUserGenerations,
+    // winningGenerations: winningUserGenerations,
+    allGenerations,
   };
 }
 

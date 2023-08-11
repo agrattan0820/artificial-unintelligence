@@ -6,6 +6,7 @@
 - [ ] Connect state for `face-off` and `face-off-result` so that a transition between components doesn't need to happen
 - [ ] Protect game pages from players who are not a part of it
 - [ ] Optional user auth
+- [ ] Fix point count on refresh for `face-off-result`
 
 ## In Progress
 

@@ -203,7 +203,7 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
   }, []);
 
   return (
-    <main className="flex min-h-[100dvh] flex-col justify-center">
+    <main>
       <section className="container mx-auto px-4 py-16">
         <AnimatePresence mode="wait">
           {isMounted ? currentComponent : null}
