@@ -4,10 +4,10 @@ import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { FiCheckSquare, FiCopy } from "react-icons/fi";
 
-import useShare from "@ai/utils/hooks/use-share";
+import useLinkShare from "@ai/utils/hooks/use-link-share";
 
 const InviteLink = ({ code }: { code: string }) => {
-  const { link, copying, setCopying, onClick } = useShare({
+  const { link, copying, setCopying, onClick } = useLinkShare({
     title: "Join My Artificial Unintelligence Room",
     slug: `/invite/${code}`,
     callback: () => toast("Invite Link Copied to Clipboard"),

@@ -15,6 +15,7 @@ import { SocketContext } from "@ai/utils/socket-provider";
 import { useStore } from "@ai/utils/store";
 import SadDog from "@ai/images/sad-dog.webp";
 import { FiDownload } from "react-icons/fi";
+import useImageShare from "@ai/utils/hooks/use-image-share";
 
 type LeaderboardProps = {
   gameInfo: GameInfo;
@@ -27,6 +28,7 @@ type LeaderboardProps = {
 const Leaderboard = ({ gameInfo, leaderboard, hostId }: LeaderboardProps) => {
   const socket = useContext(SocketContext);
   const { user } = useStore();
+  const { onClick } = useImageShare();
 
   const currUserIsHost = user && user?.id === hostId;
 
@@ -57,8 +59,6 @@ const Leaderboard = ({ gameInfo, leaderboard, hostId }: LeaderboardProps) => {
   const handlePlayAgainOnClick = () => {
     socket.emit("initiatePlayAnotherGame", gameInfo.game.roomCode);
   };
-
-  const generations = leaderboard.allGenerations;
 
   return (
     <>
@@ -153,10 +153,21 @@ const Leaderboard = ({ gameInfo, leaderboard, hostId }: LeaderboardProps) => {
                   href={generation.generation.imageUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="absolute -right-1 -top-1 rounded-b-md rounded-l-md bg-slate-800/75 pb-2 pl-2 pr-3 pt-3 text-xl text-white transition hover:ring-2 hover:ring-white"
+                  className="absolute -right-1 -top-1 hidden rounded-b-md rounded-l-md bg-slate-800/75 pb-2 pl-2 pr-3 pt-3 text-xl text-white transition hover:ring-2 hover:ring-white md:block"
                 >
                   <FiDownload />
                 </a>
+                <button
+                  onClick={() =>
+                    onClick(
+                      "Check out this AI-generated image from Artificial Unintelligence",
+                      generation.generation.imageUrl
+                    )
+                  }
+                  className="absolute -right-1 -top-1 rounded-b-md rounded-l-md bg-slate-800/75 pb-2 pl-2 pr-3 pt-3 text-xl text-white transition hover:ring-2 hover:ring-white md:hidden"
+                >
+                  <FiDownload />
+                </button>
               </div>
               <p className="mt-2">{generation.generation.text}</p>
             </li>

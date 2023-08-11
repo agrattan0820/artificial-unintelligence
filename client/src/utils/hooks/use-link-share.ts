@@ -1,7 +1,7 @@
 import { useState } from "react";
 import useIsMounted from "./use-is-mounted";
 
-type UseShareProps =
+type UseLinkShareProps =
   | {
       title: string;
       customLink: string;
@@ -15,12 +15,12 @@ type UseShareProps =
       callback?: () => void;
     };
 
-export default function useShare({
+export default function useLinkShare({
   title,
   customLink,
   slug,
   callback,
-}: UseShareProps) {
+}: UseLinkShareProps) {
   const [copying, setCopying] = useState(false);
   const isMounted = useIsMounted();
 
