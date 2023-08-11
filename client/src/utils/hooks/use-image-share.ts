@@ -14,7 +14,7 @@ export default function useImageShare() {
         metadata
       );
 
-      if (navigator.canShare({ files: [imageFile] })) {
+      if (navigator.share) {
         navigator
           .share({
             title: title,

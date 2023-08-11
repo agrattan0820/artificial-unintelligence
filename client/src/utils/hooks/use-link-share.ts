@@ -29,7 +29,7 @@ export default function useLinkShare({
     : `http://localhost:3000${slug}`;
 
   const onClick = () => {
-    if (navigator.canShare({ url: link })) {
+    if (navigator.share) {
       navigator
         .share({
           title: title,

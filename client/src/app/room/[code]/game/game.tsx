@@ -21,6 +21,7 @@ import {
 } from "@ai/components/game/game-machine";
 import { SocketContext } from "@ai/utils/socket-provider";
 import { useStore } from "@ai/utils/store";
+import { cn } from "@ai/utils/cn";
 
 // ! ----------> TYPES <----------
 
@@ -203,7 +204,12 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
   }, []);
 
   return (
-    <main>
+    <main
+      className={cn(
+        !state.matches("leaderboard") &&
+          "flex min-h-[100dvh] flex-col justify-center"
+      )}
+    >
       <section className="container mx-auto px-4 py-16">
         <AnimatePresence mode="wait">
           {isMounted ? currentComponent : null}
