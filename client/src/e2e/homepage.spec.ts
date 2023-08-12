@@ -72,8 +72,8 @@ test("multiple users should be able to join a room", async ({ browser }) => {
     // Invite Bill
     await billPage.goto(inviteURL);
     const billNicknameInput = billPage.locator("#nickname");
-    await billNicknameInput.fill("Big Al");
-    await expect(billNicknameInput).toHaveValue("Big Al");
+    await billNicknameInput.fill("Bill");
+    await expect(billNicknameInput).toHaveValue("Bill");
     const billSubmitButton = billPage.getByRole("button", {
       name: "Join Game",
     });
