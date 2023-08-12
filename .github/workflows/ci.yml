@@ -31,8 +31,10 @@ jobs:
         working-directory: ./client
         run: pnpm run lint
       - name: 📀 Install Playwright Browsers
+        working-directory: ./client
         run: npx playwright install --with-deps
       - name: 🧪 Run Playwright tests
+        working-directory: ./client
         run: npx playwright test
       - uses: actions/upload-artifact@v3
         if: always()
