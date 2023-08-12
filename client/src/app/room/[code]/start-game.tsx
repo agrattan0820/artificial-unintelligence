@@ -47,7 +47,7 @@ const StartGame = ({
 
   return (
     <>
-      <div className="mt-8 flex flex-col items-center justify-center gap-2 sm:flex-row">
+      <div className="mt-8 flex flex-col items-center justify-center gap-x-2 gap-y-4 sm:flex-row">
         {isMounted && players.length > 2 && user && user.id == hostId && (
           <Button onClick={onStartGame} className="flex items-center gap-2">
             {loading ? (

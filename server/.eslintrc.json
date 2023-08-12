@@ -26,5 +26,8 @@
                 "extendDefaults": true
             }
         ]
-    }
+    },
+    "ignorePatterns": [
+        "/dist/*.js"
+    ]
 }
