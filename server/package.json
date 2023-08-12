@@ -7,8 +7,9 @@
     "build": "tsc",
     "start": "node ./dist/src/app.js",
     "dev": "cross-env NODE_ENV=development nodemon src/app.ts",
-    "migrate": "drizzle-kit generate:pg --out drizzle --schema db/schema.ts",
+    "lint": "eslint . --ext .ts",
     "test": "jest",
+    "migrate": "drizzle-kit generate:pg --out drizzle --schema db/schema.ts",
     "sourcemaps": "pnpm run build && pnpm run sentry:sourcemaps",
     "sentry:sourcemaps": "sentry-cli sourcemaps inject --org alexander-grattan --project artificial-unintelligence-server ./dist && sentry-cli sourcemaps upload --org alexander-grattan --project artificial-unintelligence-server ./dist"
   },
