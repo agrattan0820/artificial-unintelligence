@@ -1,0 +1,34 @@
+name: Playwright Tests
+on: 
+ pull_request: 
+  branches: [main]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🏗 Setup repository
+        uses: actions/checkout@v3
+      - name: 🏗 Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - name: 🏗 Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+      - name: 👷 Install client modules
+        working-directory: ./client
+        run: pnpm install
+      - name: 📀 Install Playwright Browsers
+        working-directory: ./client
+        run: npx playwright install --with-deps
+      - name: 🧪 Run Playwright tests
+        working-directory: ./client
+        run: npx playwright test
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
