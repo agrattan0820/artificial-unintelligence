@@ -57,6 +57,13 @@ const captionVariants: Variants = {
       delayChildren: 2.5,
     },
   },
+  tie: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      delayChildren: 1,
+    },
+  },
 };
 
 const voteVariants: Variants = {
@@ -128,7 +135,7 @@ const FaceOffResultImage = ({
   showLoser: boolean;
   showVotes: boolean;
   showPoints: boolean;
-  winningImage: 1 | 2;
+  winningImage: 1 | 2 | null;
   votes: string[];
   pointIncrease: number;
   setShowImage: Dispatch<SetStateAction<boolean>>;
@@ -150,6 +157,7 @@ const FaceOffResultImage = ({
 
   const isWinner = winningImage === id && showWinner;
   const isLoser = winningImage !== id && showLoser;
+  const isTie = winningImage === null && showWinner;
 
   return (
     <motion.figure
@@ -197,8 +205,11 @@ const FaceOffResultImage = ({
         className={cn(
           `aspect-square transform rounded-xl filter transition`,
           isWinner && "ring ring-yellow-600",
-          winningImage !== id && showWinner && "grayscale filter", // do black+white transition immediately when winner is shown
-          showVotes && "brightness-50"
+          winningImage !== id &&
+            winningImage !== null &&
+            showWinner &&
+            "grayscale filter", // do black+white transition immediately when winner is shown
+          showVotes && "brightness-50",
         )}
         src={image}
         alt={`OpenAI Image with the prompt: ${prompt}`}
@@ -209,7 +220,7 @@ const FaceOffResultImage = ({
       <div
         className={cn(
           "absolute -right-2 -top-2 scale-0 transform rounded-full bg-yellow-600 p-2 text-xl text-white opacity-0 transition",
-          isWinner && "scale-100 opacity-100"
+          isWinner && "scale-100 opacity-100",
         )}
       >
         <BsTrophy />
@@ -217,12 +228,14 @@ const FaceOffResultImage = ({
       <motion.figcaption
         layout="position"
         initial={false}
-        animate={isWinner ? "winner" : isLoser ? "loser" : "hidden"}
+        animate={
+          isTie ? "tie" : isWinner ? "winner" : isLoser ? "loser" : "hidden"
+        }
         variants={captionVariants}
         className="py-4"
       >
         <AnimatePresence>
-          {(isWinner || isLoser) && (
+          {(isWinner || isLoser || isTie) && (
             <motion.p
               key="prompt"
               initial={{ opacity: 0, y: -25 }}
@@ -235,7 +248,7 @@ const FaceOffResultImage = ({
               {prompt}
             </motion.p>
           )}
-          {(isWinner || isLoser) && (
+          {(isWinner || isLoser || isTie) && (
             <motion.div
               key="nickname"
               initial={{ opacity: 0, y: -25 }}
