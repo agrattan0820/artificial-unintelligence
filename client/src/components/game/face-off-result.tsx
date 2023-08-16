@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { EventFrom, StateFrom } from "xstate";
 
 import {
@@ -47,20 +47,24 @@ const FaceOffResult = ({
 
       return acc;
     },
-    { player1Votes: [], player2Votes: [] }
+    { player1Votes: [], player2Votes: [] },
   );
 
   const pointsPerOnePercent = 10;
 
   const image1VotePercentage =
-    Math.round(voteMap.player1Votes.length / votedPlayers.length) * 100;
+    (voteMap.player1Votes.length / votedPlayers.length) * 100;
   const image1Points = image1VotePercentage * pointsPerOnePercent;
   const image2VotePercentage =
-    Math.round(voteMap.player2Votes.length / votedPlayers.length) * 100;
+    (voteMap.player2Votes.length / votedPlayers.length) * 100;
   const image2Points = image2VotePercentage * pointsPerOnePercent;
 
-  const winningImage: 1 | 2 =
-    voteMap.player1Votes.length > voteMap.player2Votes.length ? 1 : 2;
+  const winningImage: 1 | 2 | null =
+    voteMap.player1Votes.length > voteMap.player2Votes.length
+      ? 1
+      : voteMap.player1Votes.length < voteMap.player2Votes.length
+      ? 2
+      : null;
 
   const [showImage1, setShowImage1] = useState(false);
   const [showImage2, setShowImage2] = useState(false);
@@ -105,7 +109,7 @@ const FaceOffResult = ({
 
   return (
     <div className="mx-auto max-w-2xl">
-      <div className="relative mb-14">
+      <div className="relative mb-20">
         <motion.h2
           initial={{ y: 10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -115,10 +119,22 @@ const FaceOffResult = ({
           {currQuestionGenerations.question.text}
         </motion.h2>
       </div>
-      <motion.div
-        layout="position"
-        className="mb-16 flex flex-col md:flex-row gap-y-4 gap-x-6"
-      >
+      <motion.div layout="position" className="relative mb-16 flex gap-6">
+        <AnimatePresence>
+          {image1Points === image2Points && showWinner && (
+            <motion.div className="absolute -top-12 left-1/2 -translate-x-1/2 text-center">
+              <motion.h3
+                className="text-lg"
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0 }}
+              >
+                Tie!
+              </motion.h3>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         <FaceOffResultImage
           id={1}
           prompt={image1.text}
@@ -132,7 +148,7 @@ const FaceOffResult = ({
           showPoints={showPoints}
           winningImage={winningImage}
           votes={voteMap.player1Votes.map(
-            (votedPlayer) => votedPlayer.user.nickname
+            (votedPlayer) => votedPlayer.user.nickname,
           )}
           pointIncrease={image1Points}
           setShowImage={setShowImage1}
@@ -150,7 +166,7 @@ const FaceOffResult = ({
           showPoints={showPoints}
           winningImage={winningImage}
           votes={voteMap.player2Votes.map(
-            (votedPlayer) => votedPlayer.user.nickname
+            (votedPlayer) => votedPlayer.user.nickname,
           )}
           pointIncrease={image2Points}
           setShowImage={setShowImage2}

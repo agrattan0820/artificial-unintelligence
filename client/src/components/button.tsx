@@ -7,54 +7,54 @@ const Button = (props: ButtonHTMLAttributes<HTMLButtonElement>) => {
     <button
       {...props}
       className={cn(
-        `rounded-md bg-indigo-600 px-4 py-1 text-white transition hover:bg-indigo-500 active:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50 ${
+        `rounded-md bg-indigo-600 px-4 py-1 text-white transition hover:bg-indigo-500 active:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-75 ${
           props.className ?? ""
-        }`
+        }`,
       )}
     />
   );
 };
 
 export const SecondaryButton = (
-  props: ButtonHTMLAttributes<HTMLButtonElement>
+  props: ButtonHTMLAttributes<HTMLButtonElement>,
 ) => {
   return (
     <button
       {...props}
       className={cn(
-        `rounded-md bg-gray-300 px-4 py-1 text-black transition hover:bg-gray-200 active:bg-gray-400 disabled:cursor-not-allowed disabled:opacity-50 ${
+        `rounded-md bg-gray-300 px-4 py-1 text-black transition hover:bg-gray-200 active:bg-gray-400 disabled:cursor-not-allowed disabled:opacity-75 ${
           props.className ?? ""
-        }`
+        }`,
       )}
     />
   );
 };
 
 export const LinkButton = (
-  props: LinkProps & LinkHTMLAttributes<HTMLAnchorElement>
+  props: LinkProps & LinkHTMLAttributes<HTMLAnchorElement>,
 ) => {
   return (
     <Link
       {...props}
       className={cn(
-        `rounded-md bg-indigo-600 px-4 py-1 text-white transition hover:bg-indigo-500 active:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50 ${
+        `rounded-md bg-indigo-600 px-4 py-1 text-white transition hover:bg-indigo-500 active:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-75 ${
           props.className ?? ""
-        }`
+        }`,
       )}
     />
   );
 };
 
 export const LinkSecondaryButton = (
-  props: LinkProps & LinkHTMLAttributes<HTMLAnchorElement>
+  props: LinkProps & LinkHTMLAttributes<HTMLAnchorElement>,
 ) => {
   return (
     <Link
       {...props}
       className={cn(
-        `rounded-md bg-gray-300 px-4 py-1 text-black transition hover:bg-gray-200 active:bg-gray-400 disabled:cursor-not-allowed disabled:opacity-50 ${
+        `rounded-md bg-gray-300 px-4 py-1 text-black transition hover:bg-gray-200 active:bg-gray-400 disabled:cursor-not-allowed disabled:opacity-75 ${
           props.className ?? ""
-        }`
+        }`,
       )}
     />
   );

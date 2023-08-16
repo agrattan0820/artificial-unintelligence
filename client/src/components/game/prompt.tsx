@@ -62,7 +62,7 @@ const Prompt = ({
         }),
       {
         enabled: !!gameId && !!userId,
-      }
+      },
     );
 
   const incrementRegenerationCountMutation = useMutation({
@@ -98,13 +98,13 @@ const Prompt = ({
 
   const [loading, setLoading] = useState(false);
   const [imagePrompt, setImagePrompt] = useState(
-    window.localStorage.getItem("prompt") ?? ""
+    window.localStorage.getItem("prompt") ?? "",
   );
   const [imageOption1, setImageOption1] = useState(
-    window.localStorage.getItem("image1") ?? ""
+    window.localStorage.getItem("image1") ?? "",
   );
   const [imageOption2, setImageOption2] = useState(
-    window.localStorage.getItem("image2") ?? ""
+    window.localStorage.getItem("image2") ?? "",
   );
   const [selectedImage, setSelectedImage] = useState<ImageOption>();
 
@@ -133,19 +133,22 @@ const Prompt = ({
     setLoading(false);
   };
 
-  const resetImageAndPrompt = () => {
+  const resetPrompt = () => {
     setImagePrompt("");
+    window.localStorage.removeItem("prompt");
+  };
+
+  const resetImage = () => {
     setImageOption1("");
     setImageOption2("");
     setSelectedImage(undefined);
-    window.localStorage.removeItem("prompt");
     window.localStorage.removeItem("image1");
     window.localStorage.removeItem("image2");
   };
 
   const onTryAnotherPrompt = () => {
     if (userId !== undefined) {
-      resetImageAndPrompt();
+      resetImage();
       incrementRegenerationCountMutation.mutate({ gameId, userId });
       return;
     }
@@ -172,7 +175,8 @@ const Prompt = ({
 
     if (stage === "FIRST") {
       setStage("SECOND");
-      resetImageAndPrompt();
+      resetPrompt();
+      resetImage();
     } else {
       window.localStorage.removeItem("prompt");
       window.localStorage.removeItem("image1");
@@ -247,19 +251,21 @@ const Prompt = ({
         {imagesLoaded && (
           <div className="mt-4">
             <p className="mb-8">{imagePrompt}</p>
-            <div className="flex flex-wrap gap-x-2 gap-y-4">
+            <div className="fixed bottom-4 left-0 right-0 mx-auto flex w-full max-w-2xl gap-x-2 gap-y-4 px-6 md:static md:px-0">
               <Button
+                className="w-full shadow-lg md:w-auto"
                 onClick={onImageSubmit}
                 disabled={!selectedImage || loading}
               >
                 {!loading ? "Submit Image" : <Ellipsis />}
               </Button>
               <SecondaryButton
+                className="w-full shadow-lg md:w-auto"
                 onClick={onTryAnotherPrompt}
                 disabled={loading || outOfRegenerations}
               >
                 {!loading ? (
-                  `Try New Prompt ${
+                  `Create New Images ${
                     !regenerationCountLoading &&
                     regenerationCount !== undefined &&
                     typeof regenerationCount?.count === "number" ? (

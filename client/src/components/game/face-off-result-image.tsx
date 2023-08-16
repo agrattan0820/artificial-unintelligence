@@ -57,6 +57,13 @@ const captionVariants: Variants = {
       delayChildren: 2.5,
     },
   },
+  tie: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      delayChildren: 1,
+    },
+  },
 };
 
 const voteVariants: Variants = {
@@ -128,7 +135,7 @@ const FaceOffResultImage = ({
   showLoser: boolean;
   showVotes: boolean;
   showPoints: boolean;
-  winningImage: 1 | 2;
+  winningImage: 1 | 2 | null;
   votes: string[];
   pointIncrease: number;
   setShowImage: Dispatch<SetStateAction<boolean>>;
@@ -150,6 +157,7 @@ const FaceOffResultImage = ({
 
   const isWinner = winningImage === id && showWinner;
   const isLoser = winningImage !== id && showLoser;
+  const isTie = winningImage === null && showWinner;
 
   return (
     <motion.figure
@@ -166,7 +174,7 @@ const FaceOffResultImage = ({
       }
       variants={imageVariants}
       transition={{ when: "beforeChildren" }}
-      className="relative"
+      className="relative w-full"
     >
       <motion.p
         initial={false}
@@ -174,7 +182,7 @@ const FaceOffResultImage = ({
         variants={pointVariants}
         className="absolute -top-8 left-0 right-0 z-0 text-center"
       >
-        <motion.span>{animatedPoints}</motion.span>+
+        +<motion.span>{animatedPoints}</motion.span>
       </motion.p>
       <motion.ul
         initial={false}
@@ -185,11 +193,11 @@ const FaceOffResultImage = ({
         {votes.map((vote, i) => (
           <motion.li
             key={i}
-            className="absolute inline-block rounded-md bg-indigo-300 p-4 shadow-md"
+            className="absolute inline-block rounded-md bg-indigo-300 p-2 shadow-md md:p-4"
             variants={voteItemVariants}
             style={shuffledVotePositions[i]}
           >
-            <p className="text-sm text-black">{vote}</p>
+            <p className="text-xs text-black md:text-sm">{vote}</p>
           </motion.li>
         ))}
       </motion.ul>
@@ -197,8 +205,11 @@ const FaceOffResultImage = ({
         className={cn(
           `aspect-square transform rounded-xl filter transition`,
           isWinner && "ring ring-yellow-600",
-          winningImage !== id && showWinner && "grayscale filter", // do black+white transition immediately when winner is shown
-          showVotes && "brightness-50"
+          winningImage !== id &&
+            winningImage !== null &&
+            showWinner &&
+            "grayscale filter", // do black+white transition immediately when winner is shown
+          showVotes && "brightness-50",
         )}
         src={image}
         alt={`OpenAI Image with the prompt: ${prompt}`}
@@ -209,7 +220,7 @@ const FaceOffResultImage = ({
       <div
         className={cn(
           "absolute -right-2 -top-2 scale-0 transform rounded-full bg-yellow-600 p-2 text-xl text-white opacity-0 transition",
-          isWinner && "scale-100 opacity-100"
+          isWinner && "scale-100 opacity-100",
         )}
       >
         <BsTrophy />
@@ -217,40 +228,42 @@ const FaceOffResultImage = ({
       <motion.figcaption
         layout="position"
         initial={false}
-        animate={isWinner ? "winner" : isLoser ? "loser" : "hidden"}
+        animate={
+          isTie ? "tie" : isWinner ? "winner" : isLoser ? "loser" : "hidden"
+        }
         variants={captionVariants}
         className="py-4"
       >
         <AnimatePresence>
-          {(isWinner || isLoser) && (
-            <motion.p
-              key="prompt"
-              initial={{ opacity: 0, y: -25 }}
-              animate={{
-                opacity: 1,
-                y: 0,
-              }}
-              className="mb-4"
-            >
-              {prompt}
-            </motion.p>
-          )}
-          {(isWinner || isLoser) && (
+          {(isWinner || isLoser || isTie) && (
             <motion.div
               key="nickname"
               initial={{ opacity: 0, y: -25 }}
               animate={{
                 opacity: 1,
                 y: 0,
-                transition: { delay: 0.5 },
               }}
-              className="flex justify-between"
+              className="mb-2 flex justify-between"
             >
               <h3 className="text-lg text-indigo-700 dark:text-indigo-300">
                 {nickname}
               </h3>{" "}
               <p>{percentage.toLocaleString()}%</p>
             </motion.div>
+          )}
+          {(isWinner || isLoser || isTie) && (
+            <motion.p
+              key="prompt"
+              className="w-full text-sm md:text-base"
+              initial={{ opacity: 0, y: -25 }}
+              animate={{
+                opacity: 1,
+                y: 0,
+                transition: { delay: 0.5 },
+              }}
+            >
+              {prompt}
+            </motion.p>
           )}
         </AnimatePresence>
       </motion.figcaption>
