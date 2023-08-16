@@ -49,12 +49,12 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
 
   // Store players who have submitted their prompts for a round
   const [submittedPlayerIds, setSubmittedPlayerIds] = useState<Set<number>>(
-    new Set(gameInfo.submittedPlayers)
+    new Set(gameInfo.submittedPlayers),
   );
 
   // Store players who have submitted votes for the current question
   const [votedPlayers, setVotedPlayers] = useState<UserVote[]>(
-    gameInfo.votedPlayers
+    gameInfo.votedPlayers,
   );
 
   // Persisted state from server for state machine
@@ -96,7 +96,7 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
       console.log("[RECEIVED EVENT]", event);
       send(event);
     },
-    [send]
+    [send],
   );
 
   // Update which players have submitted their generations
@@ -115,7 +115,7 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
         !!gameId &&
         !!round &&
         (state.matches("faceOff") || state.matches("faceOffResults")),
-    }
+    },
   );
   const { data: leaderboard, isLoading: leaderboardLoading } = useQuery(
     ["leaderboard", "gameId", gameId],
@@ -126,7 +126,7 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
         (state.matches("winnerLeadUp") ||
           state.matches("winner") ||
           state.matches("leaderboard")),
-    }
+    },
   );
 
   const currFaceOffQuestion =
@@ -184,7 +184,7 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
       submittedPlayerIds,
       currFaceOffQuestion,
       votedPlayers,
-      leaderboard
+      leaderboard,
     );
   }, [
     gameInfo,
@@ -206,7 +206,7 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
     <main
       className={cn(
         !state.matches("leaderboard") &&
-          "flex min-h-[100dvh] flex-col justify-center"
+          "flex min-h-[100dvh] flex-col justify-center",
       )}
     >
       <section className="container mx-auto px-4 py-16">
