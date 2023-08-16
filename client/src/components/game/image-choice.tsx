@@ -59,8 +59,8 @@ const ImageChoiceOption = ({
         />
         <FiCheck
           className={cn(
-            "absolute -right-2 -top-2 scale-0 transform rounded-full bg-green-600 p-0.5 text-xl text-white transition",
-            selectedImage === option && "scale-100"
+            "absolute -right-2 -top-2 scale-0 transform rounded-full bg-green-600 p-0.5 text-3xl text-white transition",
+            selectedImage === option && "scale-100",
           )}
         />
       </button>
@@ -114,7 +114,7 @@ const ImageChoice = ({
   };
 
   return (
-    <div className="flex flex-col md:flex-row gap-6">
+    <div className="flex flex-col gap-6 md:flex-row">
       {imageOption1.src && (
         <ImageChoiceOption
           image={imageOption1}

@@ -251,16 +251,16 @@ const Prompt = ({
         {imagesLoaded && (
           <div className="mt-4">
             <p className="mb-8">{imagePrompt}</p>
-            <div className="fixed bottom-4 left-0 right-0 flex w-full gap-x-2 gap-y-4 px-4 md:static md:flex-wrap md:px-0">
+            <div className="fixed bottom-4 left-0 right-0 mx-auto flex w-full max-w-2xl gap-x-2 gap-y-4 px-5 md:static md:px-0">
               <Button
-                className="w-full shadow-lg"
+                className="w-full shadow-lg md:w-auto"
                 onClick={onImageSubmit}
                 disabled={!selectedImage || loading}
               >
                 {!loading ? "Submit Image" : <Ellipsis />}
               </Button>
               <SecondaryButton
-                className="w-full"
+                className="w-full shadow-lg md:w-auto"
                 onClick={onTryAnotherPrompt}
                 disabled={loading || outOfRegenerations}
               >
