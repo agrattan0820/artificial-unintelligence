@@ -4,9 +4,7 @@ import { useContext, useState } from "react";
 import { motion } from "framer-motion";
 import { EventFrom, StateFrom } from "xstate";
 
-import SadDog from "@ai/images/sad-dog.webp";
-import SadDog2 from "@ai/images/sad-dog-2.webp";
-import Button from "@ai/components/button";
+import Button, { SecondaryButton } from "@ai/components/button";
 import ImageChoice, { ImageOption } from "./image-choice";
 import Ellipsis from "@ai/components/ellipsis";
 import Timer from "./timer";
@@ -88,14 +86,29 @@ const FaceOff = ({
           />
           <div className="mt-8">
             {currUserInFaceOff || voteSubmitted ? (
-              <p>Waiting for other AI trainers to finish voting...</p>
+              <>
+                <div className="fixed bottom-4 left-0 right-0 mx-auto w-full max-w-2xl px-6 md:hidden">
+                  <SecondaryButton
+                    className="w-full shadow-lg disabled:opacity-100"
+                    disabled
+                  >
+                    Waiting for other trainers to finish voting...
+                  </SecondaryButton>
+                </div>
+                <p className="hidden md:block">
+                  Waiting for other trainers to finish voting...
+                </p>
+              </>
             ) : (
-              <Button
-                onClick={onImageChoice}
-                disabled={!selectedImage || loading}
-              >
-                {!loading ? "Confirm Vote" : <Ellipsis />}
-              </Button>
+              <div className="fixed bottom-4 left-0 right-0 mx-auto w-full max-w-2xl px-6 md:static md:px-0">
+                <Button
+                  className="w-full shadow-lg md:w-auto"
+                  onClick={onImageChoice}
+                  disabled={!selectedImage || loading}
+                >
+                  {!loading ? "Confirm Vote" : <Ellipsis />}
+                </Button>
+              </div>
             )}
           </div>
         </>

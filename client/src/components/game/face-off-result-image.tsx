@@ -174,7 +174,7 @@ const FaceOffResultImage = ({
       }
       variants={imageVariants}
       transition={{ when: "beforeChildren" }}
-      className="relative"
+      className="relative w-full"
     >
       <motion.p
         initial={false}
@@ -193,11 +193,11 @@ const FaceOffResultImage = ({
         {votes.map((vote, i) => (
           <motion.li
             key={i}
-            className="absolute inline-block rounded-md bg-indigo-300 p-4 shadow-md"
+            className="absolute inline-block rounded-md bg-indigo-300 p-2 shadow-md md:p-4"
             variants={voteItemVariants}
             style={shuffledVotePositions[i]}
           >
-            <p className="text-sm text-black">{vote}</p>
+            <p className="text-xs text-black md:text-sm">{vote}</p>
           </motion.li>
         ))}
       </motion.ul>
@@ -236,34 +236,34 @@ const FaceOffResultImage = ({
       >
         <AnimatePresence>
           {(isWinner || isLoser || isTie) && (
-            <motion.p
-              key="prompt"
-              initial={{ opacity: 0, y: -25 }}
-              animate={{
-                opacity: 1,
-                y: 0,
-              }}
-              className="mb-4"
-            >
-              {prompt}
-            </motion.p>
-          )}
-          {(isWinner || isLoser || isTie) && (
             <motion.div
               key="nickname"
               initial={{ opacity: 0, y: -25 }}
               animate={{
                 opacity: 1,
                 y: 0,
-                transition: { delay: 0.5 },
               }}
-              className="flex justify-between"
+              className="mb-2 flex justify-between"
             >
               <h3 className="text-lg text-indigo-700 dark:text-indigo-300">
                 {nickname}
               </h3>{" "}
               <p>{percentage.toLocaleString()}%</p>
             </motion.div>
+          )}
+          {(isWinner || isLoser || isTie) && (
+            <motion.p
+              key="prompt"
+              className="w-full text-sm md:text-base"
+              initial={{ opacity: 0, y: -25 }}
+              animate={{
+                opacity: 1,
+                y: 0,
+                transition: { delay: 0.5 },
+              }}
+            >
+              {prompt}
+            </motion.p>
           )}
         </AnimatePresence>
       </motion.figcaption>

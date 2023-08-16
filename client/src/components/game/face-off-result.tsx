@@ -109,7 +109,7 @@ const FaceOffResult = ({
 
   return (
     <div className="mx-auto max-w-2xl">
-      <div className="relative mb-14">
+      <div className="relative mb-20">
         <motion.h2
           initial={{ y: 10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -119,10 +119,7 @@ const FaceOffResult = ({
           {currQuestionGenerations.question.text}
         </motion.h2>
       </div>
-      <motion.div
-        layout="position"
-        className="relative mb-16 flex flex-col gap-x-6 gap-y-4 md:flex-row"
-      >
+      <motion.div layout="position" className="relative mb-16 flex gap-6">
         <AnimatePresence>
           {image1Points === image2Points && showWinner && (
             <motion.div className="absolute -top-12 left-1/2 -translate-x-1/2 text-center">
