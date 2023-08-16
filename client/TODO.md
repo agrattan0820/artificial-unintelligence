@@ -10,12 +10,8 @@
 
 ## In Progress
 
-- [ ] Trying new prompt should not erase original prompt
-- [ ] Show face off result without scrolling
-- [ ] Confim vote (and other buttons) be fixed to bottom of page
 - [ ] Green color for confirm vote button?
 - [ ] Try Replicate AI for image generation (so that we can have actors and naughty stuff)
-- [ ] +1000 instead of 1000+ for point results
 - [ ] Random generated image option
 - [ ] Music/Sound effects
 - [ ] Prompt tutorial
@@ -39,3 +35,7 @@
 - [x] How-to-play screen
 - [x] Add donate button
 - [x] Maximum on amount of regenerations (3 per game?)
+- [x] +1000 instead of 1000+ for point results
+- [x] Confim vote (and other buttons) be fixed to bottom of page
+- [x] Show face off result without scrolling
+- [x] Trying new prompt should not erase original prompt

@@ -182,7 +182,7 @@ const FaceOffResultImage = ({
         variants={pointVariants}
         className="absolute -top-8 left-0 right-0 z-0 text-center"
       >
-        <motion.span>{animatedPoints}</motion.span>+
+        +<motion.span>{animatedPoints}</motion.span>
       </motion.p>
       <motion.ul
         initial={false}
