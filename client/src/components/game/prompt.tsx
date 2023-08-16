@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import Button, { SecondaryButton } from "@ai/components/button";
-import { generateImage } from "@ai/utils/query";
+import { generateOpenAIImage, generateSDXLImage } from "@ai/utils/query";
 import Ellipsis from "@ai/components/ellipsis";
 import ImageChoice, { ImageOption } from "./image-choice";
 import Timer from "./timer";
@@ -115,19 +115,19 @@ const Prompt = ({
     setLoading(true);
     const formPrompt = e.currentTarget.elements.prompt.value;
 
-    const images = await generateImage(formPrompt);
+    const images = await generateOpenAIImage(formPrompt);
 
     if (!images) {
       console.error("Images were unable to be generated");
       toast.error("I'm afraid I don't know how to process such a request.");
     } else {
-      setImageOption1(images[0].url ?? "");
-      setImageOption2(images[1].url ?? "");
+      setImageOption1(images[0] ?? "");
+      setImageOption2(images[1] ?? "");
       setImagePrompt(formPrompt);
 
       window.localStorage.setItem("prompt", formPrompt ?? "");
-      window.localStorage.setItem("image1", images[0].url ?? "");
-      window.localStorage.setItem("image2", images[1].url ?? "");
+      window.localStorage.setItem("image1", images[0] ?? "");
+      window.localStorage.setItem("image2", images[1] ?? "");
     }
 
     setLoading(false);

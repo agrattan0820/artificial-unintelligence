@@ -81,6 +81,8 @@ export async function POST(req: Request) {
 
     let imageGenerations: string[] | null = null;
 
+    console.time("Execution Time");
+
     while (!imageGenerations) {
       console.log("polling for result...");
       const finalResponse = await fetch(endpointURL, {
@@ -124,6 +126,8 @@ export async function POST(req: Request) {
         await new Promise((resolve) => setTimeout(resolve, 1000));
       }
     }
+
+    console.timeEnd("Execution Time");
 
     return NextResponse.json({
       result: imageGenerations ? imageGenerations : "Failed to generate images",
