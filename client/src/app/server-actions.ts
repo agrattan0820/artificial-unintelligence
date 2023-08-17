@@ -132,6 +132,13 @@ export async function joinRoom(nickname: string, code: string) {
     }),
   });
 
+  if (!response.ok) {
+    if (response.status === 400) {
+      throw new Error("Room is full");
+    }
+    throw new Error("Failed to join room");
+  }
+
   const data: JoinRoomResponse = await response.json();
 
   return data;
@@ -188,7 +195,7 @@ export async function getRegenerationCount({
     `${URL}/game/${gameId}/regenerations/${userId}`,
     {
       cache: "no-store",
-    }
+    },
   );
 
   const data: GetRegenerationCountResponse = await response.json();
@@ -218,7 +225,7 @@ export async function incrementUserRegenerationCount({
         userId,
         gameId,
       }),
-    }
+    },
   );
 
   const data: incrementUserRegenerationCountResponse = await response.json();
@@ -239,7 +246,7 @@ export async function getFaceOffs({
 }) {
   const response = await fetch(
     `${URL}/generations/gameId/${gameId}/round/${round}`,
-    { cache: "no-store" }
+    { cache: "no-store" },
   );
 
   const data: GetFaceOffsResponse = await response.json();

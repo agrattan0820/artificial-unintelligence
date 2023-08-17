@@ -11,7 +11,7 @@ import {
   existingHost,
   joinRoom,
 } from "@ai/app/server-actions";
-import Button, { LinkSecondaryButton, SecondaryButton } from "./button";
+import Button, { LinkSecondaryButton } from "./button";
 import Input from "./input";
 import { toast } from "react-hot-toast";
 
@@ -62,19 +62,28 @@ const NicknameForm = ({ room, submitLabel, type }: NicknameFormProps) => {
 
       if (type === "INVITE") {
         const joinData = await joinRoom(formNickname, room.code);
+
         setUser(joinData.user);
         setRoom(room);
         if (room) router.push(`/room/${room.code}`);
       }
     } catch (error) {
+      setLoading(false);
+
       if (error instanceof Error) {
-        console.error(error.message);
+        console.error(error);
+
+        if (error.message === "Room is full") {
+          toast.error("Room is full! Unable to join.");
+          return;
+        }
+
         toast.error(
           `An Error Occurred ${
             type === "HOME"
-              ? "Trying to Create a Game"
-              : "Trying to Join the Game"
-          }`
+              ? "Trying to Create a Room"
+              : "Trying to Join the Room"
+          }`,
         );
       }
     }
@@ -91,7 +100,7 @@ const NicknameForm = ({ room, submitLabel, type }: NicknameFormProps) => {
         required
         label="Enter a cool nickname"
       />
-      <div className="mt-8 gap-x-2 gap-y-4 flex flex-wrap">
+      <div className="mt-8 flex flex-wrap gap-x-2 gap-y-4">
         <Button type="submit" disabled={loading}>
           {!loading ? <>{submitLabel}</> : <Ellipsis />}
         </Button>

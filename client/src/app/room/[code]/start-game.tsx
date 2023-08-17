@@ -16,12 +16,14 @@ const StartGame = ({
   hostId,
   onStartGame,
   loading,
+  roomIsFull,
 }: {
   players: User[];
   code: string;
   hostId: number | null;
   onStartGame: () => void;
   loading: boolean;
+  roomIsFull: boolean;
 }) => {
   const { user } = useStore();
   const [isMounted, setIsMounted] = useState(false);
@@ -59,7 +61,11 @@ const StartGame = ({
             )}
           </Button>
         )}
-        <SecondaryButton onClick={onClick} className="flex items-center gap-2">
+        <SecondaryButton
+          onClick={onClick}
+          className="flex items-center gap-2"
+          disabled={roomIsFull}
+        >
           Invite Players {copying ? <FiCheckSquare /> : <FiPlusSquare />}
         </SecondaryButton>
       </div>
