@@ -13,17 +13,27 @@ export function roomSocketHandlers(
       const userId = Number(socket.handshake.auth.userId);
       let roomInfo = await getRoom({ code });
 
-      if (
-        roomInfo &&
-        !roomInfo.players.some((player) => player.id === userId)
-      ) {
+      if (!roomInfo) {
+        socket.emit("message", `Unable to connect to room`);
+        return;
+      }
+
+      const playerInRoom = roomInfo.players.some(
+        (player) => player.id === userId
+      );
+
+      if (roomInfo.players.length >= 8 && !playerInRoom) {
+        socket.emit("message", "Room is full, unable to join");
+        return;
+      }
+
+      if (!playerInRoom) {
         await joinRoom({ userId: userId, code });
         roomInfo = await getRoom({ code });
       }
 
       if (!roomInfo) {
-        socket.emit("message", `Unable to connect to room`);
-        return;
+        throw new Error("Unable to get room info after join");
       }
 
       socket.join(code);

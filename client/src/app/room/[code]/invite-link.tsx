@@ -5,8 +5,15 @@ import toast from "react-hot-toast";
 import { FiCheckSquare, FiCopy } from "react-icons/fi";
 
 import useLinkShare from "@ai/utils/hooks/use-link-share";
+import { cn } from "@ai/utils/cn";
 
-const InviteLink = ({ code }: { code: string }) => {
+const InviteLink = ({
+  code,
+  roomIsFull,
+}: {
+  code: string;
+  roomIsFull: boolean;
+}) => {
   const { link, copying, setCopying, onClick } = useLinkShare({
     title: "Join My Artificial Unintelligence Room",
     slug: `/invite/${code}`,
@@ -24,11 +31,15 @@ const InviteLink = ({ code }: { code: string }) => {
 
   return (
     <button
-      className="mx-auto hidden w-full items-center justify-center gap-2 rounded-xl border-2 border-indigo-600 p-8 text-xl underline-offset-2 hover:underline sm:flex sm:w-auto"
+      className={cn(
+        "mx-auto hidden w-full items-center justify-center gap-2 rounded-xl border-2 border-indigo-600 p-8 text-xl underline-offset-2 sm:flex sm:w-auto",
+        !roomIsFull && "hover:underline",
+      )}
       onClick={onClick}
+      disabled={roomIsFull}
     >
-      <span id="inviteLink">{link}</span>
-      <span>{copying ? <FiCheckSquare /> : <FiCopy />}</span>
+      <span id="inviteLink">{!roomIsFull ? link : "Room is full!"}</span>
+      {!roomIsFull && <span>{copying ? <FiCheckSquare /> : <FiCopy />}</span>}
     </button>
   );
 };
