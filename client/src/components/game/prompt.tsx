@@ -1,10 +1,11 @@
 "use client";
 
-import { ChangeEvent, FormEvent, useContext, useMemo, useState } from "react";
+import { FormEvent, useContext, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { EventFrom, StateFrom } from "xstate";
 import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { FiHelpCircle, FiX } from "react-icons/fi";
 
 import Button, { SecondaryButton } from "@ai/components/button";
 import { generateImage } from "@ai/utils/query";
@@ -39,6 +40,7 @@ const Prompt = ({
 }) => {
   const { user } = useStore();
   const socket = useContext(SocketContext);
+  const dialogRef = useRef<HTMLDialogElement>(null);
 
   const queryClient = useQueryClient();
 
@@ -229,7 +231,8 @@ const Prompt = ({
                 placeholder="Describe a funny image"
                 rows={5}
                 cols={33}
-                maxLength={500}
+                maxLength={400}
+                name="prompt"
                 className="peer w-full resize-none rounded-xl border-2 border-gray-300 bg-transparent p-4 placeholder-transparent focus:border-indigo-600 focus:outline-none focus:dark:border-indigo-300"
                 defaultValue={
                   window.localStorage.getItem("prompt") ?? undefined
@@ -243,9 +246,77 @@ const Prompt = ({
                 Describe a funny image
               </label>
             </div>
-            <Button type="submit" disabled={loading}>
-              {!loading ? "Submit Prompt" : <Ellipsis />}
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button type="submit" disabled={loading}>
+                {!loading ? "Submit Prompt" : <Ellipsis />}
+              </Button>
+              <button
+                className="transform text-2xl transition hover:scale-110"
+                onClick={() => dialogRef.current?.showModal()}
+              >
+                <FiHelpCircle />
+              </button>
+            </div>
+            <dialog
+              ref={dialogRef}
+              className="open:animate-modal open:backdrop:animate-modal relative mx-auto w-full max-w-2xl rounded-xl p-8 transition backdrop:bg-slate-900/50"
+            >
+              <form method="dialog">
+                <button className="absolute right-2 top-2">
+                  <FiX />
+                </button>
+                <p>
+                  In Artificial Unintelligence, you can imagine any sort of
+                  fantastical scene and create a depiction of it by entering in
+                  a textual description of what the image should contain, known
+                  as a &quot;prompt.&quot;
+                </p>
+                <br />
+                <p className="mb-2">
+                  Here are some suggestions on how to get started writing a
+                  prompt of your own:
+                </p>
+                <ol className="flex list-decimal flex-col gap-2 pl-8">
+                  <li>
+                    The basis for a good prompt requires at least one subject
+                    (nouns) and a couple of descriptors (adjectives and adverbs){" "}
+                    <cite>
+                      <a
+                        href="https://letsenhance.io/blog/article/ai-text-prompt-guide/"
+                        className="text-indigo-500 underline"
+                      >
+                        (source)
+                      </a>
+                    </cite>
+                    . An example prompt could be &quot;A dog breathing blue fire
+                    onto a plate of chicken nuggets.&quot;
+                  </li>
+                  <li>
+                    To further enhance an image, try adding
+                    &quot;aesthetic&quot; words to your prompt. These can be
+                    keywords like &quot;cinematic,&quot;&quot;renaissance
+                    painting,&quot; or &quot;vaporwave&quot;{" "}
+                    <cite>
+                      <a
+                        href="https://letsenhance.io/blog/article/ai-text-prompt-guide/"
+                        className="text-indigo-500 underline"
+                      >
+                        (source)
+                      </a>
+                    </cite>
+                    . We can add an aesthetic word to our previous prompt so
+                    that it says, &quot;A dog breathing blue fire onto a plate
+                    of chicken nuggets, cinematic.&quot;
+                  </li>
+                  <li>
+                    Try not to overdo the description, you can only input a
+                    maximum of 400 characters (about 60 words) since this is the
+                    max the image generator allows.
+                  </li>
+                </ol>
+                <Button className="mt-8">Okay, I got it</Button>
+              </form>
+            </dialog>
           </motion.form>
         )}
         {imagesLoaded && (
