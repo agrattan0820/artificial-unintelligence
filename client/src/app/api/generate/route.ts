@@ -1,15 +1,11 @@
 import { NextResponse } from "next/server";
-import { Configuration, OpenAIApi, ResponseTypes } from "openai-edge";
+import OpenAI from "openai";
 import { kv } from "@vercel/kv";
 import { Ratelimit } from "@upstash/ratelimit";
 
 export const runtime = "edge";
 
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
-const openai = new OpenAIApi(configuration);
+const openai = new OpenAI();
 
 export async function POST(req: Request) {
   if (process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN) {
@@ -21,7 +17,7 @@ export async function POST(req: Request) {
     });
 
     const { success, limit, reset, remaining } = await ratelimit.limit(
-      `ratelimit_${ip}`
+      `ratelimit_${ip}`,
     );
 
     if (!success) {
@@ -36,13 +32,13 @@ export async function POST(req: Request) {
     }
   } else {
     console.log(
-      "KV_REST_API_URL and KV_REST_API_TOKEN env vars not found, not rate limiting..."
+      "KV_REST_API_URL and KV_REST_API_TOKEN env vars not found, not rate limiting...",
     );
   }
 
   const body = await req.json();
 
-  if (!configuration.apiKey) {
+  if (!process.env.OPENAI_API_KEY) {
     return new Response("API Key is not defined", {
       status: 500,
     });
@@ -56,13 +52,11 @@ export async function POST(req: Request) {
   }
 
   try {
-    const imagesResponse = await openai.createImage({
+    const images = await openai.images.generate({
       prompt,
       n: 2,
       size: "1024x1024",
     });
-
-    const images: ResponseTypes["createImage"] = await imagesResponse.json();
 
     return NextResponse.json({ result: images.data });
   } catch (error) {
