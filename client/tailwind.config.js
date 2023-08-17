@@ -18,24 +18,29 @@ module.exports = {
         space: ["var(--font-space)", ...fontFamily.sans],
       },
       keyframes: {
+        "blink-caret": {
+          "from, to": { borderColor: "inherit" },
+          "50%": { borderColor: "transparent" },
+        },
         dot: {
           "0%": { opacity: 0 },
           "50%": { opacity: 1 },
           "100%": { opacity: 0 },
         },
+        modal: {
+          "0%": { opacity: 0, transform: "translateY(24px)" },
+          "100%": { opacity: 1, transform: "translateY(0px)" },
+        },
         typing: {
           from: { width: 0 },
           to: { width: "100%" },
-        },
-        "blink-caret": {
-          "from, to": { borderColor: "inherit" },
-          "50%": { borderColor: "transparent" },
         },
       },
       animation: {
         "dot-bounce": "dot 2s infinite",
         "dot-bounce-2": "dot 2s infinite .25s",
         "dot-bounce-3": "dot 2s infinite .5s",
+        modal: "modal 300ms ease-in-out",
         typewriter:
           "typing 3.5s steps(40, end), blink-caret .75s step-end infinite",
       },
