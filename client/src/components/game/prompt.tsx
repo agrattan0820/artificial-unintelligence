@@ -219,44 +219,47 @@ const Prompt = ({
       />
       <AnimatePresence>
         {!imagesLoaded && (
-          <motion.form
-            initial={{ y: 25, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 25, opacity: 0, transition: { delay: 1 } }}
-            onSubmit={onPromptSubmit}
-          >
-            <div className="relative mb-8">
-              <textarea
-                id="prompt"
-                placeholder="Describe a funny image"
-                rows={5}
-                cols={33}
-                maxLength={400}
-                name="prompt"
-                className="peer w-full resize-none rounded-xl border-2 border-gray-300 bg-transparent p-4 placeholder-transparent focus:border-indigo-600 focus:outline-none focus:dark:border-indigo-300"
-                defaultValue={
-                  window.localStorage.getItem("prompt") ?? undefined
-                }
-                required
-              />
-              <label
-                htmlFor="prompt"
-                className="absolute -top-6 left-2 text-sm text-gray-600 transition-all peer-placeholder-shown:left-4 peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:-top-6 peer-focus:left-2 peer-focus:text-sm peer-focus:text-gray-600 dark:text-gray-400 dark:peer-focus:text-gray-400"
-              >
-                Describe a funny image
-              </label>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button type="submit" disabled={loading}>
-                {!loading ? "Submit Prompt" : <Ellipsis />}
-              </Button>
-              <button
-                className="transform text-2xl transition hover:scale-110"
-                onClick={() => dialogRef.current?.showModal()}
-              >
-                <FiHelpCircle />
-              </button>
-            </div>
+          <>
+            <motion.form
+              initial={{ y: 25, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 25, opacity: 0, transition: { delay: 1 } }}
+              onSubmit={onPromptSubmit}
+            >
+              <div className="relative mb-8">
+                <textarea
+                  id="prompt"
+                  placeholder="Describe a funny image"
+                  rows={5}
+                  cols={33}
+                  maxLength={400}
+                  name="prompt"
+                  className="peer w-full resize-none rounded-xl border-2 border-gray-300 bg-transparent p-4 placeholder-transparent focus:border-indigo-600 focus:outline-none focus:dark:border-indigo-300"
+                  defaultValue={
+                    window.localStorage.getItem("prompt") ?? undefined
+                  }
+                  required
+                />
+                <label
+                  htmlFor="prompt"
+                  className="absolute -top-6 left-2 text-sm text-gray-600 transition-all peer-placeholder-shown:left-4 peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:-top-6 peer-focus:left-2 peer-focus:text-sm peer-focus:text-gray-600 dark:text-gray-400 dark:peer-focus:text-gray-400"
+                >
+                  Describe a funny image
+                </label>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button type="submit" disabled={loading}>
+                  {!loading ? "Submit Prompt" : <Ellipsis />}
+                </Button>
+                <button
+                  type="button"
+                  className="transform text-2xl transition hover:scale-110"
+                  onClick={() => dialogRef.current?.showModal()}
+                >
+                  <FiHelpCircle />
+                </button>
+              </div>
+            </motion.form>
             <dialog
               ref={dialogRef}
               className="open:animate-modal open:backdrop:animate-modal relative mx-auto w-full max-w-2xl rounded-xl p-8 transition backdrop:bg-slate-900/50"
@@ -317,7 +320,7 @@ const Prompt = ({
                 <Button className="mt-8">Okay, I got it</Button>
               </form>
             </dialog>
-          </motion.form>
+          </>
         )}
         {imagesLoaded && (
           <div className="mt-4">
