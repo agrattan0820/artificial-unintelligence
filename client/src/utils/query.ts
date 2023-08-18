@@ -1,5 +1,5 @@
-import type { ImagesResponseDataInner } from "openai-edge";
 import * as Sentry from "@sentry/nextjs";
+import type { ImagesResponse } from "openai/resources";
 
 // generate an AI image
 export const generateOpenAIImage = async (prompt: string) => {
@@ -16,7 +16,7 @@ export const generateOpenAIImage = async (prompt: string) => {
       throw new Error(`Request failed with status ${response.status}`);
     }
 
-    const data: { result: ImagesResponseDataInner[] } = await response.json();
+    const data: { result: ImagesResponse["data"] } = await response.json();
 
     return data.result.map((image) => image.url);
   } catch (error) {
