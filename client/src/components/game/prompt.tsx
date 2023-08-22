@@ -117,7 +117,11 @@ const Prompt = ({
     setLoading(true);
     const formPrompt = e.currentTarget.elements.prompt.value;
 
-    const images = await generateOpenAIImage(formPrompt);
+    console.time("Execution Time");
+
+    const images = await generateSDXLImage(formPrompt);
+
+    console.timeEnd("Execution Time");
 
     if (!images) {
       console.error("Images were unable to be generated");
