@@ -1,12 +1,12 @@
 import { describe, expect, test } from "@jest/globals";
-import { filterGameRoundGenerationsByQuestionId } from "../services/generation.service";
+import { filterFaceOffGenerationsByQuestionId } from "../services/generation.service";
 import { GameRoundGeneration } from "../types";
 
 describe("filterGameRoundGenerationsByQuestionId", () => {
   test("expects the filtered array to not have any generations from other questions", () => {
     const testQuestionId = 2;
 
-    const gameRoundGenerations: GameRoundGeneration[] = [
+    const faceOffGenerations: GameRoundGeneration[] = [
       {
         generation: {
           id: 2,
@@ -16,6 +16,7 @@ describe("filterGameRoundGenerationsByQuestionId", () => {
           questionId: 2,
           gameId: 2,
           imageUrl: "LINK TO IMAGE",
+          selected: true,
         },
         question: {
           id: 2,
@@ -41,6 +42,7 @@ describe("filterGameRoundGenerationsByQuestionId", () => {
           questionId: 2,
           gameId: 2,
           imageUrl: "LINK TO IMAGE",
+          selected: true,
         },
         question: {
           id: 2,
@@ -66,6 +68,7 @@ describe("filterGameRoundGenerationsByQuestionId", () => {
           questionId: 2,
           gameId: 2,
           imageUrl: "LINK TO IMAGE",
+          selected: true,
         },
         question: {
           id: 3,
@@ -91,6 +94,7 @@ describe("filterGameRoundGenerationsByQuestionId", () => {
           questionId: 2,
           gameId: 2,
           imageUrl: "LINK TO IMAGE",
+          selected: true,
         },
         question: {
           id: 3,
@@ -109,9 +113,9 @@ describe("filterGameRoundGenerationsByQuestionId", () => {
       },
     ];
 
-    const filteredGenerations = filterGameRoundGenerationsByQuestionId({
+    const filteredGenerations = filterFaceOffGenerationsByQuestionId({
       questionId: testQuestionId,
-      gameRoundGenerations,
+      faceOffGenerations,
     });
 
     expect(filteredGenerations.length).toBe(2);

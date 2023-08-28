@@ -1,4 +1,4 @@
-import { and, asc, eq } from "drizzle-orm";
+import { and, asc, eq, sql } from "drizzle-orm";
 import { db } from "../../db/db";
 import {
   Generation,
@@ -49,13 +49,56 @@ export async function getGameRoundGenerations({
   return gameRoundGenerations;
 }
 
+export async function getFaceOffGenerations({
+  gameId,
+  round,
+}: {
+  gameId: number;
+  round: number;
+}): Promise<GameRoundGeneration[]> {
+  const gameRoundGenerations = await db
+    .select({
+      generation: generations,
+      question: {
+        id: questions.id,
+        text: questions.text,
+        round: questionsToGames.round,
+        gameId: questionsToGames.gameId,
+        player1: questionsToGames.player1,
+        player2: questionsToGames.player2,
+        createdAt: questionsToGames.createdAt,
+      },
+      user: users,
+    })
+    .from(generations)
+    .innerJoin(
+      questionsToGames,
+      and(
+        eq(questionsToGames.gameId, generations.gameId),
+        eq(questionsToGames.questionId, generations.questionId)
+      )
+    )
+    .innerJoin(questions, eq(questions.id, generations.questionId))
+    .innerJoin(users, eq(users.id, generations.userId))
+    .where(
+      and(
+        eq(generations.gameId, gameId),
+        eq(questionsToGames.round, round),
+        eq(generations.selected, true)
+      )
+    )
+    .orderBy(asc(questionsToGames.createdAt), asc(questionsToGames.questionId));
+
+  return gameRoundGenerations;
+}
+
 // TODO: test this function
 export function mapGenerationsByQuestion({
-  gameRoundGenerations,
+  faceOffGenerations,
 }: {
-  gameRoundGenerations: GameRoundGeneration[];
+  faceOffGenerations: GameRoundGeneration[];
 }) {
-  const questionGenerationMap = gameRoundGenerations.reduce<
+  const questionGenerationMap = faceOffGenerations.reduce<
     Record<number, QuestionGenerations>
   >((acc, curr, i) => {
     if (!acc[curr.question.id]) {
@@ -64,19 +107,19 @@ export function mapGenerationsByQuestion({
         player1:
           curr.generation.userId === curr.question.player1
             ? curr.user
-            : gameRoundGenerations[i + 1].user,
+            : faceOffGenerations[i + 1].user,
         player1Generation:
           curr.generation.userId === curr.question.player1
             ? curr.generation
-            : gameRoundGenerations[i + 1].generation, // the generations are ordered by question id so instead of doing a search for the correct generation, we know that it is at the next index
+            : faceOffGenerations[i + 1].generation, // the generations are ordered by question id so instead of doing a search for the correct generation, we know that it is at the next index
         player2:
           curr.generation.userId === curr.question.player2
             ? curr.user
-            : gameRoundGenerations[i + 1].user,
+            : faceOffGenerations[i + 1].user,
         player2Generation:
           curr.generation.userId === curr.question.player2
             ? curr.generation
-            : gameRoundGenerations[i + 1].generation,
+            : faceOffGenerations[i + 1].generation,
       };
     }
 
@@ -90,12 +133,12 @@ export function mapGenerationsByQuestion({
 
 // TODO: Test this function
 export function getSubmittedPlayers({
-  gameRoundGenerations,
+  faceOffGenerations,
 }: {
-  gameRoundGenerations: GameRoundGeneration[];
+  faceOffGenerations: GameRoundGeneration[];
 }) {
   const userGenerationCountMap = new Map<number, number>();
-  const submittedUsers = gameRoundGenerations.reduce<number[]>((acc, curr) => {
+  const submittedUsers = faceOffGenerations.reduce<number[]>((acc, curr) => {
     const currUserId = curr.generation.userId;
 
     if (userGenerationCountMap.get(currUserId) === 1) {
@@ -128,14 +171,14 @@ export async function createGeneration(data: NewGeneration) {
   return newGeneration[0];
 }
 
-export function filterGameRoundGenerationsByQuestionId({
+export function filterFaceOffGenerationsByQuestionId({
   questionId,
-  gameRoundGenerations,
+  faceOffGenerations,
 }: {
   questionId: number;
-  gameRoundGenerations: GameRoundGeneration[];
+  faceOffGenerations: GameRoundGeneration[];
 }) {
-  const filteredGenerations = gameRoundGenerations.reduce<Generation[]>(
+  const filteredGenerations = faceOffGenerations.reduce<Generation[]>(
     (acc, curr) => {
       if (curr.question.id === questionId) {
         acc.push(curr.generation);
@@ -147,4 +190,68 @@ export function filterGameRoundGenerationsByQuestionId({
   );
 
   return filteredGenerations;
+}
+
+export async function getGenerationCount({
+  gameId,
+  userId,
+  questionId,
+}: {
+  gameId: number;
+  userId: number;
+  questionId: number;
+}) {
+  const generationCount = await db
+    .select({
+      count: sql<number>`count(${generations.id})::int`,
+    })
+    .from(generations)
+    .where(
+      and(
+        eq(generations.gameId, gameId),
+        eq(generations.userId, userId),
+        eq(generations.questionId, questionId)
+      )
+    );
+
+  return generationCount[0].count;
+}
+
+export async function getUserGenerationInfo({
+  gameId,
+  userId,
+  round,
+}: {
+  gameId: number;
+  userId: number;
+  round: number;
+}) {
+  const generationsForUserForRound = await db
+    .select({
+      id: generations.id,
+      gameId: generations.gameId,
+      imageUrl: generations.imageUrl,
+      questionId: generations.questionId,
+      selected: generations.selected,
+      text: generations.text,
+      userId: generations.userId,
+      createdAt: generations.createdAt,
+    })
+    .from(generations)
+    .innerJoin(
+      questionsToGames,
+      and(
+        eq(generations.gameId, questionsToGames.gameId),
+        eq(generations.questionId, questionsToGames.questionId)
+      )
+    )
+    .where(
+      and(
+        eq(generations.gameId, gameId),
+        eq(generations.userId, userId),
+        eq(questionsToGames.round, round)
+      )
+    );
+
+  return generationsForUserForRound;
 }

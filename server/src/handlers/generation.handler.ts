@@ -4,7 +4,7 @@ import { ClientToServerEvents, ServerToClientEvents } from "../types";
 import { handleSocketError } from "../utils";
 import {
   createGeneration,
-  getGameRoundGenerations,
+  getFaceOffGenerations,
   getSubmittedPlayers,
 } from "../services/generation.service";
 import { getGameInfo } from "../services/game.service";
@@ -24,12 +24,12 @@ export function generationSocketHandlers(
 
       await createGeneration(data);
 
-      const gameRoundGenerations = await getGameRoundGenerations({
+      const faceOffGenerations = await getFaceOffGenerations({
         gameId: data.gameId,
         round: data.round,
       });
 
-      const submittedUsers = getSubmittedPlayers({ gameRoundGenerations });
+      const submittedUsers = getSubmittedPlayers({ faceOffGenerations });
 
       socket.emit("submittedPlayers", submittedUsers);
       socket
@@ -37,7 +37,7 @@ export function generationSocketHandlers(
         .emit("submittedPlayers", submittedUsers);
 
       const totalNeeded = gameInfo.players.length * 2;
-      const currentAmount = gameRoundGenerations.length;
+      const currentAmount = faceOffGenerations.length;
 
       console.log("[TOTAL NEEDED]", totalNeeded);
 

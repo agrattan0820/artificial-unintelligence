@@ -43,6 +43,7 @@ describe("createVoteMap", () => {
         questionId: 2,
         gameId: 2,
         imageUrl: "LINK TO IMAGE",
+        selected: true,
       },
       {
         id: 2,
@@ -52,6 +53,7 @@ describe("createVoteMap", () => {
         questionId: 2,
         gameId: 2,
         imageUrl: "LINK TO IMAGE",
+        selected: true,
       },
     ];
 

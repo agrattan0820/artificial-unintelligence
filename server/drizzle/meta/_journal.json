@@ -127,6 +127,13 @@
       "when": 1691244559328,
       "tag": "0017_nostalgic_northstar",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "5",
+      "when": 1693183820410,
+      "tag": "0018_late_thor",
+      "breakpoints": true
     }
   ]
 }
