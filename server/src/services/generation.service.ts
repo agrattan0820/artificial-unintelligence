@@ -1,4 +1,4 @@
-import { and, asc, eq, sql } from "drizzle-orm";
+import { and, asc, desc, eq, sql } from "drizzle-orm";
 import { db } from "../../db/db";
 import {
   Generation,
@@ -44,7 +44,10 @@ export async function getGameRoundGenerations({
     .where(
       and(eq(generations.gameId, gameId), eq(questionsToGames.round, round))
     )
-    .orderBy(asc(questionsToGames.createdAt), asc(questionsToGames.questionId));
+    .orderBy(
+      desc(questionsToGames.createdAt),
+      desc(questionsToGames.questionId)
+    );
 
   return gameRoundGenerations;
 }
@@ -254,4 +257,18 @@ export async function getUserGenerationInfo({
     );
 
   return generationsForUserForRound;
+}
+
+export async function setGenerationAsSubmitted({
+  generationId,
+}: {
+  generationId: number;
+}) {
+  const updatedGenerations = await db
+    .update(generations)
+    .set({ selected: true })
+    .where(eq(generations.id, generationId))
+    .returning();
+
+  return updatedGenerations[0];
 }

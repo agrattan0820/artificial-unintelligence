@@ -13,6 +13,9 @@ const nextConfig = {
       {
         hostname: "replicate.delivery",
       },
+      {
+        hostname: "pbxt.replicate.delivery",
+      },
     ],
   },
 };

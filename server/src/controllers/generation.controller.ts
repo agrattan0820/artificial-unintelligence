@@ -30,7 +30,7 @@ export async function createGenerationsController(
       questionId,
     });
 
-    if (generationCount >= 6) {
+    if (generationCount >= 8) {
       throw new Error("Exceeded generation count for question.");
     }
 
@@ -46,7 +46,7 @@ export async function createGenerationsController(
       )
     );
 
-    return generations;
+    res.status(200).send(generations);
   } catch (error) {
     next(error);
   }

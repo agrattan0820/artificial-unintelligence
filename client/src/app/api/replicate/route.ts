@@ -123,6 +123,10 @@ export async function POST(req: Request) {
       }
     }
 
+    if (imageGenerations) {
+      console.log("Received images:", imageGenerations);
+    }
+
     return NextResponse.json({
       result: imageGenerations ? imageGenerations : "Failed to generate images",
     });

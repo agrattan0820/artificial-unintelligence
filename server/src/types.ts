@@ -34,12 +34,9 @@ export interface ClientToServerEvents {
   }) => void;
   testEvent: (code: string) => void;
   generationSubmitted: (data: {
+    generationId: number;
     gameId: number;
     round: number;
-    userId: number;
-    questionId: number;
-    text: string;
-    imageUrl: string;
   }) => void;
   voteSubmitted: (data: {
     userId: number;

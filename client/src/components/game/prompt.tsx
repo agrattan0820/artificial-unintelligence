@@ -44,23 +44,37 @@ const Prompt = ({
   const currRound = state.context.round;
   const maxRegenerations = 3;
 
-  const [numGeneratedImages, setNumGeneratedImages] = useState(
-    userGameRoundGenerations.length ?? 0,
+  const isSecondStage =
+    userGameRoundGenerations.length > 1 &&
+    (userGameRoundGenerations[0].generation.selected ||
+      userGameRoundGenerations[1].generation.selected);
+  const shouldShowGenerations =
+    userGameRoundGenerations.length > 1 &&
+    !userGameRoundGenerations[0].generation.selected &&
+    !userGameRoundGenerations[1].generation.selected;
+
+  const [numGenerations, setNumGenerations] = useState(
+    userGameRoundGenerations.length,
   );
-  const [stage, setStage] = useState<"FIRST" | "SECOND">("FIRST");
+
+  const remainingImageGenerations = maxRegenerations - (numGenerations - 2) / 2;
+  const outOfRegenerations = remainingImageGenerations === 0;
+
+  const [stage, setStage] = useState<"FIRST" | "SECOND">(
+    isSecondStage ? "SECOND" : "FIRST",
+  );
   const [loading, setLoading] = useState(false);
   const [imagePrompt, setImagePrompt] = useState(
-    window.localStorage.getItem("prompt") ?? "",
+    shouldShowGenerations ? userGameRoundGenerations[0].generation.text : "",
   );
   const [imageOption1, setImageOption1] = useState(
-    window.localStorage.getItem("image1") ?? "",
+    shouldShowGenerations ? userGameRoundGenerations[0].generation : undefined,
   );
   const [imageOption2, setImageOption2] = useState(
-    window.localStorage.getItem("image2") ?? "",
+    shouldShowGenerations ? userGameRoundGenerations[1].generation : undefined,
   );
   const [selectedImage, setSelectedImage] = useState<ImageOption>();
 
-  const outOfRegenerations = maxRegenerations === numGeneratedImages;
   const imagesLoaded = imageOption1 && imageOption2;
 
   const questions = useMemo(() => {
@@ -88,16 +102,10 @@ const Prompt = ({
       console.error("Images were unable to be generated");
       toast.error("I'm afraid I don't know how to process such a request.");
     } else {
-      setImageOption1(images[0] ?? "");
-      setImageOption2(images[1] ?? "");
       setImagePrompt(formPrompt);
 
-      window.localStorage.setItem("prompt", formPrompt ?? "");
-      window.localStorage.setItem("image1", images[0] ?? "");
-      window.localStorage.setItem("image2", images[1] ?? "");
-
       if (userId) {
-        await createGenerations({
+        const generations = await createGenerations({
           userId,
           gameId,
           questionId: currQuestion.id,
@@ -108,55 +116,48 @@ const Prompt = ({
             };
           }),
         });
+
+        setImageOption1(generations[0]);
+        setImageOption2(generations[1]);
+
+        setNumGenerations(numGenerations + generations.length);
       }
     }
 
     setLoading(false);
   };
 
-  const resetPrompt = () => {
-    setImagePrompt("");
-    window.localStorage.removeItem("prompt");
-  };
-
   const resetImage = () => {
-    setImageOption1("");
-    setImageOption2("");
+    setImageOption1(undefined);
+    setImageOption2(undefined);
     setSelectedImage(undefined);
-    window.localStorage.removeItem("image1");
-    window.localStorage.removeItem("image2");
   };
 
   const onTryAnotherPrompt = () => {
     resetImage();
-    setNumGeneratedImages(numGeneratedImages + 1);
   };
 
   const onImageSubmit = async () => {
     setLoading(true);
 
-    if (user) {
+    if (user && imageOption1 && imageOption2) {
       socket.emit("generationSubmitted", {
-        gameId: gameInfo.game.id,
+        generationId: selectedImage === 1 ? imageOption1?.id : imageOption2?.id,
+        gameId: gameId,
         round: currRound,
-        imageUrl: selectedImage === 1 ? imageOption1 : imageOption2,
-        questionId: currQuestion.id,
-        text: imagePrompt,
-        userId: user?.id,
       });
     } else {
       console.error("User was not defined when trying to submit a generation");
       toast.error("Oops, we can't submit your generation.");
+      setLoading(false);
+      return;
     }
 
     if (stage === "FIRST") {
       setStage("SECOND");
-      resetPrompt();
+      setImagePrompt("");
       resetImage();
     } else {
-      window.localStorage.removeItem("prompt");
-      window.localStorage.removeItem("image1");
-      window.localStorage.removeItem("image2");
       send({ type: "SUBMIT" });
     }
 
@@ -181,11 +182,11 @@ const Prompt = ({
       </div>
       <ImageChoice
         imageOption1={{
-          src: imageOption1,
+          src: imageOption1?.imageUrl ?? "",
           alt: `Image option 1 with the prompt: ${imagePrompt}`,
         }}
         imageOption2={{
-          src: imageOption2,
+          src: imageOption2?.imageUrl ?? "",
           alt: `Image option 2 with the prompt: ${imagePrompt}`,
         }}
         selectedImage={selectedImage}
@@ -209,9 +210,7 @@ const Prompt = ({
                   maxLength={400}
                   name="prompt"
                   className="peer w-full resize-none rounded-xl border-2 border-gray-300 bg-transparent p-4 placeholder-transparent focus:border-indigo-600 focus:outline-none focus:dark:border-indigo-300"
-                  defaultValue={
-                    window.localStorage.getItem("prompt") ?? undefined
-                  }
+                  defaultValue={imagePrompt ?? undefined}
                   required
                 />
                 <label
@@ -314,9 +313,7 @@ const Prompt = ({
               >
                 {!loading ? (
                   `Create New Images
-                      ${
-                        maxRegenerations - numGeneratedImages
-                      }/${maxRegenerations}`
+                      ${remainingImageGenerations}/${maxRegenerations}`
                 ) : (
                   <Ellipsis />
                 )}

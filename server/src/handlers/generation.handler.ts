@@ -6,6 +6,7 @@ import {
   createGeneration,
   getFaceOffGenerations,
   getSubmittedPlayers,
+  setGenerationAsSubmitted,
 } from "../services/generation.service";
 import { getGameInfo } from "../services/game.service";
 
@@ -22,7 +23,7 @@ export function generationSocketHandlers(
         return;
       }
 
-      await createGeneration(data);
+      await setGenerationAsSubmitted({ generationId: data.generationId });
 
       const faceOffGenerations = await getFaceOffGenerations({
         gameId: data.gameId,
