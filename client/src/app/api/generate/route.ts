@@ -5,7 +5,9 @@ import { Ratelimit } from "@upstash/ratelimit";
 
 export const runtime = "edge";
 
-const openai = new OpenAI();
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY ?? "",
+});
 
 export async function POST(req: Request) {
   if (process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN) {
