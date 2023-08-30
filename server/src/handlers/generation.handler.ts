@@ -3,7 +3,6 @@ import { Server, Socket } from "socket.io";
 import { ClientToServerEvents, ServerToClientEvents } from "../types";
 import { handleSocketError } from "../utils";
 import {
-  createGeneration,
   getFaceOffGenerations,
   getSubmittedPlayers,
   setGenerationAsSubmitted,
