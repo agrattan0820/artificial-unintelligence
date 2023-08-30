@@ -1,8 +1,56 @@
 import type { NextFunction, Request, Response } from "express";
 import {
-  getGameRoundGenerations,
+  createGeneration,
+  getFaceOffGenerations,
+  getGenerationCount,
+  getUserGenerationInfo,
   mapGenerationsByQuestion,
 } from "../services/generation.service";
+
+export async function createGenerationsController(
+  req: Request<
+    {},
+    {},
+    {
+      userId: number;
+      gameId: number;
+      questionId: number;
+      images: { text: string; imageUrl: string }[];
+    }
+  >,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const { userId, gameId, questionId, images } = req.body;
+
+    const generationCount = await getGenerationCount({
+      gameId,
+      userId,
+      questionId,
+    });
+
+    if (generationCount >= 8) {
+      throw new Error("Exceeded generation count for question.");
+    }
+
+    const generations = await Promise.all(
+      images.map((image) =>
+        createGeneration({
+          userId,
+          gameId,
+          questionId,
+          text: image.text,
+          imageUrl: image.imageUrl,
+        })
+      )
+    );
+
+    res.status(200).send(generations);
+  } catch (error) {
+    next(error);
+  }
+}
 
 export async function getFaceOffsController(
   req: Request<{ gameId: string; round: string }>,
@@ -13,12 +61,12 @@ export async function getFaceOffsController(
     const gameId = Number.parseInt(req.params.gameId);
     const round = Number.parseInt(req.params.round);
 
-    const gameRoundGenerations = await getGameRoundGenerations({
+    const faceOffGenerations = await getFaceOffGenerations({
       gameId,
       round,
     });
 
-    if (!gameRoundGenerations) {
+    if (!faceOffGenerations) {
       res.status(404).send({
         error: `Generations with gameId of ${gameId} and round of ${round} were not found`,
       });
@@ -26,10 +74,43 @@ export async function getFaceOffsController(
     }
 
     const faceOffs = mapGenerationsByQuestion({
-      gameRoundGenerations,
+      faceOffGenerations,
     });
 
     res.status(200).send(faceOffs);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getUserGenerationInfoController(
+  req: Request<{
+    gameId: string;
+    userId: string;
+    round: string;
+  }>,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const gameId = Number.parseInt(req.params.gameId);
+    const userId = Number.parseInt(req.params.userId);
+    const round = Number.parseInt(req.params.round);
+
+    const generationInfo = await getUserGenerationInfo({
+      gameId,
+      userId,
+      round,
+    });
+
+    if (!generationInfo) {
+      res.status(404).send({
+        error: `Generation info with gameId of ${gameId}, round of ${round}, and userId of ${userId} were not found`,
+      });
+      return;
+    }
+
+    res.status(200).send(generationInfo);
   } catch (error) {
     next(error);
   }

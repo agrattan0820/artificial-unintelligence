@@ -1,5 +1,6 @@
 import { InferModel } from "drizzle-orm";
 import {
+  boolean,
   integer,
   pgTable,
   primaryKey,
@@ -87,6 +88,7 @@ export const generations = pgTable("generations", {
     .notNull(),
   text: text("text").notNull(),
   imageUrl: text("image_url").notNull(),
+  selected: boolean("selected").default(false).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -111,7 +113,6 @@ export const usersToGames = pgTable(
       .references(() => games.id)
       .notNull(),
     points: integer("points").default(0).notNull(),
-    regenerationCount: integer("regeneration_count").default(0).notNull(),
   },
   (table) => ({
     cpk: primaryKey(table.userId, table.gameId),

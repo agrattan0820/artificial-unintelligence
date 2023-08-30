@@ -4,8 +4,8 @@ import { ClientToServerEvents, ServerToClientEvents } from "../types";
 import { handleSocketError } from "../utils";
 import { getGameInfo } from "../services/game.service";
 import {
-  getGameRoundGenerations,
-  filterGameRoundGenerationsByQuestionId,
+  getFaceOffGenerations,
+  filterFaceOffGenerationsByQuestionId,
 } from "../services/generation.service";
 import {
   createVote,
@@ -44,14 +44,14 @@ export function voteSocketHandlers(
       const currentAmount = questionVotes.length;
 
       if (currentAmount >= totalNeeded) {
-        const gameRoundGenerations = await getGameRoundGenerations({
+        const faceOffGenerations = await getFaceOffGenerations({
           gameId: data.gameId,
           round: gameInfo.game.round,
         });
 
-        const filteredGenerations = filterGameRoundGenerationsByQuestionId({
+        const filteredGenerations = filterFaceOffGenerationsByQuestionId({
           questionId: data.questionId,
-          gameRoundGenerations,
+          faceOffGenerations,
         });
 
         const voteMap = createVoteMap({

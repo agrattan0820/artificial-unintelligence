@@ -34,7 +34,14 @@ export async function joinRoomController(
     const checkRoomExists = await getRoom({ code });
 
     if (!checkRoomExists) {
-      res.status(404).send(`Room with the code ${code} was not found`);
+      res
+        .status(404)
+        .send({ error: `Room with the code ${code} was not found` });
+      return;
+    }
+
+    if (checkRoomExists.players.length >= 8) {
+      res.status(400).send(`Room with the code ${code} is full`);
       return;
     }
 

@@ -80,14 +80,17 @@ export default function Game({ roomCode, gameInfo }: GameProps) {
 
   // Send updated state to server
   const handleStateChange = useCallback(() => {
-    socket.emit("clientEvent", {
-      state: JSON.stringify(state),
-      gameId: gameInfo.game.id,
-      round: state.context.round,
-      completedAt: state.matches("leaderboard")
-        ? new Date().toISOString()
-        : undefined,
-    });
+    // Don't send state change to backend if it is a `promptSubmitted` state
+    if (!state.matches("promptSubmitted")) {
+      socket.emit("clientEvent", {
+        state: JSON.stringify(state),
+        gameId: gameInfo.game.id,
+        round: state.context.round,
+        completedAt: state.matches("leaderboard")
+          ? new Date().toISOString()
+          : undefined,
+      });
+    }
   }, [gameInfo.game.id, socket, state]);
 
   // Receive state changes from server

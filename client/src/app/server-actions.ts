@@ -31,6 +31,7 @@ export type Generation = {
   userId: number;
   questionId: number;
   gameId: number;
+  selected: boolean;
   createdAt: string;
 };
 export type Question = {
@@ -52,11 +53,26 @@ export type Vote = {
 
 export type UserVote = { vote: Vote; user: User };
 
+export type GameRoundGeneration = {
+  generation: Generation;
+  question: {
+    id: number;
+    text: string;
+    round: number;
+    gameId: number;
+    player1: number;
+    player2: number;
+    createdAt: Date;
+  };
+  user: User;
+};
+
 export type GameInfo = {
   hostId: number | null;
   game: Game;
   players: User[];
   questions: Question[];
+  gameRoundGenerations: GameRoundGeneration[];
   submittedPlayers: number[];
   votedPlayers: UserVote[];
 };
@@ -89,6 +105,10 @@ export async function createHost(nickname: string) {
     }),
   });
 
+  if (!response.ok) {
+    throw new Error("Failed to create host and room");
+  }
+
   const data: CreateHostResponse = await response.json();
 
   return data;
@@ -108,6 +128,10 @@ export async function existingHost(userId: number) {
       userId,
     }),
   });
+
+  if (!response.ok) {
+    throw new Error("Failed to create room for existing host");
+  }
 
   const data: ExistingHostResponse = await response.json();
 
@@ -132,6 +156,13 @@ export async function joinRoom(nickname: string, code: string) {
     }),
   });
 
+  if (!response.ok) {
+    if (response.status === 400) {
+      throw new Error("Room is full");
+    }
+    throw new Error("Failed to join room");
+  }
+
   const data: JoinRoomResponse = await response.json();
 
   return data;
@@ -141,6 +172,10 @@ export type GetRoomInfoResponse = RoomInfo | ErrorResponse;
 
 export async function getRoomInfo(code: string) {
   const response = await fetch(`${URL}/room/${code}`, { cache: "no-store" });
+
+  if (!response.ok) {
+    throw new Error("Failed to obtain room info");
+  }
 
   const data: GetRoomInfoResponse = await response.json();
 
@@ -153,6 +188,10 @@ export type GetGameInfoResponse = GameInfo | ErrorResponse;
 
 export async function getGameInfo(code: string) {
   const response = await fetch(`${URL}/game/${code}`, { cache: "no-store" });
+
+  if (!response.ok) {
+    throw new Error("Failed to obtain game info");
+  }
 
   const data: GetGameInfoResponse = await response.json();
 
@@ -170,63 +209,46 @@ export async function getLeaderboardById({ gameId }: { gameId: number }) {
     cache: "no-store",
   });
 
+  if (!response.ok) {
+    throw new Error("Failed to obtain leaderboard");
+  }
+
   const data: GetGameLeaderboardResponse = await response.json();
 
   return data;
 }
 
-export type GetRegenerationCountResponse = { count: number };
-
-export async function getRegenerationCount({
-  gameId,
-  userId,
-}: {
-  gameId: number;
-  userId: number;
-}) {
-  const response = await fetch(
-    `${URL}/game/${gameId}/regenerations/${userId}`,
-    {
-      cache: "no-store",
-    }
-  );
-
-  const data: GetRegenerationCountResponse = await response.json();
-
-  return data;
-}
-
-export type incrementUserRegenerationCountResponse = {
-  room: Room;
-};
-
-export async function incrementUserRegenerationCount({
-  gameId,
-  userId,
-}: {
-  gameId: number;
-  userId: number;
-}) {
-  const response = await fetch(
-    `${URL}/game/${gameId}/regenerations/${userId}`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userId,
-        gameId,
-      }),
-    }
-  );
-
-  const data: incrementUserRegenerationCountResponse = await response.json();
-
-  return data;
-}
-
 // ! ----------> GENERATIONS <----------
+
+export type CreateGenerationsResponse = Generation[];
+
+export async function createGenerations({
+  userId,
+  gameId,
+  questionId,
+  images,
+}: {
+  userId: number;
+  gameId: number;
+  questionId: number;
+  images: { text: string; imageUrl: string }[];
+}) {
+  const response = await fetch(`${URL}/generations`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ userId, gameId, questionId, images }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to create generations");
+  }
+
+  const data: CreateGenerationsResponse = await response.json();
+
+  return data;
+}
 
 export type GetFaceOffsResponse = QuestionGenerations[];
 
@@ -239,8 +261,12 @@ export async function getFaceOffs({
 }) {
   const response = await fetch(
     `${URL}/generations/gameId/${gameId}/round/${round}`,
-    { cache: "no-store" }
+    { cache: "no-store" },
   );
+
+  if (!response.ok) {
+    throw new Error("Failed to obtain face-offs");
+  }
 
   const data: GetFaceOffsResponse = await response.json();
 

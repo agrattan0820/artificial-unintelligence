@@ -21,6 +21,8 @@ export default function Lobby({ roomInfo }: { roomInfo: RoomInfo }) {
 
   const socket = useContext(SocketContext);
 
+  const roomIsFull = players.length >= 8;
+
   const handleRoomState = (roomInfo: RoomInfo) => {
     console.log("[ROOM INFO]", roomInfo);
     setHostId(roomInfo.hostId);
@@ -57,10 +59,12 @@ export default function Lobby({ roomInfo }: { roomInfo: RoomInfo }) {
   return (
     <main className="flex min-h-[100dvh] flex-col justify-center">
       <motion.section layout="position" className="container mx-auto px-4">
-        <p className="hidden sm:block mb-2 text-center text-xl">
-          Your Invite Link is
-        </p>
-        <InviteLink code={roomInfo.code} />
+        {!roomIsFull && (
+          <p className="mb-2 hidden text-center text-xl sm:block">
+            Your Invite Link is
+          </p>
+        )}
+        <InviteLink code={roomInfo.code} roomIsFull={roomIsFull} />
         <div className="mx-auto mt-4 flex items-center justify-center md:absolute md:left-8 md:top-8">
           <UserCount count={players.length} />
         </div>
@@ -71,6 +75,7 @@ export default function Lobby({ roomInfo }: { roomInfo: RoomInfo }) {
           hostId={hostId}
           onStartGame={initiateStartGame}
           loading={startGameLoading}
+          roomIsFull={roomIsFull}
         />
       </motion.section>
     </main>
