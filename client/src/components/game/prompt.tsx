@@ -1,6 +1,13 @@
 "use client";
 
-import { FormEvent, useContext, useMemo, useRef, useState } from "react";
+import {
+  FormEvent,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { EventFrom, StateFrom } from "xstate";
 import toast from "react-hot-toast";
@@ -41,6 +48,7 @@ const Prompt = ({
   const userGameRoundGenerations = gameInfo.gameRoundGenerations.filter(
     (generation) => generation.user.id === userId,
   );
+
   const currRound = state.context.round;
   const maxRegenerations = 3;
 
@@ -163,6 +171,18 @@ const Prompt = ({
 
     setLoading(false);
   };
+
+  useEffect(() => {
+    // Redirect to prompt submitted page if the player already has two images submitted for the round
+    const alreadySubmittedImages =
+      userGameRoundGenerations.filter(
+        (generation) => generation.generation.selected,
+      ).length >= 2;
+
+    if (alreadySubmittedImages) {
+      send({ type: "SUBMIT" });
+    }
+  }, [send, userGameRoundGenerations]);
 
   return (
     <motion.div layout="position" className="max-w-2xl">
