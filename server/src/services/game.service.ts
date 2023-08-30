@@ -109,7 +109,12 @@ export async function getPageGameInfoByRoomCode({ code }: { code: string }) {
   let votedPlayers: { user: User; vote: Vote }[] = [];
 
   if (gameRoundGenerations.length > 0) {
-    submittedPlayers = getSubmittedPlayers({ gameRoundGenerations });
+    // Grab only the generations where selected is true because those are the ones that are submitted for face-offs.
+    submittedPlayers = getSubmittedPlayers({
+      faceOffGenerations: gameRoundGenerations.filter(
+        (generation) => generation.generation.selected
+      ),
+    });
     votedPlayers = await getVotesByGameRound({
       gameId: latestGame.id,
       round: latestGame.round,
@@ -121,6 +126,7 @@ export async function getPageGameInfoByRoomCode({ code }: { code: string }) {
     game: latestGame,
     players: players,
     questions: gameQuestions,
+    gameRoundGenerations,
     submittedPlayers,
     votedPlayers,
   };
@@ -206,40 +212,4 @@ export async function addUsersToGame({
     .returning();
 
   return usersToGame;
-}
-
-export async function getUserRegenerationCount({
-  gameId,
-  userId,
-}: {
-  gameId: number;
-  userId: number;
-}) {
-  const regenerationCount = await db
-    .select({ count: usersToGames.regenerationCount })
-    .from(usersToGames)
-    .where(
-      and(eq(usersToGames.userId, userId), eq(usersToGames.gameId, gameId))
-    );
-
-  return regenerationCount[0].count;
-}
-
-export async function incrementUserRegenerationCount({
-  gameId,
-  userId,
-}: {
-  gameId: number;
-  userId: number;
-}) {
-  const currentCount = await getUserRegenerationCount({ gameId, userId });
-  const incrementedCount = await db
-    .update(usersToGames)
-    .set({ regenerationCount: currentCount + 1 })
-    .where(
-      and(eq(usersToGames.userId, userId), eq(usersToGames.gameId, gameId))
-    )
-    .returning();
-
-  return incrementedCount[0].regenerationCount;
 }

@@ -5,7 +5,7 @@ import {
 } from "../controllers/room.controller";
 
 export function roomRoutes(app: Express) {
-  app.post("/room/join", joinRoomController);
-
   app.get("/room/:code", getRoomController);
+
+  app.post("/room/join", joinRoomController);
 }

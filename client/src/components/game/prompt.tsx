@@ -1,22 +1,23 @@
 "use client";
 
-import { FormEvent, useContext, useMemo, useRef, useState } from "react";
+import {
+  FormEvent,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { EventFrom, StateFrom } from "xstate";
 import toast from "react-hot-toast";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { FiHelpCircle, FiX } from "react-icons/fi";
 
 import Button, { SecondaryButton } from "@ai/components/button";
 import { generateOpenAIImage, generateSDXLImage } from "@ai/utils/query";
 import Ellipsis from "@ai/components/ellipsis";
 import ImageChoice, { ImageOption } from "./image-choice";
-import Timer from "./timer";
-import {
-  GameInfo,
-  getRegenerationCount,
-  incrementUserRegenerationCount,
-} from "@ai/app/server-actions";
+import { GameInfo, createGenerations } from "@ai/app/server-actions";
 import { gameMachine } from "./game-machine";
 import { useStore } from "@ai/utils/store";
 import { SocketContext } from "@ai/utils/socket-provider";
@@ -42,47 +43,47 @@ const Prompt = ({
   const socket = useContext(SocketContext);
   const dialogRef = useRef<HTMLDialogElement>(null);
 
-  const queryClient = useQueryClient();
-
   const gameId = gameInfo.game.id;
   const userId = user?.id;
-  const regenerationCountQueryKey = [
-    "regenerationCount",
-    "gameId",
-    gameId,
-    "userId",
-    userId,
-  ];
-
-  const { data: regenerationCount, isLoading: regenerationCountLoading } =
-    useQuery(
-      regenerationCountQueryKey,
-      () =>
-        getRegenerationCount({
-          gameId: gameId,
-          userId: userId ?? 0,
-        }),
-      {
-        enabled: !!gameId && !!userId,
-      },
-    );
-
-  const incrementRegenerationCountMutation = useMutation({
-    mutationFn: ({ gameId, userId }: { gameId: number; userId: number }) => {
-      return incrementUserRegenerationCount({ gameId, userId });
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: regenerationCountQueryKey });
-    },
-  });
-
-  const maxRegenerations = 3;
-  const outOfRegenerations =
-    !regenerationCountLoading && regenerationCount !== undefined
-      ? regenerationCount.count >= maxRegenerations
-      : true;
+  const userGameRoundGenerations = gameInfo.gameRoundGenerations.filter(
+    (generation) => generation.user.id === userId,
+  );
 
   const currRound = state.context.round;
+  const maxRegenerations = 3;
+
+  const isSecondStage =
+    userGameRoundGenerations.length > 1 &&
+    (userGameRoundGenerations[0].generation.selected ||
+      userGameRoundGenerations[1].generation.selected);
+  const shouldShowGenerations =
+    userGameRoundGenerations.length > 1 &&
+    !userGameRoundGenerations[0].generation.selected &&
+    !userGameRoundGenerations[1].generation.selected;
+
+  const [numGenerations, setNumGenerations] = useState(
+    userGameRoundGenerations.length,
+  );
+
+  const remainingImageGenerations = maxRegenerations - (numGenerations - 2) / 2;
+  const outOfRegenerations = remainingImageGenerations === 0;
+
+  const [stage, setStage] = useState<"FIRST" | "SECOND">(
+    isSecondStage ? "SECOND" : "FIRST",
+  );
+  const [loading, setLoading] = useState(false);
+  const [imagePrompt, setImagePrompt] = useState(
+    shouldShowGenerations ? userGameRoundGenerations[0].generation.text : "",
+  );
+  const [imageOption1, setImageOption1] = useState(
+    shouldShowGenerations ? userGameRoundGenerations[0].generation : undefined,
+  );
+  const [imageOption2, setImageOption2] = useState(
+    shouldShowGenerations ? userGameRoundGenerations[1].generation : undefined,
+  );
+  const [selectedImage, setSelectedImage] = useState<ImageOption>();
+
+  const imagesLoaded = imageOption1 && imageOption2;
 
   const questions = useMemo(() => {
     return gameInfo.questions.filter((question) => {
@@ -92,25 +93,7 @@ const Prompt = ({
       );
     });
   }, [currRound, gameInfo.questions, user?.id]);
-
-  // State to handle the two questions of the current round
-  const [stage, setStage] = useState<"FIRST" | "SECOND">("FIRST");
-
   const currQuestion = stage === "FIRST" ? questions[0] : questions[1];
-
-  const [loading, setLoading] = useState(false);
-  const [imagePrompt, setImagePrompt] = useState(
-    window.localStorage.getItem("prompt") ?? "",
-  );
-  const [imageOption1, setImageOption1] = useState(
-    window.localStorage.getItem("image1") ?? "",
-  );
-  const [imageOption2, setImageOption2] = useState(
-    window.localStorage.getItem("image2") ?? "",
-  );
-  const [selectedImage, setSelectedImage] = useState<ImageOption>();
-
-  const imagesLoaded = imageOption1 && imageOption2;
 
   const onPromptSubmit = async (e: FormEvent<PromptFormType>) => {
     e.preventDefault();
@@ -127,71 +110,79 @@ const Prompt = ({
       console.error("Images were unable to be generated");
       toast.error("I'm afraid I don't know how to process such a request.");
     } else {
-      setImageOption1(images[0] ?? "");
-      setImageOption2(images[1] ?? "");
       setImagePrompt(formPrompt);
 
-      window.localStorage.setItem("prompt", formPrompt ?? "");
-      window.localStorage.setItem("image1", images[0] ?? "");
-      window.localStorage.setItem("image2", images[1] ?? "");
+      if (userId) {
+        const generations = await createGenerations({
+          userId,
+          gameId,
+          questionId: currQuestion.id,
+          images: images?.map((image) => {
+            return {
+              text: formPrompt,
+              imageUrl: image,
+            };
+          }),
+        });
+
+        setImageOption1(generations[0]);
+        setImageOption2(generations[1]);
+
+        setNumGenerations(numGenerations + generations.length);
+      }
     }
 
     setLoading(false);
   };
 
-  const resetPrompt = () => {
-    setImagePrompt("");
-    window.localStorage.removeItem("prompt");
-  };
-
   const resetImage = () => {
-    setImageOption1("");
-    setImageOption2("");
+    setImageOption1(undefined);
+    setImageOption2(undefined);
     setSelectedImage(undefined);
-    window.localStorage.removeItem("image1");
-    window.localStorage.removeItem("image2");
   };
 
   const onTryAnotherPrompt = () => {
-    if (userId !== undefined) {
-      resetImage();
-      incrementRegenerationCountMutation.mutate({ gameId, userId });
-      return;
-    }
-    console.error("User was not defined when trying to use another prompt");
-    toast.error("Oops, unable to try another prompt.");
+    resetImage();
   };
 
   const onImageSubmit = async () => {
     setLoading(true);
 
-    if (user) {
+    if (user && imageOption1 && imageOption2) {
       socket.emit("generationSubmitted", {
-        gameId: gameInfo.game.id,
+        generationId: selectedImage === 1 ? imageOption1?.id : imageOption2?.id,
+        gameId: gameId,
         round: currRound,
-        imageUrl: selectedImage === 1 ? imageOption1 : imageOption2,
-        questionId: currQuestion.id,
-        text: imagePrompt,
-        userId: user?.id,
       });
     } else {
       console.error("User was not defined when trying to submit a generation");
       toast.error("Oops, we can't submit your generation.");
+      setLoading(false);
+      return;
     }
 
     if (stage === "FIRST") {
       setStage("SECOND");
-      resetPrompt();
+      setImagePrompt("");
       resetImage();
     } else {
-      window.localStorage.removeItem("prompt");
-      window.localStorage.removeItem("image1");
-      window.localStorage.removeItem("image2");
       send({ type: "SUBMIT" });
     }
 
     setLoading(false);
   };
+
+  useEffect(() => {
+    // Redirect to prompt submitted page if the player already has two images submitted for the round
+    const alreadySubmittedImages =
+      userGameRoundGenerations.filter(
+        (generation) => generation.generation.selected,
+      ).length >= 2;
+
+    if (alreadySubmittedImages) {
+      send({ type: "SUBMIT" });
+    }
+  }, [send, userGameRoundGenerations]);
 
   return (
     <motion.div layout="position" className="max-w-2xl">
@@ -211,11 +202,11 @@ const Prompt = ({
       </div>
       <ImageChoice
         imageOption1={{
-          src: imageOption1,
+          src: imageOption1?.imageUrl ?? "",
           alt: `Image option 1 with the prompt: ${imagePrompt}`,
         }}
         imageOption2={{
-          src: imageOption2,
+          src: imageOption2?.imageUrl ?? "",
           alt: `Image option 2 with the prompt: ${imagePrompt}`,
         }}
         selectedImage={selectedImage}
@@ -239,9 +230,7 @@ const Prompt = ({
                   maxLength={400}
                   name="prompt"
                   className="peer w-full resize-none rounded-xl border-2 border-gray-300 bg-transparent p-4 placeholder-transparent focus:border-indigo-600 focus:outline-none focus:dark:border-indigo-300"
-                  defaultValue={
-                    window.localStorage.getItem("prompt") ?? undefined
-                  }
+                  defaultValue={imagePrompt ?? undefined}
                   required
                 />
                 <label
@@ -343,19 +332,8 @@ const Prompt = ({
                 disabled={loading || outOfRegenerations}
               >
                 {!loading ? (
-                  `Create New Images ${
-                    !regenerationCountLoading &&
-                    regenerationCount !== undefined &&
-                    typeof regenerationCount?.count === "number" ? (
-                      `${
-                        maxRegenerations - regenerationCount?.count
-                      }/${maxRegenerations}`
-                    ) : (
-                      <span>
-                        <Ellipsis />/{maxRegenerations}
-                      </span>
-                    )
-                  }`
+                  `Create New Images
+                      ${remainingImageGenerations}/${maxRegenerations}`
                 ) : (
                   <Ellipsis />
                 )}

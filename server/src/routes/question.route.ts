@@ -6,7 +6,6 @@ import {
 
 export function questionRoutes(app: Express) {
   app.get("/question/:id", getQuestionByIdController);
-
   app.get(
     "/questions/user/:userId/game/:gameId/round/:round",
     getQuestionsByUserGameRoundController
