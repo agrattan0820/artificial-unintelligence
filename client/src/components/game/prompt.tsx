@@ -24,6 +24,7 @@ import { SocketContext } from "@ai/utils/socket-provider";
 
 interface FormElementsType extends HTMLFormControlsCollection {
   prompt: HTMLInputElement;
+  generator: HTMLSelectElement;
 }
 
 export interface PromptFormType extends HTMLFormElement {
@@ -99,17 +100,18 @@ const Prompt = ({
     e.preventDefault();
     setLoading(true);
     const formPrompt = e.currentTarget.elements.prompt.value;
+    const formGenerator = e.currentTarget.elements.generator.value;
 
     console.time("Execution Time");
 
-    const images = await generateSDXLImage(formPrompt);
+    const images =
+      formGenerator === "sdxl"
+        ? await generateSDXLImage(formPrompt)
+        : await generateOpenAIImage(formPrompt);
 
     console.timeEnd("Execution Time");
 
-    if (!images) {
-      console.error("Images were unable to be generated");
-      toast.error("I'm afraid I don't know how to process such a request.");
-    } else {
+    if (images && images.length === 2) {
       setImagePrompt(formPrompt);
 
       if (userId) {
@@ -130,6 +132,9 @@ const Prompt = ({
 
         setNumGenerations(numGenerations + generations.length);
       }
+    } else {
+      console.error("Images were unable to be generated");
+      toast.error("I'm afraid I don't know how to process such a request.");
     }
 
     setLoading(false);
@@ -221,7 +226,7 @@ const Prompt = ({
               exit={{ y: 25, opacity: 0, transition: { delay: 1 } }}
               onSubmit={onPromptSubmit}
             >
-              <div className="relative mb-8">
+              <div className="relative mb-4">
                 <textarea
                   id="prompt"
                   placeholder="Describe a funny image"
@@ -229,21 +234,37 @@ const Prompt = ({
                   cols={33}
                   maxLength={400}
                   name="prompt"
-                  className="peer w-full resize-none rounded-xl border-2 border-gray-300 bg-transparent p-4 placeholder-transparent focus:border-indigo-600 focus:outline-none focus:dark:border-indigo-300"
+                  className="peer w-full resize-none rounded-xl border-2 border-gray-300 bg-transparent p-4 placeholder-transparent focus:border-indigo-300 focus:outline-none"
                   defaultValue={imagePrompt ?? undefined}
                   required
                 />
                 <label
                   htmlFor="prompt"
-                  className="absolute -top-6 left-2 text-sm text-gray-600 transition-all peer-placeholder-shown:left-4 peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:-top-6 peer-focus:left-2 peer-focus:text-sm peer-focus:text-gray-600 dark:text-gray-400 dark:peer-focus:text-gray-400"
+                  className="absolute -top-6 left-2 text-sm text-gray-400 transition-all peer-placeholder-shown:left-4 peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:-top-6 peer-focus:left-2 peer-focus:text-sm peer-focus:text-gray-400"
                 >
                   Describe a funny image
+                </label>
+              </div>
+              <div className="mb-8">
+                <label>
+                  <span>Image generator:</span>
+                  <br />
+                  <select
+                    name="generator"
+                    id="generatorSelect"
+                    className="mt-1 appearance-none rounded-md bg-gray-300 px-4 py-1 text-black focus:border-none focus:outline-none focus:ring focus:ring-indigo-600"
+                    required
+                  >
+                    <option value="dalle">DALL-E 2</option>
+                    <option value="sdxl">Stable Diffusion XL</option>
+                  </select>
                 </label>
               </div>
               <div className="flex items-center gap-2">
                 <Button type="submit" disabled={loading}>
                   {!loading ? "Submit Prompt" : <Ellipsis />}
                 </Button>
+
                 <button
                   type="button"
                   className="transform text-2xl transition hover:scale-110"
@@ -255,7 +276,7 @@ const Prompt = ({
             </motion.form>
             <dialog
               ref={dialogRef}
-              className="open:animate-modal open:backdrop:animate-modal relative mx-auto w-full max-w-2xl rounded-xl p-8 transition backdrop:bg-slate-900/50"
+              className="relative mx-auto w-full max-w-2xl rounded-xl p-8 transition backdrop:bg-slate-900/50 open:animate-modal open:backdrop:animate-modal"
             >
               <form method="dialog">
                 <button className="absolute right-2 top-2">

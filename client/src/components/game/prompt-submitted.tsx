@@ -10,24 +10,38 @@ import { gameMachine } from "./game-machine";
 import { useStore } from "@ai/utils/store";
 import Friend from "./friend";
 
-type PlayerBlockProps = {
+type SubmittedUserCardProps = {
   nickname: string;
   submitted: boolean;
 };
 
-const PlayerBlock = ({ nickname, submitted }: PlayerBlockProps) => {
+const SubmittedUserCard = ({ nickname, submitted }: SubmittedUserCardProps) => {
   return (
     <motion.li
       layout
       className={cn(
-        "rounded-xl border-2 border-indigo-600 p-4 shadow-md",
-        !submitted && "opacity-50"
+        "rounded-xl border-2 border-indigo-600 p-4",
+        !submitted && "opacity-50",
       )}
     >
       <motion.p
         layout
-        className="flex items-center justify-center gap-2 text-sm"
+        className="flex items-center justify-center gap-3 md:text-xl"
       >
+        <span
+          className={cn(
+            "flex h-12 w-12 items-center justify-center rounded-full border-2 border-indigo-600 p-1",
+          )}
+        >
+          <img
+            src={`https://api.dicebear.com/7.x/bottts/svg?seed=${nickname
+              .split(" ")
+              .join("_")}&size=36`}
+            alt={`Avatar for ${nickname}`}
+            width={36}
+            height={36}
+          />
+        </span>
         <motion.span layout="position">{nickname}</motion.span>{" "}
         {submitted && (
           <motion.span
@@ -57,7 +71,7 @@ const PromptSubmitted = ({
 
   return (
     <div className="mx-auto text-center">
-      <Friend className="mb-4 w-32 mx-auto" />
+      <Friend className="mx-auto mb-4 w-32" />
       <h2 className="mb-10 text-2xl md:text-4xl">We got your images!</h2>
       <p className="mb-6 text-sm md:text-lg">
         Waiting on your fellow AI trainers to submit.
@@ -67,7 +81,7 @@ const PromptSubmitted = ({
         className="mb-4 flex flex-wrap items-center justify-center gap-6"
       >
         {gameInfo.players.map((player, i) => (
-          <PlayerBlock
+          <SubmittedUserCard
             key={i}
             nickname={player.nickname}
             submitted={

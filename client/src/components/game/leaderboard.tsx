@@ -15,6 +15,7 @@ import { SocketContext } from "@ai/utils/socket-provider";
 import { useStore } from "@ai/utils/store";
 import { FiDownload } from "react-icons/fi";
 import useImageShare from "@ai/utils/hooks/use-image-share";
+import Friend from "./friend";
 
 type LeaderboardProps = {
   gameInfo: GameInfo;
@@ -78,7 +79,7 @@ const Leaderboard = ({ gameInfo, leaderboard, hostId }: LeaderboardProps) => {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.5 }}
             >
-              <FriendWithLegs />
+              <Friend className="w-24" />
             </motion.div>
           </motion.div>
           <motion.h2
@@ -102,17 +103,29 @@ const Leaderboard = ({ gameInfo, leaderboard, hostId }: LeaderboardProps) => {
               variants={leaderboardListItemVariants}
             >
               {result.standing}.
-              <div className="flex w-full justify-between gap-2 rounded-xl p-4 text-left dark:bg-slate-800 md:text-xl">
+              <div className="flex w-full justify-between gap-2 rounded-xl bg-slate-800 p-4 text-left md:text-xl">
                 <p className="flex items-center gap-4">
-                  {result.user.nickname}{" "}
+                  <span className="flex items-center gap-2 md:gap-3">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-indigo-600 p-1 md:h-12 md:w-12">
+                      <img
+                        src={`https://api.dicebear.com/7.x/bottts/svg?seed=${result.user.nickname
+                          .split(" ")
+                          .join("_")}`}
+                        alt={`Avatar for ${result.user.nickname}`}
+                        width={36}
+                        height={36}
+                      />
+                    </span>
+                    {result.user.nickname}{" "}
+                  </span>
+                </p>
+                <p className="flex items-center justify-center gap-4">
                   {result.standing === 1 && (
                     <span className="rounded-full bg-yellow-600 p-2 text-white">
                       <BsTrophy />
                     </span>
                   )}
-                </p>
-                <p className="flex items-center justify-center">
-                  {result.points.toLocaleString()} points
+                  <span>{result.points.toLocaleString()} points</span>
                 </p>
               </div>
             </motion.li>
