@@ -28,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${spaceMono.variable} font-space antialiased dark:bg-slate-900 dark:text-white`}
+        className={`${spaceMono.variable} bg-slate-900 font-space text-white antialiased`}
       >
         <Toaster containerStyle={{ textAlign: "center" }} />
         {children}

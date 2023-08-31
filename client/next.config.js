@@ -16,6 +16,9 @@ const nextConfig = {
       {
         hostname: "pbxt.replicate.delivery",
       },
+      {
+        hostname: "api.dicebear.com",
+      },
     ],
   },
 };

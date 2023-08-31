@@ -245,9 +245,7 @@ const FaceOffResultImage = ({
               }}
               className="mb-2 flex justify-between"
             >
-              <h3 className="text-lg text-indigo-700 dark:text-indigo-300">
-                {nickname}
-              </h3>{" "}
+              <h3 className="text-lg text-indigo-300">{nickname}</h3>{" "}
               <p>{percentage.toLocaleString()}%</p>
             </motion.div>
           )}
