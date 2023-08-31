@@ -24,6 +24,7 @@ import { SocketContext } from "@ai/utils/socket-provider";
 
 interface FormElementsType extends HTMLFormControlsCollection {
   prompt: HTMLInputElement;
+  generator: HTMLSelectElement;
 }
 
 export interface PromptFormType extends HTMLFormElement {
@@ -99,17 +100,18 @@ const Prompt = ({
     e.preventDefault();
     setLoading(true);
     const formPrompt = e.currentTarget.elements.prompt.value;
+    const formGenerator = e.currentTarget.elements.generator.value;
 
     console.time("Execution Time");
 
-    const images = await generateSDXLImage(formPrompt);
+    const images =
+      formGenerator === "sdxl"
+        ? await generateSDXLImage(formPrompt)
+        : await generateOpenAIImage(formPrompt);
 
     console.timeEnd("Execution Time");
 
-    if (!images) {
-      console.error("Images were unable to be generated");
-      toast.error("I'm afraid I don't know how to process such a request.");
-    } else {
+    if (images && images.length === 2) {
       setImagePrompt(formPrompt);
 
       if (userId) {
@@ -130,6 +132,9 @@ const Prompt = ({
 
         setNumGenerations(numGenerations + generations.length);
       }
+    } else {
+      console.error("Images were unable to be generated");
+      toast.error("I'm afraid I don't know how to process such a request.");
     }
 
     setLoading(false);
@@ -221,7 +226,7 @@ const Prompt = ({
               exit={{ y: 25, opacity: 0, transition: { delay: 1 } }}
               onSubmit={onPromptSubmit}
             >
-              <div className="relative mb-8">
+              <div className="relative mb-4">
                 <textarea
                   id="prompt"
                   placeholder="Describe a funny image"
@@ -240,10 +245,26 @@ const Prompt = ({
                   Describe a funny image
                 </label>
               </div>
+              <div className="mb-8">
+                <label>
+                  <span>Image generator:</span>
+                  <br />
+                  <select
+                    name="generator"
+                    id="generatorSelect"
+                    className="mt-1 appearance-none rounded-md bg-gray-300 px-4 py-1 text-black focus:border-none focus:outline-none focus:ring focus:ring-indigo-600"
+                    required
+                  >
+                    <option value="dalle">DALL-E 2</option>
+                    <option value="sdxl">Stable Diffusion XL</option>
+                  </select>
+                </label>
+              </div>
               <div className="flex items-center gap-2">
                 <Button type="submit" disabled={loading}>
                   {!loading ? "Submit Prompt" : <Ellipsis />}
                 </Button>
+
                 <button
                   type="button"
                   className="transform text-2xl transition hover:scale-110"

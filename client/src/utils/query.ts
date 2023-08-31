@@ -18,7 +18,7 @@ export const generateOpenAIImage = async (prompt: string) => {
 
     const data: { result: ImagesResponse["data"] } = await response.json();
 
-    return data.result.map((image) => image.url);
+    return data.result.map((image) => image.url ?? ""); // TODO return error if image URL is not defined?
   } catch (error) {
     console.error(error);
     Sentry.captureException(error);
