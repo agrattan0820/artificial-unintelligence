@@ -1,0 +1,45 @@
+{
+ "$schema": "https://turbo.build/schema.json",
+ "globalDependencies": [
+  "**/.env.*local"
+ ],
+ "pipeline": {
+  "build": {
+   "env": [
+    "CI",
+    "NEXT_PUBLIC_API_URL",
+    "KV_REST_API_URL",
+    "KV_REST_API_TOKEN",
+    "OPENAI_API_KEY",
+    "REPLICATE_API_TOKEN",
+    "DATABASE_URL",
+    "PORT",
+    "NODE_ENV",
+    "APP_URL"
+   ],
+   "dependsOn": [
+    "^build"
+   ],
+   "outputs": [
+    "dist/**",
+    ".next/**",
+    "!.next/cache/**"
+   ]
+  },
+  "start": {
+   "dependsOn": [
+    "^build"
+   ]
+  },
+  "lint": {},
+  "dev": {
+   "cache": false,
+   "persistent": true
+  },
+  "test": {
+   "dependsOn": [
+    "^build"
+   ]
+  }
+ }
+}

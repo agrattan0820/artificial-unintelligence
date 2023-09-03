@@ -1,0 +1,13 @@
+{
+ "eslint.workingDirectories": [
+  {
+   "pattern": "apps/*/"
+  },
+  {
+   "pattern": "packages/*/"
+  }
+ ],
+ "editor.quickSuggestions": {
+  "strings": true
+ },
+}

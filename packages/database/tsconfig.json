@@ -1,0 +1,12 @@
+{
+ "extends": "tsconfig/base.json",
+ "compilerOptions": {
+  "target": "es2016",
+  "module": "commonjs",
+  "outDir": "./dist"
+ },
+ "exclude": [
+  "dist",
+  "node_modules"
+ ]
+}
