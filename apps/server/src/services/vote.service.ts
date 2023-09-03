@@ -1,6 +1,6 @@
 import { eq, and, inArray } from "drizzle-orm";
-import { db } from "database";
 import {
+  db,
   Generation,
   games,
   generations,
@@ -8,7 +8,7 @@ import {
   users,
   votes,
   questionsToGames,
-} from "database/schema";
+} from "database";
 import { UserVote } from "../types";
 
 export async function createVote({

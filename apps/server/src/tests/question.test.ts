@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@jest/globals";
 import { prepareQuestionsForGame } from "../services/question.service";
-import { User } from "database/schema";
+import { User } from "database";
 
 describe("prepareQuestionsForGame", () => {
   test("expects to contain questions with a randomized ordering of players", () => {

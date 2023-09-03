@@ -1,6 +1,6 @@
 import { asc, desc, eq, sql } from "drizzle-orm";
-import { db } from "database";
 import {
+  db,
   NewGame,
   User,
   Vote,
@@ -12,7 +12,7 @@ import {
   questionsToGames,
   questions,
   votes,
-} from "database/schema";
+} from "database";
 import {
   getGameRoundGenerations,
   getSubmittedPlayers,

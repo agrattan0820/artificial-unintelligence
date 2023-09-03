@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@jest/globals";
 import { calculateVotePoints, createVoteMap } from "../services/vote.service";
-import { Generation } from "database/schema";
+import { Generation } from "database";
 import { UserVote } from "../types";
 
 describe("calculateVotePoints", () => {

@@ -1,9 +1,10 @@
 {
  "name": "database",
  "version": "0.0.0",
- "main": "./index.ts",
- "types": "./index.ts",
+ "main": "./dist/index.js",
+ "types": "./dist/index.d.ts",
  "scripts": {
+  "build": "tsc",
   "migrate:create": "drizzle-kit generate:pg --out drizzle --schema schema.ts",
   "migrate:run": "ts-node migrate.ts"
  },
@@ -15,6 +16,7 @@
  "devDependencies": {
   "@types/pg": "^8.10.2",
   "drizzle-kit": "^0.19.13",
-  "ts-node": "^10.9.1"
+  "ts-node": "^10.9.1",
+  "tsconfig": "workspace:*"
  }
 }

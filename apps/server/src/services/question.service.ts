@@ -1,12 +1,12 @@
 import { and, eq, inArray, or, sql } from "drizzle-orm";
-import { db } from "database";
 import {
+  db,
   NewQuestion,
   NewQuestionToGame,
   User,
   questions,
   questionsToGames,
-} from "database/schema";
+} from "database";
 import { shuffleArray } from "../utils";
 
 export async function getQuestionById({ id }: { id: number }) {
