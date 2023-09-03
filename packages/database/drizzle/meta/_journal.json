@@ -134,6 +134,13 @@
       "when": 1693183820410,
       "tag": "0018_late_thor",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "5",
+      "when": 1693755517659,
+      "tag": "0019_brainy_vector",
+      "breakpoints": true
     }
   ]
 }

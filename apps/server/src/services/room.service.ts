@@ -1,5 +1,5 @@
 import * as crypto from "crypto";
-import { db } from "../../db/db";
+import { db } from "database";
 import {
   NewRoom,
   NewUserRoom,
@@ -7,7 +7,7 @@ import {
   rooms,
   usersToRooms,
   users,
-} from "../../db/schema";
+} from "database/schema";
 import { and, eq } from "drizzle-orm";
 
 export async function createRoom({ hostId }: { hostId: number }) {

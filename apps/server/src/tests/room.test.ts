@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@jest/globals";
-import { User } from "../../db/schema";
+import { User } from "database/schema";
 import { findNextHost } from "../services/room.service";
 
 describe("findNextHost", () => {

@@ -82,7 +82,9 @@ export const generations = pgTable("generations", {
   userId: integer("user_id")
     .references(() => users.id)
     .notNull(),
-  gameId: integer("game_id").references(() => games.id), // TODO make gameId not null
+  gameId: integer("game_id")
+    .references(() => games.id)
+    .notNull(),
   questionId: integer("question_id")
     .references(() => questions.id)
     .notNull(),

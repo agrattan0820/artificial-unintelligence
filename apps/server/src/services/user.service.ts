@@ -1,5 +1,5 @@
-import { db } from "../../db/db";
-import { users } from "../../db/schema";
+import { db } from "database";
+import { users } from "database/schema";
 
 export async function createUser({ nickname }: { nickname: string }) {
   const newUser = await db.insert(users).values({ nickname }).returning();

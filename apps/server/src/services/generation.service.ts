@@ -1,5 +1,5 @@
 import { and, asc, desc, eq, sql } from "drizzle-orm";
-import { db } from "../../db/db";
+import { db } from "database";
 import {
   Generation,
   NewGeneration,
@@ -7,7 +7,7 @@ import {
   questions,
   questionsToGames,
   users,
-} from "../../db/schema";
+} from "database/schema";
 import { GameRoundGeneration, QuestionGenerations } from "../types";
 
 export async function getGameRoundGenerations({

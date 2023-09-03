@@ -1,12 +1,12 @@
 import { and, eq, inArray, or, sql } from "drizzle-orm";
-import { db } from "../../db/db";
+import { db } from "database";
 import {
   NewQuestion,
   NewQuestionToGame,
   User,
   questions,
   questionsToGames,
-} from "../../db/schema";
+} from "database/schema";
 import { openai } from "../openai";
 import { shuffleArray } from "../utils";
 

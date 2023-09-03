@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "cc74bb0d-f595-4f49-97cf-6138b6c3c48b",
-  "prevId": "0978ada5-a2e3-4ddd-9e4f-e82f08b639a7",
+  "id": "07cdecd1-ba81-41cc-ba2b-eb0f56f99c87",
+  "prevId": "9ce8536e-8d91-4faa-a444-c62347ed2abc",
   "tables": {
     "games": {
       "name": "games",
@@ -81,6 +81,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "game_id": {
+          "name": "game_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
         "question_id": {
           "name": "question_id",
           "type": "integer",
@@ -99,6 +105,13 @@
           "primaryKey": false,
           "notNull": true
         },
+        "selected": {
+          "name": "selected",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -115,6 +128,19 @@
           "tableTo": "users",
           "columnsFrom": [
             "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "generations_game_id_games_id_fk": {
+          "name": "generations_game_id_games_id_fk",
+          "tableFrom": "generations",
+          "tableTo": "games",
+          "columnsFrom": [
+            "game_id"
           ],
           "columnsTo": [
             "id"
@@ -155,6 +181,29 @@
           "primaryKey": false,
           "notNull": true
         },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "questions_to_games": {
+      "name": "questions_to_games",
+      "schema": "",
+      "columns": {
+        "question_id": {
+          "name": "question_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
         "game_id": {
           "name": "game_id",
           "type": "integer",
@@ -189,9 +238,22 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "questions_game_id_games_id_fk": {
-          "name": "questions_game_id_games_id_fk",
-          "tableFrom": "questions",
+        "questions_to_games_question_id_questions_id_fk": {
+          "name": "questions_to_games_question_id_questions_id_fk",
+          "tableFrom": "questions_to_games",
+          "tableTo": "questions",
+          "columnsFrom": [
+            "question_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "questions_to_games_game_id_games_id_fk": {
+          "name": "questions_to_games_game_id_games_id_fk",
+          "tableFrom": "questions_to_games",
           "tableTo": "games",
           "columnsFrom": [
             "game_id"
@@ -202,9 +264,9 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "questions_player_1_users_id_fk": {
-          "name": "questions_player_1_users_id_fk",
-          "tableFrom": "questions",
+        "questions_to_games_player_1_users_id_fk": {
+          "name": "questions_to_games_player_1_users_id_fk",
+          "tableFrom": "questions_to_games",
           "tableTo": "users",
           "columnsFrom": [
             "player_1"
@@ -215,9 +277,9 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "questions_player_2_users_id_fk": {
-          "name": "questions_player_2_users_id_fk",
-          "tableFrom": "questions",
+        "questions_to_games_player_2_users_id_fk": {
+          "name": "questions_to_games_player_2_users_id_fk",
+          "tableFrom": "questions_to_games",
           "tableTo": "users",
           "columnsFrom": [
             "player_2"
@@ -229,7 +291,15 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "questions_to_games_game_id_question_id": {
+          "name": "questions_to_games_game_id_question_id",
+          "columns": [
+            "game_id",
+            "question_id"
+          ]
+        }
+      },
       "uniqueConstraints": {}
     },
     "rooms": {
@@ -242,6 +312,12 @@
           "primaryKey": true,
           "notNull": true
         },
+        "host_id": {
+          "name": "host_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -251,7 +327,21 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "rooms_host_id_users_id_fk": {
+          "name": "rooms_host_id_users_id_fk",
+          "tableFrom": "rooms",
+          "tableTo": "users",
+          "columnsFrom": [
+            "host_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
