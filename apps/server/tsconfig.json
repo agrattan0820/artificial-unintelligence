@@ -10,7 +10,7 @@
     "outDir": "./dist",
     "sourceMap": true,
     "inlineSources": true,
-    "sourceRoot": "/"
+    "sourceRoot": "/",
   },
   "exclude": [
     "dist",
