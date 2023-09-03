@@ -17,7 +17,7 @@ jobs:
     #  TURBO_TEAM: ${{ vars.TURBO_TEAM }}
 
     steps:
-      - name: Check out code
+      - name: 🏗 Check out code
         uses: actions/checkout@v3
         with:
           fetch-depth: 2
@@ -26,17 +26,24 @@ jobs:
         with:
           version: 6.32.2
 
-      - name: Setup Node.js environment
+      - name: 🏗 Setup Node.js environment
         uses: actions/setup-node@v3
         with:
           node-version: 18
           cache: "pnpm"
 
-      - name: Install dependencies
+      - name: 👷 Install dependencies
         run: pnpm install
 
-      - name: Build
+      - name: 📀 Install Playwright Browsers
+        working-directory: ./client
+        run: npx playwright install --with-deps
+
+      - name: 💅 Lint
+        run: pnpm lint
+
+      - name: 🧱 Build
         run: pnpm build
 
-      - name: Test
+      - name: 🧪 Test
         run: pnpm test
