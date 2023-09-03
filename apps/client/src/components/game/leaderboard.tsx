@@ -1,3 +1,6 @@
+/* eslint-disable @next/next/no-img-element */
+// Disable @next/next/no-img-element because it breaks dicebear's image randomization
+
 "use client";
 
 import { useContext } from "react";

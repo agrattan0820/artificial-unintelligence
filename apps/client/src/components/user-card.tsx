@@ -1,3 +1,6 @@
+/* eslint-disable @next/next/no-img-element */
+// Disable @next/next/no-img-element because it breaks dicebear's image randomization
+
 import { cn } from "@ai/utils/cn";
 
 type UserCardProps = {
