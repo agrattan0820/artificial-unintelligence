@@ -1,4 +1,4 @@
-import { Generation, Question, RoomInfo, User, Vote } from "../db/schema";
+import { Generation, Question, RoomInfo, User, Vote } from "database/schema";
 
 type StateMachineEvent =
   | {

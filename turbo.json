@@ -6,6 +6,7 @@
  "pipeline": {
   "build": {
    "env": [
+    "CI",
     "NEXT_PUBLIC_API_URL",
     "KV_REST_API_URL",
     "KV_REST_API_TOKEN",
@@ -29,6 +30,11 @@
   "dev": {
    "cache": false,
    "persistent": true
+  },
+  "test": {
+   "dependsOn": [
+    "^build"
+   ]
   }
  }
 }
