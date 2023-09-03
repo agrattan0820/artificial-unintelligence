@@ -1,0 +1,1 @@
+ALTER TABLE "generations" ALTER COLUMN "game_id" SET NOT NULL;
