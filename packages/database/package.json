@@ -3,8 +3,12 @@
  "version": "0.0.0",
  "main": "./dist/index.js",
  "types": "./dist/index.d.ts",
+ "files": [
+  "dist/**"
+ ],
  "scripts": {
   "build": "tsc",
+  "dev": "tsc --watch",
   "migrate:create": "drizzle-kit generate:pg --out drizzle --schema schema.ts",
   "migrate:run": "ts-node migrate.ts"
  },
@@ -16,6 +20,7 @@
  "devDependencies": {
   "@types/pg": "^8.10.2",
   "drizzle-kit": "^0.19.13",
+  "eslint-config-custom": "workspace:*",
   "ts-node": "^10.9.1",
   "tsconfig": "workspace:*",
   "typescript": "^5.2.2"
