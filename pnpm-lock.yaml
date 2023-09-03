@@ -189,6 +189,9 @@ importers:
       drizzle-kit:
         specifier: ^0.19.13
         version: 0.19.13
+      eslint-config-custom:
+        specifier: workspace:*
+        version: link:../../packages/eslint-config-custom
       jest:
         specifier: ^29.6.4
         version: 29.6.4(@types/node@20.5.7)(ts-node@10.9.1)
@@ -204,6 +207,22 @@ importers:
       typescript:
         specifier: ^5.2.2
         version: 5.2.2
+
+  packages/database:
+    dependencies:
+      drizzle-orm:
+        specifier: ^0.28.5
+        version: 0.28.5(@types/pg@8.10.2)(pg@8.11.3)
+      pg:
+        specifier: ^8.11.3
+        version: 8.11.3
+    devDependencies:
+      '@types/pg':
+        specifier: ^8.10.2
+        version: 8.10.2
+      drizzle-kit:
+        specifier: ^0.19.13
+        version: 0.19.13
 
   packages/eslint-config-custom:
     devDependencies:
