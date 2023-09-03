@@ -17,6 +17,7 @@
   "@types/pg": "^8.10.2",
   "drizzle-kit": "^0.19.13",
   "ts-node": "^10.9.1",
-  "tsconfig": "workspace:*"
+  "tsconfig": "workspace:*",
+  "typescript": "^5.2.2"
  }
 }
