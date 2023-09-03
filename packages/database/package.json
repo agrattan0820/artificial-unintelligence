@@ -1,28 +1,28 @@
 {
- "name": "database",
- "version": "0.0.0",
- "main": "./dist/index.js",
- "types": "./dist/index.d.ts",
- "files": [
-  "dist/**"
- ],
- "scripts": {
-  "build": "tsc",
-  "dev": "tsc --watch",
-  "migrate:create": "drizzle-kit generate:pg --out drizzle --schema schema.ts",
-  "migrate:run": "ts-node migrate.ts"
- },
- "dependencies": {
-  "dotenv": "^16.3.1",
-  "drizzle-orm": "^0.28.5",
-  "pg": "^8.11.3"
- },
- "devDependencies": {
-  "@types/pg": "^8.10.2",
-  "drizzle-kit": "^0.19.13",
-  "eslint-config-custom": "workspace:*",
-  "ts-node": "^10.9.1",
-  "tsconfig": "workspace:*",
-  "typescript": "^5.2.2"
- }
+  "name": "database",
+  "version": "0.0.0",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/**"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "migrate:create": "drizzle-kit generate:pg --out drizzle --schema schema.ts",
+    "migrate:run": "ts-node migrate.ts"
+  },
+  "dependencies": {
+    "@auth/core": "^0.13.0",
+    "dotenv": "^16.3.1",
+    "drizzle-orm": "^0.28.5",
+    "postgres": "^3.3.5"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.19.13",
+    "eslint-config-custom": "workspace:*",
+    "ts-node": "^10.9.1",
+    "tsconfig": "workspace:*",
+    "typescript": "^5.2.2"
+  }
 }

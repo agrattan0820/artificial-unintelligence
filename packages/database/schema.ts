@@ -1,4 +1,3 @@
-import { InferModel } from "drizzle-orm";
 import {
   boolean,
   integer,
@@ -8,12 +7,59 @@ import {
   text,
   timestamp,
 } from "drizzle-orm/pg-core";
+import type { AdapterAccount } from "@auth/core/adapters";
 
-export const users = pgTable("users", {
+export const users = pgTable("user", {
   id: serial("id").primaryKey(),
   nickname: text("nickname").notNull(),
+  name: text("name"),
+  email: text("email"),
+  emailVerified: timestamp("emailVerified", { mode: "date" }),
+  image: text("image"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
+
+export const accounts = pgTable(
+  "account",
+  {
+    userId: integer("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    type: text("type").$type<AdapterAccount["type"]>().notNull(),
+    provider: text("provider").notNull(),
+    providerAccountId: text("providerAccountId").notNull(),
+    refresh_token: text("refresh_token"),
+    access_token: text("access_token"),
+    expires_at: integer("expires_at"),
+    token_type: text("token_type"),
+    scope: text("scope"),
+    id_token: text("id_token"),
+    session_state: text("session_state"),
+  },
+  (account) => ({
+    compoundKey: primaryKey(account.provider, account.providerAccountId),
+  })
+);
+
+export const sessions = pgTable("session", {
+  sessionToken: text("sessionToken").notNull().primaryKey(),
+  userId: integer("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  expires: timestamp("expires", { mode: "date" }).notNull(),
+});
+
+export const verificationTokens = pgTable(
+  "verificationToken",
+  {
+    identifier: text("identifier").notNull(),
+    token: text("token").notNull(),
+    expires: timestamp("expires", { mode: "date" }).notNull(),
+  },
+  (vt) => ({
+    compoundKey: primaryKey(vt.identifier, vt.token),
+  })
+);
 
 export const rooms = pgTable("rooms", {
   code: text("code").primaryKey(),
@@ -121,11 +167,11 @@ export const usersToGames = pgTable(
   })
 );
 
-export type User = InferModel<typeof users>;
-export type NewUser = InferModel<typeof users, "insert">;
+export type User = typeof users.$inferSelect;
+export type NewUser = typeof users.$inferInsert;
 
-export type Room = InferModel<typeof rooms>;
-export type NewRoom = InferModel<typeof rooms, "insert">;
+export type Room = typeof rooms.$inferSelect;
+export type NewRoom = typeof rooms.$inferInsert;
 export type RoomInfo = {
   hostId: number | null;
   code: string;
@@ -133,20 +179,20 @@ export type RoomInfo = {
   players: User[];
 };
 
-export type UserRoom = InferModel<typeof usersToRooms>;
-export type NewUserRoom = InferModel<typeof usersToRooms, "insert">;
+export type UserRoom = typeof usersToRooms.$inferSelect;
+export type NewUserRoom = typeof usersToRooms.$inferInsert;
 
-export type Question = InferModel<typeof questions>;
-export type NewQuestion = InferModel<typeof questions, "insert">;
+export type Question = typeof questions.$inferSelect;
+export type NewQuestion = typeof questions.$inferInsert;
 
-export type Game = InferModel<typeof games>;
-export type NewGame = InferModel<typeof games, "insert">;
+export type Game = typeof games.$inferSelect;
+export type NewGame = typeof games.$inferInsert;
 
-export type QuestionToGame = InferModel<typeof questionsToGames>;
-export type NewQuestionToGame = InferModel<typeof questionsToGames, "insert">;
+export type QuestionToGame = typeof questionsToGames.$inferSelect;
+export type NewQuestionToGame = typeof questionsToGames.$inferInsert;
 
-export type Generation = InferModel<typeof generations>;
-export type NewGeneration = InferModel<typeof generations, "insert">;
+export type Generation = typeof generations.$inferSelect;
+export type NewGeneration = typeof generations.$inferInsert;
 
-export type Vote = InferModel<typeof votes>;
-export type NewVote = InferModel<typeof votes, "insert">;
+export type Vote = typeof votes.$inferSelect;
+export type NewVote = typeof votes.$inferInsert;
