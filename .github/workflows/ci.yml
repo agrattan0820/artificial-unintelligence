@@ -36,7 +36,6 @@ jobs:
         run: pnpm install
 
       - name: 📀 Install Playwright Browsers
-        working-directory: ./client
         run: npx playwright install --with-deps
 
       - name: 💅 Lint
