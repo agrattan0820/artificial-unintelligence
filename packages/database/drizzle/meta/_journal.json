@@ -162,6 +162,13 @@
       "when": 1693774538998,
       "tag": "0022_strange_proudstar",
       "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "5",
+      "when": 1693834700322,
+      "tag": "0023_famous_penance",
+      "breakpoints": true
     }
   ]
 }
