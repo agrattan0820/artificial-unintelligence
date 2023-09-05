@@ -16,14 +16,14 @@ export interface ServerToClientEvents {
   startGame: () => void;
   playAnotherGame: () => void;
   serverEvent: (event: StateMachineEvent) => void;
-  submittedPlayers: (players: number[]) => void;
+  submittedPlayers: (players: string[]) => void;
   votedPlayers: (votes: { vote: Vote; user: User }[]) => void;
   error: (str: string) => void;
 }
 
 export interface ClientToServerEvents {
   connectToRoom: (code: string) => void;
-  leaveRoom: (data: { userId: number; code: string }) => void;
+  leaveRoom: (data: { userId: string; code: string }) => void;
   initiateGame: (code: string) => void;
   initiatePlayAnotherGame: (code: string) => void;
   clientEvent: (data: {
@@ -39,7 +39,7 @@ export interface ClientToServerEvents {
     round: number;
   }) => void;
   voteSubmitted: (data: {
-    userId: number;
+    userId: string;
     generationId: number;
     gameId: number;
     questionId: number;
@@ -55,8 +55,8 @@ export type GameRoundGeneration = {
     text: string;
     round: number;
     gameId: number;
-    player1: number;
-    player2: number;
+    player1: string;
+    player2: string;
     createdAt: Date;
   };
   user: User;

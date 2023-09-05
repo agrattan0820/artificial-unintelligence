@@ -4,27 +4,31 @@ import { findNextHost } from "../services/room.service";
 
 describe("findNextHost", () => {
   test("expects next host to not be the previous host", () => {
-    const prevHostId = 1;
+    const prevHostId = crypto.randomUUID();
 
     const players: User[] = [
       {
-        id: 1,
+        id: prevHostId,
         nickname: "Big Al",
+        email: "",
         createdAt: new Date(),
       },
       {
-        id: 2,
+        id: crypto.randomUUID(),
         nickname: "Big Dan",
+        email: "",
         createdAt: new Date(),
       },
       {
-        id: 3,
+        id: crypto.randomUUID(),
         nickname: "Big Tom",
+        email: "",
         createdAt: new Date(),
       },
       {
-        id: 4,
+        id: crypto.randomUUID(),
         nickname: "Big Kev",
+        email: "",
         createdAt: new Date(),
       },
     ];
@@ -36,12 +40,13 @@ describe("findNextHost", () => {
     expect(nextHost?.id).toBe(2);
   });
   test("expects to return undefined when no other players exist to become host", () => {
-    const prevHostId = 1;
+    const prevHostId = crypto.randomUUID();
 
     const players: User[] = [
       {
-        id: 1,
+        id: prevHostId,
         nickname: "Big Al",
+        email: "",
         createdAt: new Date(),
       },
     ];

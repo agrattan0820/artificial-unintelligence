@@ -44,7 +44,7 @@ export async function createHostController(
 }
 
 export async function existingHostController(
-  req: Request<{}, {}, { userId: number }>,
+  req: Request<{}, {}, { userId: string }>,
   res: Response,
   next: NextFunction
 ) {

@@ -2,7 +2,7 @@ import "next-auth";
 
 declare module "next-auth" {
   interface User {
-    id: number;
+    id: string;
     name: string | null;
     nickname: string;
     email: string | null;

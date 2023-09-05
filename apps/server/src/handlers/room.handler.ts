@@ -10,7 +10,7 @@ export function roomSocketHandlers(
 ) {
   socket.on("connectToRoom", async (code) => {
     try {
-      const userId = Number(socket.handshake.auth.userId);
+      const userId = socket.handshake.auth.userId;
       let roomInfo = await getRoom({ code });
 
       if (!roomInfo) {

@@ -140,8 +140,8 @@ export function getSubmittedPlayers({
 }: {
   faceOffGenerations: GameRoundGeneration[];
 }) {
-  const userGenerationCountMap = new Map<number, number>();
-  const submittedUsers = faceOffGenerations.reduce<number[]>((acc, curr) => {
+  const userGenerationCountMap = new Map<string, number>();
+  const submittedUsers = faceOffGenerations.reduce<string[]>((acc, curr) => {
     const currUserId = curr.generation.userId;
 
     if (userGenerationCountMap.get(currUserId) === 1) {
@@ -201,7 +201,7 @@ export async function getGenerationCount({
   questionId,
 }: {
   gameId: number;
-  userId: number;
+  userId: string;
   questionId: number;
 }) {
   const generationCount = await db
@@ -226,7 +226,7 @@ export async function getUserGenerationInfo({
   round,
 }: {
   gameId: number;
-  userId: number;
+  userId: string;
   round: number;
 }) {
   const generationsForUserForRound = await db

@@ -34,11 +34,14 @@ describe("calculateVotePoints", () => {
 
 describe("createVoteMap", () => {
   test("expects to create a map between users and the votes they accumlated for a face off", () => {
+    const creator1 = crypto.randomUUID();
+    const creator2 = crypto.randomUUID();
+
     const generations: Generation[] = [
       {
         id: 1,
         createdAt: new Date(),
-        userId: 3,
+        userId: creator1,
         text: "A dog eating a Pop Tart",
         questionId: 2,
         gameId: 2,
@@ -48,7 +51,7 @@ describe("createVoteMap", () => {
       {
         id: 2,
         createdAt: new Date(),
-        userId: 4,
+        userId: creator2,
         text: "A dog eating a burger",
         questionId: 2,
         gameId: 2,
@@ -57,31 +60,36 @@ describe("createVoteMap", () => {
       },
     ];
 
+    const voter1 = crypto.randomUUID();
+    const voter2 = crypto.randomUUID();
+
     const userVotes: UserVote[] = [
       {
         user: {
-          id: 5,
+          id: voter1,
           nickname: "Big Al",
+          email: "",
           createdAt: new Date(),
         },
         vote: {
           id: 6,
           createdAt: new Date(),
           generationId: 1,
-          userId: 5,
+          userId: voter1,
         },
       },
       {
         user: {
-          id: 10,
+          id: voter2,
           nickname: "Big Al",
+          email: "",
           createdAt: new Date(),
         },
         vote: {
           id: 7,
           createdAt: new Date(),
           generationId: 2,
-          userId: 10,
+          userId: voter2,
         },
       },
     ];

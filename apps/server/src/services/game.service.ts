@@ -105,7 +105,7 @@ export async function getPageGameInfoByRoomCode({ code }: { code: string }) {
     round: latestGame.round,
   });
 
-  let submittedPlayers: number[] = [];
+  let submittedPlayers: string[] = [];
   let votedPlayers: { user: User; vote: Vote }[] = [];
 
   if (gameRoundGenerations.length > 0) {

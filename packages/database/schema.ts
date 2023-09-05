@@ -9,20 +9,20 @@ import {
 } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from "@auth/core/adapters";
 
-export const users = pgTable("users", {
-  id: serial("id").primaryKey(),
-  nickname: text("nickname").notNull(),
+export const users = pgTable("user", {
+  id: text("id").notNull().primaryKey(),
+  nickname: text("nickname"),
   name: text("name"),
-  email: text("email"),
+  email: text("email").notNull(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 export const accounts = pgTable(
-  "accounts",
+  "account",
   {
-    userId: integer("userId")
+    userId: text("userId")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     type: text("type").$type<AdapterAccount["type"]>().notNull(),
@@ -41,16 +41,16 @@ export const accounts = pgTable(
   })
 );
 
-export const sessions = pgTable("sessions", {
+export const sessions = pgTable("session", {
   sessionToken: text("sessionToken").notNull().primaryKey(),
-  userId: integer("userId")
+  userId: text("userId")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   expires: timestamp("expires", { mode: "date" }).notNull(),
 });
 
 export const verificationTokens = pgTable(
-  "verificationTokens",
+  "verificationToken",
   {
     identifier: text("identifier").notNull(),
     token: text("token").notNull(),
@@ -63,14 +63,14 @@ export const verificationTokens = pgTable(
 
 export const rooms = pgTable("rooms", {
   code: text("code").primaryKey(),
-  hostId: integer("host_id").references(() => users.id),
+  hostId: text("host_id").references(() => users.id),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 export const usersToRooms = pgTable(
   "users_to_rooms",
   {
-    userId: integer("user_id")
+    userId: text("user_id")
       .references(() => users.id)
       .notNull(),
     roomCode: text("room_code")
@@ -110,10 +110,10 @@ export const questionsToGames = pgTable(
       .references(() => games.id)
       .notNull(),
     round: integer("round").notNull(),
-    player1: integer("player_1")
+    player1: text("player_1")
       .references(() => users.id)
       .notNull(),
-    player2: integer("player_2")
+    player2: text("player_2")
       .references(() => users.id)
       .notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -125,7 +125,7 @@ export const questionsToGames = pgTable(
 
 export const generations = pgTable("generations", {
   id: serial("id").primaryKey(),
-  userId: integer("user_id")
+  userId: text("user_id")
     .references(() => users.id)
     .notNull(),
   gameId: integer("game_id")
@@ -142,7 +142,7 @@ export const generations = pgTable("generations", {
 
 export const votes = pgTable("votes", {
   id: serial("id").primaryKey(),
-  userId: integer("user_id")
+  userId: text("user_id")
     .references(() => users.id)
     .notNull(),
   generationId: integer("generation_id")
@@ -154,7 +154,7 @@ export const votes = pgTable("votes", {
 export const usersToGames = pgTable(
   "users_to_games",
   {
-    userId: integer("user_id")
+    userId: text("user_id")
       .references(() => users.id)
       .notNull(),
     gameId: integer("game_id")
@@ -167,13 +167,13 @@ export const usersToGames = pgTable(
   })
 );
 
-export type User = typeof users.$inferSelect;
+export type User = typeof users.$inferInsert;
 export type NewUser = typeof users.$inferInsert;
 
 export type Room = typeof rooms.$inferSelect;
 export type NewRoom = typeof rooms.$inferInsert;
 export type RoomInfo = {
-  hostId: number | null;
+  hostId: string | null;
   code: string;
   createdAt: Date;
   players: User[];

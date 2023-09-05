@@ -10,7 +10,7 @@ import {
 } from "database";
 import { and, eq } from "drizzle-orm";
 
-export async function createRoom({ hostId }: { hostId: number }) {
+export async function createRoom({ hostId }: { hostId: string }) {
   let validRoomCode = false;
 
   let roomCode = crypto.randomBytes(4).toString("hex");
@@ -42,7 +42,7 @@ export async function joinRoom({
   userId,
   code,
 }: {
-  userId: number;
+  userId: string;
   code: string;
 }) {
   const newUserRoomRelationship: NewUserRoom = {
@@ -62,7 +62,7 @@ export async function leaveRoom({
   userId,
   code,
 }: {
-  userId: number;
+  userId: string;
   code: string;
 }) {
   const removeUserFromRoom = await db
@@ -102,7 +102,7 @@ export async function checkRoomForUserAndAdd({
   userId,
   roomCode,
 }: {
-  userId: number;
+  userId: string;
   roomCode: string;
 }) {
   let roomInfo = await getRoom({ code: roomCode });
@@ -120,7 +120,7 @@ export async function updateRoomHost({
   newHostId,
   roomCode,
 }: {
-  newHostId: number;
+  newHostId: string;
   roomCode: string;
 }) {
   const updatedRoomInfo = await db
@@ -136,7 +136,7 @@ export function findNextHost({
   prevHostId,
   players,
 }: {
-  prevHostId: number;
+  prevHostId: string | null;
   players: User[];
 }) {
   const nextHost = players.find((player) => player.id !== prevHostId);

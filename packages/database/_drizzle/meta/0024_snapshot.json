@@ -1,11 +1,11 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "6a8e84f5-de19-4a0e-b474-c6c5110c5712",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "7eded5a7-1fe8-4bc4-a79f-afc75fd0f772",
+  "prevId": "f343c7da-d526-41ab-9f2a-2908f5e2a3ca",
   "tables": {
-    "account": {
-      "name": "account",
+    "accounts": {
+      "name": "accounts",
       "schema": "",
       "columns": {
         "userId": {
@@ -77,10 +77,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "account_userId_user_id_fk": {
-          "name": "account_userId_user_id_fk",
-          "tableFrom": "account",
-          "tableTo": "user",
+        "accounts_userId_users_id_fk": {
+          "name": "accounts_userId_users_id_fk",
+          "tableFrom": "accounts",
+          "tableTo": "users",
           "columnsFrom": [
             "userId"
           ],
@@ -92,8 +92,8 @@
         }
       },
       "compositePrimaryKeys": {
-        "account_provider_providerAccountId": {
-          "name": "account_provider_providerAccountId",
+        "accounts_provider_providerAccountId": {
+          "name": "accounts_provider_providerAccountId",
           "columns": [
             "provider",
             "providerAccountId"
@@ -220,10 +220,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "generations_user_id_user_id_fk": {
-          "name": "generations_user_id_user_id_fk",
+        "generations_user_id_users_id_fk": {
+          "name": "generations_user_id_users_id_fk",
           "tableFrom": "generations",
-          "tableTo": "user",
+          "tableTo": "users",
           "columnsFrom": [
             "user_id"
           ],
@@ -362,10 +362,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "questions_to_games_player_1_user_id_fk": {
-          "name": "questions_to_games_player_1_user_id_fk",
+        "questions_to_games_player_1_users_id_fk": {
+          "name": "questions_to_games_player_1_users_id_fk",
           "tableFrom": "questions_to_games",
-          "tableTo": "user",
+          "tableTo": "users",
           "columnsFrom": [
             "player_1"
           ],
@@ -375,10 +375,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "questions_to_games_player_2_user_id_fk": {
-          "name": "questions_to_games_player_2_user_id_fk",
+        "questions_to_games_player_2_users_id_fk": {
+          "name": "questions_to_games_player_2_users_id_fk",
           "tableFrom": "questions_to_games",
-          "tableTo": "user",
+          "tableTo": "users",
           "columnsFrom": [
             "player_2"
           ],
@@ -426,10 +426,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "rooms_host_id_user_id_fk": {
-          "name": "rooms_host_id_user_id_fk",
+        "rooms_host_id_users_id_fk": {
+          "name": "rooms_host_id_users_id_fk",
           "tableFrom": "rooms",
-          "tableTo": "user",
+          "tableTo": "users",
           "columnsFrom": [
             "host_id"
           ],
@@ -443,8 +443,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "session": {
-      "name": "session",
+    "sessions": {
+      "name": "sessions",
       "schema": "",
       "columns": {
         "sessionToken": {
@@ -468,10 +468,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "session_userId_user_id_fk": {
-          "name": "session_userId_user_id_fk",
-          "tableFrom": "session",
-          "tableTo": "user",
+        "sessions_userId_users_id_fk": {
+          "name": "sessions_userId_users_id_fk",
+          "tableFrom": "sessions",
+          "tableTo": "users",
           "columnsFrom": [
             "userId"
           ],
@@ -485,8 +485,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "user": {
-      "name": "user",
+    "users": {
+      "name": "users",
       "schema": "",
       "columns": {
         "id": {
@@ -499,7 +499,7 @@
           "name": "nickname",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "name": {
           "name": "name",
@@ -511,7 +511,7 @@
           "name": "email",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "emailVerified": {
           "name": "emailVerified",
@@ -564,10 +564,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "users_to_games_user_id_user_id_fk": {
-          "name": "users_to_games_user_id_user_id_fk",
+        "users_to_games_user_id_users_id_fk": {
+          "name": "users_to_games_user_id_users_id_fk",
           "tableFrom": "users_to_games",
-          "tableTo": "user",
+          "tableTo": "users",
           "columnsFrom": [
             "user_id"
           ],
@@ -628,10 +628,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "users_to_rooms_user_id_user_id_fk": {
-          "name": "users_to_rooms_user_id_user_id_fk",
+        "users_to_rooms_user_id_users_id_fk": {
+          "name": "users_to_rooms_user_id_users_id_fk",
           "tableFrom": "users_to_rooms",
-          "tableTo": "user",
+          "tableTo": "users",
           "columnsFrom": [
             "user_id"
           ],
@@ -666,8 +666,8 @@
       },
       "uniqueConstraints": {}
     },
-    "verificationToken": {
-      "name": "verificationToken",
+    "verificationTokens": {
+      "name": "verificationTokens",
       "schema": "",
       "columns": {
         "identifier": {
@@ -692,8 +692,8 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {
-        "verificationToken_identifier_token": {
-          "name": "verificationToken_identifier_token",
+        "verificationTokens_identifier_token": {
+          "name": "verificationTokens_identifier_token",
           "columns": [
             "identifier",
             "token"
@@ -734,10 +734,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "votes_user_id_user_id_fk": {
-          "name": "votes_user_id_user_id_fk",
+        "votes_user_id_users_id_fk": {
+          "name": "votes_user_id_users_id_fk",
           "tableFrom": "votes",
-          "tableTo": "user",
+          "tableTo": "users",
           "columnsFrom": [
             "user_id"
           ],

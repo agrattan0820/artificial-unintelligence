@@ -14,7 +14,7 @@ export async function checkIfExistingUser(
   socket: Socket<ClientToServerEvents, ServerToClientEvents>
 ) {
   if (socket.handshake.auth.userId && socket.handshake.auth.roomCode) {
-    const userId = Number(socket.handshake.auth.userId);
+    const userId = socket.handshake.auth.userId;
     const roomCode: string = socket.handshake.auth.roomCode;
     socket.join(roomCode);
     try {
@@ -42,7 +42,7 @@ export async function connectionSocketHandlers(
     try {
       await Promise.all(
         [...socket.rooms].map(async (room) => {
-          const userId = Number(socket.handshake.auth.userId);
+          const userId = socket.handshake.auth.userId;
 
           await leaveRoom({
             userId,
