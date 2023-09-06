@@ -5,10 +5,10 @@
 
 import { motion } from "framer-motion";
 import { FiCheck } from "react-icons/fi";
+import { Session } from "next-auth";
 
 import { cn } from "@ai/utils/cn";
 import { GameInfo } from "@ai/app/server-actions";
-import { useStore } from "@ai/utils/store";
 import Friend from "./friend";
 
 type SubmittedUserCardProps = {
@@ -62,12 +62,12 @@ const SubmittedUserCard = ({ nickname, submitted }: SubmittedUserCardProps) => {
 const PromptSubmitted = ({
   gameInfo,
   submittedPlayerIds,
+  session,
 }: {
   gameInfo: GameInfo;
-  submittedPlayerIds: Set<number>;
+  submittedPlayerIds: Set<string>;
+  session: Session;
 }) => {
-  const { user } = useStore();
-
   return (
     <div className="mx-auto text-center">
       <Friend className="mx-auto mb-4 w-32" />
@@ -84,7 +84,7 @@ const PromptSubmitted = ({
             key={i}
             nickname={player.nickname}
             submitted={
-              submittedPlayerIds.has(player.id) || player.id === user?.id
+              submittedPlayerIds.has(player.id) || player.id === session.user.id
             }
           />
         ))}

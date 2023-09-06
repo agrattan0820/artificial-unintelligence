@@ -7,15 +7,15 @@ import { authOptions } from "@ai/pages/api/auth/[...nextauth]";
 import { redirect } from "next/navigation";
 
 export default async function Room({ params }: { params: { code: string } }) {
-  const roomInfo = await getRoomInfo(params.code);
-
   const session = await getServerSession(authOptions());
-
-  console.log("[ROOM INFO]", roomInfo);
 
   if (!session) {
     redirect("/");
   }
+
+  const roomInfo = await getRoomInfo(params.code);
+
+  console.log("[ROOM INFO]", roomInfo);
 
   if ("error" in roomInfo) {
     return (

@@ -2,21 +2,25 @@
 
 import { useContext, useState } from "react";
 import { motion } from "framer-motion";
+import type { Session } from "next-auth";
 
 import Button, { SecondaryButton } from "@ai/components/button";
 import ImageChoice, { ImageOption } from "./image-choice";
 import Ellipsis from "@ai/components/ellipsis";
 import { GameInfo, QuestionGenerations } from "@ai/app/server-actions";
-import { useStore } from "@ai/utils/store";
 import { SocketContext } from "@ai/utils/socket-provider";
 
 type FaceOffProps = {
   gameInfo: GameInfo;
   currQuestionGenerations: QuestionGenerations | undefined;
+  session: Session;
 };
 
-const FaceOff = ({ gameInfo, currQuestionGenerations }: FaceOffProps) => {
-  const { user } = useStore();
+const FaceOff = ({
+  gameInfo,
+  currQuestionGenerations,
+  session,
+}: FaceOffProps) => {
   const socket = useContext(SocketContext);
 
   const [loading, setLoading] = useState(false);
@@ -24,13 +28,13 @@ const FaceOff = ({ gameInfo, currQuestionGenerations }: FaceOffProps) => {
   const [voteSubmitted, setVoteSubmitted] = useState(false);
 
   const currUserInFaceOff =
-    user?.id === currQuestionGenerations?.player1.id ||
-    user?.id === currQuestionGenerations?.player2.id;
+    session.user.id === currQuestionGenerations?.player1.id ||
+    session.user.id === currQuestionGenerations?.player2.id;
 
   const onImageChoice = async () => {
     setLoading(true);
 
-    if (user && selectedImage && currQuestionGenerations) {
+    if (session.user && selectedImage && currQuestionGenerations) {
       socket.emit("voteSubmitted", {
         gameId: gameInfo.game.id,
         questionId: currQuestionGenerations.question.id,
@@ -38,7 +42,7 @@ const FaceOff = ({ gameInfo, currQuestionGenerations }: FaceOffProps) => {
           selectedImage === 1
             ? currQuestionGenerations.player1Generation.id
             : currQuestionGenerations.player2Generation.id,
-        userId: user.id,
+        userId: session.user.id,
       });
     }
 

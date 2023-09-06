@@ -19,8 +19,8 @@ import Ellipsis from "@ai/components/ellipsis";
 import ImageChoice, { ImageOption } from "./image-choice";
 import { GameInfo, createGenerations } from "@ai/app/server-actions";
 import { gameMachine } from "./game-machine";
-import { useStore } from "@ai/utils/store";
 import { SocketContext } from "@ai/utils/socket-provider";
+import { Session } from "next-auth";
 
 interface FormElementsType extends HTMLFormControlsCollection {
   prompt: HTMLInputElement;
@@ -35,17 +35,18 @@ const Prompt = ({
   gameInfo,
   state,
   send,
+  session,
 }: {
   gameInfo: GameInfo;
   state: StateFrom<typeof gameMachine>;
   send: (event: EventFrom<typeof gameMachine>) => StateFrom<typeof gameMachine>;
+  session: Session;
 }) => {
-  const { user } = useStore();
   const socket = useContext(SocketContext);
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   const gameId = gameInfo.game.id;
-  const userId = user?.id;
+  const userId = session.user.id;
   const userGameRoundGenerations = gameInfo.gameRoundGenerations.filter(
     (generation) => generation.user.id === userId,
   );
@@ -90,10 +91,10 @@ const Prompt = ({
     return gameInfo.questions.filter((question) => {
       return (
         question.round === currRound &&
-        (question.player1 === user?.id || question.player2 === user?.id)
+        (question.player1 === userId || question.player2 === userId)
       );
     });
-  }, [currRound, gameInfo.questions, user?.id]);
+  }, [currRound, gameInfo.questions, userId]);
   const currQuestion = stage === "FIRST" ? questions[0] : questions[1];
 
   const onPromptSubmit = async (e: FormEvent<PromptFormType>) => {
@@ -153,7 +154,7 @@ const Prompt = ({
   const onImageSubmit = async () => {
     setLoading(true);
 
-    if (user && imageOption1 && imageOption2) {
+    if (session && imageOption1 && imageOption2) {
       socket.emit("generationSubmitted", {
         generationId: selectedImage === 1 ? imageOption1?.id : imageOption2?.id,
         gameId: gameId,

@@ -3,24 +3,102 @@
 import { signIn, useSession } from "next-auth/react";
 import { FaGoogle } from "react-icons/fa";
 import Button, { LinkSecondaryButton } from "./button";
+import { RoomInfo } from "@ai/app/server-actions";
+import { FormEvent, useState } from "react";
+import toast from "react-hot-toast";
+import Input from "./input";
+import Ellipsis from "./ellipsis";
 
-const SignInForm = () => {
+interface FormElementsType extends HTMLFormControlsCollection {
+  nickname: HTMLInputElement;
+}
+
+export interface NicknameFormType extends HTMLFormElement {
+  readonly elements: FormElementsType;
+}
+
+type SignInFormProps =
+  | {
+      room?: never;
+      submitLabel: string;
+      type: "HOME";
+    }
+  | {
+      room: RoomInfo;
+      submitLabel: string;
+      type: "INVITE";
+    };
+
+const SignInForm = ({ room, submitLabel, type }: SignInFormProps) => {
   const { data: session } = useSession();
+  const [loading, setLoading] = useState(false);
 
-  console.log("CLIENT SESSION", session);
+  const onSubmit = async (e: FormEvent<NicknameFormType>) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const formNickname: string = e.currentTarget.elements.nickname.value;
+
+      const callbackUrl =
+        type === "HOME"
+          ? `/api/host/?nickname=${formNickname.split(" ").join("+")}`
+          : `/api/join/?nickname=${formNickname.split(" ").join("+")}&code=${
+              room.code
+            }`;
+
+      signIn("google", { callbackUrl });
+    } catch (error) {
+      setLoading(false);
+
+      if (error instanceof Error) {
+        console.error(error);
+
+        if (error.message === "Room is full") {
+          toast.error("Room is full! Unable to join.");
+          return;
+        }
+
+        toast.error(
+          `An Error Occurred ${
+            type === "HOME"
+              ? "Trying to Create a Room"
+              : "Trying to Join the Room"
+          }`,
+        );
+      }
+    }
+  };
 
   return (
-    <div className="mt-8 flex flex-wrap gap-x-2 gap-y-4">
-      <Button
-        onClick={() =>
-          signIn("google", { callbackUrl: "/api/redirect/?nickname=Big+Al" })
-        }
-        className="flex items-center justify-center gap-2 rounded-md bg-indigo-600 px-4 py-1"
-      >
-        Sign-in with Google <FaGoogle />
-      </Button>
-      <LinkSecondaryButton href="/how-to-play">How to Play</LinkSecondaryButton>
-    </div>
+    <form onSubmit={onSubmit}>
+      <Input
+        id="nickname"
+        type="text"
+        placeholder="Enter a cool nickname"
+        defaultValue={session?.user?.nickname ?? ""}
+        maxLength={50}
+        required
+        label="Enter a cool nickname"
+      />
+      <div className="mt-8 flex flex-wrap gap-x-2 gap-y-4">
+        <Button
+          type="submit"
+          disabled={loading}
+          className="flex items-center justify-center gap-2"
+        >
+          {!loading ? (
+            <>
+              {submitLabel} <FaGoogle />
+            </>
+          ) : (
+            <Ellipsis />
+          )}
+        </Button>
+        <LinkSecondaryButton href="/how-to-play">
+          How to Play
+        </LinkSecondaryButton>
+      </div>
+    </form>
   );
 };
 

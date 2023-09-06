@@ -20,7 +20,7 @@ export default function Lobby({
   session: Session;
 }) {
   const router = useRouter();
-  const [hostId, setHostId] = useState<number | null>(roomInfo.hostId);
+  const [hostId, setHostId] = useState<string | null>(roomInfo.hostId);
   const [players, setPlayers] = useState<User[]>(roomInfo.players);
   const [startGameLoading, setStartGameLoading] = useState(false);
 
@@ -84,6 +84,7 @@ export default function Lobby({
           onStartGame={initiateStartGame}
           loading={startGameLoading}
           roomIsFull={roomIsFull}
+          session={session}
         />
       </motion.section>
     </main>

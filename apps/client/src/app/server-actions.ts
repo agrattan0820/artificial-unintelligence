@@ -9,12 +9,12 @@ export type User = {
   emailVerified: string | null;
 };
 export type Room = {
-  hostId: number | null;
+  hostId: string | null;
   code: string;
   createdAt: string;
 };
 export type RoomInfo = {
-  hostId: number | null;
+  hostId: string | null;
   code: string;
   createdAt: string;
   players: User[];
@@ -43,8 +43,8 @@ export type Question = {
   createdAt: string;
   gameId: number;
   round: number;
-  player1: number;
-  player2: number;
+  player1: string;
+  player2: string;
   votedOn: boolean;
 };
 export type Vote = {
@@ -63,20 +63,20 @@ export type GameRoundGeneration = {
     text: string;
     round: number;
     gameId: number;
-    player1: number;
-    player2: number;
+    player1: string;
+    player2: string;
     createdAt: Date;
   };
   user: User;
 };
 
 export type GameInfo = {
-  hostId: number | null;
+  hostId: string | null;
   game: Game;
   players: User[];
   questions: Question[];
   gameRoundGenerations: GameRoundGeneration[];
-  submittedPlayers: number[];
+  submittedPlayers: string[];
   votedPlayers: UserVote[];
 };
 

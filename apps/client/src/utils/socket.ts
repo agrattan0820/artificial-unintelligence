@@ -10,7 +10,7 @@ export interface ServerToClientEvents {
   startGame: () => void;
   playAnotherGame: () => void;
   serverEvent: (event: EventFrom<typeof gameMachine>) => void;
-  submittedPlayers: (players: number[]) => void;
+  submittedPlayers: (players: string[]) => void;
   votedPlayers: (votes: UserVote[]) => void;
   error: (str: string) => void;
 }
@@ -32,7 +32,7 @@ export interface ClientToServerEvents {
     round: number;
   }) => void;
   voteSubmitted: (data: {
-    userId: number;
+    userId: string;
     generationId: number;
     gameId: number;
     questionId: number;

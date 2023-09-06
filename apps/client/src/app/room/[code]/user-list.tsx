@@ -9,7 +9,7 @@ const UserList = ({
   hostId,
   players,
 }: {
-  hostId: number | null;
+  hostId: string | null;
   players: User[];
 }) => {
   return (
