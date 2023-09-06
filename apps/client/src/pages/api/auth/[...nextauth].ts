@@ -41,16 +41,8 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
       // newUser: "/auth/new-user", // New users will be directed here on first sign in (leave the property out if not of interest)
     },
     callbacks: {
-      async signIn({ user, profile }) {
-        console.log("SIGN IN USER", user);
-        console.log("SIGN IN PROFILE", profile);
-
-        return true;
-      },
-      async session({ session, token, user }) {
-        console.log("SESSION SESSION", session);
-        console.log("SESSION TOKEN", token);
-        console.log("SESSION user", user);
+      async session({ session, user }) {
+        session.user = user;
         return session;
       },
     },
