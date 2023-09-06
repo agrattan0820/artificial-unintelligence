@@ -8,38 +8,40 @@ export function roomSocketHandlers(
   io: Server<ClientToServerEvents, ServerToClientEvents>,
   socket: Socket<ClientToServerEvents, ServerToClientEvents>
 ) {
-  socket.on("connectToRoom", async (code) => {
-    try {
-      const userId = socket.handshake.auth.userId;
-      let roomInfo = await getRoom({ code });
+  socket.on("connectToRoom", async (data) => {
+    const { userId, code } = data;
+    if (userId && code) {
+      try {
+        let roomInfo = await getRoom({ code });
 
-      if (!roomInfo) {
-        socket.emit("message", `Unable to connect to room`);
-        return;
+        if (!roomInfo) {
+          socket.emit("message", `Unable to connect to room`);
+          return;
+        }
+
+        const playerInRoom = roomInfo.players.some(
+          (player) => player.id === userId
+        );
+
+        if (roomInfo.players.length >= 8 && !playerInRoom) {
+          socket.emit("message", "Room is full, unable to join");
+          return;
+        }
+
+        if (!playerInRoom) {
+          await joinRoom({ userId: userId, code });
+          roomInfo = await getRoom({ code });
+        }
+
+        if (!roomInfo) {
+          throw new Error("Unable to get room info after join");
+        }
+
+        socket.join(code);
+        socket.to(code).emit("roomState", roomInfo);
+      } catch (error) {
+        if (error instanceof Error) handleSocketError(error, socket, code);
       }
-
-      const playerInRoom = roomInfo.players.some(
-        (player) => player.id === userId
-      );
-
-      if (roomInfo.players.length >= 8 && !playerInRoom) {
-        socket.emit("message", "Room is full, unable to join");
-        return;
-      }
-
-      if (!playerInRoom) {
-        await joinRoom({ userId: userId, code });
-        roomInfo = await getRoom({ code });
-      }
-
-      if (!roomInfo) {
-        throw new Error("Unable to get room info after join");
-      }
-
-      socket.join(code);
-      socket.to(code).emit("roomState", roomInfo);
-    } catch (error) {
-      if (error instanceof Error) handleSocketError(error, socket, code);
     }
   });
 

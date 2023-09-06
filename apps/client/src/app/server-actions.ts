@@ -2,8 +2,11 @@ import { URL } from "@ai/utils/socket";
 
 export type User = {
   createdAt: string;
-  id: number;
+  id: string;
   nickname: string;
+  name: string | null;
+  email: string | null;
+  emailVerified: string | null;
 };
 export type Room = {
   hostId: number | null;
@@ -28,7 +31,7 @@ export type Generation = {
   id: number;
   text: string;
   imageUrl: string;
-  userId: number;
+  userId: string;
   questionId: number;
   gameId: number;
   selected: boolean;
@@ -47,7 +50,7 @@ export type Question = {
 export type Vote = {
   createdAt: string;
   id: number;
-  userId: number;
+  userId: string;
   generationId: number;
 };
 
@@ -118,7 +121,7 @@ export type ExistingHostResponse = {
   room: Room;
 };
 
-export async function existingHost(userId: number) {
+export async function existingHost(userId: string) {
   const response = await fetch(`${URL}/user/existingHost`, {
     method: "POST",
     headers: {
@@ -228,7 +231,7 @@ export async function createGenerations({
   questionId,
   images,
 }: {
-  userId: number;
+  userId: string;
   gameId: number;
   questionId: number;
   images: { text: string; imageUrl: string }[];

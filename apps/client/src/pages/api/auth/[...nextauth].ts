@@ -1,11 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { db } from "database";
 import { myDrizzleAdapter } from "@ai/components/my-drizzle-adapter";
 
-export default async function auth(req: NextApiRequest, res: NextApiResponse) {
-  return await NextAuth(req, res, {
+export const authOptions = (
+  req?: NextApiRequest | Request,
+): NextAuthOptions => {
+  return {
     adapter: myDrizzleAdapter(db),
     providers: [
       GoogleProvider({
@@ -13,13 +15,13 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
         clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
         profile(profile) {
           const cookieNickname =
-            typeof req.cookies["next-auth.callback-url"] === "string"
-              ? new URL(req.cookies["next-auth.callback-url"]).searchParams.get(
-                  "nickname",
-                ) ?? ""
+            req && "cookies" in req && typeof req.cookies === "object"
+              ? typeof req.cookies["next-auth.callback-url"] === "string"
+                ? new URL(
+                    req.cookies["next-auth.callback-url"],
+                  ).searchParams.get("nickname") ?? ""
+                : ""
               : "";
-
-          console.log("FINAL CHECK OF REQ", req);
 
           return {
             id: profile.sub,
@@ -51,5 +53,9 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
         console.log("CREATE USER", user);
       },
     },
-  });
+  };
+};
+
+export default async function auth(req: NextApiRequest, res: NextApiResponse) {
+  return await NextAuth(req, res, authOptions(req));
 }

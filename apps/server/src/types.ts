@@ -22,7 +22,7 @@ export interface ServerToClientEvents {
 }
 
 export interface ClientToServerEvents {
-  connectToRoom: (code: string) => void;
+  connectToRoom: (data: { code: string; userId: string }) => void;
   leaveRoom: (data: { userId: string; code: string }) => void;
   initiateGame: (code: string) => void;
   initiatePlayAnotherGame: (code: string) => void;

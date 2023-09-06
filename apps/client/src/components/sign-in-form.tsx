@@ -13,7 +13,7 @@ const SignInForm = () => {
     <div className="mt-8 flex flex-wrap gap-x-2 gap-y-4">
       <Button
         onClick={() =>
-          signIn("google", { callbackUrl: "/auth?nickname=Big+Al" })
+          signIn("google", { callbackUrl: "/api/redirect/?nickname=Big+Al" })
         }
         className="flex items-center justify-center gap-2 rounded-md bg-indigo-600 px-4 py-1"
       >

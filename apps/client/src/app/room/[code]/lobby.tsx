@@ -3,18 +3,23 @@
 import { motion } from "framer-motion";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Session } from "next-auth";
 
 import InviteLink from "./invite-link";
 import UserCount from "@ai/components/user-count";
 import { RoomInfo, User } from "@ai/app/server-actions";
 import UserList from "./user-list";
 import StartGame from "./start-game";
-import { useStore } from "@ai/utils/store";
 import { SocketContext } from "@ai/utils/socket-provider";
 
-export default function Lobby({ roomInfo }: { roomInfo: RoomInfo }) {
+export default function Lobby({
+  roomInfo,
+  session,
+}: {
+  roomInfo: RoomInfo;
+  session: Session;
+}) {
   const router = useRouter();
-  const { user } = useStore();
   const [hostId, setHostId] = useState<number | null>(roomInfo.hostId);
   const [players, setPlayers] = useState<User[]>(roomInfo.players);
   const [startGameLoading, setStartGameLoading] = useState(false);
@@ -44,7 +49,10 @@ export default function Lobby({ roomInfo }: { roomInfo: RoomInfo }) {
   };
 
   useEffect(() => {
-    socket.emit("connectToRoom", roomInfo.code);
+    socket.emit("connectToRoom", {
+      userId: session.user.id,
+      code: roomInfo.code,
+    });
     socket.on("roomState", handleRoomState);
     socket.on("startGame", handleStartGame);
     socket.on("error", handleError);
@@ -54,7 +62,7 @@ export default function Lobby({ roomInfo }: { roomInfo: RoomInfo }) {
       socket.off("startGame", handleStartGame);
       socket.off("error", handleError);
     };
-  }, [handleStartGame, roomInfo.code, socket, user?.id]);
+  }, [handleStartGame, roomInfo.code, socket, session]);
 
   return (
     <main className="flex min-h-[100dvh] flex-col justify-center">
