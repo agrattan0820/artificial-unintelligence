@@ -1,7 +1,8 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { signIn, useSession } from "next-auth/react";
+import { Session } from "next-auth";
+import { signIn } from "next-auth/react";
 import { FaGoogle } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
@@ -21,18 +22,19 @@ export interface NicknameFormType extends HTMLFormElement {
 
 type SignInFormProps =
   | {
+      session: Session | null;
       room?: never;
       submitLabel: string;
       type: "HOME";
     }
   | {
+      session: Session | null;
       room: RoomInfo;
       submitLabel: string;
       type: "INVITE";
     };
 
-const SignInForm = ({ room, submitLabel, type }: SignInFormProps) => {
-  const { data: session } = useSession();
+const SignInForm = ({ session, room, submitLabel, type }: SignInFormProps) => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -96,7 +98,7 @@ const SignInForm = ({ room, submitLabel, type }: SignInFormProps) => {
         >
           {!loading ? (
             <>
-              {submitLabel} <FaGoogle />
+              {submitLabel} {!session && <FaGoogle />}
             </>
           ) : (
             <Ellipsis />

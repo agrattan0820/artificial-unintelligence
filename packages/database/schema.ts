@@ -196,3 +196,6 @@ export type NewGeneration = typeof generations.$inferInsert;
 
 export type Vote = typeof votes.$inferSelect;
 export type NewVote = typeof votes.$inferInsert;
+
+export type UserGame = typeof usersToGames.$inferSelect;
+export type NewUserGame = typeof games.$inferInsert;
