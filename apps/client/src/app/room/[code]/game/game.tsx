@@ -217,7 +217,7 @@ export default function Game({ gameInfo, session }: GameProps) {
       )}
     >
       <section className="container mx-auto px-4 py-16">
-        <div className="absolute right-8 top-8 mt-4">
+        <div className="absolute right-8 top-8 z-50 mt-4">
           <UserMenu />
         </div>
         <AnimatePresence mode="wait">

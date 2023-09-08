@@ -77,7 +77,7 @@ export default function Lobby({
         <div className="mx-auto mt-4 flex items-center justify-center md:absolute md:left-8 md:top-8">
           <UserCount count={players.length} />
         </div>
-        <div className="absolute right-8 top-8 mt-4">
+        <div className="absolute right-8 top-8 z-50 mt-4">
           <UserMenu />
         </div>
         <UserList session={session} hostId={hostId} players={players} />
