@@ -147,13 +147,22 @@ export type JoinRoomResponse = {
   user: User;
 };
 
-export async function joinRoom(nickname: string, code: string) {
+export async function joinRoom({
+  userId,
+  nickname,
+  code,
+}: {
+  userId: string;
+  nickname: string;
+  code: string;
+}) {
   const response = await fetch(`${URL}/room/join`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
+      userId,
       nickname,
       code,
     }),

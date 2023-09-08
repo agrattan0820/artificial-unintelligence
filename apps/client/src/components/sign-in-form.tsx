@@ -1,11 +1,13 @@
 "use client";
 
+import { FormEvent, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { FaGoogle } from "react-icons/fa";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+
 import Button, { LinkSecondaryButton } from "./button";
 import { RoomInfo } from "@ai/app/server-actions";
-import { FormEvent, useState } from "react";
-import toast from "react-hot-toast";
 import Input from "./input";
 import Ellipsis from "./ellipsis";
 
@@ -32,6 +34,7 @@ type SignInFormProps =
 const SignInForm = ({ room, submitLabel, type }: SignInFormProps) => {
   const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const onSubmit = async (e: FormEvent<NicknameFormType>) => {
     e.preventDefault();
@@ -45,6 +48,11 @@ const SignInForm = ({ room, submitLabel, type }: SignInFormProps) => {
           : `/api/join/?nickname=${formNickname.split(" ").join("+")}&code=${
               room.code
             }`;
+
+      if (session) {
+        router.push(callbackUrl);
+        return;
+      }
 
       signIn("google", { callbackUrl });
     } catch (error) {

@@ -11,6 +11,7 @@ import { RoomInfo, User } from "@ai/app/server-actions";
 import UserList from "./user-list";
 import StartGame from "./start-game";
 import { SocketContext } from "@ai/utils/socket-provider";
+import UserMenu from "@ai/components/user-menu";
 
 export default function Lobby({
   roomInfo,
@@ -76,7 +77,10 @@ export default function Lobby({
         <div className="mx-auto mt-4 flex items-center justify-center md:absolute md:left-8 md:top-8">
           <UserCount count={players.length} />
         </div>
-        <UserList hostId={hostId} players={players} />
+        <div className="absolute right-8 top-8 mt-4">
+          <UserMenu />
+        </div>
+        <UserList session={session} hostId={hostId} players={players} />
         <StartGame
           players={players}
           code={roomInfo.code}
