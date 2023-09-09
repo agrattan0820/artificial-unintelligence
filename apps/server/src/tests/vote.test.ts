@@ -99,8 +99,8 @@ describe("createVoteMap", () => {
     const voteMap = createVoteMap({ generations, userVotes });
 
     expect(voteMap).toEqual({
-      3: 1,
-      4: 1,
+      [creator1]: 1,
+      [creator2]: 1,
     });
   });
 });
