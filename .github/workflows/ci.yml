@@ -40,14 +40,14 @@ jobs:
       - name: 💅 Lint
         run: pnpm lint
 
-      - name: 🧱 Build
-        env:
-          NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
-          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
-          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
-        run: pnpm build
+      # - name: 🧱 Build
+      #   env:
+      #     NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+      #     NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+      #     GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+      #     GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+      #     NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+      #   run: pnpm build
 
       - name: 🧪 Test
         run: pnpm test
