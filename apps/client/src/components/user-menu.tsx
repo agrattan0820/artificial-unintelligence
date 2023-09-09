@@ -19,12 +19,12 @@ const UserMenu = () => {
       className="relative flex flex-col items-end justify-end"
     >
       <button onClick={() => setShowMenu(!showMenu)}>
-        <FiSettings className="text-2xl" />
+        <FiSettings className="text-xl md:text-2xl" />
       </button>
       <AnimatePresence initial={false}>
         {showMenu && (
           <motion.div
-            className="mt-4 rounded-md border border-gray-300 p-4"
+            className="mt-4 rounded-md border border-gray-300 bg-slate-900 p-4"
             initial={{ opacity: 0 }}
             animate={{
               opacity: 1,
