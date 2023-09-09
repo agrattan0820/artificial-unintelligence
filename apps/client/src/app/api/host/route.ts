@@ -10,7 +10,18 @@ export async function GET(req: Request) {
     redirect("/");
   }
 
-  const roomForExistingUser = await existingHost(session.user.id);
+  const searchParams = new URL(req.url).searchParams;
+
+  const nickname = searchParams.get("nickname");
+
+  if (!nickname) {
+    redirect("/");
+  }
+
+  const roomForExistingUser = await existingHost({
+    userId: session.user.id,
+    nickname,
+  });
 
   redirect(`/room/${roomForExistingUser.room.code}`);
 }

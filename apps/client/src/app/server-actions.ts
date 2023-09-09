@@ -121,13 +121,20 @@ export type ExistingHostResponse = {
   room: Room;
 };
 
-export async function existingHost(userId: string) {
+export async function existingHost({
+  userId,
+  nickname,
+}: {
+  userId: string;
+  nickname: string;
+}) {
   const response = await fetch(`${URL}/user/existingHost`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
+      nickname,
       userId,
     }),
   });

@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 
 import { createRoom, joinRoom } from "../services/room.service";
-import { createUser } from "../services/user.service";
+import { createUser, updateUserNickname } from "../services/user.service";
 
 export async function createUserController(
   req: Request<{}, {}, { nickname: string }>,
@@ -44,17 +44,22 @@ export async function createHostController(
 }
 
 export async function existingHostController(
-  req: Request<{}, {}, { userId: string }>,
+  req: Request<{}, {}, { userId: string; nickname: string }>,
   res: Response,
   next: NextFunction
 ) {
   try {
-    const body = req.body;
+    const { userId, nickname } = req.body;
 
-    const newRoom = await createRoom({ hostId: body.userId });
+    const newRoom = await createRoom({ hostId: userId });
+
+    await updateUserNickname({
+      userId,
+      nickname,
+    });
 
     await joinRoom({
-      userId: body.userId,
+      userId: userId,
       code: newRoom.code,
     });
 
