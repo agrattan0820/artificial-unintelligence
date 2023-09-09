@@ -29,7 +29,8 @@ const SubmittedUserCard = ({ nickname, submitted }: SubmittedUserCardProps) => {
         layout
         className="flex items-center justify-center gap-3 md:text-xl"
       >
-        <span
+        <motion.span
+          layout="position"
           className={cn(
             "flex h-12 w-12 items-center justify-center rounded-full border-2 border-indigo-600 p-1",
           )}
@@ -42,7 +43,7 @@ const SubmittedUserCard = ({ nickname, submitted }: SubmittedUserCardProps) => {
             width={36}
             height={36}
           />
-        </span>
+        </motion.span>
         <motion.span layout="position">{nickname}</motion.span>{" "}
         {submitted && (
           <motion.span
