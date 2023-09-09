@@ -1,43 +1,14 @@
 import { URL } from "@ai/utils/socket";
+import { Game, Generation, Question, Room, User, Vote } from "database";
 
-export type User = {
-  createdAt: string;
-  id: string;
-  nickname: string;
-  name: string | null;
-  email: string | null;
-  emailVerified: string | null;
-};
-export type Room = {
-  hostId: string | null;
-  code: string;
-  createdAt: string;
-};
 export type RoomInfo = {
   hostId: string | null;
   code: string;
   createdAt: string;
   players: User[];
 };
-export type Game = {
-  id: number;
-  roomCode: string;
-  state: string;
-  round: number;
-  createdAt: string;
-  completedAt: string | null;
-};
-export type Generation = {
-  id: number;
-  text: string;
-  imageUrl: string;
-  userId: string;
-  questionId: number;
-  gameId: number;
-  selected: boolean;
-  createdAt: string;
-};
-export type Question = {
+
+export type GameQuestion = {
   id: number;
   text: string;
   createdAt: string;
@@ -46,12 +17,6 @@ export type Question = {
   player1: string;
   player2: string;
   votedOn: boolean;
-};
-export type Vote = {
-  createdAt: string;
-  id: number;
-  userId: string;
-  generationId: number;
 };
 
 export type UserVote = { vote: Vote; user: User };
@@ -74,7 +39,7 @@ export type GameInfo = {
   hostId: string | null;
   game: Game;
   players: User[];
-  questions: Question[];
+  questions: GameQuestion[];
   gameRoundGenerations: GameRoundGeneration[];
   submittedPlayers: string[];
   votedPlayers: UserVote[];
@@ -205,8 +170,8 @@ export async function getRoomInfo(code: string) {
 
 export type GetGameInfoResponse = GameInfo | ErrorResponse;
 
-export async function getGameInfo(code: string) {
-  const response = await fetch(`${URL}/game/${code}`, { cache: "no-store" });
+export async function getGameInfo(gameId: number) {
+  const response = await fetch(`${URL}/game/${gameId}`, { cache: "no-store" });
 
   if (!response.ok) {
     throw new Error("Failed to obtain game info");

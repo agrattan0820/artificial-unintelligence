@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 export default async function GamePage({
   params,
 }: {
-  params: { code: string };
+  params: { code: string; gameId: number };
 }) {
   const session = await getServerSession(authOptions());
 
@@ -16,7 +16,7 @@ export default async function GamePage({
     redirect("/");
   }
 
-  const gameInfo = await getGameInfo(params.code);
+  const gameInfo = await getGameInfo(params.gameId);
 
   console.log("[GAME INFO]", gameInfo);
 

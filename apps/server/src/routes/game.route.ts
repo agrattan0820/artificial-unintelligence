@@ -5,6 +5,6 @@ import {
 } from "../controllers/game.controller";
 
 export function gameRoutes(app: Express) {
-  app.get("/game/:code", getGameInfoController);
+  app.get("/game/:id", getGameInfoController);
   app.get("/game/:id/leaderboard", getLeaderboardByIdController);
 }

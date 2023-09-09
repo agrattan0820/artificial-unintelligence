@@ -1,5 +1,5 @@
 import { getServerSession } from "next-auth";
-import { db, games, usersToGames } from "database";
+import { Game, db, games, usersToGames } from "database";
 import { isNull, and, eq, desc } from "drizzle-orm";
 import { FiLogIn } from "react-icons/fi";
 
@@ -12,7 +12,7 @@ import { LinkSecondaryButton } from "@ai/components/button";
 export default async function Home() {
   const session = await getServerSession(authOptions());
 
-  let runningGameRoomCode = "";
+  let runningGame: Game | null = null;
 
   if (session) {
     const response = await db
@@ -31,17 +31,17 @@ export default async function Home() {
       .orderBy(desc(games.createdAt));
 
     if (response.length > 0) {
-      runningGameRoomCode = response[0].game.roomCode;
+      runningGame = response[0].game;
     }
   }
 
   return (
     <main className="relative flex min-h-[100dvh] flex-col justify-center">
       <section className="container mx-auto flex flex-col-reverse items-start justify-center gap-8 px-4 lg:flex-row lg:gap-24">
-        {runningGameRoomCode && (
+        {runningGame && (
           <div className="absolute left-1/2 top-8 w-full -translate-x-1/2">
             <LinkSecondaryButton
-              href={`/room/${runningGameRoomCode}/game`}
+              href={`/room/${runningGame.roomCode}/game/${runningGame.id}`}
               className="mx-auto flex w-full max-w-fit items-center gap-2"
             >
               Join Back Into Game <FiLogIn />

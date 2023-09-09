@@ -253,7 +253,7 @@ const Prompt = ({
                   <select
                     name="generator"
                     id="generatorSelect"
-                    className="mt-1 appearance-none rounded-md bg-gray-300 px-4 py-1 text-black focus:border-none focus:outline-none focus:ring focus:ring-indigo-600"
+                    className="form-select mt-1 rounded-md bg-gray-300 px-4 py-1 text-black focus:border-none focus:outline-none focus:ring focus:ring-indigo-600"
                     required
                   >
                     <option value="dalle">DALL-E 2</option>
