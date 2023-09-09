@@ -13,7 +13,7 @@ type StateMachineEvent =
 export interface ServerToClientEvents {
   message: (str: string) => void;
   roomState: (roomInfo: RoomInfo) => void;
-  startGame: () => void;
+  startGame: (gameId: number) => void;
   playAnotherGame: () => void;
   serverEvent: (event: StateMachineEvent) => void;
   submittedPlayers: (players: string[]) => void;

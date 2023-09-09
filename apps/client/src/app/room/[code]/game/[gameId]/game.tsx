@@ -19,7 +19,6 @@ import {
   getCurrentComponent,
 } from "@ai/components/game/game-machine";
 import { SocketContext } from "@ai/utils/socket-provider";
-import { useStore } from "@ai/utils/store";
 import { cn } from "@ai/utils/cn";
 import { Session } from "next-auth";
 import UserMenu from "@ai/components/user-menu";
@@ -39,9 +38,6 @@ export default function Game({ gameInfo, session }: GameProps) {
 
   // Next.js router
   const router = useRouter();
-
-  // game id store state
-  const { setGameId } = useStore();
 
   // Wait until the client mounts to avoid hydration errors
   const [isMounted, setIsMounted] = useState(false);
@@ -157,11 +153,6 @@ export default function Game({ gameInfo, session }: GameProps) {
     handleStateChange();
   }, [handleStateChange, state]);
 
-  // Set gameId state
-  useEffect(() => {
-    setGameId(gameId);
-  }, [gameId, setGameId]);
-
   // Socket.io Effects
   useEffect(() => {
     socket.on("roomState", handleRoomState);
@@ -218,7 +209,7 @@ export default function Game({ gameInfo, session }: GameProps) {
     >
       <section className="container mx-auto px-4 py-24 md:py-16">
         <div className="absolute right-4 top-4 z-50 mt-4 md:right-8 md:top-8">
-          <UserMenu />
+          <UserMenu session={session} roomCode={gameInfo.game.roomCode} />
         </div>
         <AnimatePresence mode="wait">
           {isMounted ? currentComponent : null}

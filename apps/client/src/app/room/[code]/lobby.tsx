@@ -35,10 +35,13 @@ export default function Lobby({
     setPlayers(roomInfo.players);
   };
 
-  const handleStartGame = useCallback(() => {
-    console.log("[RECEIVED START GAME]");
-    router.push(`/room/${roomInfo.code}/game`);
-  }, [roomInfo.code, router]);
+  const handleStartGame = useCallback(
+    (gameId: number) => {
+      console.log("[RECEIVED START GAME]");
+      router.push(`/room/${roomInfo.code}/game/${gameId}`);
+    },
+    [roomInfo.code, router],
+  );
 
   const initiateStartGame = () => {
     setStartGameLoading(true);
@@ -78,7 +81,7 @@ export default function Lobby({
           <UserCount count={players.length} />
         </div>
         <div className="absolute right-8 top-8 z-50 mt-4">
-          <UserMenu />
+          <UserMenu session={session} roomCode={roomInfo.code} />
         </div>
         <UserList session={session} hostId={hostId} players={players} />
         <StartGame

@@ -56,7 +56,6 @@ export function roomSocketHandlers(
       }
 
       socket.leave(code);
-      socket.to(code).emit("message", `${socket.handshake.auth.userId} left`);
       socket.to(code).emit("roomState", roomInfo);
     } catch (error) {
       if (error instanceof Error) handleSocketError(error, socket, code);

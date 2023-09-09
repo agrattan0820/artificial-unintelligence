@@ -7,7 +7,7 @@ import { gameMachine } from "@ai/components/game/game-machine";
 export interface ServerToClientEvents {
   message: (str: string) => void;
   roomState: (roomInfo: RoomInfo) => void;
-  startGame: () => void;
+  startGame: (gameId: number) => void;
   playAnotherGame: () => void;
   serverEvent: (event: EventFrom<typeof gameMachine>) => void;
   submittedPlayers: (players: string[]) => void;
@@ -37,7 +37,7 @@ export interface ClientToServerEvents {
     gameId: number;
     questionId: number;
   }) => void;
-  leaveRoom: (code: string) => void;
+  leaveRoom: (data: { userId: string; code: string }) => void;
 }
 
 export const URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080";

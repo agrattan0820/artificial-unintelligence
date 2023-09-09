@@ -4,7 +4,6 @@ import { createContext, useEffect } from "react";
 import toast from "react-hot-toast";
 
 import { socket } from "./socket";
-import { useStore } from "./store";
 import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
 
@@ -15,7 +14,6 @@ export default function SocketProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const { room, gameId } = useStore();
   const { data: session } = useSession();
   const params = useParams();
 
@@ -31,8 +29,8 @@ export default function SocketProvider({
   useEffect(() => {
     socket.auth = {
       userId: session?.user?.id ?? "",
-      roomCode: room?.code ?? params?.code ?? "",
-      gameId,
+      roomCode: params?.code ?? "",
+      gameId: params?.gameId ?? "",
     };
     socket.connect();
     socket.on("message", socketMessage);
@@ -43,7 +41,7 @@ export default function SocketProvider({
       socket.off("error", socketError);
       socket.disconnect();
     };
-  }, [room?.code, gameId, session?.user?.id, params?.code]);
+  }, [params?.code, params?.gameId, session?.user?.id]);
 
   return (
     <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
