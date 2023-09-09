@@ -1,4 +1,6 @@
+import crypto from "crypto";
 import { describe, expect, test } from "@jest/globals";
+
 import { filterFaceOffGenerationsByQuestionId } from "../services/generation.service";
 import { GameRoundGeneration } from "../types";
 

@@ -1,6 +1,8 @@
+import crypto from "crypto";
 import { describe, expect, test } from "@jest/globals";
-import { calculateVotePoints, createVoteMap } from "../services/vote.service";
 import { Generation } from "database";
+
+import { calculateVotePoints, createVoteMap } from "../services/vote.service";
 import { UserVote } from "../types";
 
 describe("calculateVotePoints", () => {
