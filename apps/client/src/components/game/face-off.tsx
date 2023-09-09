@@ -81,7 +81,7 @@ const FaceOff = ({
           <div className="mt-8">
             {currUserInFaceOff || voteSubmitted ? (
               <>
-                <div className="fixed bottom-4 left-0 right-0 mx-auto w-full max-w-2xl px-6 md:hidden">
+                <div className="fixed bottom-8 left-0 right-0 mx-auto w-full max-w-2xl px-6 md:hidden">
                   <SecondaryButton
                     className="w-full shadow-lg disabled:opacity-100"
                     disabled
@@ -94,7 +94,7 @@ const FaceOff = ({
                 </p>
               </>
             ) : (
-              <div className="fixed bottom-4 left-0 right-0 mx-auto w-full max-w-2xl px-6 md:static md:px-0">
+              <div className="fixed bottom-8 left-0 right-0 mx-auto w-full max-w-2xl px-6 md:static md:px-0">
                 <Button
                   className="w-full shadow-lg md:w-auto"
                   onClick={onImageChoice}

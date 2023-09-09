@@ -340,7 +340,7 @@ const Prompt = ({
         {imagesLoaded && (
           <div className="mt-4">
             <p className="mb-8">{imagePrompt}</p>
-            <div className="fixed bottom-4 left-0 right-0 mx-auto flex w-full max-w-2xl gap-x-2 gap-y-4 px-6 md:static md:px-0">
+            <div className="fixed bottom-8 left-0 right-0 mx-auto flex w-full max-w-2xl gap-x-2 gap-y-4 px-6 md:static md:px-0">
               <Button
                 className="w-full shadow-lg md:w-auto"
                 onClick={onImageSubmit}
