@@ -39,10 +39,10 @@ export default async function Home() {
     <main className="relative flex min-h-[100dvh] flex-col justify-center">
       <section className="container mx-auto flex flex-col-reverse items-start justify-center gap-8 px-4 lg:flex-row lg:gap-24">
         {runningGameRoomCode && (
-          <div className="absolute left-1/2 top-8 -translate-x-1/2">
+          <div className="absolute left-1/2 top-8 w-full -translate-x-1/2">
             <LinkSecondaryButton
               href={`/room/${runningGameRoomCode}/game`}
-              className="flex items-center gap-2"
+              className="mx-auto flex w-full max-w-fit items-center gap-2"
             >
               Join Back Into Game <FiLogIn />
             </LinkSecondaryButton>
