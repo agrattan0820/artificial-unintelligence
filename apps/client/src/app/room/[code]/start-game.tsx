@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FiCheckSquare, FiPlusSquare, FiPlay } from "react-icons/fi";
 import { Session } from "next-auth";
+import type { User } from "database";
 
-import { User } from "@ai/app/server-actions";
 import Button, { SecondaryButton } from "@ai/components/button";
 import Ellipsis from "@ai/components/ellipsis";
 import useLinkShare from "@ai/utils/hooks/use-link-share";

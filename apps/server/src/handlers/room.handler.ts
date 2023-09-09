@@ -1,12 +1,19 @@
 import { Server, Socket } from "socket.io";
 
 import { ClientToServerEvents, ServerToClientEvents } from "../types";
-import { getRoom, joinRoom, leaveRoom } from "../services/room.service";
+import {
+  findNextHost,
+  getRoom,
+  joinRoom,
+  leaveRoom,
+  updateRoomHost,
+} from "../services/room.service";
 import { handleSocketError } from "../utils";
 
 export function roomSocketHandlers(
   io: Server<ClientToServerEvents, ServerToClientEvents>,
-  socket: Socket<ClientToServerEvents, ServerToClientEvents>
+  socket: Socket<ClientToServerEvents, ServerToClientEvents>,
+  gameStateMap: Map<number, { state: string; round: number }>
 ) {
   socket.on("connectToRoom", async (data) => {
     const { userId, code } = data;
@@ -53,6 +60,30 @@ export function roomSocketHandlers(
       if (!roomInfo) {
         socket.emit("message", `Unable to get room info when leaving`);
         return;
+      }
+
+      // TODO: Make this find new host and game state map deletion reusuable
+      if (roomInfo.hostId === userId) {
+        const newHost = findNextHost({
+          prevHostId: roomInfo.hostId,
+          players: roomInfo.players,
+        });
+        if (!newHost) {
+          console.log(`[NO OTHER PLAYERS REMAIN IN ${code}]`);
+
+          const gameId = socket.handshake.auth.gameId
+            ? Number(socket.handshake.auth.gameId)
+            : null;
+          if (gameId) {
+            gameStateMap.delete(gameId);
+          }
+
+          return;
+        }
+        await updateRoomHost({
+          newHostId: newHost.id,
+          roomCode: code,
+        });
       }
 
       socket.leave(code);

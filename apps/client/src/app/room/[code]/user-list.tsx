@@ -2,9 +2,9 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 
-import { User } from "@ai/app/server-actions";
 import UserCard from "@ai/components/user-card";
 import { Session } from "next-auth";
+import type { User } from "database";
 
 const UserList = ({
   session,

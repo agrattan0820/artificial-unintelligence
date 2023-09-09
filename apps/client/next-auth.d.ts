@@ -4,7 +4,7 @@ declare module "next-auth" {
   interface User {
     id: string;
     name: string | null;
-    nickname: string | null;
+    nickname: string;
     email: string | null;
     emailVerified: Date | null;
     image: string | null;

@@ -56,19 +56,13 @@ const Prompt = ({
 
   const isSecondStage =
     userGameRoundGenerations.length > 1 &&
-    (userGameRoundGenerations[0].generation.selected ||
-      userGameRoundGenerations[1].generation.selected);
+    userGameRoundGenerations.some(
+      (generation) => generation.generation.selected,
+    );
   const shouldShowGenerations =
     userGameRoundGenerations.length > 1 &&
-    !userGameRoundGenerations[0].generation.selected &&
-    !userGameRoundGenerations[1].generation.selected;
-
-  const [numGenerations, setNumGenerations] = useState(
-    userGameRoundGenerations.length,
-  );
-
-  const remainingImageGenerations = maxRegenerations - (numGenerations - 2) / 2;
-  const outOfRegenerations = remainingImageGenerations === 0;
+    !userGameRoundGenerations[0]?.generation.selected &&
+    !userGameRoundGenerations[1]?.generation.selected;
 
   const [stage, setStage] = useState<"FIRST" | "SECOND">(
     isSecondStage ? "SECOND" : "FIRST",
@@ -96,6 +90,16 @@ const Prompt = ({
     });
   }, [currRound, gameInfo.questions, userId]);
   const currQuestion = stage === "FIRST" ? questions[0] : questions[1];
+
+  const [currQuestionNumGenerations, setCurrQuestionNumGenerations] = useState(
+    userGameRoundGenerations.filter(
+      (generation) => generation.question.id === currQuestion.id,
+    ).length,
+  );
+
+  const remainingImageGenerations =
+    maxRegenerations - (currQuestionNumGenerations - 2) / 2;
+  const outOfRegenerations = remainingImageGenerations === 0;
 
   const onPromptSubmit = async (e: FormEvent<PromptFormType>) => {
     e.preventDefault();
@@ -131,7 +135,9 @@ const Prompt = ({
         setImageOption1(generations[0]);
         setImageOption2(generations[1]);
 
-        setNumGenerations(numGenerations + generations.length);
+        setCurrQuestionNumGenerations(
+          currQuestionNumGenerations + generations.length,
+        );
       }
     } else {
       console.error("Images were unable to be generated");
@@ -168,6 +174,7 @@ const Prompt = ({
     }
 
     if (stage === "FIRST") {
+      setCurrQuestionNumGenerations(0);
       setStage("SECOND");
       setImagePrompt("");
       resetImage();
@@ -238,6 +245,7 @@ const Prompt = ({
                   className="peer w-full resize-none rounded-xl border-2 border-gray-300 bg-transparent p-4 placeholder-transparent focus:border-indigo-300 focus:outline-none"
                   defaultValue={imagePrompt ?? undefined}
                   required
+                  disabled={loading}
                 />
                 <label
                   htmlFor="prompt"
@@ -255,6 +263,7 @@ const Prompt = ({
                     id="generatorSelect"
                     className="form-select mt-1 rounded-md bg-gray-300 px-4 py-1 text-black focus:border-none focus:outline-none focus:ring focus:ring-indigo-600"
                     required
+                    disabled={loading}
                   >
                     <option value="dalle">DALL-E 2</option>
                     <option value="sdxl">Stable Diffusion XL</option>

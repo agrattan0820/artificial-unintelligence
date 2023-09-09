@@ -4,10 +4,11 @@ import { motion } from "framer-motion";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Session } from "next-auth";
+import type { User } from "database";
 
 import InviteLink from "./invite-link";
 import UserCount from "@ai/components/user-count";
-import { RoomInfo, User } from "@ai/app/server-actions";
+import { RoomInfo } from "@ai/app/server-actions";
 import UserList from "./user-list";
 import StartGame from "./start-game";
 import { SocketContext } from "@ai/utils/socket-provider";

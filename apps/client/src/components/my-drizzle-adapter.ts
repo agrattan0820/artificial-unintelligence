@@ -13,7 +13,7 @@ import { Adapter, AdapterAccount } from "next-auth/adapters";
 export function createTables(pgTable: PgTableFn) {
   const users = pgTable("users", {
     id: text("id").notNull().primaryKey(),
-    nickname: text("nickname"),
+    nickname: text("nickname").notNull(),
     name: text("name"),
     email: text("email").notNull(),
     emailVerified: timestamp("email_verified", { mode: "date" }),
