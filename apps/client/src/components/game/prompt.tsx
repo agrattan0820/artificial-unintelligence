@@ -72,10 +72,10 @@ const Prompt = ({
     shouldShowGenerations ? userGameRoundGenerations[0].generation.text : "",
   );
   const [imageOption1, setImageOption1] = useState(
-    shouldShowGenerations ? userGameRoundGenerations[0].generation : undefined,
+    shouldShowGenerations ? userGameRoundGenerations[1].generation : undefined,
   );
   const [imageOption2, setImageOption2] = useState(
-    shouldShowGenerations ? userGameRoundGenerations[1].generation : undefined,
+    shouldShowGenerations ? userGameRoundGenerations[0].generation : undefined,
   );
   const [selectedImage, setSelectedImage] = useState<ImageOption>();
 
