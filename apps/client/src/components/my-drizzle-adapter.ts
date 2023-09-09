@@ -11,25 +11,25 @@ import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import { Adapter, AdapterAccount } from "next-auth/adapters";
 
 export function createTables(pgTable: PgTableFn) {
-  const users = pgTable("user", {
+  const users = pgTable("users", {
     id: text("id").notNull().primaryKey(),
     nickname: text("nickname"),
     name: text("name"),
     email: text("email").notNull(),
-    emailVerified: timestamp("emailVerified", { mode: "date" }),
+    emailVerified: timestamp("email_verified", { mode: "date" }),
     image: text("image"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
   });
 
   const accounts = pgTable(
-    "account",
+    "accounts",
     {
-      userId: text("userId")
+      userId: text("user_id")
         .notNull()
         .references(() => users.id, { onDelete: "cascade" }),
       type: text("type").$type<AdapterAccount["type"]>().notNull(),
       provider: text("provider").notNull(),
-      providerAccountId: text("providerAccountId").notNull(),
+      providerAccountId: text("provider_account_id").notNull(),
       refresh_token: text("refresh_token"),
       access_token: text("access_token"),
       expires_at: integer("expires_at"),
@@ -43,16 +43,16 @@ export function createTables(pgTable: PgTableFn) {
     }),
   );
 
-  const sessions = pgTable("session", {
-    sessionToken: text("sessionToken").notNull().primaryKey(),
-    userId: text("userId")
+  const sessions = pgTable("sessions", {
+    sessionToken: text("session_token").notNull().primaryKey(),
+    userId: text("user_id")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     expires: timestamp("expires", { mode: "date" }).notNull(),
   });
 
   const verificationTokens = pgTable(
-    "verificationToken",
+    "verification_tokens",
     {
       identifier: text("identifier").notNull(),
       token: text("token").notNull(),
@@ -169,7 +169,7 @@ export function myDrizzleAdapter(
       if (!dbAccount) {
         return null;
       }
-      return dbAccount.user;
+      return dbAccount.users;
     },
     async deleteSession(sessionToken) {
       const session = await client

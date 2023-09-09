@@ -1,1 +1,0 @@
-ALTER TABLE "users_to_games" ADD COLUMN "regeneration_count" integer DEFAULT 0 NOT NULL;

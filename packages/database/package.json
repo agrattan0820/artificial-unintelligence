@@ -9,7 +9,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
-    "db:push": "drizzle-kit push:pg --schema schema.tsg",
+    "db:push": "drizzle-kit push:pg --schema schema.ts",
     "db:migrate:create": "drizzle-kit generate:pg --out drizzle --schema schema.ts",
     "db:migrate:run": "ts-node migrate.ts"
   },
