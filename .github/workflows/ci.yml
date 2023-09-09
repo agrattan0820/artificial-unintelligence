@@ -46,11 +46,6 @@ jobs:
       - name: 💅 Lint
         run: pnpm lint
 
-      # - name: 🌳 Create ENV File
-      #   run: |
-      #     touch .env
-      #     echo DATABASE_URL=${{ secrets.DATABASE_URL }} >> .env
-
       - name: 🧱 Build
         run: pnpm build
 
