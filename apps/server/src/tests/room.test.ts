@@ -7,6 +7,7 @@ import { findNextHost } from "../services/room.service";
 describe("findNextHost", () => {
   test("expects next host to not be the previous host", () => {
     const prevHostId = crypto.randomUUID();
+    const nextHostId = crypto.randomUUID();
 
     const players: User[] = [
       {
@@ -16,7 +17,7 @@ describe("findNextHost", () => {
         createdAt: new Date(),
       },
       {
-        id: crypto.randomUUID(),
+        id: nextHostId,
         nickname: "Big Dan",
         email: "",
         createdAt: new Date(),
@@ -39,7 +40,7 @@ describe("findNextHost", () => {
 
     expect(nextHost).toBeDefined();
 
-    expect(nextHost?.id).toBe(2);
+    expect(nextHost?.id).toBe(nextHostId);
   });
   test("expects to return undefined when no other players exist to become host", () => {
     const prevHostId = crypto.randomUUID();
