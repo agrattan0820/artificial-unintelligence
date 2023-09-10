@@ -9,7 +9,7 @@ const ratelimit = new Ratelimit({
 });
 
 export const config = {
-  matcher: ["/api/generate", "/api/host", "/api/join", "/api/replicate"],
+  matcher: "/api/:function*",
 };
 
 export default async function middleware(request: NextRequest) {
