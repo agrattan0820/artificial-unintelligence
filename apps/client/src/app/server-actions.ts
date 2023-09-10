@@ -68,6 +68,7 @@ export async function createHost(nickname: string) {
     headers: {
       "Content-Type": "application/json",
     },
+    credentials: "include",
     body: JSON.stringify({
       nickname,
     }),
@@ -98,6 +99,7 @@ export async function existingHost({
     headers: {
       "Content-Type": "application/json",
     },
+    credentials: "include",
     body: JSON.stringify({
       nickname,
       userId,
@@ -133,6 +135,7 @@ export async function joinRoom({
     headers: {
       "Content-Type": "application/json",
     },
+    credentials: "include",
     body: JSON.stringify({
       userId,
       nickname,
@@ -155,7 +158,10 @@ export async function joinRoom({
 export type GetRoomInfoResponse = RoomInfo | ErrorResponse;
 
 export async function getRoomInfo(code: string) {
-  const response = await fetch(`${URL}/room/${code}`, { cache: "no-store" });
+  const response = await fetch(`${URL}/room/${code}`, {
+    cache: "no-store",
+    credentials: "include",
+  });
 
   if (!response.ok) {
     throw new Error("Failed to obtain room info");
@@ -170,8 +176,14 @@ export async function getRoomInfo(code: string) {
 
 export type GetGameInfoResponse = GameInfo | ErrorResponse;
 
-export async function getGameInfo(gameId: number) {
-  const response = await fetch(`${URL}/game/${gameId}`, { cache: "no-store" });
+export async function getGameInfo(gameId: number, sessionToken: string) {
+  const response = await fetch(`${URL}/game/${gameId}`, {
+    headers: {
+      Authorization: `Bearer ${sessionToken}`,
+    },
+    cache: "no-store",
+    credentials: "include",
+  });
 
   if (!response.ok) {
     throw new Error("Failed to obtain game info");
@@ -191,6 +203,7 @@ export type GetGameLeaderboardResponse = {
 export async function getLeaderboardById({ gameId }: { gameId: number }) {
   const response = await fetch(`${URL}/game/${gameId}/leaderboard`, {
     cache: "no-store",
+    credentials: "include",
   });
 
   if (!response.ok) {
@@ -222,6 +235,7 @@ export async function createGenerations({
     headers: {
       "Content-Type": "application/json",
     },
+    credentials: "include",
     body: JSON.stringify({ userId, gameId, questionId, images }),
   });
 
@@ -245,7 +259,7 @@ export async function getFaceOffs({
 }) {
   const response = await fetch(
     `${URL}/generations/gameId/${gameId}/round/${round}`,
-    { cache: "no-store" },
+    { cache: "no-store", credentials: "include" },
   );
 
   if (!response.ok) {

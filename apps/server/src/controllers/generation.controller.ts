@@ -3,7 +3,6 @@ import {
   createGeneration,
   getFaceOffGenerations,
   getGenerationCount,
-  getUserGenerationInfo,
   mapGenerationsByQuestion,
 } from "../services/generation.service";
 
@@ -81,39 +80,6 @@ export async function getFaceOffsController(
     });
 
     res.status(200).send(faceOffs);
-  } catch (error) {
-    next(error);
-  }
-}
-
-export async function getUserGenerationInfoController(
-  req: Request<{
-    gameId: string;
-    userId: string;
-    round: string;
-  }>,
-  res: Response,
-  next: NextFunction
-) {
-  try {
-    const gameId = Number.parseInt(req.params.gameId);
-    const userId = req.params.userId;
-    const round = Number.parseInt(req.params.round);
-
-    const generationInfo = await getUserGenerationInfo({
-      gameId,
-      userId,
-      round,
-    });
-
-    if (!generationInfo) {
-      res.status(404).send({
-        error: `Generation info with gameId of ${gameId}, round of ${round}, and userId of ${userId} were not found`,
-      });
-      return;
-    }
-
-    res.status(200).send(generationInfo);
   } catch (error) {
     next(error);
   }

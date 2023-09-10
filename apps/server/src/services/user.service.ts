@@ -1,6 +1,6 @@
-import { db, users } from "database";
+import { db, sessions, users } from "database";
 import crypto from "crypto";
-import { eq } from "drizzle-orm";
+import { and, eq, gt } from "drizzle-orm";
 
 export async function createUser({ nickname }: { nickname: string }) {
   const newUser = await db
@@ -24,4 +24,22 @@ export async function updateUserNickname({
     .returning();
 
   return updatedUser[0];
+}
+
+export async function checkUserSession({
+  sessionToken,
+}: {
+  sessionToken: string;
+}) {
+  const checkDBForSession = await db
+    .select()
+    .from(sessions)
+    .where(
+      and(
+        eq(sessions.sessionToken, sessionToken),
+        gt(sessions.expires, new Date())
+      )
+    );
+
+  return checkDBForSession.length > 0;
 }

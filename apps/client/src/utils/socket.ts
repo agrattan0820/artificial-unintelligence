@@ -46,5 +46,6 @@ export const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(
   URL,
   {
     autoConnect: false,
+    withCredentials: true,
   },
 );

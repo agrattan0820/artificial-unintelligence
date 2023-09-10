@@ -1,9 +1,11 @@
+import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
+import { getServerSession } from "next-auth";
+
 import { getGameInfo } from "@ai/app/server-actions";
 import Game from "./game";
 import ErrorScreen from "@ai/components/error-screen";
-import { getServerSession } from "next-auth";
 import { authOptions } from "@ai/pages/api/auth/[...nextauth]";
-import { redirect } from "next/navigation";
 
 export default async function GamePage({
   params,
@@ -12,11 +14,13 @@ export default async function GamePage({
 }) {
   const session = await getServerSession(authOptions());
 
-  if (!session) {
+  const sessionToken = cookies().get("next-auth.session-token");
+
+  if (!session || !sessionToken) {
     redirect("/");
   }
 
-  const gameInfo = await getGameInfo(params.gameId);
+  const gameInfo = await getGameInfo(params.gameId, sessionToken.value);
 
   console.log("[GAME INFO]", gameInfo);
 
