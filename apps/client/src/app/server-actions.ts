@@ -90,13 +90,16 @@ export type ExistingHostResponse = {
 export async function existingHost({
   userId,
   nickname,
+  sessionToken,
 }: {
   userId: string;
   nickname: string;
+  sessionToken: string;
 }) {
   const response = await fetch(`${URL}/user/existingHost`, {
     method: "POST",
     headers: {
+      Authorization: `Bearer ${sessionToken}`,
       "Content-Type": "application/json",
     },
     credentials: "include",
@@ -125,14 +128,17 @@ export async function joinRoom({
   userId,
   nickname,
   code,
+  sessionToken,
 }: {
   userId: string;
   nickname: string;
   code: string;
+  sessionToken: string;
 }) {
   const response = await fetch(`${URL}/room/join`, {
     method: "POST",
     headers: {
+      Authorization: `Bearer ${sessionToken}`,
       "Content-Type": "application/json",
     },
     credentials: "include",
