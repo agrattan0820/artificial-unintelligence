@@ -6,7 +6,9 @@ import postgres from "postgres";
 // Load .env file before importing db
 dotenv.config();
 
-const client = postgres(process.env.DATABASE_URL ?? "");
+const client = postgres(
+  process.env.POSTGRES_URL ?? process.env.DATABASE_URL ?? ""
+);
 
 const migrationDB = drizzle(client);
 

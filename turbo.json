@@ -15,6 +15,7 @@
     "OPENAI_API_KEY",
     "REPLICATE_API_TOKEN",
     "DATABASE_URL",
+    "POSTGRES_URL",
     "PORT",
     "NODE_ENV",
     "APP_URL"
