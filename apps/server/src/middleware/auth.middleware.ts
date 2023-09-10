@@ -12,9 +12,6 @@ export function authSocketMiddleware(
       ? parseCookie(socket.request.headers.cookie)["next-auth.session-token"]
       : undefined;
 
-    console.log("AUTH USERID", userId);
-    console.log("AUTH SESSION TOKEN", sessionToken);
-
     if (!userId || !sessionToken) {
       next(new Error("Unauthorized"));
       return;
