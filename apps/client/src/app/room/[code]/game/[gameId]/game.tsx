@@ -19,35 +19,34 @@ import {
   getCurrentComponent,
 } from "@ai/components/game/game-machine";
 import { SocketContext } from "@ai/utils/socket-provider";
-import { useStore } from "@ai/utils/store";
 import { cn } from "@ai/utils/cn";
+import { Session } from "next-auth";
+import UserMenu from "@ai/components/user-menu";
 
 // ! ----------> TYPES <----------
 
 type GameProps = {
   gameInfo: GameInfo;
+  session: Session;
 };
 
 // ! ----------> COMPONENTS <----------
 
-export default function Game({ gameInfo }: GameProps) {
+export default function Game({ gameInfo, session }: GameProps) {
   // Socket for real-time communication
   const socket = useContext(SocketContext);
 
   // Next.js router
   const router = useRouter();
 
-  // game id store state
-  const { setGameId } = useStore();
-
   // Wait until the client mounts to avoid hydration errors
   const [isMounted, setIsMounted] = useState(false);
 
   // Id of the user who is the current host of the game
-  const [hostId, setHostId] = useState<number | null>(gameInfo.hostId);
+  const [hostId, setHostId] = useState<string | null>(gameInfo.hostId);
 
   // Store players who have submitted their prompts for a round
-  const [submittedPlayerIds, setSubmittedPlayerIds] = useState<Set<number>>(
+  const [submittedPlayerIds, setSubmittedPlayerIds] = useState<Set<string>>(
     new Set(gameInfo.submittedPlayers),
   );
 
@@ -102,7 +101,7 @@ export default function Game({ gameInfo }: GameProps) {
   );
 
   // Update which players have submitted their generations
-  const handleOnSubmittedPlayers = (players: number[]) => {
+  const handleOnSubmittedPlayers = (players: string[]) => {
     console.log("[HANDLE SUBMITTED PLAYERS]", players);
     setSubmittedPlayerIds(new Set(players));
   };
@@ -154,11 +153,6 @@ export default function Game({ gameInfo }: GameProps) {
     handleStateChange();
   }, [handleStateChange, state]);
 
-  // Set gameId state
-  useEffect(() => {
-    setGameId(gameId);
-  }, [gameId, setGameId]);
-
   // Socket.io Effects
   useEffect(() => {
     socket.on("roomState", handleRoomState);
@@ -187,6 +181,7 @@ export default function Game({ gameInfo }: GameProps) {
       currFaceOffQuestion,
       votedPlayers,
       leaderboard,
+      session,
     );
   }, [
     gameInfo,
@@ -197,6 +192,7 @@ export default function Game({ gameInfo }: GameProps) {
     currFaceOffQuestion,
     votedPlayers,
     leaderboard,
+    session,
   ]);
 
   // Avoid hydration issues by ensuring app has mounted
@@ -211,7 +207,10 @@ export default function Game({ gameInfo }: GameProps) {
           "flex min-h-[100dvh] flex-col justify-center",
       )}
     >
-      <section className="container mx-auto px-4 py-16">
+      <section className="container mx-auto px-4 py-24 md:py-16">
+        <div className="absolute right-4 top-4 z-50 mt-4 md:right-8 md:top-8">
+          <UserMenu session={session} roomCode={gameInfo.game.roomCode} />
+        </div>
         <AnimatePresence mode="wait">
           {isMounted ? currentComponent : null}
         </AnimatePresence>

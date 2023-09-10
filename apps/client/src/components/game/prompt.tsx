@@ -19,8 +19,8 @@ import Ellipsis from "@ai/components/ellipsis";
 import ImageChoice, { ImageOption } from "./image-choice";
 import { GameInfo, createGenerations } from "@ai/app/server-actions";
 import { gameMachine } from "./game-machine";
-import { useStore } from "@ai/utils/store";
 import { SocketContext } from "@ai/utils/socket-provider";
+import { Session } from "next-auth";
 
 interface FormElementsType extends HTMLFormControlsCollection {
   prompt: HTMLInputElement;
@@ -35,17 +35,18 @@ const Prompt = ({
   gameInfo,
   state,
   send,
+  session,
 }: {
   gameInfo: GameInfo;
   state: StateFrom<typeof gameMachine>;
   send: (event: EventFrom<typeof gameMachine>) => StateFrom<typeof gameMachine>;
+  session: Session;
 }) => {
-  const { user } = useStore();
   const socket = useContext(SocketContext);
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   const gameId = gameInfo.game.id;
-  const userId = user?.id;
+  const userId = session.user.id;
   const userGameRoundGenerations = gameInfo.gameRoundGenerations.filter(
     (generation) => generation.user.id === userId,
   );
@@ -55,19 +56,13 @@ const Prompt = ({
 
   const isSecondStage =
     userGameRoundGenerations.length > 1 &&
-    (userGameRoundGenerations[0].generation.selected ||
-      userGameRoundGenerations[1].generation.selected);
+    userGameRoundGenerations.some(
+      (generation) => generation.generation.selected,
+    );
   const shouldShowGenerations =
     userGameRoundGenerations.length > 1 &&
-    !userGameRoundGenerations[0].generation.selected &&
-    !userGameRoundGenerations[1].generation.selected;
-
-  const [numGenerations, setNumGenerations] = useState(
-    userGameRoundGenerations.length,
-  );
-
-  const remainingImageGenerations = maxRegenerations - (numGenerations - 2) / 2;
-  const outOfRegenerations = remainingImageGenerations === 0;
+    !userGameRoundGenerations[0]?.generation.selected &&
+    !userGameRoundGenerations[1]?.generation.selected;
 
   const [stage, setStage] = useState<"FIRST" | "SECOND">(
     isSecondStage ? "SECOND" : "FIRST",
@@ -77,10 +72,10 @@ const Prompt = ({
     shouldShowGenerations ? userGameRoundGenerations[0].generation.text : "",
   );
   const [imageOption1, setImageOption1] = useState(
-    shouldShowGenerations ? userGameRoundGenerations[0].generation : undefined,
+    shouldShowGenerations ? userGameRoundGenerations[1].generation : undefined,
   );
   const [imageOption2, setImageOption2] = useState(
-    shouldShowGenerations ? userGameRoundGenerations[1].generation : undefined,
+    shouldShowGenerations ? userGameRoundGenerations[0].generation : undefined,
   );
   const [selectedImage, setSelectedImage] = useState<ImageOption>();
 
@@ -90,11 +85,21 @@ const Prompt = ({
     return gameInfo.questions.filter((question) => {
       return (
         question.round === currRound &&
-        (question.player1 === user?.id || question.player2 === user?.id)
+        (question.player1 === userId || question.player2 === userId)
       );
     });
-  }, [currRound, gameInfo.questions, user?.id]);
+  }, [currRound, gameInfo.questions, userId]);
   const currQuestion = stage === "FIRST" ? questions[0] : questions[1];
+
+  const [currQuestionNumGenerations, setCurrQuestionNumGenerations] = useState(
+    userGameRoundGenerations.filter(
+      (generation) => generation.question.id === currQuestion.id,
+    ).length,
+  );
+
+  const remainingImageGenerations =
+    maxRegenerations - (currQuestionNumGenerations - 2) / 2;
+  const outOfRegenerations = remainingImageGenerations === 0;
 
   const onPromptSubmit = async (e: FormEvent<PromptFormType>) => {
     e.preventDefault();
@@ -130,7 +135,9 @@ const Prompt = ({
         setImageOption1(generations[0]);
         setImageOption2(generations[1]);
 
-        setNumGenerations(numGenerations + generations.length);
+        setCurrQuestionNumGenerations(
+          currQuestionNumGenerations + generations.length,
+        );
       }
     } else {
       console.error("Images were unable to be generated");
@@ -153,7 +160,7 @@ const Prompt = ({
   const onImageSubmit = async () => {
     setLoading(true);
 
-    if (user && imageOption1 && imageOption2) {
+    if (session && imageOption1 && imageOption2) {
       socket.emit("generationSubmitted", {
         generationId: selectedImage === 1 ? imageOption1?.id : imageOption2?.id,
         gameId: gameId,
@@ -167,6 +174,7 @@ const Prompt = ({
     }
 
     if (stage === "FIRST") {
+      setCurrQuestionNumGenerations(0);
       setStage("SECOND");
       setImagePrompt("");
       resetImage();
@@ -237,6 +245,7 @@ const Prompt = ({
                   className="peer w-full resize-none rounded-xl border-2 border-gray-300 bg-transparent p-4 placeholder-transparent focus:border-indigo-300 focus:outline-none"
                   defaultValue={imagePrompt ?? undefined}
                   required
+                  disabled={loading}
                 />
                 <label
                   htmlFor="prompt"
@@ -252,8 +261,9 @@ const Prompt = ({
                   <select
                     name="generator"
                     id="generatorSelect"
-                    className="mt-1 appearance-none rounded-md bg-gray-300 px-4 py-1 text-black focus:border-none focus:outline-none focus:ring focus:ring-indigo-600"
+                    className="form-select mt-1 rounded-md bg-gray-300 px-4 py-1 text-black focus:border-none focus:outline-none focus:ring focus:ring-indigo-600"
                     required
+                    disabled={loading}
                   >
                     <option value="dalle">DALL-E 2</option>
                     <option value="sdxl">Stable Diffusion XL</option>
@@ -339,7 +349,7 @@ const Prompt = ({
         {imagesLoaded && (
           <div className="mt-4">
             <p className="mb-8">{imagePrompt}</p>
-            <div className="fixed bottom-4 left-0 right-0 mx-auto flex w-full max-w-2xl gap-x-2 gap-y-4 px-6 md:static md:px-0">
+            <div className="fixed bottom-8 left-0 right-0 mx-auto flex w-full max-w-2xl gap-x-2 gap-y-4 px-6 md:static md:px-0">
               <Button
                 className="w-full shadow-lg md:w-auto"
                 onClick={onImageSubmit}

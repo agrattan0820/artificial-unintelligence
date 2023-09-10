@@ -12,6 +12,7 @@ import {
   questionsToGames,
   questions,
   votes,
+  Game,
 } from "database";
 import {
   getGameRoundGenerations,
@@ -39,15 +40,19 @@ export async function getGameInfo({ gameId }: { gameId: number }) {
 
   const game = getGame[0];
 
-  const players = (await db
+  const players = await db
     .select({
       id: users.id,
+      email: users.email,
+      name: users.nickname,
       nickname: users.nickname,
+      emailVerified: users.emailVerified,
+      image: users.image,
       createdAt: users.createdAt,
     })
     .from(usersToGames)
     .innerJoin(users, eq(usersToGames.userId, users.id))
-    .where(eq(usersToGames.gameId, game.id))) as User[];
+    .where(eq(usersToGames.gameId, game.id));
 
   return {
     game,
@@ -55,35 +60,18 @@ export async function getGameInfo({ gameId }: { gameId: number }) {
   };
 }
 
-// TODO: create reusuable function with game info query logic?
-export async function getPageGameInfoByRoomCode({ code }: { code: string }) {
+export async function getGamePageInfo({
+  game,
+  players,
+}: {
+  game: Game;
+  players: User[];
+}) {
   const hostResponse = await db
     .select({ hostId: rooms.hostId })
     .from(rooms)
-    .where(eq(rooms.code, code));
+    .where(eq(rooms.code, game.roomCode));
   const hostId = hostResponse.length > 0 ? hostResponse[0].hostId : null;
-
-  const latestGames = await db
-    .select()
-    .from(games)
-    .where(eq(games.roomCode, code))
-    .orderBy(desc(games.createdAt));
-
-  if (latestGames.length === 0) {
-    return null;
-  }
-
-  const latestGame = latestGames[0];
-
-  const players = (await db
-    .select({
-      id: users.id,
-      nickname: users.nickname,
-      createdAt: users.createdAt,
-    })
-    .from(usersToGames)
-    .innerJoin(users, eq(usersToGames.userId, users.id))
-    .where(eq(usersToGames.gameId, latestGame.id))) as User[];
 
   const gameQuestions = await db
     .select({
@@ -97,15 +85,15 @@ export async function getPageGameInfoByRoomCode({ code }: { code: string }) {
     })
     .from(questionsToGames)
     .innerJoin(questions, eq(questions.id, questionsToGames.questionId))
-    .where(eq(questionsToGames.gameId, latestGame.id))
+    .where(eq(questionsToGames.gameId, game.id))
     .orderBy(asc(questionsToGames.round), asc(questionsToGames.createdAt));
 
   const gameRoundGenerations = await getGameRoundGenerations({
-    gameId: latestGame.id,
-    round: latestGame.round,
+    gameId: game.id,
+    round: game.round,
   });
 
-  let submittedPlayers: number[] = [];
+  let submittedPlayers: string[] = [];
   let votedPlayers: { user: User; vote: Vote }[] = [];
 
   if (gameRoundGenerations.length > 0) {
@@ -116,14 +104,13 @@ export async function getPageGameInfoByRoomCode({ code }: { code: string }) {
       ),
     });
     votedPlayers = await getVotesByGameRound({
-      gameId: latestGame.id,
-      round: latestGame.round,
+      gameId: game.id,
+      round: game.round,
     });
   }
-
   return {
     hostId,
-    game: latestGame,
+    game: game,
     players: players,
     questions: gameQuestions,
     gameRoundGenerations,

@@ -1,54 +1,22 @@
 import { URL } from "@ai/utils/socket";
+import { Game, Generation, Question, Room, User, Vote } from "database";
 
-export type User = {
-  createdAt: string;
-  id: number;
-  nickname: string;
-};
-export type Room = {
-  hostId: number | null;
-  code: string;
-  createdAt: string;
-};
 export type RoomInfo = {
-  hostId: number | null;
+  hostId: string | null;
   code: string;
   createdAt: string;
   players: User[];
 };
-export type Game = {
-  id: number;
-  roomCode: string;
-  state: string;
-  round: number;
-  createdAt: string;
-  completedAt: string | null;
-};
-export type Generation = {
-  id: number;
-  text: string;
-  imageUrl: string;
-  userId: number;
-  questionId: number;
-  gameId: number;
-  selected: boolean;
-  createdAt: string;
-};
-export type Question = {
+
+export type GameQuestion = {
   id: number;
   text: string;
   createdAt: string;
   gameId: number;
   round: number;
-  player1: number;
-  player2: number;
+  player1: string;
+  player2: string;
   votedOn: boolean;
-};
-export type Vote = {
-  createdAt: string;
-  id: number;
-  userId: number;
-  generationId: number;
 };
 
 export type UserVote = { vote: Vote; user: User };
@@ -60,20 +28,20 @@ export type GameRoundGeneration = {
     text: string;
     round: number;
     gameId: number;
-    player1: number;
-    player2: number;
+    player1: string;
+    player2: string;
     createdAt: Date;
   };
   user: User;
 };
 
 export type GameInfo = {
-  hostId: number | null;
+  hostId: string | null;
   game: Game;
   players: User[];
-  questions: Question[];
+  questions: GameQuestion[];
   gameRoundGenerations: GameRoundGeneration[];
-  submittedPlayers: number[];
+  submittedPlayers: string[];
   votedPlayers: UserVote[];
 };
 
@@ -118,13 +86,20 @@ export type ExistingHostResponse = {
   room: Room;
 };
 
-export async function existingHost(userId: number) {
+export async function existingHost({
+  userId,
+  nickname,
+}: {
+  userId: string;
+  nickname: string;
+}) {
   const response = await fetch(`${URL}/user/existingHost`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
+      nickname,
       userId,
     }),
   });
@@ -144,13 +119,22 @@ export type JoinRoomResponse = {
   user: User;
 };
 
-export async function joinRoom(nickname: string, code: string) {
+export async function joinRoom({
+  userId,
+  nickname,
+  code,
+}: {
+  userId: string;
+  nickname: string;
+  code: string;
+}) {
   const response = await fetch(`${URL}/room/join`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
+      userId,
       nickname,
       code,
     }),
@@ -186,8 +170,8 @@ export async function getRoomInfo(code: string) {
 
 export type GetGameInfoResponse = GameInfo | ErrorResponse;
 
-export async function getGameInfo(code: string) {
-  const response = await fetch(`${URL}/game/${code}`, { cache: "no-store" });
+export async function getGameInfo(gameId: number) {
+  const response = await fetch(`${URL}/game/${gameId}`, { cache: "no-store" });
 
   if (!response.ok) {
     throw new Error("Failed to obtain game info");
@@ -228,7 +212,7 @@ export async function createGenerations({
   questionId,
   images,
 }: {
-  userId: number;
+  userId: string;
   gameId: number;
   questionId: number;
   images: { text: string; imageUrl: string }[];

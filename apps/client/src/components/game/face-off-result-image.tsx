@@ -184,39 +184,42 @@ const FaceOffResultImage = ({
       >
         +<motion.span>{animatedPoints}</motion.span>
       </motion.p>
-      <motion.ul
-        initial={false}
-        animate={showVotes ? "visible" : "hidden"}
-        className="absolute inset-0 z-10"
-        variants={voteVariants}
-      >
-        {votes.map((vote, i) => (
-          <motion.li
-            key={i}
-            className="absolute inline-block rounded-md bg-indigo-300 p-2 shadow-md md:p-4"
-            variants={voteItemVariants}
-            style={shuffledVotePositions[i]}
-          >
-            <p className="text-xs text-black md:text-sm">{vote}</p>
-          </motion.li>
-        ))}
-      </motion.ul>
-      <Image
-        className={cn(
-          `aspect-square transform rounded-xl filter transition`,
-          isWinner && "ring ring-yellow-600",
-          winningImage !== id &&
-            winningImage !== null &&
-            showWinner &&
-            "grayscale filter", // do black+white transition immediately when winner is shown
-          showVotes && "brightness-50",
-        )}
-        src={image}
-        alt={`OpenAI Image with the prompt: ${prompt}`}
-        onLoad={() => setShowImage(true)}
-        width={1024}
-        height={1024}
-      />
+      <div className="relative">
+        <Image
+          className={cn(
+            `aspect-square transform rounded-xl filter transition`,
+            isWinner && "ring ring-yellow-600",
+            winningImage !== id &&
+              winningImage !== null &&
+              showWinner &&
+              "grayscale filter", // do black+white transition immediately when winner is shown
+            showVotes && "brightness-50",
+          )}
+          src={image}
+          alt={`OpenAI Image with the prompt: ${prompt}`}
+          onLoad={() => setShowImage(true)}
+          width={1024}
+          height={1024}
+        />
+        <motion.ul
+          initial={false}
+          animate={showVotes ? "visible" : "hidden"}
+          className="absolute inset-0 z-10"
+          variants={voteVariants}
+        >
+          {votes.map((vote, i) => (
+            <motion.li
+              key={i}
+              className="absolute inline-block rounded-md bg-indigo-300 p-2 shadow-md md:p-4"
+              variants={voteItemVariants}
+              style={shuffledVotePositions[i]}
+            >
+              <p className="text-xs text-black md:text-sm">{vote}</p>
+            </motion.li>
+          ))}
+        </motion.ul>
+      </div>
+
       <div
         className={cn(
           "absolute -right-2 -top-2 scale-0 transform rounded-full bg-yellow-600 p-2 text-xl text-white opacity-0 transition",

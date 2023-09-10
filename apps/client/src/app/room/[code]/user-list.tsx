@@ -2,14 +2,17 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 
-import { User } from "@ai/app/server-actions";
 import UserCard from "@ai/components/user-card";
+import { Session } from "next-auth";
+import type { User } from "database";
 
 const UserList = ({
+  session,
   hostId,
   players,
 }: {
-  hostId: number | null;
+  session: Session;
+  hostId: string | null;
   players: User[];
 }) => {
   return (
@@ -24,6 +27,7 @@ const UserList = ({
               nickname={player.nickname}
               color={player.id === hostId ? "INDIGO" : "GRAY"}
               isHost={player.id === hostId}
+              isYou={player.id !== hostId && player.id === session.user.id}
             />
           </motion.li>
         ))}

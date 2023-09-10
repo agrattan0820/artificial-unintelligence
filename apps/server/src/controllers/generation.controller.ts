@@ -12,9 +12,9 @@ export async function createGenerationsController(
     {},
     {},
     {
-      userId: number;
-      gameId: number;
-      questionId: number;
+      userId: string;
+      gameId: string;
+      questionId: string;
       images: { text: string; imageUrl: string }[];
     }
   >,
@@ -24,10 +24,13 @@ export async function createGenerationsController(
   try {
     const { userId, gameId, questionId, images } = req.body;
 
+    const gameIdToNum = Number.parseInt(gameId);
+    const questionIdToNum = Number.parseInt(questionId);
+
     const generationCount = await getGenerationCount({
-      gameId,
+      gameId: gameIdToNum,
       userId,
-      questionId,
+      questionId: questionIdToNum,
     });
 
     if (generationCount >= 8) {
@@ -38,8 +41,8 @@ export async function createGenerationsController(
       images.map((image) =>
         createGeneration({
           userId,
-          gameId,
-          questionId,
+          gameId: gameIdToNum,
+          questionId: questionIdToNum,
           text: image.text,
           imageUrl: image.imageUrl,
         })
@@ -94,7 +97,7 @@ export async function getUserGenerationInfoController(
 ) {
   try {
     const gameId = Number.parseInt(req.params.gameId);
-    const userId = Number.parseInt(req.params.userId);
+    const userId = req.params.userId;
     const round = Number.parseInt(req.params.round);
 
     const generationInfo = await getUserGenerationInfo({

@@ -32,7 +32,7 @@ export async function getQuestionsByUserGameRoundController(
   next: NextFunction
 ) {
   try {
-    const userId = Number.parseInt(req.params.userId);
+    const userId = req.params.userId;
     const gameId = Number.parseInt(req.params.gameId);
     const round = Number.parseInt(req.params.round);
 

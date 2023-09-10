@@ -7,9 +7,10 @@ type UserCardProps = {
   nickname: string;
   color: "GRAY" | "INDIGO";
   isHost?: boolean;
+  isYou?: boolean;
 };
 
-const UserCard = ({ nickname, color, isHost }: UserCardProps) => {
+const UserCard = ({ nickname, color, isHost, isYou }: UserCardProps) => {
   return (
     <div
       className={cn(
@@ -35,6 +36,7 @@ const UserCard = ({ nickname, color, isHost }: UserCardProps) => {
       <span className="flex flex-col md:text-xl">
         {nickname}
         {isHost && <span className="text-xs">{"host"}</span>}
+        {isYou && <span className="text-xs">{"you"}</span>}
       </span>
     </div>
   );

@@ -42,8 +42,8 @@ export function gameSocketHandlers(
         players: roomInfo?.players,
       });
 
-      socket.emit("startGame"); // `socket.in` which is supposed to send to members including the sender is not working as expected, using two emits as a workaround
-      socket.to(code).emit("startGame");
+      socket.emit("startGame", newGame.id); // `socket.in` which is supposed to send to members including the sender is not working as expected, using two emits as a workaround
+      socket.to(code).emit("startGame", newGame.id);
     } catch (error) {
       if (error instanceof Error) handleSocketError(error, socket, code);
     }

@@ -1,6 +1,8 @@
-import { describe, expect, test } from "@jest/globals";
-import { prepareQuestionsForGame } from "../services/question.service";
+import crypto from "crypto";
 import { User } from "database";
+import { describe, expect, test } from "@jest/globals";
+
+import { prepareQuestionsForGame } from "../services/question.service";
 
 describe("prepareQuestionsForGame", () => {
   test("expects to contain questions with a randomized ordering of players", () => {
@@ -50,18 +52,21 @@ describe("prepareQuestionsForGame", () => {
       ],
       players: [
         {
-          id: 1,
+          id: crypto.randomUUID(),
           nickname: "Big Al",
+          email: "",
           createdAt: new Date(),
         },
         {
-          id: 2,
+          id: crypto.randomUUID(),
           nickname: "Big Dan",
+          email: "",
           createdAt: new Date(),
         },
         {
-          id: 3,
+          id: crypto.randomUUID(),
           nickname: "Big Tom",
+          email: "",
           createdAt: new Date(),
         },
       ],

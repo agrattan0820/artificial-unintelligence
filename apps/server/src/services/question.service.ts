@@ -137,7 +137,7 @@ export async function getUserQuestionsForRound({
   gameId,
   round,
 }: {
-  userId: number;
+  userId: string;
   gameId: number;
   round: number;
 }) {

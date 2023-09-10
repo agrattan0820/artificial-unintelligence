@@ -1,45 +1,54 @@
 import { Server, Socket } from "socket.io";
 
 import { ClientToServerEvents, ServerToClientEvents } from "../types";
-import { getRoom, joinRoom, leaveRoom } from "../services/room.service";
+import {
+  findNextHost,
+  getRoom,
+  joinRoom,
+  leaveRoom,
+  updateRoomHost,
+} from "../services/room.service";
 import { handleSocketError } from "../utils";
 
 export function roomSocketHandlers(
   io: Server<ClientToServerEvents, ServerToClientEvents>,
-  socket: Socket<ClientToServerEvents, ServerToClientEvents>
+  socket: Socket<ClientToServerEvents, ServerToClientEvents>,
+  gameStateMap: Map<number, { state: string; round: number }>
 ) {
-  socket.on("connectToRoom", async (code) => {
-    try {
-      const userId = Number(socket.handshake.auth.userId);
-      let roomInfo = await getRoom({ code });
+  socket.on("connectToRoom", async (data) => {
+    const { userId, code } = data;
+    if (userId && code) {
+      try {
+        let roomInfo = await getRoom({ code });
 
-      if (!roomInfo) {
-        socket.emit("message", `Unable to connect to room`);
-        return;
+        if (!roomInfo) {
+          socket.emit("message", `Unable to connect to room`);
+          return;
+        }
+
+        const playerInRoom = roomInfo.players.some(
+          (player) => player.id === userId
+        );
+
+        if (roomInfo.players.length >= 8 && !playerInRoom) {
+          socket.emit("message", "Room is full, unable to join");
+          return;
+        }
+
+        if (!playerInRoom) {
+          await joinRoom({ userId: userId, code });
+          roomInfo = await getRoom({ code });
+        }
+
+        if (!roomInfo) {
+          throw new Error("Unable to get room info after join");
+        }
+
+        socket.join(code);
+        socket.to(code).emit("roomState", roomInfo);
+      } catch (error) {
+        if (error instanceof Error) handleSocketError(error, socket, code);
       }
-
-      const playerInRoom = roomInfo.players.some(
-        (player) => player.id === userId
-      );
-
-      if (roomInfo.players.length >= 8 && !playerInRoom) {
-        socket.emit("message", "Room is full, unable to join");
-        return;
-      }
-
-      if (!playerInRoom) {
-        await joinRoom({ userId: userId, code });
-        roomInfo = await getRoom({ code });
-      }
-
-      if (!roomInfo) {
-        throw new Error("Unable to get room info after join");
-      }
-
-      socket.join(code);
-      socket.to(code).emit("roomState", roomInfo);
-    } catch (error) {
-      if (error instanceof Error) handleSocketError(error, socket, code);
     }
   });
 
@@ -53,8 +62,31 @@ export function roomSocketHandlers(
         return;
       }
 
+      // TODO: Make this find new host and game state map deletion reusuable
+      if (roomInfo.hostId === userId) {
+        const newHost = findNextHost({
+          prevHostId: roomInfo.hostId,
+          players: roomInfo.players,
+        });
+        if (!newHost) {
+          console.log(`[NO OTHER PLAYERS REMAIN IN ${code}]`);
+
+          const gameId = socket.handshake.auth.gameId
+            ? Number(socket.handshake.auth.gameId)
+            : null;
+          if (gameId) {
+            gameStateMap.delete(gameId);
+          }
+
+          return;
+        }
+        await updateRoomHost({
+          newHostId: newHost.id,
+          roomCode: code,
+        });
+      }
+
       socket.leave(code);
-      socket.to(code).emit("message", `${socket.handshake.auth.userId} left`);
       socket.to(code).emit("roomState", roomInfo);
     } catch (error) {
       if (error instanceof Error) handleSocketError(error, socket, code);

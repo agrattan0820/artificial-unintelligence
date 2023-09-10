@@ -75,10 +75,10 @@ export function buildServer() {
   io.on("connection", async (socket) => {
     console.log("[CONNECTION]", socket.id);
 
-    await checkIfExistingUser(socket);
+    await checkIfExistingUser(io, socket);
 
     connectionSocketHandlers(io, socket, gameStateMap);
-    roomSocketHandlers(io, socket);
+    roomSocketHandlers(io, socket, gameStateMap);
     gameSocketHandlers(io, socket, gameStateMap);
     generationSocketHandlers(io, socket);
     voteSocketHandlers(io, socket);

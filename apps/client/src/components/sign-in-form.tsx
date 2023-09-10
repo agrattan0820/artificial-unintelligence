@@ -1,19 +1,16 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import Ellipsis from "./ellipsis";
-import { useStore } from "@ai/utils/store";
+import { Session } from "next-auth";
+import { signIn } from "next-auth/react";
+import { FaGoogle } from "react-icons/fa";
+import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
-import {
-  RoomInfo,
-  createHost,
-  existingHost,
-  joinRoom,
-} from "@ai/app/server-actions";
 import Button, { LinkSecondaryButton } from "./button";
+import { RoomInfo } from "@ai/app/server-actions";
 import Input from "./input";
-import { toast } from "react-hot-toast";
+import Ellipsis from "./ellipsis";
 
 interface FormElementsType extends HTMLFormControlsCollection {
   nickname: HTMLInputElement;
@@ -23,50 +20,43 @@ export interface NicknameFormType extends HTMLFormElement {
   readonly elements: FormElementsType;
 }
 
-type NicknameFormProps =
+type SignInFormProps =
   | {
+      session: Session | null;
       room?: never;
       submitLabel: string;
       type: "HOME";
     }
   | {
+      session: Session | null;
       room: RoomInfo;
       submitLabel: string;
       type: "INVITE";
     };
 
-const NicknameForm = ({ room, submitLabel, type }: NicknameFormProps) => {
-  const { user, setUser, setRoom } = useStore();
+const SignInForm = ({ session, room, submitLabel, type }: SignInFormProps) => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const onSubmit = async (e: FormEvent<NicknameFormType>) => {
     e.preventDefault();
     setLoading(true);
-    const formNickname = e.currentTarget.elements.nickname.value;
-
     try {
-      if (type === "HOME") {
-        if (user && user.nickname === formNickname) {
-          const roomForExistingUser = await existingHost(user.id);
-          setRoom(roomForExistingUser.room);
-          router.push(`/room/${roomForExistingUser.room.code}`);
-          return;
-        }
+      const formNickname: string = e.currentTarget.elements.nickname.value;
 
-        const hostData = await createHost(formNickname);
-        setUser(hostData.host);
-        setRoom(hostData.room);
-        router.push(`/room/${hostData.room.code}`);
+      const callbackUrl =
+        type === "HOME"
+          ? `/api/host/?nickname=${formNickname.split(" ").join("+")}`
+          : `/api/join/?nickname=${formNickname.split(" ").join("+")}&code=${
+              room.code
+            }`;
+
+      if (session) {
+        router.push(callbackUrl);
+        return;
       }
 
-      if (type === "INVITE") {
-        const joinData = await joinRoom(formNickname, room.code);
-
-        setUser(joinData.user);
-        setRoom(room);
-        if (room) router.push(`/room/${room.code}`);
-      }
+      signIn("google", { callbackUrl });
     } catch (error) {
       setLoading(false);
 
@@ -95,14 +85,24 @@ const NicknameForm = ({ room, submitLabel, type }: NicknameFormProps) => {
         id="nickname"
         type="text"
         placeholder="Enter a cool nickname"
-        defaultValue={user?.nickname ?? ""}
+        defaultValue={session?.user?.nickname ?? ""}
         maxLength={50}
         required
         label="Enter a cool nickname"
       />
       <div className="mt-8 flex flex-wrap gap-x-2 gap-y-4">
-        <Button type="submit" disabled={loading}>
-          {!loading ? <>{submitLabel}</> : <Ellipsis />}
+        <Button
+          type="submit"
+          disabled={loading}
+          className="flex items-center justify-center gap-2"
+        >
+          {!loading ? (
+            <>
+              {submitLabel} {!session && <FaGoogle />}
+            </>
+          ) : (
+            <Ellipsis />
+          )}
         </Button>
         <LinkSecondaryButton href="/how-to-play">
           How to Play
@@ -112,4 +112,4 @@ const NicknameForm = ({ room, submitLabel, type }: NicknameFormProps) => {
   );
 };
 
-export default NicknameForm;
+export default SignInForm;

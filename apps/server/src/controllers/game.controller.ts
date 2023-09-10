@@ -1,27 +1,33 @@
 import type { NextFunction, Request, Response } from "express";
 import {
+  getGameInfo,
+  getGamePageInfo,
   getLeaderboardById,
-  getPageGameInfoByRoomCode,
 } from "../services/game.service";
 
-export async function getPageGameInfoByRoomCodeController(
-  req: Request<{ code: string }>,
+export async function getGameInfoController(
+  req: Request<{ id: string }>,
   res: Response,
   next: NextFunction
 ) {
   try {
-    const code = req.params.code;
+    const gameId = Number(req.params.id);
 
-    const gameInfo = await getPageGameInfoByRoomCode({ code });
+    const initialGameInfo = await getGameInfo({ gameId });
 
-    if (!gameInfo) {
+    if (!initialGameInfo) {
       res
         .status(404)
-        .send({ error: `Game with room code of ${code} was not found` });
+        .send({ error: `Game with the id of ${gameId} was not found` });
       return;
     }
 
-    res.status(200).send(gameInfo);
+    const gamePageInfo = await getGamePageInfo({
+      game: initialGameInfo?.game,
+      players: initialGameInfo?.players,
+    });
+
+    res.status(200).send(gamePageInfo);
   } catch (error) {
     next(error);
   }

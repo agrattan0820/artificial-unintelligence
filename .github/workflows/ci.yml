@@ -14,6 +14,13 @@ jobs:
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
+      NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+      NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+      GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+      NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
 
     steps:
       - name: 🏗 Check out code
@@ -34,8 +41,8 @@ jobs:
       - name: 👷 Install dependencies
         run: pnpm install
 
-      - name: 📀 Install Playwright Browsers
-        run: npx playwright install --with-deps
+      # - name: 📀 Install Playwright Browsers
+      #   run: npx playwright install --with-deps
 
       - name: 💅 Lint
         run: pnpm lint

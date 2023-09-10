@@ -11,24 +11,29 @@ import {
 import { handleSocketError } from "../utils";
 
 export async function checkIfExistingUser(
+  io: Server<ClientToServerEvents, ServerToClientEvents>,
   socket: Socket<ClientToServerEvents, ServerToClientEvents>
 ) {
-  if (socket.handshake.auth.userId && socket.handshake.auth.roomCode) {
-    const userId = Number(socket.handshake.auth.userId);
+  if (socket.handshake.auth.roomCode) {
     const roomCode: string = socket.handshake.auth.roomCode;
     socket.join(roomCode);
-    try {
-      console.log(`[CHECKING IF ${userId} IS IN ROOM ${roomCode}]`);
-      const updatedRoomInfo = await checkRoomForUserAndAdd({
-        userId,
-        roomCode,
-      });
-      if (updatedRoomInfo) {
-        socket.emit("roomState", updatedRoomInfo);
-        socket.to(roomCode).emit("roomState", updatedRoomInfo);
+
+    if (socket.handshake.auth.userId) {
+      const userId = socket.handshake.auth.userId;
+
+      try {
+        console.log(`[CHECKING IF ${userId} IS IN ROOM ${roomCode}]`);
+        const updatedRoomInfo = await checkRoomForUserAndAdd({
+          userId,
+          roomCode,
+        });
+        if (updatedRoomInfo) {
+          socket.emit("roomState", updatedRoomInfo);
+          socket.to(roomCode).emit("roomState", updatedRoomInfo);
+        }
+      } catch (error) {
+        if (error instanceof Error) handleSocketError(error, socket, roomCode);
       }
-    } catch (error) {
-      if (error instanceof Error) handleSocketError(error, socket, roomCode);
     }
   }
 }
@@ -42,7 +47,7 @@ export async function connectionSocketHandlers(
     try {
       await Promise.all(
         [...socket.rooms].map(async (room) => {
-          const userId = Number(socket.handshake.auth.userId);
+          const userId = socket.handshake.auth.userId;
 
           await leaveRoom({
             userId,
