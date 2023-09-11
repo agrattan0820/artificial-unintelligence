@@ -1,7 +1,6 @@
 import { getServerSession } from "next-auth";
 
 import { getRoomInfo } from "@ai/app/server-actions";
-import ErrorScreen from "@ai/components/error-screen";
 import Footer from "@ai/components/footer";
 import Friend from "@ai/components/game/friend";
 import SignInForm from "@ai/components/sign-in-form";
@@ -9,14 +8,6 @@ import { authOptions } from "@ai/pages/api/auth/[...nextauth]";
 
 export default async function Invite({ params }: { params: { code: string } }) {
   const roomInfo = await getRoomInfo(params.code);
-
-  if ("error" in roomInfo) {
-    return (
-      <ErrorScreen
-        details={`A room with code "${params.code}" does not exist.`}
-      />
-    );
-  }
 
   const session = await getServerSession(authOptions());
 

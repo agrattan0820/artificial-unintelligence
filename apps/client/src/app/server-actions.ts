@@ -53,8 +53,6 @@ export type QuestionGenerations = {
   player2Generation: Generation;
 };
 
-type ErrorResponse = { error: string };
-
 // ! ----------> USERS <----------
 
 export type CreateHostResponse = {
@@ -161,7 +159,7 @@ export async function joinRoom({
   return data;
 }
 
-export type GetRoomInfoResponse = RoomInfo | ErrorResponse;
+export type GetRoomInfoResponse = RoomInfo;
 
 export async function getRoomInfo(code: string) {
   const response = await fetch(`${URL}/room/${code}`, {
@@ -180,7 +178,7 @@ export async function getRoomInfo(code: string) {
 
 // ! ----------> GAMES <----------
 
-export type GetGameInfoResponse = GameInfo | ErrorResponse;
+export type GetGameInfoResponse = GameInfo;
 
 export async function getGameInfo(gameId: number, sessionToken: string) {
   const response = await fetch(`${URL}/game/${gameId}`, {
