@@ -52,7 +52,6 @@ const FaceOff = ({
 
   return (
     <div className="mx-auto max-w-2xl">
-      {/* <Timer totalSeconds={30} /> */}
       {currQuestionGenerations && (
         <>
           <div className="relative mb-14">

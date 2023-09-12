@@ -200,7 +200,6 @@ const Prompt = ({
 
   return (
     <motion.div layout="position" className="max-w-2xl">
-      {/* <Timer totalSeconds={90} /> */}
       <div className="relative mb-14">
         <AnimatePresence>
           <motion.h2
