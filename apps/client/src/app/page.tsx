@@ -1,6 +1,6 @@
 import { getServerSession } from "next-auth";
-import { Game, db, games, usersToGames } from "database";
-import { isNull, and, eq, desc } from "drizzle-orm";
+import { Game, Room, db, games, usersToGames, usersToRooms } from "database";
+import { isNull, and, eq, desc, sql, gt } from "drizzle-orm";
 import { FiLogIn } from "react-icons/fi";
 
 import Footer from "@ai/components/footer";
@@ -8,6 +8,7 @@ import Friend from "@ai/components/game/friend";
 import SignInForm from "@ai/components/sign-in-form";
 import { authOptions } from "@ai/pages/api/auth/[...nextauth]";
 import { LinkSecondaryButton } from "@ai/components/button";
+import UserMenu from "@ai/components/user-menu";
 
 export default async function Home() {
   const session = await getServerSession(authOptions());
@@ -15,28 +16,36 @@ export default async function Home() {
   let runningGame: Game | null = null;
 
   if (session) {
-    const response = await db
+    const runningGameWithUserQuery = await db
       .select({
         game: games,
-        usersToGames: usersToGames,
+        playerCount: sql<number>`count(${usersToRooms.userId})::int`,
       })
       .from(games)
       .innerJoin(usersToGames, eq(games.id, usersToGames.gameId))
+      .innerJoin(usersToRooms, eq(games.roomCode, usersToRooms.roomCode))
       .where(
         and(
           isNull(games.completedAt),
           eq(usersToGames.userId, session.user.id),
         ),
       )
-      .orderBy(desc(games.createdAt));
+      .orderBy(desc(games.createdAt))
+      .groupBy(games.id)
+      .having(({ playerCount }) => gt(playerCount, 0));
 
-    if (response.length > 0) {
-      runningGame = response[0].game;
+    if (runningGameWithUserQuery.length > 0) {
+      runningGame = runningGameWithUserQuery[0].game;
     }
   }
 
   return (
     <main className="relative flex min-h-[100dvh] flex-col justify-center">
+      {session && (
+        <div className="absolute right-4 top-4 z-50 mt-4 md:right-8 md:top-8">
+          <UserMenu session={session} />
+        </div>
+      )}
       <section className="container mx-auto flex flex-col-reverse items-start justify-center gap-8 px-4 lg:flex-row lg:gap-24">
         {runningGame && (
           <div className="absolute left-1/2 top-8 w-full -translate-x-1/2">
@@ -44,7 +53,7 @@ export default async function Home() {
               href={`/room/${runningGame.roomCode}/game/${runningGame.id}`}
               className="mx-auto flex w-full max-w-fit items-center gap-2"
             >
-              Join Back Into Game <FiLogIn />
+              Join Back Into {runningGame ? "Game" : "Room"} <FiLogIn />
             </LinkSecondaryButton>
           </div>
         )}
