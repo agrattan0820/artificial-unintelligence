@@ -74,7 +74,7 @@ export function buildServer() {
   app.use(async (req, res, next) => {
     let sessionToken = "";
 
-    const safeURLs = ["/room"];
+    const safeURLs = ["/ping", "/room"];
 
     if (safeURLs.some((url) => req.url.includes(url)) && req.method === "GET") {
       next();
