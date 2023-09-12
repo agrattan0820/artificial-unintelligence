@@ -21,9 +21,14 @@ export default function SocketProvider({
     console.log("Received socket message:", msg);
     toast(msg);
   };
-  const socketError = (err: string) => {
-    console.error("Received socket error:", err);
+  const socketError = (error: string) => {
+    console.error("Received socket error:", error);
     toast.error("An Error Occurred");
+  };
+
+  const socketConnectError = (error: Error) => {
+    console.error(error.message);
+    toast.error("Failed to connect to server, please try again later");
   };
 
   useEffect(() => {
@@ -32,11 +37,15 @@ export default function SocketProvider({
       roomCode: params?.code ?? "",
       gameId: params?.gameId ?? "",
     };
-    socket.connect();
+    if (session?.user?.id) {
+      socket.connect();
+    }
+    socket.on("connect_error", socketConnectError);
     socket.on("message", socketMessage);
     socket.on("error", socketError);
 
     return () => {
+      socket.off("connect_error", socketConnectError);
       socket.off("message", socketMessage);
       socket.off("error", socketError);
       socket.disconnect();

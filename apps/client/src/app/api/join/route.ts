@@ -1,13 +1,16 @@
 import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
+import { cookies } from "next/headers";
 
 import { joinRoom } from "@ai/app/server-actions";
 import { authOptions } from "@ai/pages/api/auth/[...nextauth]";
-import { getServerSession } from "next-auth";
 
 export async function GET(req: Request) {
   const session = await getServerSession(authOptions(req));
 
-  if (!session) {
+  const sessionToken = cookies().get("next-auth.session-token");
+
+  if (!session || !sessionToken) {
     redirect("/");
   }
 
@@ -20,7 +23,12 @@ export async function GET(req: Request) {
     redirect("/");
   }
 
-  await joinRoom({ userId: session.user.id, nickname, code: roomCode });
+  await joinRoom({
+    userId: session.user.id,
+    nickname,
+    code: roomCode,
+    sessionToken: sessionToken.value,
+  });
 
   redirect(`/room/${roomCode}`);
 }

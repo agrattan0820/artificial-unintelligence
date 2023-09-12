@@ -1,28 +1,12 @@
 import { and, eq, inArray, or, sql } from "drizzle-orm";
 import {
   db,
-  NewQuestion,
   NewQuestionToGame,
   User,
   questions,
   questionsToGames,
 } from "database";
 import { shuffleArray } from "../utils";
-
-export async function getQuestionById({ id }: { id: number }) {
-  const question = await db
-    .select()
-    .from(questions)
-    .where(eq(questions.id, id));
-
-  return question[0];
-}
-
-export async function createQuestions(data: NewQuestion[]) {
-  const newQuestions = await db.insert(questions).values(data).returning();
-
-  return newQuestions;
-}
 
 export async function createQuestionsToGames(data: NewQuestionToGame[]) {
   const newQuestions = await db

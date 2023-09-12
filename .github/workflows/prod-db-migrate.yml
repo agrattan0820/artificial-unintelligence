@@ -1,12 +1,12 @@
-name: CI
+name: Run Production Database Migrations
 
 on:
-  pull_request:
-    types: [opened, synchronize]
+  push:
+    branches: ["main"]
 
 jobs:
   build:
-    name: Build and Test
+    name: Build and Run Migrations
     timeout-minutes: 15
     runs-on: ubuntu-latest
     env:
@@ -39,14 +39,6 @@ jobs:
       - name: 👷 Install dependencies
         run: pnpm install
 
-      # - name: 📀 Install Playwright Browsers
-      #   run: npx playwright install --with-deps
-
-      - name: 💅 Lint
-        run: pnpm lint
-
-      - name: 🧱 Build
-        run: pnpm build
-
-      - name: 🧪 Test
-        run: pnpm test
+      - name: 🥾 Run db migrations
+        working-directory: "./packages/database"
+        run: pnpm db:migrate:run

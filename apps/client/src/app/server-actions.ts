@@ -53,8 +53,6 @@ export type QuestionGenerations = {
   player2Generation: Generation;
 };
 
-type ErrorResponse = { error: string };
-
 // ! ----------> USERS <----------
 
 export type CreateHostResponse = {
@@ -68,6 +66,7 @@ export async function createHost(nickname: string) {
     headers: {
       "Content-Type": "application/json",
     },
+    credentials: "include",
     body: JSON.stringify({
       nickname,
     }),
@@ -89,15 +88,19 @@ export type ExistingHostResponse = {
 export async function existingHost({
   userId,
   nickname,
+  sessionToken,
 }: {
   userId: string;
   nickname: string;
+  sessionToken: string;
 }) {
   const response = await fetch(`${URL}/user/existingHost`, {
     method: "POST",
     headers: {
+      Authorization: `Bearer ${sessionToken}`,
       "Content-Type": "application/json",
     },
+    credentials: "include",
     body: JSON.stringify({
       nickname,
       userId,
@@ -123,16 +126,20 @@ export async function joinRoom({
   userId,
   nickname,
   code,
+  sessionToken,
 }: {
   userId: string;
   nickname: string;
   code: string;
+  sessionToken: string;
 }) {
   const response = await fetch(`${URL}/room/join`, {
     method: "POST",
     headers: {
+      Authorization: `Bearer ${sessionToken}`,
       "Content-Type": "application/json",
     },
+    credentials: "include",
     body: JSON.stringify({
       userId,
       nickname,
@@ -152,10 +159,13 @@ export async function joinRoom({
   return data;
 }
 
-export type GetRoomInfoResponse = RoomInfo | ErrorResponse;
+export type GetRoomInfoResponse = RoomInfo;
 
 export async function getRoomInfo(code: string) {
-  const response = await fetch(`${URL}/room/${code}`, { cache: "no-store" });
+  const response = await fetch(`${URL}/room/${code}`, {
+    cache: "no-store",
+    credentials: "include",
+  });
 
   if (!response.ok) {
     throw new Error("Failed to obtain room info");
@@ -168,10 +178,16 @@ export async function getRoomInfo(code: string) {
 
 // ! ----------> GAMES <----------
 
-export type GetGameInfoResponse = GameInfo | ErrorResponse;
+export type GetGameInfoResponse = GameInfo;
 
-export async function getGameInfo(gameId: number) {
-  const response = await fetch(`${URL}/game/${gameId}`, { cache: "no-store" });
+export async function getGameInfo(gameId: number, sessionToken: string) {
+  const response = await fetch(`${URL}/game/${gameId}`, {
+    headers: {
+      Authorization: `Bearer ${sessionToken}`,
+    },
+    cache: "no-store",
+    credentials: "include",
+  });
 
   if (!response.ok) {
     throw new Error("Failed to obtain game info");
@@ -191,6 +207,7 @@ export type GetGameLeaderboardResponse = {
 export async function getLeaderboardById({ gameId }: { gameId: number }) {
   const response = await fetch(`${URL}/game/${gameId}/leaderboard`, {
     cache: "no-store",
+    credentials: "include",
   });
 
   if (!response.ok) {
@@ -222,6 +239,7 @@ export async function createGenerations({
     headers: {
       "Content-Type": "application/json",
     },
+    credentials: "include",
     body: JSON.stringify({ userId, gameId, questionId, images }),
   });
 
@@ -245,7 +263,7 @@ export async function getFaceOffs({
 }) {
   const response = await fetch(
     `${URL}/generations/gameId/${gameId}/round/${round}`,
-    { cache: "no-store" },
+    { cache: "no-store", credentials: "include" },
   );
 
   if (!response.ok) {

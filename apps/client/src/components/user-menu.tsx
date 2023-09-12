@@ -1,3 +1,5 @@
+"use client";
+
 import { Session } from "next-auth";
 import { signOut } from "next-auth/react";
 import { useContext, useRef, useState } from "react";
@@ -10,7 +12,7 @@ import { FiSettings, FiLogOut } from "react-icons/fi";
 
 type UserMenuProps = {
   session: Session;
-  roomCode: string;
+  roomCode?: string;
 };
 
 const UserMenu = ({ session, roomCode }: UserMenuProps) => {
@@ -23,10 +25,12 @@ const UserMenu = ({ session, roomCode }: UserMenuProps) => {
   });
 
   const handleSignOutAndLeave = () => {
-    socket.emit("leaveRoom", {
-      userId: session.user.id,
-      code: roomCode,
-    });
+    if (roomCode) {
+      socket.emit("leaveRoom", {
+        userId: session.user.id,
+        code: roomCode,
+      });
+    }
     signOut();
   };
 
@@ -54,7 +58,7 @@ const UserMenu = ({ session, roomCode }: UserMenuProps) => {
                   onClick={handleSignOutAndLeave}
                   className="flex items-center gap-2 text-sm hover:underline focus:underline md:text-base"
                 >
-                  Sign Out and Leave Game <FiLogOut />
+                  Sign Out{roomCode && " and Leave Game"} <FiLogOut />
                 </button>
               </li>
             </ul>
