@@ -1,18 +1,18 @@
-name: CI
+name: Run Development Database Migrations
 
 on:
-  pull_request:
-    types: [opened, synchronize]
+  push:
+    branches: ["dev"]
 
 jobs:
   build:
-    name: Build and Test
+    name: Build and Run Migrations
     timeout-minutes: 15
     runs-on: ubuntu-latest
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      DATABASE_URL: ${{ secrets.DEV_DATABASE_URL }}
       POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
       NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
       NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
@@ -42,11 +42,6 @@ jobs:
       # - name: 📀 Install Playwright Browsers
       #   run: npx playwright install --with-deps
 
-      - name: 💅 Lint
-        run: pnpm lint
-
-      - name: 🧱 Build
-        run: pnpm build
-
-      - name: 🧪 Test
-        run: pnpm test
+      - name: 🥾 Run db migrations
+        working-directory: "./packages/database"
+        run: pnpm db:migrate:run
