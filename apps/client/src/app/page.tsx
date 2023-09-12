@@ -1,5 +1,5 @@
 import { getServerSession } from "next-auth";
-import { Game, Room, db, games, usersToGames, usersToRooms } from "database";
+import { Game, db, games, usersToGames, usersToRooms } from "database";
 import { isNull, and, eq, desc, sql, gt } from "drizzle-orm";
 import { FiLogIn } from "react-icons/fi";
 
