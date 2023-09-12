@@ -47,12 +47,13 @@ const Prompt = ({
 
   const gameId = gameInfo.game.id;
   const userId = session.user.id;
-  const userGameRoundGenerations = gameInfo.gameRoundGenerations.filter(
-    (generation) => generation.user.id === userId,
-  );
-
   const currRound = state.context.round;
   const maxRegenerations = 3;
+
+  const userGameRoundGenerations = gameInfo.gameRoundGenerations.filter(
+    (generation) =>
+      generation.user.id === userId && generation.question.round === currRound,
+  );
 
   const isSecondStage =
     userGameRoundGenerations.length > 1 &&
