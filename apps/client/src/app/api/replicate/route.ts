@@ -1,36 +1,15 @@
-import { Ratelimit } from "@upstash/ratelimit";
-import { kv } from "@vercel/kv";
+import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
-export const runtime = "edge";
+import { authOptions } from "@ai/pages/api/auth/[...nextauth]";
 
 export async function POST(req: Request) {
-  if (process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN) {
-    const ip = req.headers.get("x-forwarded-for");
-    const ratelimit = new Ratelimit({
-      redis: kv,
-      // rate limit to 5 requests per 10 seconds
-      limiter: Ratelimit.slidingWindow(5, "10s"),
+  const session = await getServerSession(authOptions(req));
+
+  if (!session) {
+    return new Response("Unauthorized", {
+      status: 401,
     });
-
-    const { success, limit, reset, remaining } = await ratelimit.limit(
-      `ratelimit_${ip}`,
-    );
-
-    if (!success) {
-      return new Response("You have reached your request limit for the day.", {
-        status: 429,
-        headers: {
-          "X-RateLimit-Limit": limit.toString(),
-          "X-RateLimit-Remaining": remaining.toString(),
-          "X-RateLimit-Reset": reset.toString(),
-        },
-      });
-    }
-  } else {
-    console.log(
-      "KV_REST_API_URL and KV_REST_API_TOKEN env vars not found, not rate limiting...",
-    );
   }
 
   const body = await req.json();
@@ -55,10 +34,10 @@ export async function POST(req: Request) {
           // Pinned to a specific version of Stable Diffusion
           // See https://replicate.com/stability-ai/sdxl
           version:
-            "2b017d9b67edd2ee1401238df49d75da53c523f36e363881e057f5dc3ed3c5b2",
+            "8beff3369e81422112d93b89ca01426147de542cd4684c244b673b105188fe5f",
 
           // This is the text prompt that will be submitted by a form on the frontend
-          input: { prompt, num_outputs: 2 },
+          input: { prompt, num_outputs: 2, width: 768, height: 768 },
         }),
       },
     );

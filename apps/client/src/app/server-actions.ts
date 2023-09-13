@@ -1,54 +1,22 @@
 import { URL } from "@ai/utils/socket";
+import { Game, Generation, Question, Room, User, Vote } from "database";
 
-export type User = {
-  createdAt: string;
-  id: number;
-  nickname: string;
-};
-export type Room = {
-  hostId: number | null;
-  code: string;
-  createdAt: string;
-};
 export type RoomInfo = {
-  hostId: number | null;
+  hostId: string | null;
   code: string;
   createdAt: string;
   players: User[];
 };
-export type Game = {
-  id: number;
-  roomCode: string;
-  state: string;
-  round: number;
-  createdAt: string;
-  completedAt: string | null;
-};
-export type Generation = {
-  id: number;
-  text: string;
-  imageUrl: string;
-  userId: number;
-  questionId: number;
-  gameId: number;
-  selected: boolean;
-  createdAt: string;
-};
-export type Question = {
+
+export type GameQuestion = {
   id: number;
   text: string;
   createdAt: string;
   gameId: number;
   round: number;
-  player1: number;
-  player2: number;
+  player1: string;
+  player2: string;
   votedOn: boolean;
-};
-export type Vote = {
-  createdAt: string;
-  id: number;
-  userId: number;
-  generationId: number;
 };
 
 export type UserVote = { vote: Vote; user: User };
@@ -60,20 +28,20 @@ export type GameRoundGeneration = {
     text: string;
     round: number;
     gameId: number;
-    player1: number;
-    player2: number;
+    player1: string;
+    player2: string;
     createdAt: Date;
   };
   user: User;
 };
 
 export type GameInfo = {
-  hostId: number | null;
+  hostId: string | null;
   game: Game;
   players: User[];
-  questions: Question[];
+  questions: GameQuestion[];
   gameRoundGenerations: GameRoundGeneration[];
-  submittedPlayers: number[];
+  submittedPlayers: string[];
   votedPlayers: UserVote[];
 };
 
@@ -84,8 +52,6 @@ export type QuestionGenerations = {
   player2: User;
   player2Generation: Generation;
 };
-
-type ErrorResponse = { error: string };
 
 // ! ----------> USERS <----------
 
@@ -100,6 +66,7 @@ export async function createHost(nickname: string) {
     headers: {
       "Content-Type": "application/json",
     },
+    credentials: "include",
     body: JSON.stringify({
       nickname,
     }),
@@ -118,13 +85,24 @@ export type ExistingHostResponse = {
   room: Room;
 };
 
-export async function existingHost(userId: number) {
+export async function existingHost({
+  userId,
+  nickname,
+  sessionToken,
+}: {
+  userId: string;
+  nickname: string;
+  sessionToken: string;
+}) {
   const response = await fetch(`${URL}/user/existingHost`, {
     method: "POST",
     headers: {
+      Authorization: `Bearer ${sessionToken}`,
       "Content-Type": "application/json",
     },
+    credentials: "include",
     body: JSON.stringify({
+      nickname,
       userId,
     }),
   });
@@ -144,13 +122,26 @@ export type JoinRoomResponse = {
   user: User;
 };
 
-export async function joinRoom(nickname: string, code: string) {
+export async function joinRoom({
+  userId,
+  nickname,
+  code,
+  sessionToken,
+}: {
+  userId: string;
+  nickname: string;
+  code: string;
+  sessionToken: string;
+}) {
   const response = await fetch(`${URL}/room/join`, {
     method: "POST",
     headers: {
+      Authorization: `Bearer ${sessionToken}`,
       "Content-Type": "application/json",
     },
+    credentials: "include",
     body: JSON.stringify({
+      userId,
       nickname,
       code,
     }),
@@ -168,10 +159,13 @@ export async function joinRoom(nickname: string, code: string) {
   return data;
 }
 
-export type GetRoomInfoResponse = RoomInfo | ErrorResponse;
+export type GetRoomInfoResponse = RoomInfo;
 
 export async function getRoomInfo(code: string) {
-  const response = await fetch(`${URL}/room/${code}`, { cache: "no-store" });
+  const response = await fetch(`${URL}/room/${code}`, {
+    cache: "no-store",
+    credentials: "include",
+  });
 
   if (!response.ok) {
     throw new Error("Failed to obtain room info");
@@ -184,10 +178,16 @@ export async function getRoomInfo(code: string) {
 
 // ! ----------> GAMES <----------
 
-export type GetGameInfoResponse = GameInfo | ErrorResponse;
+export type GetGameInfoResponse = GameInfo;
 
-export async function getGameInfo(code: string) {
-  const response = await fetch(`${URL}/game/${code}`, { cache: "no-store" });
+export async function getGameInfo(gameId: number, sessionToken: string) {
+  const response = await fetch(`${URL}/game/${gameId}`, {
+    headers: {
+      Authorization: `Bearer ${sessionToken}`,
+    },
+    cache: "no-store",
+    credentials: "include",
+  });
 
   if (!response.ok) {
     throw new Error("Failed to obtain game info");
@@ -207,6 +207,7 @@ export type GetGameLeaderboardResponse = {
 export async function getLeaderboardById({ gameId }: { gameId: number }) {
   const response = await fetch(`${URL}/game/${gameId}/leaderboard`, {
     cache: "no-store",
+    credentials: "include",
   });
 
   if (!response.ok) {
@@ -228,7 +229,7 @@ export async function createGenerations({
   questionId,
   images,
 }: {
-  userId: number;
+  userId: string;
   gameId: number;
   questionId: number;
   images: { text: string; imageUrl: string }[];
@@ -238,6 +239,7 @@ export async function createGenerations({
     headers: {
       "Content-Type": "application/json",
     },
+    credentials: "include",
     body: JSON.stringify({ userId, gameId, questionId, images }),
   });
 
@@ -261,7 +263,7 @@ export async function getFaceOffs({
 }) {
   const response = await fetch(
     `${URL}/generations/gameId/${gameId}/round/${round}`,
-    { cache: "no-store" },
+    { cache: "no-store", credentials: "include" },
   );
 
   if (!response.ok) {

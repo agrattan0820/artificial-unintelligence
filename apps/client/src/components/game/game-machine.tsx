@@ -7,6 +7,7 @@ import {
   assign,
   createMachine,
 } from "xstate";
+import { Session } from "next-auth";
 
 import ConnectToMainframe from "./connect-to-mainframe";
 import ConnectionEstablished from "./connection-established";
@@ -177,11 +178,12 @@ export const getCurrentComponent = (
   gameInfo: GameInfo,
   state: StateFrom<typeof gameMachine>,
   send: (event: EventFrom<typeof gameMachine>) => StateFrom<typeof gameMachine>,
-  hostId: number | null,
-  submittedPlayerIds: Set<number>,
+  hostId: string | null,
+  submittedPlayerIds: Set<string>,
   currFaceOffQuestion: QuestionGenerations | undefined,
   votedPlayers: UserVote[],
   leaderboard: GetGameLeaderboardResponse | undefined,
+  session: Session,
 ) => {
   const stateMachineComponentMap: Record<
     StateValueFrom<typeof gameMachine>,
@@ -199,7 +201,12 @@ export const getCurrentComponent = (
     ),
     prompt: (
       <TransitionWrapper key="prompt">
-        <Prompt gameInfo={gameInfo} state={state} send={send} />
+        <Prompt
+          gameInfo={gameInfo}
+          state={state}
+          send={send}
+          session={session}
+        />
       </TransitionWrapper>
     ),
     promptSubmitted: (
@@ -207,6 +214,7 @@ export const getCurrentComponent = (
         <PromptSubmitted
           gameInfo={gameInfo}
           submittedPlayerIds={submittedPlayerIds}
+          session={session}
         />
       </TransitionWrapper>
     ),
@@ -220,6 +228,7 @@ export const getCurrentComponent = (
         <FaceOff
           gameInfo={gameInfo}
           currQuestionGenerations={currFaceOffQuestion}
+          session={session}
         />
       </TransitionWrapper>
     ),
@@ -254,6 +263,7 @@ export const getCurrentComponent = (
           send={send}
           leaderboard={leaderboard}
           hostId={hostId}
+          session={session}
         />
       </TransitionWrapper>
     ),

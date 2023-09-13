@@ -8,13 +8,13 @@ import Image from "next/image";
 import { EventFrom, StateFrom } from "xstate";
 import { BsTrophy } from "react-icons/bs";
 import { motion, Variants } from "framer-motion";
+import type { Session } from "next-auth";
 
 import Crown from "@ai/images/crown.webp";
 import { GameInfo, GetGameLeaderboardResponse } from "@ai/app/server-actions";
 import { gameMachine } from "./game-machine";
 import Button, { LinkSecondaryButton } from "../button";
 import { SocketContext } from "@ai/utils/socket-provider";
-import { useStore } from "@ai/utils/store";
 import { FiDownload } from "react-icons/fi";
 import Friend from "./friend";
 
@@ -23,16 +23,22 @@ type LeaderboardProps = {
   state: StateFrom<typeof gameMachine>;
   send: (event: EventFrom<typeof gameMachine>) => StateFrom<typeof gameMachine>;
   leaderboard: GetGameLeaderboardResponse | undefined;
-  hostId: number | null;
+  hostId: string | null;
+  session: Session;
 };
 
-const Leaderboard = ({ gameInfo, leaderboard, hostId }: LeaderboardProps) => {
+const Leaderboard = ({
+  gameInfo,
+  leaderboard,
+  hostId,
+  session,
+}: LeaderboardProps) => {
   const socket = useContext(SocketContext);
-  const { user } = useStore();
+
   // TODO: working mobile image share (likely will have to use base64 images)
   // const { onClick } = useImageShare();
 
-  const currUserIsHost = user && user?.id === hostId;
+  const currUserIsHost = session.user.id === hostId;
 
   const leaderboardListVariants: Variants = {
     hidden: {},

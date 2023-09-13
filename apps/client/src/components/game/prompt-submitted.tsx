@@ -5,10 +5,10 @@
 
 import { motion } from "framer-motion";
 import { FiCheck } from "react-icons/fi";
+import { Session } from "next-auth";
 
 import { cn } from "@ai/utils/cn";
 import { GameInfo } from "@ai/app/server-actions";
-import { useStore } from "@ai/utils/store";
 import Friend from "./friend";
 
 type SubmittedUserCardProps = {
@@ -29,7 +29,8 @@ const SubmittedUserCard = ({ nickname, submitted }: SubmittedUserCardProps) => {
         layout
         className="flex items-center justify-center gap-3 md:text-xl"
       >
-        <span
+        <motion.span
+          layout="position"
           className={cn(
             "flex h-12 w-12 items-center justify-center rounded-full border-2 border-indigo-600 p-1",
           )}
@@ -42,7 +43,7 @@ const SubmittedUserCard = ({ nickname, submitted }: SubmittedUserCardProps) => {
             width={36}
             height={36}
           />
-        </span>
+        </motion.span>
         <motion.span layout="position">{nickname}</motion.span>{" "}
         {submitted && (
           <motion.span
@@ -62,12 +63,12 @@ const SubmittedUserCard = ({ nickname, submitted }: SubmittedUserCardProps) => {
 const PromptSubmitted = ({
   gameInfo,
   submittedPlayerIds,
+  session,
 }: {
   gameInfo: GameInfo;
-  submittedPlayerIds: Set<number>;
+  submittedPlayerIds: Set<string>;
+  session: Session;
 }) => {
-  const { user } = useStore();
-
   return (
     <div className="mx-auto text-center">
       <Friend className="mx-auto mb-4 w-32" />
@@ -84,7 +85,7 @@ const PromptSubmitted = ({
             key={i}
             nickname={player.nickname}
             submitted={
-              submittedPlayerIds.has(player.id) || player.id === user?.id
+              submittedPlayerIds.has(player.id) || player.id === session.user.id
             }
           />
         ))}

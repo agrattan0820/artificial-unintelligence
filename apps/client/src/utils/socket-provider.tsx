@@ -4,7 +4,8 @@ import { createContext, useEffect } from "react";
 import toast from "react-hot-toast";
 
 import { socket } from "./socket";
-import { useStore } from "./store";
+import { useSession } from "next-auth/react";
+import { useParams } from "next/navigation";
 
 export const SocketContext = createContext(socket);
 
@@ -13,29 +14,43 @@ export default function SocketProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const { user, room, gameId } = useStore();
+  const { data: session } = useSession();
+  const params = useParams();
 
   const socketMessage = (msg: string) => {
     console.log("Received socket message:", msg);
     toast(msg);
   };
-  const socketError = (err: string) => {
-    console.error("Received socket error:", err);
+  const socketError = (error: string) => {
+    console.error("Received socket error:", error);
     toast.error("An Error Occurred");
   };
 
+  const socketConnectError = (error: Error) => {
+    console.error(error.message);
+    toast.error("Failed to connect to server, please try again later");
+  };
+
   useEffect(() => {
-    socket.auth = { userId: user?.id, roomCode: room?.code, gameId };
-    socket.connect();
+    socket.auth = {
+      userId: session?.user?.id ?? "",
+      roomCode: params?.code ?? "",
+      gameId: params?.gameId ?? "",
+    };
+    if (session?.user?.id) {
+      socket.connect();
+    }
+    socket.on("connect_error", socketConnectError);
     socket.on("message", socketMessage);
     socket.on("error", socketError);
 
     return () => {
+      socket.off("connect_error", socketConnectError);
       socket.off("message", socketMessage);
       socket.off("error", socketError);
       socket.disconnect();
     };
-  }, [user?.id, room?.code, gameId]);
+  }, [params?.code, params?.gameId, session?.user?.id]);
 
   return (
     <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>

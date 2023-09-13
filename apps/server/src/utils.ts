@@ -20,12 +20,25 @@ export function shuffleArray<T>(arr: T[]) {
 }
 
 export function handleSocketError(
-  e: Error,
+  error: Error,
   socket: Socket<ClientToServerEvents, ServerToClientEvents>,
   code?: string
 ) {
-  console.error("Socket Error: ", e);
-  socket.emit("error", e.message);
-  Sentry.captureException(e);
-  if (code) socket.to(code).emit("error", e.message);
+  console.error("Socket Error: ", error);
+  socket.emit("error", error.message);
+  Sentry.captureException(error);
+  if (code) socket.to(code).emit("error", error.message);
+}
+
+export function parseCookie(cookieHeader: string) {
+  return cookieHeader
+    .split(";")
+    .map((v) => v.split("="))
+    .reduce(
+      (acc, v) => {
+        acc[decodeURIComponent(v[0].trim())] = decodeURIComponent(v[1].trim());
+        return acc;
+      },
+      {} as Record<string, string>
+    );
 }

@@ -15,7 +15,7 @@ export async function createVote({
   userId,
   generationId,
 }: {
-  userId: number;
+  userId: string;
   generationId: number;
 }) {
   const newVote = await db
@@ -91,7 +91,7 @@ export function createVoteMap({
   generations: Generation[];
   userVotes: UserVote[];
 }) {
-  const userGenerationMap = generations.reduce<Record<number, number>>(
+  const userGenerationMap = generations.reduce<Record<number, string>>(
     (acc, curr) => {
       acc[curr.id] = curr.userId;
       return acc;
@@ -99,7 +99,7 @@ export function createVoteMap({
     {}
   );
 
-  const voteMap = userVotes.reduce<Record<number, number>>((acc, curr) => {
+  const voteMap = userVotes.reduce<Record<string, number>>((acc, curr) => {
     const userId = userGenerationMap[curr.vote.generationId];
 
     if (!acc[userId]) {
@@ -142,11 +142,11 @@ export async function saveVotePoints({
   totalVotes,
   gameId,
 }: {
-  voteMap: Record<number, number>;
+  voteMap: Record<string, number>;
   totalVotes: number;
   gameId: number;
 }) {
-  const userIdArray = Object.keys(voteMap).map((id) => Number.parseInt(id));
+  const userIdArray = Object.keys(voteMap).map((id) => id);
 
   const previousPoints = await db
     .select()

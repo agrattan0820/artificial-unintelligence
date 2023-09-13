@@ -1,24 +1,23 @@
+import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
+
 import { getRoomInfo } from "@ai/app/server-actions";
 import Lobby from "./lobby";
-import ErrorScreen from "@ai/components/error-screen";
 import Footer from "@ai/components/footer";
+import { authOptions } from "@ai/pages/api/auth/[...nextauth]";
 
 export default async function Room({ params }: { params: { code: string } }) {
-  const roomInfo = await getRoomInfo(params.code);
+  const session = await getServerSession(authOptions());
 
-  console.log("[ROOM INFO]", roomInfo);
-
-  if ("error" in roomInfo) {
-    return (
-      <ErrorScreen
-        details={`A room with code "${params.code}" does not exist.`}
-      />
-    );
+  if (!session) {
+    redirect("/");
   }
+
+  const roomInfo = await getRoomInfo(params.code);
 
   return (
     <div>
-      <Lobby roomInfo={roomInfo} />
+      <Lobby roomInfo={roomInfo} session={session} />
       <Footer />
     </div>
   );

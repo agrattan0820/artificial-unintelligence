@@ -3,12 +3,12 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FiCheckSquare, FiPlusSquare, FiPlay } from "react-icons/fi";
+import { Session } from "next-auth";
+import type { User } from "database";
 
-import { User } from "@ai/app/server-actions";
 import Button, { SecondaryButton } from "@ai/components/button";
 import Ellipsis from "@ai/components/ellipsis";
 import useLinkShare from "@ai/utils/hooks/use-link-share";
-import { useStore } from "@ai/utils/store";
 
 const StartGame = ({
   players,
@@ -17,15 +17,16 @@ const StartGame = ({
   onStartGame,
   loading,
   roomIsFull,
+  session,
 }: {
   players: User[];
   code: string;
-  hostId: number | null;
+  hostId: string | null;
   onStartGame: () => void;
   loading: boolean;
   roomIsFull: boolean;
+  session: Session;
 }) => {
-  const { user } = useStore();
   const [isMounted, setIsMounted] = useState(false);
 
   const { copying, setCopying, onClick } = useLinkShare({
@@ -50,17 +51,20 @@ const StartGame = ({
   return (
     <>
       <div className="mt-8 flex flex-col items-center justify-center gap-x-2 gap-y-4 sm:flex-row">
-        {isMounted && players.length > 2 && user && user.id == hostId && (
-          <Button onClick={onStartGame} className="flex items-center gap-2">
-            {loading ? (
-              <Ellipsis />
-            ) : (
-              <>
-                Start Game <FiPlay />
-              </>
-            )}
-          </Button>
-        )}
+        {isMounted &&
+          players.length > 2 &&
+          session &&
+          session.user.id == hostId && (
+            <Button onClick={onStartGame} className="flex items-center gap-2">
+              {loading ? (
+                <Ellipsis />
+              ) : (
+                <>
+                  Start Game <FiPlay />
+                </>
+              )}
+            </Button>
+          )}
         <SecondaryButton
           onClick={onClick}
           className="flex items-center gap-2"
@@ -78,7 +82,9 @@ const StartGame = ({
             3 - players.length !== 1 ? "s" : ""
           } to start a game`
         ) : (
-          user && user.id !== hostId && "Waiting on host to start game..."
+          session &&
+          session.user.id !== hostId &&
+          "Waiting on host to start game..."
         )}
       </p>
     </>

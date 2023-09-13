@@ -44,10 +44,7 @@ export async function getGameRoundGenerations({
     .where(
       and(eq(generations.gameId, gameId), eq(questionsToGames.round, round))
     )
-    .orderBy(
-      desc(questionsToGames.createdAt),
-      desc(questionsToGames.questionId)
-    );
+    .orderBy(desc(generations.createdAt));
 
   return gameRoundGenerations;
 }
@@ -140,8 +137,8 @@ export function getSubmittedPlayers({
 }: {
   faceOffGenerations: GameRoundGeneration[];
 }) {
-  const userGenerationCountMap = new Map<number, number>();
-  const submittedUsers = faceOffGenerations.reduce<number[]>((acc, curr) => {
+  const userGenerationCountMap = new Map<string, number>();
+  const submittedUsers = faceOffGenerations.reduce<string[]>((acc, curr) => {
     const currUserId = curr.generation.userId;
 
     if (userGenerationCountMap.get(currUserId) === 1) {
@@ -201,7 +198,7 @@ export async function getGenerationCount({
   questionId,
 }: {
   gameId: number;
-  userId: number;
+  userId: string;
   questionId: number;
 }) {
   const generationCount = await db
@@ -218,45 +215,6 @@ export async function getGenerationCount({
     );
 
   return generationCount[0].count;
-}
-
-export async function getUserGenerationInfo({
-  gameId,
-  userId,
-  round,
-}: {
-  gameId: number;
-  userId: number;
-  round: number;
-}) {
-  const generationsForUserForRound = await db
-    .select({
-      id: generations.id,
-      gameId: generations.gameId,
-      imageUrl: generations.imageUrl,
-      questionId: generations.questionId,
-      selected: generations.selected,
-      text: generations.text,
-      userId: generations.userId,
-      createdAt: generations.createdAt,
-    })
-    .from(generations)
-    .innerJoin(
-      questionsToGames,
-      and(
-        eq(generations.gameId, questionsToGames.gameId),
-        eq(generations.questionId, questionsToGames.questionId)
-      )
-    )
-    .where(
-      and(
-        eq(generations.gameId, gameId),
-        eq(generations.userId, userId),
-        eq(questionsToGames.round, round)
-      )
-    );
-
-  return generationsForUserForRound;
 }
 
 export async function setGenerationAsSubmitted({

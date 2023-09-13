@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import { getRoom, joinRoom } from "../services/room.service";
-import { createUser } from "../services/user.service";
+import { updateUserNickname } from "../services/user.service";
 
 export async function getRoomController(
   req: Request<{ code: string }>,
@@ -24,12 +24,12 @@ export async function getRoomController(
 }
 
 export async function joinRoomController(
-  req: Request<{}, {}, { nickname: string; code: string }>,
+  req: Request<{}, {}, { userId: string; nickname: string; code: string }>,
   res: Response,
   next: NextFunction
 ) {
   try {
-    const { nickname, code } = req.body;
+    const { userId, nickname, code } = req.body;
 
     const checkRoomExists = await getRoom({ code });
 
@@ -45,15 +45,20 @@ export async function joinRoomController(
       return;
     }
 
-    const createdUser = await createUser({ nickname });
-    const addUserToRoom = await joinRoom({
-      userId: createdUser.id,
-      code,
+    const updatedUser = await updateUserNickname({
+      userId,
+      nickname,
     });
 
-    console.log("[ADD USER TO ROOM]:", addUserToRoom);
+    if (!checkRoomExists.players.some((player) => player.id === userId)) {
+      const addUserToRoom = await joinRoom({
+        userId: userId,
+        code,
+      });
+      console.log("[ADD USER TO ROOM]:", addUserToRoom);
+    }
 
-    res.status(200).send({ user: createdUser });
+    res.status(200).send({ user: updatedUser });
   } catch (error) {
     next(error);
   }
