@@ -10,6 +10,10 @@ export function authSocketMiddleware(
   io.use(async (socket, next) => {
     const userId = socket.handshake.auth.userId;
 
+    const headers = socket.request.headers;
+
+    console.log(headers);
+
     const cookieObject = socket.request.headers.cookie
       ? parseCookie(socket.request.headers.cookie)
       : undefined;
