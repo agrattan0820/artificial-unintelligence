@@ -26,7 +26,7 @@ import { roomSocketHandlers } from "./handlers/room.handler";
 import { gameSocketHandlers } from "./handlers/game.handler";
 import { generationSocketHandlers } from "./handlers/generation.handler";
 import { voteSocketHandlers } from "./handlers/vote.handler";
-import { authSocketMiddleware } from "./middleware/auth.middleware";
+// import { authSocketMiddleware } from "./middleware/auth.middleware";
 import { checkUserSession } from "./services/user.service";
 
 export function buildServer() {
@@ -109,11 +109,6 @@ export function buildServer() {
   // Websockets with socket.io
   const io = new Server<ClientToServerEvents, ServerToClientEvents>(server, {
     cors: {
-      allowedHeaders: [
-        "cookie",
-        "next-auth.session-token",
-        "__Secure-next-auth.session-token",
-      ],
       origin: process.env.APP_URL ?? "https://un-ai.vercel.app",
       credentials: true,
     },
@@ -122,7 +117,7 @@ export function buildServer() {
   io.engine.use(helmet());
 
   // Check for authenticated session
-  authSocketMiddleware(io);
+  // authSocketMiddleware(io);
 
   // Socket.io events
   io.on("connection", async (socket) => {
