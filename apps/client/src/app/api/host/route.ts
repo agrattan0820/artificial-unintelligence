@@ -1,6 +1,7 @@
 import { getServerSession } from "next-auth";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import * as Sentry from "@sentry/nextjs";
 
 import { existingHost } from "@ai/app/server-actions";
 import { authOptions } from "@ai/pages/api/auth/[...nextauth]";
@@ -10,7 +11,11 @@ export async function GET(req: Request) {
 
   const sessionToken = cookies().get("next-auth.session-token");
 
+  console.log("SESSION", session);
+  console.log("SESSION TOKEN", sessionToken);
+
   if (!session || !sessionToken) {
+    Sentry.captureMessage("Unauthenticated for host route");
     redirect("/");
   }
 
@@ -19,6 +24,7 @@ export async function GET(req: Request) {
   const nickname = searchParams.get("nickname");
 
   if (!nickname) {
+    Sentry.captureMessage("Nickname not defined for host route");
     redirect("/");
   }
 
