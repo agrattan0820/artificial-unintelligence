@@ -85,8 +85,9 @@ export function buildServer() {
       sessionToken = req.headers.authorization?.split("Bearer ")[1];
     } else if (req.cookies["next-auth.session-token"]) {
       sessionToken = req.cookies["next-auth.session-token"];
+    } else if (req.cookies["__Secure-next-auth.session-token"]) {
+      sessionToken = req.cookies["__Secure-next-auth.session-token"];
     }
-
     if (!sessionToken) {
       next(new Error("Unauthorized"));
       return;

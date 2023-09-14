@@ -13,7 +13,9 @@ export default async function GamePage({
 }) {
   const session = await getServerSession(authOptions());
 
-  const sessionToken = cookies().get("next-auth.session-token");
+  const sessionToken =
+    cookies().get("__Secure-next-auth.session-token") ??
+    cookies().get("next-auth.session-token");
 
   if (!session || !sessionToken) {
     redirect("/");
