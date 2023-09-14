@@ -109,7 +109,11 @@ export function buildServer() {
   // Websockets with socket.io
   const io = new Server<ClientToServerEvents, ServerToClientEvents>(server, {
     cors: {
-      methods: ["GET", "POST"],
+      allowedHeaders: [
+        "cookie",
+        "next-auth.session-token",
+        "__Secure-next-auth.session-token",
+      ],
       origin: process.env.APP_URL ?? "https://un-ai.vercel.app",
       credentials: true,
     },
