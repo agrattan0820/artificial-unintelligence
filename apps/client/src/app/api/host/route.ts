@@ -9,11 +9,9 @@ import { authOptions } from "@ai/pages/api/auth/[...nextauth]";
 export async function GET(req: Request) {
   const session = await getServerSession(authOptions(req));
 
-  const allCookies = cookies().getAll();
-  const sessionToken = cookies().get("next-auth.session-token");
-
-  console.log("SESSION", session);
-  console.log("ALL COOKIES", allCookies);
+  const sessionToken =
+    cookies().get("__Secure-next-auth.session-token") ??
+    cookies().get("next-auth.session-token");
 
   if (!session || !sessionToken) {
     Sentry.captureMessage("Unauthenticated for host route");
