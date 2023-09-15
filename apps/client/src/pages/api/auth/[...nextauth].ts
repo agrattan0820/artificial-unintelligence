@@ -53,6 +53,21 @@ export const authOptions = (
         console.log("CREATE USER", user);
       },
     },
+    cookies: {
+      sessionToken: {
+        name:
+          process.env.NODE_ENV === "production"
+            ? "__Secure-next-auth.session-token"
+            : "next-auth.session-token",
+        options: {
+          httpOnly: true,
+          sameSite: "lax",
+          path: "/",
+          secure: process.env.NODE_ENV === "production",
+          domain: process.env.SESSION_COOKIE_DOMAIN,
+        },
+      },
+    },
   };
 };
 
