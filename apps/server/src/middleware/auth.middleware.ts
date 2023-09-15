@@ -8,9 +8,19 @@ export function authSocketMiddleware(
 ) {
   io.use(async (socket, next) => {
     const userId = socket.handshake.auth.userId;
-    const sessionToken = socket.request.headers.cookie
-      ? parseCookie(socket.request.headers.cookie)["next-auth.session-token"]
+
+    const cookieObject = socket.request.headers.cookie
+      ? parseCookie(socket.request.headers.cookie)
       : undefined;
+
+    if (!cookieObject) {
+      next(new Error("Unauthorized, no cookies sent"));
+      return;
+    }
+
+    const sessionToken =
+      cookieObject["next-auth.session-token"] ??
+      cookieObject["__Secure-next-auth.session-token"];
 
     if (!userId || !sessionToken) {
       next(new Error("Unauthorized"));
