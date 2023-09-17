@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth";
 import { getGameInfo } from "@ai/app/server-actions";
 import Game from "./game";
 import { authOptions } from "@ai/pages/api/auth/[...nextauth]";
+import { isUserInGame } from "@ai/utils/query";
 
 export default async function GamePage({
   params,
@@ -18,6 +19,12 @@ export default async function GamePage({
     cookies().get("next-auth.session-token");
 
   if (!session || !sessionToken) {
+    redirect("/");
+  }
+
+  const userInGame = await isUserInGame({ gameId: params.gameId, session });
+
+  if (!userInGame) {
     redirect("/");
   }
 

@@ -1,7 +1,6 @@
 import { getServerSession } from "next-auth";
-import { Game, db, games, usersToGames, usersToRooms } from "database";
-import { isNull, and, eq, desc, sql, gt } from "drizzle-orm";
 import { FiLogIn } from "react-icons/fi";
+import { Game } from "database";
 
 import Footer from "@ai/components/footer";
 import Friend from "@ai/components/game/friend";
@@ -9,6 +8,7 @@ import SignInForm from "@ai/components/sign-in-form";
 import { authOptions } from "@ai/pages/api/auth/[...nextauth]";
 import { LinkSecondaryButton } from "@ai/components/button";
 import UserMenu from "@ai/components/user-menu";
+import { getRunningGame } from "@ai/utils/query";
 
 export default async function Home() {
   const session = await getServerSession(authOptions());
@@ -16,26 +16,10 @@ export default async function Home() {
   let runningGame: Game | null = null;
 
   if (session) {
-    const runningGameWithUserQuery = await db
-      .select({
-        game: games,
-        playerCount: sql<number>`count(${usersToRooms.userId})::int`,
-      })
-      .from(games)
-      .innerJoin(usersToGames, eq(games.id, usersToGames.gameId))
-      .innerJoin(usersToRooms, eq(games.roomCode, usersToRooms.roomCode))
-      .where(
-        and(
-          isNull(games.completedAt),
-          eq(usersToGames.userId, session.user.id),
-        ),
-      )
-      .orderBy(desc(games.createdAt))
-      .groupBy(games.id)
-      .having(({ playerCount }) => gt(playerCount, 0));
+    const runningGameQuery = await getRunningGame({ session });
 
-    if (runningGameWithUserQuery.length > 0) {
-      runningGame = runningGameWithUserQuery[0].game;
+    if (runningGameQuery) {
+      runningGame = runningGameQuery.game;
     }
   }
 
