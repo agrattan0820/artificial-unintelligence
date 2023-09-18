@@ -19,7 +19,7 @@ import ImageChoice, { ImageOption } from "./image-choice";
 import {
   GameInfo,
   createGenerations,
-  generateSDXLImage,
+  generateSDXLImages,
 } from "@ai/utils/queries";
 import { gameMachine } from "./game-machine";
 import { SocketContext } from "@ai/utils/socket-provider";
@@ -111,7 +111,7 @@ const Prompt = ({
 
     console.time("Execution Time");
 
-    const images = await generateSDXLImage(formPrompt);
+    const images = await generateSDXLImages(formPrompt);
 
     console.timeEnd("Execution Time");
 
