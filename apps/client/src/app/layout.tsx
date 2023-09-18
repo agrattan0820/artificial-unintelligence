@@ -4,6 +4,7 @@ import { Toaster } from "react-hot-toast";
 import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 import AuthProvider from "@ai/components/auth-provider";
+import { cn } from "@ai/utils/cn";
 
 const spaceMono = Space_Mono({
   subsets: ["latin"],
@@ -29,7 +30,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${spaceMono.variable} bg-slate-900 font-space text-white antialiased`}
+        className={cn(
+          spaceMono.variable,
+          "scroll-smooth bg-slate-900 font-space text-white antialiased",
+        )}
       >
         <Toaster containerStyle={{ textAlign: "center" }} />
         <AuthProvider>{children}</AuthProvider>

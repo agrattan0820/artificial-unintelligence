@@ -31,7 +31,6 @@ export default function Lobby({
   const roomIsFull = players.length >= 8;
 
   const handleRoomState = (roomInfo: RoomInfo) => {
-    console.log("[ROOM INFO]", roomInfo);
     setHostId(roomInfo.hostId);
     setPlayers(roomInfo.players);
   };

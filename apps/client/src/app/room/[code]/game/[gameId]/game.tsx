@@ -72,7 +72,6 @@ export default function Game({ gameInfo, session }: GameProps) {
   });
 
   const handleRoomState = (roomInfo: RoomInfo) => {
-    console.log("[ROOM INFO]", roomInfo);
     setHostId(roomInfo.hostId);
   };
 
