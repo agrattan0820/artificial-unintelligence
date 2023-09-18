@@ -14,10 +14,13 @@ import toast from "react-hot-toast";
 import { FiHelpCircle, FiX } from "react-icons/fi";
 
 import Button, { SecondaryButton } from "@ai/components/button";
-import { generateSDXLImage } from "@ai/utils/query";
 import Ellipsis from "@ai/components/ellipsis";
 import ImageChoice, { ImageOption } from "./image-choice";
-import { GameInfo, createGenerations } from "@ai/app/server-actions";
+import {
+  GameInfo,
+  createGenerations,
+  generateSDXLImage,
+} from "@ai/utils/queries";
 import { gameMachine } from "./game-machine";
 import { SocketContext } from "@ai/utils/socket-provider";
 import { Session } from "next-auth";

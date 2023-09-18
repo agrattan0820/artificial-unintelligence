@@ -8,7 +8,7 @@ import SignInForm from "@ai/components/sign-in-form";
 import { authOptions } from "@ai/pages/api/auth/[...nextauth]";
 import { LinkSecondaryButton } from "@ai/components/button";
 import UserMenu from "@ai/components/user-menu";
-import { getRunningGame } from "@ai/utils/query";
+import { getRunningGame } from "@ai/utils/server-actions";
 
 export default async function Home() {
   const session = await getServerSession(authOptions());

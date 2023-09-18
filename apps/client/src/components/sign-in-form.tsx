@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
 import Button, { LinkSecondaryButton } from "./button";
-import { RoomInfo } from "@ai/app/server-actions";
+import { RoomInfo } from "@ai/utils/queries";
 import Input from "./input";
 import Ellipsis from "./ellipsis";
 

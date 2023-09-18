@@ -2,10 +2,10 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { getServerSession } from "next-auth";
 
-import { getGameInfo } from "@ai/app/server-actions";
+import { getGameInfo } from "@ai/utils/queries";
 import Game from "./game";
 import { authOptions } from "@ai/pages/api/auth/[...nextauth]";
-import { isUserInGame } from "@ai/utils/query";
+import { isUserInGame } from "@ai/utils/server-actions";
 
 export default async function GamePage({
   params,

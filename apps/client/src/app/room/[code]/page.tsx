@@ -1,11 +1,11 @@
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 
-import { getRoomInfo } from "@ai/app/server-actions";
+import { getRoomInfo } from "@ai/utils/queries";
 import Lobby from "./lobby";
 import Footer from "@ai/components/footer";
 import { authOptions } from "@ai/pages/api/auth/[...nextauth]";
-import { isUserInRoom } from "@ai/utils/query";
+import { isUserInRoom } from "@ai/utils/server-actions";
 
 export default async function Room({ params }: { params: { code: string } }) {
   const session = await getServerSession(authOptions());

@@ -11,7 +11,7 @@ import {
 import { useEffect, useMemo } from "react";
 
 import Crown from "@ai/images/crown.webp";
-import { GetGameLeaderboardResponse } from "@ai/app/server-actions";
+import { GetGameLeaderboardResponse } from "@ai/utils/queries";
 
 type WinnerProps = {
   leaderboard: GetGameLeaderboardResponse | undefined;

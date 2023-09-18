@@ -11,7 +11,7 @@ import { motion, Variants } from "framer-motion";
 import type { Session } from "next-auth";
 
 import Crown from "@ai/images/crown.webp";
-import { GameInfo, GetGameLeaderboardResponse } from "@ai/app/server-actions";
+import { GameInfo, GetGameLeaderboardResponse } from "@ai/utils/queries";
 import { gameMachine } from "./game-machine";
 import Button, { LinkSecondaryButton } from "../button";
 import { SocketContext } from "@ai/utils/socket-provider";

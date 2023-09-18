@@ -2,14 +2,14 @@ import { getServerSession } from "next-auth";
 import { FiLogIn } from "react-icons/fi";
 import { Game } from "database";
 
-import { getRoomInfo } from "@ai/app/server-actions";
+import { getRoomInfo } from "@ai/utils/queries";
 import Footer from "@ai/components/footer";
 import Friend from "@ai/components/game/friend";
 import SignInForm from "@ai/components/sign-in-form";
 import { authOptions } from "@ai/pages/api/auth/[...nextauth]";
 import UserMenu from "@ai/components/user-menu";
 import { LinkSecondaryButton } from "@ai/components/button";
-import { getRunningGame } from "@ai/utils/query";
+import { getRunningGame } from "@ai/utils/server-actions";
 
 export default async function Invite({ params }: { params: { code: string } }) {
   const roomInfo = await getRoomInfo(params.code);

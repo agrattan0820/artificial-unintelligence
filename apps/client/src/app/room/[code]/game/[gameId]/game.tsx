@@ -13,7 +13,7 @@ import {
   UserVote,
   getFaceOffs,
   getLeaderboardById,
-} from "@ai/app/server-actions";
+} from "@ai/utils/queries";
 import {
   gameMachine,
   getCurrentComponent,

@@ -8,7 +8,7 @@ import type { User } from "database";
 
 import InviteLink from "./invite-link";
 import UserCount from "@ai/components/user-count";
-import { RoomInfo } from "@ai/app/server-actions";
+import { RoomInfo } from "@ai/utils/queries";
 import UserList from "./user-list";
 import StartGame from "./start-game";
 import { SocketContext } from "@ai/utils/socket-provider";
