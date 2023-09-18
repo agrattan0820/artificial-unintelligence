@@ -4,8 +4,6 @@
   </a>
 </div>
 
-<!-- ![Friend from Artificial Unintelligence!](./client/src/images/friend.svg "Friend from Artificial Unintelligence") -->
-
 # Artificial Unintelligence
 
 > Online multiplayer game where players compete against each other to create the funniest AI-generated images in response to amusing prompts.
@@ -20,7 +18,11 @@
 
 Artificial Unintelligence is a game inspired by party games like [Jackbox Party Pack’s Quiplash](https://www.jackboxgames.com/quiplash/) and [Onrizon’s Garticphone](https://garticphone.com/).
 
+> If you've ever played the game, "Quiplash" from Jackbox Party Pack, you can think of Artificial Unintelligence as the same game but rather than answering with text, you answer with images!
+
 Starting a game of Artificial Unintelligence will create a room with a unique room code and an invite link to join the room. The player who starts the game and creates the room is also known as the room’s “host.”
+
+![The room lobby where players meet before starting a game.](./apps/client/src/images/how-to-play/lobby.png "The room lobby where players meet before starting a game.")
 
 The host can share the unique invite link with other prospective players to have them join their room.
 
@@ -35,15 +37,21 @@ A game consists of three rounds, and each round is split into two phases:
 
 ### Generation Phase
 
-During the “Generation” phase, each player will be given two prompts that they will base off of for the AI-generated images. Both prompts each player receives is shared with another player in the game and the two resulting images submitted by both players for a given prompt will compete for votes from other players during the “Face-Off” phase.
+During the “Generation” phase, each player will be given two prompts that they will base off of for the AI-generated images. Each of the two prompts a player receives is shared with another player in the game. Once all players create and submit images for their two assigned prompts, the game transitions to the “Face-Off” phase where the image generations compete against whichever counterpart shared the same original prompt.
 
-To generate an image, describe an interesting picture within the provided text input and press the submit button. After a few seconds, two images based on your description will appear. You can decide to either submit one of these images as a response to the prompt or generate a new set of two images with a new description.
+![The entered text is transformed into an image.](./apps/client/src/images/how-to-play/prompt.png "The entered text is transformed into an image.")
+
+To generate an image, describe an interesting picture within the provided text input and press the submit button. After a few seconds, two images based on your description will appear. You can decide to either submit one of these images as a response to the prompt or generate a new set of two images with a new description. You can generate a maximum of 3 extra sets of images per question, so make them count!
+
+![You can select between two generated images.](./apps/client/src/images/how-to-play/prompt-submission.png "You can select between two generated images.")
 
 > To submit an image, click or tap on the image you want to appear in the face-off and then press the submit button.
 
 ### Face-Off Phase
 
 The "Face-Off" phase showcases all of the player-submitted images in 1v1 duels where all players excluding those who have an image in the duel vote on which one is the funniest.
+
+![Players outside of the ones who generated the images vote.](./apps/client/src/images/how-to-play/vote.png "Players outside of the ones who generated the images vote.")
 
 > To vote on an image, click or tap on the image and then press the "Confirm Vote" button.
 
@@ -53,9 +61,13 @@ For each 1% of the votes a player's image receives in the duel, they will receiv
 
 Once all duels have been completed for the round, the game will return to the "Generation" phase until a total of 3 rounds have been completed.
 
+![The winning image is highlighted while all of the original prompts are shown.](./apps/client/src/images/how-to-play/vote-result.png "The winning image is highlighted while all of the original prompts are shown.")
+
 ### Scoring and Winning the Game
 
 Once 3 rounds have been completed, all points are tallied up from the votes the players garnered and the player with the most points at the end wins the game.
+
+![See the end-game leaderboard.](./apps/client/src/images/how-to-play/leaderboard.png "See the end-game leaderboard.")
 
 ## Dev Tutorial
 
