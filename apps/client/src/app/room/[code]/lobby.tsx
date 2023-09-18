@@ -37,7 +37,6 @@ export default function Lobby({
 
   const handleStartGame = useCallback(
     (gameId: number) => {
-      console.log("[RECEIVED START GAME]");
       router.push(`/room/${roomInfo.code}/game/${gameId}`);
     },
     [roomInfo.code, router],

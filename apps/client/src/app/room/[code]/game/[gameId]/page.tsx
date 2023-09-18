@@ -30,7 +30,5 @@ export default async function GamePage({
 
   const gameInfo = await getGameInfo(params.gameId, sessionToken.value);
 
-  console.log("[GAME INFO]", gameInfo);
-
   return <Game gameInfo={gameInfo} session={session} />;
 }

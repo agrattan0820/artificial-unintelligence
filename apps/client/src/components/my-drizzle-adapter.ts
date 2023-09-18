@@ -73,8 +73,6 @@ export function myDrizzleAdapter(
     createTables(tableFn);
   return {
     async createUser(data) {
-      console.log("NEXT AUTH USER CREATION", data);
-
       return await client
         .insert(users)
         .values({ ...data, id: crypto.randomUUID() })

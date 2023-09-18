@@ -93,7 +93,6 @@ export default function Game({ gameInfo, session }: GameProps) {
   // Receive state changes from server
   const handleServerEvent = useCallback(
     (event: EventFrom<typeof gameMachine>) => {
-      console.log("[RECEIVED EVENT]", event);
       send(event);
     },
     [send],
@@ -101,7 +100,6 @@ export default function Game({ gameInfo, session }: GameProps) {
 
   // Update which players have submitted their generations
   const handleOnSubmittedPlayers = (players: string[]) => {
-    console.log("[HANDLE SUBMITTED PLAYERS]", players);
     setSubmittedPlayerIds(new Set(players));
   };
 
@@ -136,7 +134,6 @@ export default function Game({ gameInfo, session }: GameProps) {
 
   // Update which players have voted for the current face off
   const handleVotedPlayers = (votes: UserVote[]) => {
-    console.log("[HANDLE VOTED PLAYERS]", votes);
     setVotedPlayers(votes);
   };
 

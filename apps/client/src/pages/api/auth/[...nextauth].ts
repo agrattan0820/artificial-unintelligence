@@ -48,11 +48,6 @@ export const authOptions = (
         return session;
       },
     },
-    events: {
-      createUser({ user }) {
-        console.log("CREATE USER", user);
-      },
-    },
     cookies: {
       sessionToken: {
         name:
