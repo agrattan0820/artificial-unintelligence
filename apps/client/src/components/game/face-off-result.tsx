@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
-import { QuestionGenerations, UserVote } from "@ai/app/server-actions";
+import { QuestionGenerations, UserVote } from "@ai/utils/queries";
 import FaceOffResultImage from "./face-off-result-image";
 
 type FaceOffResultProps = {

@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { cookies } from "next/headers";
 
-import { joinRoom } from "@ai/app/server-actions";
+import { joinRoom } from "@ai/utils/queries";
 import { authOptions } from "@ai/pages/api/auth/[...nextauth]";
 
 export async function GET(req: Request) {
