@@ -38,7 +38,15 @@ const InviteLink = ({
       onClick={onClick}
       disabled={roomIsFull}
     >
-      <span id="inviteLink">{!roomIsFull ? link : "Room is full!"}</span>
+      <span id="inviteLink">
+        {!roomIsFull
+          ? link.split(
+              process.env.NODE_ENV === "production"
+                ? "https://www."
+                : "http://",
+            )[1]
+          : "Room is full!"}
+      </span>
       {!roomIsFull && <span>{copying ? <FiCheckSquare /> : <FiCopy />}</span>}
     </button>
   );
