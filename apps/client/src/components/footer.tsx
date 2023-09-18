@@ -1,6 +1,6 @@
 const Footer = () => {
   return (
-    <footer className="w-full text-center absolute bottom-8 left-1/2 -translate-x-1/2">
+    <footer className="absolute bottom-8 left-1/2 w-full -translate-x-1/2 text-center">
       <div className="flex flex-col items-center justify-center gap-2 text-xs sm:text-sm">
         <p>
           Free and{" "}
@@ -18,7 +18,7 @@ const Footer = () => {
             href="https://www.buymeacoffee.com/agrattan"
             className="text-indigo-300 underline"
           >
-            Send some cereal our way
+            Donate some cereal
           </a>{" "}
           🥣
         </p>

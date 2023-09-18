@@ -25,7 +25,7 @@ import {
   GetGameLeaderboardResponse,
   QuestionGenerations,
   UserVote,
-} from "@ai/app/server-actions";
+} from "@ai/utils/queries";
 
 // COMPONENTS
 const TransitionWrapper = ({ children }: { children: ReactNode }) => {

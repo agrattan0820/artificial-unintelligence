@@ -7,7 +7,7 @@ import type { Session } from "next-auth";
 import Button, { SecondaryButton } from "@ai/components/button";
 import ImageChoice, { ImageOption } from "./image-choice";
 import Ellipsis from "@ai/components/ellipsis";
-import { GameInfo, QuestionGenerations } from "@ai/app/server-actions";
+import { GameInfo, QuestionGenerations } from "@ai/utils/queries";
 import { SocketContext } from "@ai/utils/socket-provider";
 
 type FaceOffProps = {

@@ -1,4 +1,5 @@
 import { URL } from "@ai/utils/socket";
+import * as Sentry from "@sentry/nextjs";
 import { Game, Generation, Question, Room, User, Vote } from "database";
 
 export type RoomInfo = {
@@ -274,3 +275,29 @@ export async function getFaceOffs({
 
   return data;
 }
+
+export const generateSDXLImage = async (prompt: string) => {
+  try {
+    const response = await fetch("/api/replicate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ prompt }),
+    });
+
+    if (response.status !== 200) {
+      throw new Error(`Request failed with status ${response.status}`);
+    }
+
+    const data: { result: string[] } = await response.json();
+
+    return data.result;
+  } catch (error) {
+    console.error(error);
+    Sentry.captureException(error);
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
+  }
+};

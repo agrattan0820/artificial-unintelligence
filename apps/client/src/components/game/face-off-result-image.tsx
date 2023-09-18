@@ -196,7 +196,7 @@ const FaceOffResultImage = ({
             showVotes && "brightness-50",
           )}
           src={image}
-          alt={`OpenAI Image with the prompt: ${prompt}`}
+          alt={`AI-generated image with the prompt: ${prompt}`}
           onLoad={() => setShowImage(true)}
           width={1024}
           height={1024}

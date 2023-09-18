@@ -8,7 +8,7 @@ import { FiCheck } from "react-icons/fi";
 import { Session } from "next-auth";
 
 import { cn } from "@ai/utils/cn";
-import { GameInfo } from "@ai/app/server-actions";
+import { GameInfo } from "@ai/utils/queries";
 import Friend from "./friend";
 
 type SubmittedUserCardProps = {

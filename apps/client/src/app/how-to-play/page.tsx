@@ -1,12 +1,12 @@
 import Image, { StaticImageData } from "next/image";
 
 import { LinkButton } from "@ai/components/button";
-import InviteLink from "@ai/images/invite-link.png";
-import Prompt from "@ai/images/prompt.png";
-import ImagePrompt from "@ai/images/image-prompt.png";
-import ImageVoting from "@ai/images/image-voting.png";
-import VotingPoints from "@ai/images/voting-points.png";
-import WinningImages from "@ai/images/winning-images.png";
+import Lobby from "@ai/images/how-to-play/lobby.png";
+import Prompt from "@ai/images/how-to-play/prompt.png";
+import PromptSubmission from "@ai/images/how-to-play/prompt-submission.png";
+import Voting from "@ai/images/how-to-play/vote.png";
+import VotingResults from "@ai/images/how-to-play/vote-result.png";
+import Leaderboard from "@ai/images/how-to-play/leaderboard.png";
 
 const ImageFigure = ({
   image,
@@ -42,12 +42,24 @@ export default function HowToPlay() {
           </a>
           .
         </p>
+        <blockquote>
+          If you&apos;ve ever played the game, &quot;Quiplash&quot; from Jackbox
+          Party Pack, you can think of Artificial Unintelligence as the same
+          game but rather than answering with text, you answer with images!
+        </blockquote>
         <p>
           Starting a game of Artificial Unintelligence will create a room with a
           unique room code and an invite link to join the room. The player who
           starts the game and creates the room is also known as the room&apos;s
           &quot;host.&quot;
         </p>
+        <ImageFigure
+          image={{
+            src: Lobby,
+            alt: "Artificial Unintelligence lobby and invite link",
+          }}
+          caption="The room lobby where players meet before starting a game."
+        />
         <p>
           The host can share the unique invite link with other prospective
           players to have them join their room.
@@ -57,13 +69,6 @@ export default function HowToPlay() {
           to copy the link to your clipboard or open the share menu, depending
           on which device you are playing on.
         </blockquote>
-        <ImageFigure
-          image={{
-            src: InviteLink,
-            alt: "Artificial Unintelligence invite link",
-          }}
-          caption="The room lobby"
-        />
         <p>
           Once at least 3 players are in the room (max of 8 players), the game
           is allowed to begin, initiated by the host of the room.
@@ -92,21 +97,23 @@ export default function HowToPlay() {
             src: Prompt,
             alt: "Artificial Unintelligence prompt screen",
           }}
-          caption="The entered text is transformed into an image"
+          caption="The entered text is transformed into an image."
         />
         <p>
           To generate an image, describe an interesting picture within the
           provided text input and press the submit button. After a few seconds,
           two images based on your description will appear. You can decide to
           either submit one of these images as a response to the prompt or
-          generate a new set of two images with a new description.
+          generate a new set of two images with a new description. You can
+          generate a maximum of 3 extra sets of images per question, so make
+          them count!
         </p>
         <ImageFigure
           image={{
-            src: ImagePrompt,
+            src: PromptSubmission,
             alt: "Artificial Unintelligence image prompt screen",
           }}
-          caption="You can select between two generated images"
+          caption="You can select between two generated images."
         />
         <blockquote>
           To submit an image, click or tap on the image you want to appear in
@@ -120,10 +127,10 @@ export default function HowToPlay() {
         </p>
         <ImageFigure
           image={{
-            src: ImageVoting,
+            src: Voting,
             alt: "Artificial Unintelligence image voting screen",
           }}
-          caption="Players outside of the ones who generated the images vote"
+          caption="Players outside of the ones who generated the images vote."
         />
         <blockquote>
           To vote on an image, click or tap on the image and then press the
@@ -135,10 +142,10 @@ export default function HowToPlay() {
         </p>
         <ImageFigure
           image={{
-            src: VotingPoints,
+            src: VotingResults,
             alt: "Artificial Unintelligence voting results screen",
           }}
-          caption="The winning image is highlighted along with the original prompts"
+          caption="The winning image is highlighted while all of the original prompts are shown."
         />
         <p>
           For each 1% of the votes a player&apos;s image receives in the duel,
@@ -159,10 +166,10 @@ export default function HowToPlay() {
         </p>
         <ImageFigure
           image={{
-            src: WinningImages,
+            src: Leaderboard,
             alt: "Artificial Unintelligence winning images screen",
           }}
-          caption="Show the winner and all of their images"
+          caption="See the end-game leaderboard."
         />
       </section>
       <div className="mx-auto mt-8 max-w-prose">

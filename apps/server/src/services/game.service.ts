@@ -1,4 +1,4 @@
-import { asc, desc, eq, sql } from "drizzle-orm";
+import { asc, desc, eq, sql, and } from "drizzle-orm";
 import {
   db,
   NewGame,
@@ -173,7 +173,7 @@ export async function getLeaderboardById({ gameId }: { gameId: number }) {
     .innerJoin(questions, eq(generations.questionId, questions.id))
     .innerJoin(users, eq(generations.userId, users.id))
     .leftJoin(votes, eq(generations.id, votes.generationId))
-    .where(eq(generations.gameId, gameId))
+    .where(and(eq(generations.gameId, gameId), eq(generations.selected, true)))
     .groupBy(generations.id, questions.id, users.id);
 
   return {

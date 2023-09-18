@@ -8,7 +8,7 @@ import type { User } from "database";
 
 import InviteLink from "./invite-link";
 import UserCount from "@ai/components/user-count";
-import { RoomInfo } from "@ai/app/server-actions";
+import { RoomInfo } from "@ai/utils/queries";
 import UserList from "./user-list";
 import StartGame from "./start-game";
 import { SocketContext } from "@ai/utils/socket-provider";
@@ -31,14 +31,12 @@ export default function Lobby({
   const roomIsFull = players.length >= 8;
 
   const handleRoomState = (roomInfo: RoomInfo) => {
-    console.log("[ROOM INFO]", roomInfo);
     setHostId(roomInfo.hostId);
     setPlayers(roomInfo.players);
   };
 
   const handleStartGame = useCallback(
     (gameId: number) => {
-      console.log("[RECEIVED START GAME]");
       router.push(`/room/${roomInfo.code}/game/${gameId}`);
     },
     [roomInfo.code, router],

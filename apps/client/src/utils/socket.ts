@@ -1,7 +1,7 @@
 import type { EventFrom } from "xstate";
 import { Socket, io } from "socket.io-client";
 
-import { RoomInfo, UserVote } from "@ai/app/server-actions";
+import { RoomInfo, UserVote } from "@ai/utils/queries";
 import { gameMachine } from "@ai/components/game/game-machine";
 
 export interface ServerToClientEvents {

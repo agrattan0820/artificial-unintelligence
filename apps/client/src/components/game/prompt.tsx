@@ -14,17 +14,19 @@ import toast from "react-hot-toast";
 import { FiHelpCircle, FiX } from "react-icons/fi";
 
 import Button, { SecondaryButton } from "@ai/components/button";
-import { generateOpenAIImage, generateSDXLImage } from "@ai/utils/query";
 import Ellipsis from "@ai/components/ellipsis";
 import ImageChoice, { ImageOption } from "./image-choice";
-import { GameInfo, createGenerations } from "@ai/app/server-actions";
+import {
+  GameInfo,
+  createGenerations,
+  generateSDXLImage,
+} from "@ai/utils/queries";
 import { gameMachine } from "./game-machine";
 import { SocketContext } from "@ai/utils/socket-provider";
 import { Session } from "next-auth";
 
 interface FormElementsType extends HTMLFormControlsCollection {
   prompt: HTMLInputElement;
-  generator: HTMLSelectElement;
 }
 
 export interface PromptFormType extends HTMLFormElement {
@@ -106,14 +108,10 @@ const Prompt = ({
     e.preventDefault();
     setLoading(true);
     const formPrompt = e.currentTarget.elements.prompt.value;
-    const formGenerator = e.currentTarget.elements.generator.value;
 
     console.time("Execution Time");
 
-    const images =
-      formGenerator === "sdxl"
-        ? await generateSDXLImage(formPrompt)
-        : await generateOpenAIImage(formPrompt);
+    const images = await generateSDXLImage(formPrompt);
 
     console.timeEnd("Execution Time");
 
@@ -234,7 +232,7 @@ const Prompt = ({
               exit={{ y: 25, opacity: 0, transition: { delay: 1 } }}
               onSubmit={onPromptSubmit}
             >
-              <div className="relative mb-4">
+              <div className="relative mb-8">
                 <textarea
                   id="prompt"
                   placeholder="Describe a funny image"
@@ -252,22 +250,6 @@ const Prompt = ({
                   className="absolute -top-6 left-2 text-sm text-gray-400 transition-all peer-placeholder-shown:left-4 peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:-top-6 peer-focus:left-2 peer-focus:text-sm peer-focus:text-gray-400"
                 >
                   Describe a funny image
-                </label>
-              </div>
-              <div className="mb-8">
-                <label>
-                  <span>Image generator:</span>
-                  <br />
-                  <select
-                    name="generator"
-                    id="generatorSelect"
-                    className="form-select mt-1 rounded-md bg-gray-300 px-4 py-1 text-black focus:border-none focus:outline-none focus:ring focus:ring-indigo-600"
-                    required
-                    disabled={loading}
-                  >
-                    <option value="dalle">DALL-E 2</option>
-                    <option value="sdxl">Stable Diffusion XL</option>
-                  </select>
                 </label>
               </div>
               <div className="flex items-center gap-2">
