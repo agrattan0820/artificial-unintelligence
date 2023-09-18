@@ -31,7 +31,20 @@ export default function HowToPlay() {
       <section className="prose mx-auto text-white prose-headings:text-white prose-a:text-white prose-a:underline-offset-2 prose-a:transition hover:prose-a:text-indigo-200  prose-blockquote:text-white">
         <h1>How to Play</h1>
         <p>
-          Artificial Unintelligence is a game inspired by party games like{" "}
+          Artificial Unintelligence is an online multiplayer game where players
+          compete against each other to create the funniest AI-generated images
+          in response to amusing prompts.
+        </p>
+        <blockquote>
+          Some prompts you might encounter:
+          <ul>
+            <li>A canceled children&apos;s toy</li>
+            <li>The creature hidden in IKEA</li>
+            <li>The newly discovered animal in Austrailia</li>
+          </ul>
+        </blockquote>
+        <p>
+          The game is inspired by party games like{" "}
           <a href="https://www.jackboxgames.com/quiplash/">
             Jackbox Party Pack&apos;s Quiplash
           </a>
