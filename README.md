@@ -6,13 +6,13 @@
 
 # Artificial Unintelligence
 
-> Online multiplayer game where players compete against each other to create the funniest AI-generated images in response to amusing prompts.
->
-> Some prompts you might encounter:
->
-> - A canceled children's toy
-> - The creature hidden in IKEA
-> - The newly discovered animal in Australia
+Online multiplayer game where players compete against each other to create the funniest AI-generated images in response to amusing prompts.
+
+Some prompts you might encounter:
+
+- A canceled children's toy
+- The creature hidden in IKEA
+- The newly discovered animal in Australia
 
 ## How to Play
 
