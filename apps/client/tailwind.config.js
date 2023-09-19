@@ -32,6 +32,11 @@ module.exports = {
           "0%": { opacity: 0, transform: "translateY(24px)" },
           "100%": { opacity: 1, transform: "translateY(0px)" },
         },
+        shimmer: {
+          "100%": {
+            transform: "translateX(100%)",
+          },
+        },
         typing: {
           from: { width: 0 },
           to: { width: "100%" },

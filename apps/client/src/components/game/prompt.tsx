@@ -222,6 +222,7 @@ const Prompt = ({
         }}
         selectedImage={selectedImage}
         setSelectedImage={setSelectedImage}
+        loading={loading}
       />
       <AnimatePresence>
         {!imagesLoaded && (
@@ -233,24 +234,30 @@ const Prompt = ({
               onSubmit={onPromptSubmit}
             >
               <div className="relative mb-8">
-                <textarea
-                  id="prompt"
-                  placeholder="Describe a funny image"
-                  rows={5}
-                  cols={33}
-                  maxLength={400}
-                  name="prompt"
-                  className="peer w-full resize-none rounded-xl border-2 border-gray-300 bg-transparent p-4 placeholder-transparent focus:border-indigo-300 focus:outline-none"
-                  defaultValue={imagePrompt ?? undefined}
-                  required
-                  disabled={loading}
-                />
-                <label
-                  htmlFor="prompt"
-                  className="absolute -top-6 left-2 text-sm text-gray-400 transition-all peer-placeholder-shown:left-4 peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:-top-6 peer-focus:left-2 peer-focus:text-sm peer-focus:text-gray-400"
-                >
-                  Describe a funny image
-                </label>
+                {!loading ? (
+                  <>
+                    <textarea
+                      id="prompt"
+                      placeholder="Describe a funny image"
+                      rows={5}
+                      cols={33}
+                      maxLength={400}
+                      name="prompt"
+                      className="peer w-full resize-none rounded-xl border-2 border-gray-300 bg-transparent p-4 placeholder-transparent focus:border-indigo-300 focus:outline-none"
+                      defaultValue={imagePrompt ?? undefined}
+                      required
+                      disabled={loading}
+                    />
+                    <label
+                      htmlFor="prompt"
+                      className="absolute -top-6 left-2 text-sm text-gray-400 transition-all peer-placeholder-shown:left-4 peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:-top-6 peer-focus:left-2 peer-focus:text-sm peer-focus:text-gray-400"
+                    >
+                      Describe a funny image
+                    </label>
+                  </>
+                ) : (
+                  <p className="mt-4">{imagePrompt}</p>
+                )}
               </div>
               <div className="flex items-center gap-2">
                 <Button type="submit" disabled={loading}>
