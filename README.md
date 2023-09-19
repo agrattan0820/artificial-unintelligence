@@ -51,7 +51,7 @@ To generate an image, describe an interesting picture within the provided text i
 
 The "Face-Off" phase showcases all of the player-submitted images in 1v1 duels where all players excluding those who have an image in the duel vote on which one is the funniest.
 
-![Players outside of the ones who generated the images vote.](./apps/client/src/images/how-to-play/vote.png "Players outside of the ones who generated the images vote.")
+![Players outside of the ones who generated the images vote.](./apps/client/src/images/how-to-play/vote-2.png "Players outside of the ones who generated the images vote.")
 
 > To vote on an image, click or tap on the image and then press the "Confirm Vote" button.
 
@@ -61,7 +61,7 @@ For each 1% of the votes a player's image receives in the duel, they will receiv
 
 Once all duels have been completed for the round, the game will return to the "Generation" phase until a total of 3 rounds have been completed.
 
-![The winning image is highlighted while all of the original prompts are shown.](./apps/client/src/images/how-to-play/vote-result.png "The winning image is highlighted while all of the original prompts are shown.")
+![The winning image is highlighted while all of the original prompts are shown.](./apps/client/src/images/how-to-play/vote-result-2.png "The winning image is highlighted while all of the original prompts are shown.")
 
 ### Scoring and Winning the Game
 

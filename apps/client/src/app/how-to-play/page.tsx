@@ -4,8 +4,8 @@ import { LinkButton } from "@ai/components/button";
 import Lobby from "@ai/images/how-to-play/lobby.png";
 import Prompt from "@ai/images/how-to-play/prompt.png";
 import PromptSubmission from "@ai/images/how-to-play/prompt-submission.png";
-import Voting from "@ai/images/how-to-play/vote.png";
-import VotingResults from "@ai/images/how-to-play/vote-result.png";
+import Voting from "@ai/images/how-to-play/vote-2.png";
+import VotingResults from "@ai/images/how-to-play/vote-result-2.png";
 import Leaderboard from "@ai/images/how-to-play/leaderboard.png";
 
 const ImageFigure = ({
