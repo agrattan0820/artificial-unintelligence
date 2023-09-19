@@ -65,7 +65,7 @@ export function buildServer() {
   app.use(cookieParser());
 
   // Rate limiter
-  // Based on https://redis.io/commands/incr
+  // Based on https://redis.io/commands/incr#pattern-rate-limiter-1
   app.use(async (req, res, next) => {
     let redisIncr: number;
     try {
