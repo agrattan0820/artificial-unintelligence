@@ -11,7 +11,6 @@ import morgan from "morgan";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import * as Sentry from "@sentry/node";
-import { rateLimit } from "express-rate-limit";
 
 import { userRoutes } from "./routes/user.route";
 import { roomRoutes } from "./routes/room.route";
@@ -28,17 +27,11 @@ import { generationSocketHandlers } from "./handlers/generation.handler";
 import { voteSocketHandlers } from "./handlers/vote.handler";
 import { authSocketMiddleware } from "./middleware/auth.middleware";
 import { checkUserSession } from "./services/user.service";
+import { redis } from "./redis";
 
 export function buildServer() {
   const app: Express = express();
   const server = createServer(app);
-
-  const limiter = rateLimit({
-    windowMs: 10 * 60 * 1000, // 100 requests every 10 minutes
-    max: 100,
-    standardHeaders: "draft-7",
-    legacyHeaders: false,
-  });
 
   Sentry.init({
     dsn: "https://94861f92f5354fe0ae1a921b9a55d909@o4505598670209024.ingest.sentry.io/4505598751211520",
@@ -63,14 +56,34 @@ export function buildServer() {
   app.use(
     cors({
       methods: ["GET", "POST"],
-      origin: process.env.APP_URL ?? "https://un-ai.vercel.app",
+      origin: process.env.APP_URL ?? "https://www.artificialunintelligence.gg",
       credentials: true,
     })
   );
   app.use(helmet());
   app.use(morgan("tiny"));
   app.use(cookieParser());
-  app.use(limiter);
+
+  // Rate limiter
+  // Based on https://redis.io/commands/incr
+  app.use(async (req, res, next) => {
+    let redisIncr: number;
+    try {
+      redisIncr = await redis.incr(req.ip);
+    } catch (err) {
+      console.error("Could not increment rate limit key");
+      throw err;
+    }
+    console.log(`${req.ip} has value: ${redisIncr}`);
+    if (redisIncr > 10) {
+      res.status(429).send("Too many requests - try again later");
+    }
+    await redis.expire(req.ip, 10);
+
+    next();
+  });
+
+  // Session check
   app.use(async (req, res, next) => {
     let sessionToken = "";
 
@@ -88,28 +101,36 @@ export function buildServer() {
     } else if (req.cookies["__Secure-next-auth.session-token"]) {
       sessionToken = req.cookies["__Secure-next-auth.session-token"];
     }
+
     if (!sessionToken) {
       res.status(401).send("Unauthorized");
       return;
     }
 
-    const checkDBForSession = await checkUserSession({ sessionToken });
+    const redisSession = await redis.get(sessionToken);
 
-    if (!checkDBForSession) {
-      res.status(401).send("Unauthorized");
-      return;
+    if (!redisSession) {
+      const checkDBForSession = await checkUserSession({ sessionToken });
+      if (!checkDBForSession) {
+        res.status(401).send("Unauthorized");
+        return;
+      }
+
+      await redis.set(sessionToken, checkDBForSession.expires.toISOString());
+
+      await redis.expireat(
+        sessionToken,
+        Math.floor(checkDBForSession.expires.getTime() / 1000)
+      );
     }
 
     next();
   });
 
-  // Map to track and memoize the state of running games
-  const gameStateMap = new Map<number, { state: string; round: number }>();
-
   // Websockets with socket.io
   const io = new Server<ClientToServerEvents, ServerToClientEvents>(server, {
     cors: {
-      origin: process.env.APP_URL ?? "https://un-ai.vercel.app",
+      origin: process.env.APP_URL ?? "https://www.artificialunintelligence.gg",
       credentials: true,
     },
   });
@@ -125,9 +146,9 @@ export function buildServer() {
 
     await checkIfExistingUser(io, socket);
 
-    connectionSocketHandlers(io, socket, gameStateMap);
-    roomSocketHandlers(io, socket, gameStateMap);
-    gameSocketHandlers(io, socket, gameStateMap);
+    connectionSocketHandlers(io, socket);
+    roomSocketHandlers(io, socket);
+    gameSocketHandlers(io, socket);
     generationSocketHandlers(io, socket);
     voteSocketHandlers(io, socket);
   });

@@ -9,20 +9,23 @@ import { assignQuestionsToPlayers } from "../services/question.service";
 import { getRoom } from "../services/room.service";
 import { ClientToServerEvents, ServerToClientEvents } from "../types";
 import { handleSocketError } from "../utils";
+import { redis } from "../redis";
 
 export function gameSocketHandlers(
   io: Server<ClientToServerEvents, ServerToClientEvents>,
-  socket: Socket<ClientToServerEvents, ServerToClientEvents>,
-  gameStateMap: Map<number, { state: string; round: number }>
+  socket: Socket<ClientToServerEvents, ServerToClientEvents>
 ) {
   socket.on("initiateGame", async (code) => {
     try {
       const newGame = await createGame({ code });
 
-      gameStateMap.set(newGame.id, {
-        state: newGame.state,
-        round: newGame.round,
-      });
+      await redis.set(
+        `GAME_${newGame.id}`,
+        JSON.stringify({
+          state: newGame.state,
+          round: newGame.round,
+        })
+      );
 
       const roomInfo = await getRoom({ code });
 
@@ -55,10 +58,13 @@ export function gameSocketHandlers(
 
       console.log("[PLAY ANOTHER GAME]", newGame);
 
-      gameStateMap.set(newGame.id, {
-        state: newGame.state,
-        round: newGame.round,
-      });
+      await redis.set(
+        `GAME_${newGame.id}`,
+        JSON.stringify({
+          state: newGame.state,
+          round: newGame.round,
+        })
+      );
 
       const roomInfo = await getRoom({ code });
 
@@ -87,13 +93,21 @@ export function gameSocketHandlers(
 
   socket.on("clientEvent", async ({ state, gameId, round, completedAt }) => {
     try {
-      const mapValue = gameStateMap.get(gameId);
+      let gameStateValue: string | null = null;
 
-      const gameStateValue = mapValue
-        ? mapValue.state !== "START_GAME"
-          ? JSON.parse(mapValue.state).value
-          : mapValue.state
-        : null;
+      const cacheValue = await redis.get(`GAME_${gameId}`);
+
+      if (cacheValue) {
+        const parsedGameState: { state: string; round: number } =
+          JSON.parse(cacheValue);
+
+        if (parsedGameState.state !== "START_GAME") {
+          gameStateValue = JSON.parse(parsedGameState.state).value;
+        } else {
+          gameStateValue = parsedGameState.state;
+        }
+      }
+
       const clientStateValue =
         state !== "START_GAME" ? JSON.parse(state).value : state;
 
@@ -105,10 +119,16 @@ export function gameSocketHandlers(
           completedAt: completedAt ? new Date(completedAt) : undefined,
         });
 
-        if (completedAt && mapValue) {
-          gameStateMap.delete(gameId);
+        if (completedAt && cacheValue) {
+          await redis.del(`GAME_${gameId}`);
         } else {
-          gameStateMap.set(gameId, { state, round });
+          await redis.set(
+            `GAME_${gameId}`,
+            JSON.stringify({
+              state,
+              round,
+            })
+          );
         }
       }
     } catch (error) {
