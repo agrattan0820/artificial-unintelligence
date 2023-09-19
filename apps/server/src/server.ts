@@ -89,14 +89,14 @@ export function buildServer() {
       sessionToken = req.cookies["__Secure-next-auth.session-token"];
     }
     if (!sessionToken) {
-      res.status(400).send("Unauthorized");
+      res.status(401).send("Unauthorized");
       return;
     }
 
     const checkDBForSession = await checkUserSession({ sessionToken });
 
     if (!checkDBForSession) {
-      res.status(400).send("Unauthorized");
+      res.status(401).send("Unauthorized");
       return;
     }
 
