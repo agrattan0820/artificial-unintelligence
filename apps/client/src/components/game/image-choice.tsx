@@ -14,7 +14,22 @@ type ImageChoiceProps = {
   imageOption2: { src: string; alt: string };
   selectedImage: ImageOption | undefined;
   setSelectedImage: Dispatch<SetStateAction<ImageOption | undefined>>;
+  loading?: boolean;
   disabled?: boolean;
+};
+
+/**
+ * Skeleton component taken from Delba's fantastic blog post
+ * https://delba.dev/blog/animated-loading-skeletons-with-tailwind
+ */
+const SkeletonImage = () => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -15 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="relative isolate aspect-square min-h-[324px] w-full min-w-[324px] overflow-hidden rounded-xl bg-slate-800 shadow-xl shadow-black/5 before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:border-t before:border-slate-100/10 before:bg-gradient-to-r before:from-transparent before:via-slate-700 before:to-transparent"
+    />
+  );
 };
 
 const ImageChoiceOption = ({
@@ -38,6 +53,10 @@ const ImageChoiceOption = ({
   bothShown: boolean;
   selectedImage: ImageOption | undefined;
 }) => {
+  if (!image.src) {
+    return <SkeletonImage />;
+  }
+
   return (
     <motion.div
       initial={false}
@@ -73,6 +92,7 @@ const ImageChoice = ({
   imageOption2,
   selectedImage,
   setSelectedImage,
+  loading,
   disabled,
 }: ImageChoiceProps) => {
   const [showImage1, setShowImage1] = useState(false);
@@ -115,7 +135,7 @@ const ImageChoice = ({
 
   return (
     <div className="flex flex-col gap-6 md:flex-row">
-      {imageOption1.src && (
+      {(loading || imageOption1.src) && (
         <ImageChoiceOption
           image={imageOption1}
           option={1}
@@ -128,7 +148,7 @@ const ImageChoice = ({
           selectedImage={selectedImage}
         />
       )}
-      {imageOption2.src && (
+      {(loading || imageOption2.src) && (
         <ImageChoiceOption
           image={imageOption2}
           option={2}
