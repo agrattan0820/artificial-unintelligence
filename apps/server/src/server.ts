@@ -71,10 +71,9 @@ export function buildServer() {
     try {
       redisIncr = await redis.incr(req.ip);
     } catch (err) {
-      console.error("Could not increment rate limit key");
+      console.error(`Could not increment rate limit key for ${req.ip}`);
       throw err;
     }
-    console.log(`${req.ip} has value: ${redisIncr}`);
     if (redisIncr > 10) {
       res.status(429).send("Too many requests - try again later");
     }
