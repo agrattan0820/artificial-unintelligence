@@ -27,6 +27,8 @@ export function gameSocketHandlers(
         })
       );
 
+      await redis.expire(`GAME_${newGame.id}`, 3600); // expire in 1 hour
+
       const roomInfo = await getRoom({ code });
 
       if (!roomInfo?.players) {
@@ -65,6 +67,8 @@ export function gameSocketHandlers(
           round: newGame.round,
         })
       );
+
+      await redis.expire(`GAME_${newGame.id}`, 3600); // expire in 1 hour
 
       const roomInfo = await getRoom({ code });
 
@@ -129,6 +133,8 @@ export function gameSocketHandlers(
               round,
             })
           );
+
+          await redis.expire(`GAME_${gameId}`, 3600); // expire in 1 hour
         }
       }
     } catch (error) {
