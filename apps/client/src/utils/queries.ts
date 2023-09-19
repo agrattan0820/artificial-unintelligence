@@ -276,13 +276,14 @@ export async function getFaceOffs({
   return data;
 }
 
-export const generateSDXLImage = async (prompt: string) => {
+export const generateSDXLImages = async (prompt: string) => {
   try {
-    const response = await fetch("/api/replicate", {
+    const response = await fetch(`${URL}/replicate`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify({ prompt }),
     });
 

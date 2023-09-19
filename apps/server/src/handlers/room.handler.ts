@@ -9,11 +9,11 @@ import {
   updateRoomHost,
 } from "../services/room.service";
 import { handleSocketError } from "../utils";
+import { redis } from "../redis";
 
 export function roomSocketHandlers(
   io: Server<ClientToServerEvents, ServerToClientEvents>,
-  socket: Socket<ClientToServerEvents, ServerToClientEvents>,
-  gameStateMap: Map<number, { state: string; round: number }>
+  socket: Socket<ClientToServerEvents, ServerToClientEvents>
 ) {
   socket.on("connectToRoom", async (data) => {
     const { userId, code } = data;
@@ -75,7 +75,7 @@ export function roomSocketHandlers(
             ? Number(socket.handshake.auth.gameId)
             : null;
           if (gameId) {
-            gameStateMap.delete(gameId);
+            await redis.del(`GAME_${gameId}`);
           }
 
           return;

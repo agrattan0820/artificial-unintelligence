@@ -17,6 +17,7 @@
     "DATABASE_URL",
     "POSTGRES_URL",
     "SESSION_COOKIE_DOMAIN",
+    "REDIS_URL",
     "PORT",
     "NODE_ENV",
     "APP_URL"

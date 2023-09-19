@@ -41,5 +41,5 @@ export async function checkUserSession({
       )
     );
 
-  return checkDBForSession.length > 0;
+  return checkDBForSession[0];
 }

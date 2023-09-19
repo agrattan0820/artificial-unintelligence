@@ -3,6 +3,7 @@ import {
   createGeneration,
   getFaceOffGenerations,
   getGenerationCount,
+  getReplicateAIImages,
   mapGenerationsByQuestion,
 } from "../services/generation.service";
 
@@ -49,6 +50,37 @@ export async function createGenerationsController(
     );
 
     res.status(200).send(generations);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function replicateAIController(
+  req: Request<
+    {},
+    {},
+    {
+      prompt: string;
+    }
+  >,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const { prompt } = req.body;
+
+    if (!prompt) {
+      res.status(400).send({ error: "Please enter a valid prompt" });
+      return;
+    }
+
+    const replicateAIImages = await getReplicateAIImages({ prompt });
+
+    if (!replicateAIImages) {
+      throw new Error("Failed to generate images");
+    }
+
+    res.status(200).send({ result: replicateAIImages });
   } catch (error) {
     next(error);
   }
