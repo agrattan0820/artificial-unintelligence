@@ -107,7 +107,9 @@ const Prompt = ({
   const onPromptSubmit = async (e: FormEvent<PromptFormType>) => {
     e.preventDefault();
     setLoading(true);
+
     const formPrompt = e.currentTarget.elements.prompt.value;
+    setImagePrompt(formPrompt);
 
     console.time("Execution Time");
 
@@ -116,8 +118,6 @@ const Prompt = ({
     console.timeEnd("Execution Time");
 
     if (images && images.length === 2) {
-      setImagePrompt(formPrompt);
-
       if (userId) {
         const generations = await createGenerations({
           userId,
