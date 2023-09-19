@@ -39,8 +39,6 @@ export function generationSocketHandlers(
       const totalNeeded = gameInfo.players.length * 2;
       const currentAmount = faceOffGenerations.length;
 
-      console.log("[TOTAL NEEDED]", totalNeeded);
-
       if (currentAmount >= totalNeeded) {
         console.log("[SENDING SERVER EVENTS]", gameInfo.game.roomCode);
         socket.emit("serverEvent", {
