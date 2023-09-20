@@ -19,7 +19,7 @@
     "postgres": "^3.3.5"
   },
   "devDependencies": {
-    "@auth/core": "^0.14.0",
+    "@auth/core": "^0.15.0",
     "drizzle-kit": "^0.19.13",
     "eslint-config-custom": "workspace:*",
     "ts-node": "^10.9.1",
