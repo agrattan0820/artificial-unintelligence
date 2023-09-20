@@ -35,14 +35,12 @@ export default function HowToPlay() {
           compete against each other to create the funniest AI-generated images
           in response to amusing prompts.
         </p>
-        <blockquote>
-          Some prompts you might encounter:
-          <ul>
-            <li>A canceled children&apos;s toy</li>
-            <li>The creature hidden in IKEA</li>
-            <li>The newly discovered animal in Austrailia</li>
-          </ul>
-        </blockquote>
+        Some prompts you might encounter:
+        <ul>
+          <li>A canceled children&apos;s toy</li>
+          <li>The creature hidden in IKEA</li>
+          <li>The newly discovered animal in Austrailia</li>
+        </ul>
         <p>
           The game is inspired by party games like{" "}
           <a href="https://www.jackboxgames.com/quiplash/">
