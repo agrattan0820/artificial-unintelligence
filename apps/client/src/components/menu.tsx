@@ -10,17 +10,17 @@ import { SocketContext } from "@ai/utils/socket-provider";
 
 import { FiSettings, FiLogOut } from "react-icons/fi";
 
-type UserMenuProps = {
+type MenuProps = {
   session: Session;
   roomCode?: string;
 };
 
-const UserMenu = ({ session, roomCode }: UserMenuProps) => {
+const Menu = ({ session, roomCode }: MenuProps) => {
   const [showMenu, setShowMenu] = useState(false);
   const socket = useContext(SocketContext);
 
-  const userMenuRef = useRef<HTMLDivElement>(null);
-  useClickAway(userMenuRef, () => {
+  const menuRef = useRef<HTMLElement>(null);
+  useClickAway(menuRef, () => {
     setShowMenu(false);
   });
 
@@ -35,16 +35,23 @@ const UserMenu = ({ session, roomCode }: UserMenuProps) => {
   };
 
   return (
-    <div
-      ref={userMenuRef}
+    <nav
+      ref={menuRef}
+      aria-label="Main menu"
       className="relative flex flex-col items-end justify-end"
     >
-      <button onClick={() => setShowMenu(!showMenu)}>
+      <button
+        aria-expanded={showMenu}
+        aria-controls="main-menu"
+        onClick={() => setShowMenu(!showMenu)}
+      >
         <FiSettings className="text-xl md:text-2xl" />
+        <span>Menu</span>
       </button>
       <AnimatePresence initial={false}>
         {showMenu && (
-          <motion.div
+          <motion.ul
+            id="main-menu"
             className="mt-4 rounded-md border border-gray-300 bg-slate-900 p-4"
             initial={{ opacity: 0 }}
             animate={{
@@ -52,21 +59,19 @@ const UserMenu = ({ session, roomCode }: UserMenuProps) => {
             }}
             exit={{ opacity: 0 }}
           >
-            <ul>
-              <li>
-                <button
-                  onClick={handleSignOutAndLeave}
-                  className="flex items-center gap-2 text-sm hover:underline focus:underline md:text-base"
-                >
-                  Sign Out{roomCode && " and Leave Game"} <FiLogOut />
-                </button>
-              </li>
-            </ul>
-          </motion.div>
+            <li>
+              <button
+                onClick={handleSignOutAndLeave}
+                className="flex items-center gap-2 text-sm hover:underline focus:underline md:text-base"
+              >
+                Sign Out{roomCode && " and Leave Game"} <FiLogOut />
+              </button>
+            </li>
+          </motion.ul>
         )}
       </AnimatePresence>
-    </div>
+    </nav>
   );
 };
 
-export default UserMenu;
+export default Menu;

@@ -21,7 +21,7 @@ import {
 import { SocketContext } from "@ai/utils/socket-provider";
 import { cn } from "@ai/utils/cn";
 import { Session } from "next-auth";
-import UserMenu from "@ai/components/user-menu";
+import Menu from "@ai/components/menu";
 
 // ! ----------> TYPES <----------
 
@@ -205,7 +205,7 @@ export default function Game({ gameInfo, session }: GameProps) {
     >
       <section className="container mx-auto px-4 py-24 md:py-16">
         <div className="absolute right-4 top-4 z-50 mt-4 md:right-8 md:top-8">
-          <UserMenu session={session} roomCode={gameInfo.game.roomCode} />
+          <Menu session={session} roomCode={gameInfo.game.roomCode} />
         </div>
         <AnimatePresence mode="wait">
           {isMounted ? currentComponent : null}
