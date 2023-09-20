@@ -46,7 +46,7 @@ const Menu = ({ session, roomCode }: MenuProps) => {
         onClick={() => setShowMenu(!showMenu)}
       >
         <FiSettings className="text-xl md:text-2xl" />
-        <span>Menu</span>
+        <span className="sr-only">Menu</span>
       </button>
       <AnimatePresence initial={false}>
         {showMenu && (
