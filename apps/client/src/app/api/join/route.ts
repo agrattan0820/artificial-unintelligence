@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 import { joinRoom } from "@ai/utils/queries";
 import { authOptions } from "@ai/pages/api/auth/[...nextauth]";
 
-export async function GET(req: Request) {
+export async function GET(req: Request): Promise<never> {
   const session = await getServerSession(authOptions(req));
 
   const sessionToken =
