@@ -44,19 +44,18 @@ const SignInForm = ({ session, room, submitLabel, type }: SignInFormProps) => {
     try {
       const formNickname: string = e.currentTarget.elements.nickname.value;
 
-      const callbackUrl =
+      const callbackUrl = new URL(
         type === "HOME"
-          ? `/api/host/?nickname=${formNickname.split(" ").join("+")}`
-          : `/api/join/?nickname=${formNickname.split(" ").join("+")}&code=${
-              room.code
-            }`;
+          ? `/api/host/?nickname=${formNickname}`
+          : `/api/join/?nickname=${formNickname}&code=${room.code}`,
+      );
 
       if (session) {
-        router.push(callbackUrl);
+        router.push(callbackUrl.toString());
         return;
       }
 
-      signIn("google", { callbackUrl });
+      signIn("google", { callbackUrl: callbackUrl.toString() });
     } catch (error) {
       setLoading(false);
 
