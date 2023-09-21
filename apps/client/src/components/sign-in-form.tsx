@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { Session } from "next-auth";
 import { signIn } from "next-auth/react";
 import { FaGoogle } from "react-icons/fa";
@@ -37,6 +37,7 @@ type SignInFormProps =
 const SignInForm = ({ session, room, submitLabel, type }: SignInFormProps) => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const [isMounted, setIsMounted] = useState(false);
 
   const onSubmit = async (e: FormEvent<NicknameFormType>) => {
     e.preventDefault();
@@ -48,6 +49,9 @@ const SignInForm = ({ session, room, submitLabel, type }: SignInFormProps) => {
         type === "HOME"
           ? `/api/host/?nickname=${formNickname}`
           : `/api/join/?nickname=${formNickname}&code=${room.code}`,
+        isMounted
+          ? window.location.origin
+          : "https://www.artificialunintelligence.gg",
       );
 
       if (session) {
@@ -77,6 +81,10 @@ const SignInForm = ({ session, room, submitLabel, type }: SignInFormProps) => {
       }
     }
   };
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   return (
     <form onSubmit={onSubmit}>
