@@ -7,7 +7,7 @@ import Friend from "@ai/components/game/friend";
 import SignInForm from "@ai/components/sign-in-form";
 import { authOptions } from "@ai/pages/api/auth/[...nextauth]";
 import { LinkSecondaryButton } from "@ai/components/button";
-import UserMenu from "@ai/components/user-menu";
+import Menu from "@ai/components/menu";
 import { getRunningGame } from "@ai/utils/server-actions";
 
 export default async function Home() {
@@ -27,7 +27,7 @@ export default async function Home() {
     <main className="relative flex min-h-[100dvh] flex-col justify-center">
       {session && (
         <div className="absolute right-4 top-4 z-50 mt-4 md:right-8 md:top-8">
-          <UserMenu session={session} />
+          <Menu session={session} />
         </div>
       )}
       <section className="container mx-auto flex flex-col-reverse items-start justify-center gap-8 px-4 lg:flex-row lg:gap-24">

@@ -12,7 +12,7 @@ import { RoomInfo } from "@ai/utils/queries";
 import UserList from "./user-list";
 import StartGame from "./start-game";
 import { SocketContext } from "@ai/utils/socket-provider";
-import UserMenu from "@ai/components/user-menu";
+import Menu from "@ai/components/menu";
 
 export default function Lobby({
   roomInfo,
@@ -80,7 +80,7 @@ export default function Lobby({
           <UserCount count={players.length} />
         </div>
         <div className="absolute right-8 top-8 z-50 mt-4">
-          <UserMenu session={session} roomCode={roomInfo.code} />
+          <Menu session={session} roomCode={roomInfo.code} />
         </div>
         <UserList session={session} hostId={hostId} players={players} />
         <StartGame
