@@ -4,17 +4,18 @@ import { createContext, useEffect } from "react";
 import toast from "react-hot-toast";
 
 import { socket } from "./socket";
-import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
+import { Session } from "next-auth";
 
 export const SocketContext = createContext(socket);
 
 export default function SocketProvider({
   children,
+  session,
 }: {
   children: React.ReactNode;
+  session: Session;
 }) {
-  const { data: session } = useSession();
   const params = useParams();
 
   const socketMessage = (msg: string) => {
