@@ -4,6 +4,7 @@ import { Session } from "next-auth";
 import { signOut } from "next-auth/react";
 import { useContext, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import * as Sentry from "@sentry/nextjs";
 
 import useClickAway from "@ai/utils/hooks/use-click-away";
 import { SocketContext } from "@ai/utils/socket-provider";
@@ -31,6 +32,7 @@ const Menu = ({ session, roomCode }: MenuProps) => {
         code: roomCode,
       });
     }
+    Sentry.setUser(null);
     signOut();
   };
 
