@@ -115,12 +115,16 @@ export function buildServer() {
         return;
       }
 
-      await redis.set(sessionToken, checkDBForSession.expires.toISOString());
+      Sentry.setUser({ id: checkDBForSession.userId });
+
+      await redis.set(sessionToken, checkDBForSession.userId);
 
       await redis.expireat(
         sessionToken,
         Math.floor(checkDBForSession.expires.getTime() / 1000)
       );
+    } else {
+      Sentry.setUser({ id: redisSession });
     }
 
     next();
