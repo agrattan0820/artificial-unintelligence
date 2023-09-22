@@ -117,7 +117,7 @@ const Prompt = ({
 
     console.timeEnd("Execution Time");
 
-    if (images && images.length === 2) {
+    if (images && Array.isArray(images) && images.length === 2) {
       if (userId) {
         const generations = await createGenerations({
           userId,
