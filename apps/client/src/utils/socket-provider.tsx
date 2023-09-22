@@ -34,7 +34,7 @@ export default function SocketProvider({
 
   useEffect(() => {
     socket.auth = {
-      userId: session?.user?.id ?? "",
+      userId: session.user.id,
       roomCode: params?.code ?? "",
       gameId: params?.gameId ?? "",
     };
