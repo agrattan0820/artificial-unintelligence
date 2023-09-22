@@ -9,6 +9,7 @@ import {
   users,
 } from "database";
 import { GameRoundGeneration, QuestionGenerations } from "../types";
+import { replicate } from "../replicate";
 
 export async function getGameRoundGenerations({
   gameId,
@@ -232,88 +233,14 @@ export async function setGenerationAsSubmitted({
 }
 
 export async function getReplicateAIImages({ prompt }: { prompt: string }) {
-  const startResponse = await fetch(
-    "https://api.replicate.com/v1/predictions",
+  const output = await replicate.run(
+    "stability-ai/sdxl:8beff3369e81422112d93b89ca01426147de542cd4684c244b673b105188fe5f",
     {
-      method: "POST",
-      headers: {
-        Authorization: `Token ${process.env.REPLICATE_API_TOKEN}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        // Pinned to a specific version of Stable Diffusion
-        // See https://replicate.com/stability-ai/sdxl
-        version:
-          "8beff3369e81422112d93b89ca01426147de542cd4684c244b673b105188fe5f",
-
-        // This is the text prompt that will be submitted by a form on the frontend
-        input: { prompt, num_outputs: 2, width: 768, height: 768 },
-      }),
+      input: { prompt, num_outputs: 2, width: 768, height: 768 },
     }
   );
 
-  const startResponseJSON: unknown = await startResponse.json();
+  console.log("Received images:", output);
 
-  if (
-    typeof startResponseJSON !== "object" ||
-    !startResponseJSON ||
-    !("urls" in startResponseJSON) ||
-    typeof startResponseJSON.urls !== "object" ||
-    !startResponseJSON.urls ||
-    !("get" in startResponseJSON.urls) ||
-    typeof startResponseJSON.urls.get !== "string"
-  ) {
-    throw new Error("Was unable to retrieve Replicate AI endpoint URL");
-  }
-
-  const endpointURL = startResponseJSON.urls.get;
-
-  let imageGenerations: string[] | null = null;
-
-  while (!imageGenerations) {
-    const finalResponse = await fetch(endpointURL, {
-      method: "GET",
-      headers: {
-        Authorization: `Token ${process.env.REPLICATE_API_TOKEN}`,
-        "Content-Type": "application/json",
-      },
-    });
-    const finalResponseJSON: unknown = await finalResponse.json();
-
-    if (
-      typeof finalResponseJSON !== "object" ||
-      !finalResponseJSON ||
-      !("status" in finalResponseJSON) ||
-      !finalResponseJSON.status ||
-      typeof finalResponseJSON.status !== "string"
-    ) {
-      throw new Error("Unable to retrieve Replicate AI status");
-    }
-
-    if (
-      finalResponseJSON.status === "succeeded" &&
-      "output" in finalResponseJSON &&
-      typeof finalResponseJSON.output === "object" &&
-      Array.isArray(finalResponseJSON.output)
-    ) {
-      imageGenerations = finalResponseJSON.output;
-    } else if (finalResponseJSON.status === "failed") {
-      throw new Error(
-        `Unable to generate image${
-          "error" in finalResponseJSON &&
-          typeof finalResponseJSON.error === "string"
-            ? `, message: ${finalResponseJSON.error}`
-            : ``
-        }`
-      );
-    } else {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-    }
-  }
-
-  if (imageGenerations) {
-    console.log("Received images:", imageGenerations);
-  }
-
-  return imageGenerations;
+  return output;
 }
