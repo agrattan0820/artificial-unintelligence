@@ -10,6 +10,7 @@ import {
 } from "database";
 import { GameRoundGeneration, QuestionGenerations } from "../types";
 import { replicate } from "../replicate";
+import { z } from "zod";
 
 export async function getGameRoundGenerations({
   gameId,
@@ -232,6 +233,8 @@ export async function setGenerationAsSubmitted({
   return updatedGenerations[0];
 }
 
+const replicateAPISchema = z.array(z.string()).length(2);
+
 export async function getReplicateAIImages({ prompt }: { prompt: string }) {
   const output = await replicate.run(
     "stability-ai/sdxl:8beff3369e81422112d93b89ca01426147de542cd4684c244b673b105188fe5f",
@@ -242,5 +245,7 @@ export async function getReplicateAIImages({ prompt }: { prompt: string }) {
 
   console.log("Received images:", output);
 
-  return output;
+  const resultingImages = replicateAPISchema.parse(output);
+
+  return resultingImages;
 }
