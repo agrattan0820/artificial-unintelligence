@@ -67,15 +67,32 @@ export function buildServer() {
   // Rate limiter
   // Based on https://redis.io/commands/incr#pattern-rate-limiter-1
   app.use(async (req, res, next) => {
+    const isIPBlocked = await redis.get(`BLOCKED_${req.ip}`);
+
+    if (isIPBlocked) {
+      res.status(429).send("Too many requests - try again tomorrow");
+      return;
+    }
+
     let redisIncr: number;
     try {
       redisIncr = await redis.incr(req.ip);
-    } catch (err) {
+    } catch (error) {
       console.error(`Could not increment rate limit key for ${req.ip}`);
-      throw err;
+      throw error;
     }
     if (redisIncr > 10) {
-      res.status(429).send("Too many requests - try again later");
+      const today = new Date();
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      tomorrow.setHours(0, 0, 0, 0);
+      await redis.set(`BLOCKED_${req.ip}`, tomorrow.toISOString());
+      await redis.expireat(
+        `BLOCKED_${req.ip}`,
+        Math.floor(tomorrow.getTime() / 1000)
+      );
+      console.log("Blocked the IP Address:", req.ip);
+      res.status(429).send("Too many requests - try again tomorrow");
       return;
     }
     await redis.expire(req.ip, 10);

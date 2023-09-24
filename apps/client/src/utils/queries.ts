@@ -201,7 +201,6 @@ export async function getGameInfo(gameId: number, sessionToken: string) {
 
 export type GetGameLeaderboardResponse = {
   leaderboard: { user: User; points: number; standing: number }[];
-  // winningGenerations: { question: Question; generation: Generation }[];
   allGenerations: { question: Question; generation: Generation; user: User }[];
 };
 
@@ -287,7 +286,7 @@ export const generateSDXLImages = async (prompt: string) => {
       body: JSON.stringify({ prompt }),
     });
 
-    if (response.status !== 200) {
+    if (!response.ok) {
       throw new Error(`Request failed with status ${response.status}`);
     }
 
