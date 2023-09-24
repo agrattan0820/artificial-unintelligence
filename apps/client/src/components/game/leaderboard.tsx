@@ -13,9 +13,9 @@ import type { Session } from "next-auth";
 import Crown from "@ai/images/crown.webp";
 import { GameInfo, GetGameLeaderboardResponse } from "@ai/utils/queries";
 import { gameMachine } from "./game-machine";
-import Button, { LinkSecondaryButton } from "../button";
+import { LinkButton, SecondaryButton } from "../button";
 import { SocketContext } from "@ai/utils/socket-provider";
-import { FiDownload } from "react-icons/fi";
+import { FiDownload, FiPlay } from "react-icons/fi";
 import Friend from "./friend";
 
 type LeaderboardProps = {
@@ -34,9 +34,6 @@ const Leaderboard = ({
   session,
 }: LeaderboardProps) => {
   const socket = useContext(SocketContext);
-
-  // TODO: working mobile image share (likely will have to use base64 images)
-  // const { onClick } = useImageShare();
 
   const currUserIsHost = session.user.id === hostId;
 
@@ -109,11 +106,11 @@ const Leaderboard = ({
               className="relative flex items-center justify-center gap-4"
               variants={leaderboardListItemVariants}
             >
-              {result.standing}.
-              <div className="flex w-full justify-between gap-2 rounded-xl bg-slate-800 p-4 text-left md:text-xl">
+              <span className="hidden md:block">{result.standing}.</span>
+              <div className="relative flex w-full flex-wrap items-center justify-between gap-2 rounded-xl bg-slate-800 p-4 text-left md:text-xl">
                 <p className="flex items-center gap-4">
                   <span className="flex items-center gap-2 md:gap-3">
-                    <span className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-indigo-600 p-1 md:h-12 md:w-12">
+                    <span className="relative flex h-10 w-10 items-center justify-center rounded-full border-2 border-indigo-600 p-1 md:h-12 md:w-12">
                       <img
                         src={`https://api.dicebear.com/7.x/bottts/svg?seed=${result.user.nickname
                           .split(" ")
@@ -122,13 +119,16 @@ const Leaderboard = ({
                         width={36}
                         height={36}
                       />
+                      <span className="absolute -bottom-2.5 flex h-5 w-5 items-center justify-center rounded-full border-2 border-indigo-600 bg-slate-800 p-1 text-sm md:hidden">
+                        {result.standing}
+                      </span>
                     </span>
                     {result.user.nickname}{" "}
                   </span>
                 </p>
                 <p className="flex items-center justify-center gap-4">
                   {result.standing === 1 && (
-                    <span className="rounded-full bg-yellow-600 p-2 text-white">
+                    <span className="absolute -right-2 -top-2 rounded-full bg-yellow-600 p-2 text-sm text-white md:static md:text-base">
                       <BsTrophy />
                     </span>
                   )}
@@ -139,14 +139,17 @@ const Leaderboard = ({
           ))}
         </motion.ol>
         <div className="mt-8 flex flex-col justify-center gap-2 sm:flex-row">
+          <LinkButton href="https://www.buymeacoffee.com/agrattan">
+            Buy Me a Bowl of Cereal 🥣
+          </LinkButton>
           {currUserIsHost && (
-            <Button onClick={handlePlayAgainOnClick}>
-              Play Again With Same Players
-            </Button>
+            <SecondaryButton
+              onClick={handlePlayAgainOnClick}
+              className="flex items-center justify-center gap-2"
+            >
+              Play Again With Same Players <FiPlay />
+            </SecondaryButton>
           )}
-          <LinkSecondaryButton href="https://www.buymeacoffee.com/agrattan">
-            Donate Cereal to Creator 🥣
-          </LinkSecondaryButton>
         </div>
         {!currUserIsHost && (
           <p className="mx-auto mt-4 w-full max-w-sm text-sm">
@@ -179,18 +182,6 @@ const Leaderboard = ({
                 >
                   <FiDownload />
                 </a>
-                {/* TODO: working mobile share for images */}
-                {/* <button
-                  onClick={() =>
-                    onClick(
-                      "Check out this AI-generated image from Artificial Unintelligence",
-                      generation.generation.imageUrl
-                    )
-                  }
-                  className="absolute -right-1 -top-1 rounded-b-md rounded-l-md bg-slate-800/75 pb-2 pl-2 pr-3 pt-3 text-xl text-white transition hover:ring-2 hover:ring-white md:hidden"
-                >
-                  <FiDownload />
-                </button> */}
               </div>
               <p className="mt-2">{generation.generation.text}</p>
             </li>

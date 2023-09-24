@@ -5,7 +5,7 @@ import { EventFrom, State } from "xstate";
 import { useMachine } from "@xstate/react";
 import { AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 
 import {
   GameInfo,
@@ -35,9 +35,6 @@ type GameProps = {
 export default function Game({ gameInfo, session }: GameProps) {
   // Socket for real-time communication
   const socket = useContext(SocketContext);
-
-  // Next.js router
-  const router = useRouter();
 
   // Wait until the client mounts to avoid hydration errors
   const [isMounted, setIsMounted] = useState(false);
@@ -138,11 +135,13 @@ export default function Game({ gameInfo, session }: GameProps) {
   };
 
   // Handle "play another game" request from server
-  // Refresh page to acquire new server-rendered `gameInfo`
-  const handlePlayAnotherGame = useCallback(() => {
-    send("NEXT");
-    router.refresh();
-  }, [router, send]);
+  const handlePlayAnotherGame = useCallback(
+    (gameId: number) => {
+      send("NEXT");
+      redirect(`/room/${gameInfo.game.roomCode}/game/${gameId}`);
+    },
+    [gameInfo.game.roomCode, send],
+  );
 
   // Send new state to server
   useEffect(() => {

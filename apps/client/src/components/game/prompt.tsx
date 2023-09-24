@@ -261,7 +261,7 @@ const Prompt = ({
               </div>
               <div className="flex items-center gap-2">
                 <Button type="submit" disabled={loading}>
-                  {!loading ? "Submit Prompt" : <Ellipsis />}
+                  {!loading ? "Generate Images" : <Ellipsis />}
                 </Button>
 
                 <button
@@ -278,7 +278,7 @@ const Prompt = ({
               className="relative mx-auto w-full max-w-2xl rounded-xl p-8 transition backdrop:bg-slate-900/50 open:animate-modal open:backdrop:animate-modal"
             >
               <form method="dialog">
-                <button className="absolute right-2 top-2">
+                <button className="absolute right-4 top-4 text-xl md:text-2xl">
                   <FiX />
                 </button>
                 <p>
@@ -344,7 +344,13 @@ const Prompt = ({
                 onClick={onImageSubmit}
                 disabled={!selectedImage || loading}
               >
-                {!loading ? "Submit Image" : <Ellipsis />}
+                {loading ? (
+                  <Ellipsis />
+                ) : !selectedImage ? (
+                  "Select an Image"
+                ) : (
+                  "Submit Image"
+                )}
               </Button>
               <SecondaryButton
                 className="w-full shadow-lg md:w-auto"

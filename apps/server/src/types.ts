@@ -14,7 +14,7 @@ export interface ServerToClientEvents {
   message: (str: string) => void;
   roomState: (roomInfo: RoomInfo) => void;
   startGame: (gameId: number) => void;
-  playAnotherGame: () => void;
+  playAnotherGame: (gameId: number) => void;
   serverEvent: (event: StateMachineEvent) => void;
   submittedPlayers: (players: string[]) => void;
   votedPlayers: (votes: { vote: Vote; user: User }[]) => void;

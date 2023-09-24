@@ -39,7 +39,7 @@ export default function HowToPlay() {
         <ul>
           <li>A canceled children&apos;s toy</li>
           <li>The creature hidden in IKEA</li>
-          <li>The newly discovered animal in Austrailia</li>
+          <li>The newly discovered animal in Australia</li>
         </ul>
         <p>
           The game is inspired by party games like{" "}
