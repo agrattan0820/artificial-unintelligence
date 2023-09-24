@@ -55,11 +55,12 @@ const Menu = ({ session, roomCode }: MenuProps) => {
           <motion.ul
             id="main-menu"
             className="mt-4 rounded-md border border-gray-300 bg-slate-900 p-4"
-            initial={{ opacity: 0 }}
+            initial={{ scale: 0.9, opacity: 0 }}
             animate={{
+              scale: 1,
               opacity: 1,
             }}
-            exit={{ opacity: 0 }}
+            exit={{ scale: 0.9, opacity: 0 }}
           >
             <li>
               <button
