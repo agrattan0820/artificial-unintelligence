@@ -76,6 +76,7 @@ export function buildServer() {
     }
     if (redisIncr > 10) {
       res.status(429).send("Too many requests - try again later");
+      return;
     }
     await redis.expire(req.ip, 10);
 
