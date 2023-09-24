@@ -39,19 +39,25 @@ const SignInForm = ({ session, room, submitLabel, type }: SignInFormProps) => {
   const router = useRouter();
   const [isMounted, setIsMounted] = useState(false);
 
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const onSubmit = async (e: FormEvent<NicknameFormType>) => {
     e.preventDefault();
     setLoading(true);
     try {
       const formNickname: string = e.currentTarget.elements.nickname.value;
 
+      const origin = isMounted
+        ? window.location.origin
+        : "https://www.artificialunintelligence.gg";
+
       const callbackUrl = new URL(
         type === "HOME"
           ? `/api/host/?nickname=${formNickname}`
           : `/api/join/?nickname=${formNickname}&code=${room.code}`,
-        isMounted
-          ? window.location.origin
-          : "https://www.artificialunintelligence.gg",
+        origin,
       );
 
       if (session) {
@@ -81,10 +87,6 @@ const SignInForm = ({ session, room, submitLabel, type }: SignInFormProps) => {
       }
     }
   };
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
 
   return (
     <form onSubmit={onSubmit}>
