@@ -3,9 +3,9 @@
 import { FormEvent, useEffect, useState } from "react";
 import { Session } from "next-auth";
 import { signIn } from "next-auth/react";
-import { FaGoogle } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { FiPlay } from "react-icons/fi";
 
 import Button, { LinkSecondaryButton } from "./button";
 import { RoomInfo } from "@ai/utils/queries";
@@ -95,7 +95,7 @@ const SignInForm = ({ session, room, submitLabel, type }: SignInFormProps) => {
         type="text"
         placeholder="Enter a cool nickname"
         defaultValue={session?.user?.nickname ?? ""}
-        maxLength={50}
+        maxLength={15}
         required
         label="Enter a cool nickname"
       />
@@ -107,7 +107,7 @@ const SignInForm = ({ session, room, submitLabel, type }: SignInFormProps) => {
         >
           {!loading ? (
             <>
-              {submitLabel} {!session && <FaGoogle />}
+              {submitLabel} <FiPlay />
             </>
           ) : (
             <Ellipsis />
