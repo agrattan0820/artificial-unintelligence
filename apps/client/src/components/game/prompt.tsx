@@ -50,7 +50,7 @@ const Prompt = ({
   const gameId = gameInfo.game.id;
   const userId = session.user.id;
   const currRound = state.context.round;
-  const maxRegenerations = 3;
+  const maxRegenerations = 2;
 
   const userGameRoundGenerations = gameInfo.gameRoundGenerations.filter(
     (generation) =>

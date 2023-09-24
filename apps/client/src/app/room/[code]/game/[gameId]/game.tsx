@@ -5,7 +5,7 @@ import { EventFrom, State } from "xstate";
 import { useMachine } from "@xstate/react";
 import { AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 import {
   GameInfo,
@@ -35,6 +35,8 @@ type GameProps = {
 export default function Game({ gameInfo, session }: GameProps) {
   // Socket for real-time communication
   const socket = useContext(SocketContext);
+
+  const router = useRouter();
 
   // Wait until the client mounts to avoid hydration errors
   const [isMounted, setIsMounted] = useState(false);
@@ -138,9 +140,9 @@ export default function Game({ gameInfo, session }: GameProps) {
   const handlePlayAnotherGame = useCallback(
     (gameId: number) => {
       send("NEXT");
-      redirect(`/room/${gameInfo.game.roomCode}/game/${gameId}`);
+      router.push(`/room/${gameInfo.game.roomCode}/game/${gameId}`);
     },
-    [gameInfo.game.roomCode, send],
+    [gameInfo.game.roomCode, router, send],
   );
 
   // Send new state to server
