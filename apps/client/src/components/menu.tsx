@@ -9,7 +9,7 @@ import * as Sentry from "@sentry/nextjs";
 import useClickAway from "@ai/utils/hooks/use-click-away";
 import { SocketContext } from "@ai/utils/socket-provider";
 
-import { FiSettings, FiLogOut } from "react-icons/fi";
+import { FiSettings, FiLogOut, FiX } from "react-icons/fi";
 
 type MenuProps = {
   session: Session;
@@ -47,7 +47,11 @@ const Menu = ({ session, roomCode }: MenuProps) => {
         aria-controls="main-menu"
         onClick={() => setShowMenu(!showMenu)}
       >
-        <FiSettings className="text-xl md:text-2xl" />
+        {!showMenu ? (
+          <FiSettings className="text-xl md:text-2xl" />
+        ) : (
+          <FiX className="text-xl md:text-2xl" />
+        )}
         <span className="sr-only">Menu</span>
       </button>
       <AnimatePresence initial={false}>
