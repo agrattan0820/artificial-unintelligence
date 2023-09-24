@@ -88,8 +88,8 @@ export function gameSocketHandlers(
         players: roomInfo?.players,
       });
 
-      socket.emit("playAnotherGame");
-      socket.to(code).emit("playAnotherGame");
+      socket.emit("playAnotherGame", newGame.id);
+      socket.to(code).emit("playAnotherGame", newGame.id);
     } catch (error) {
       if (error instanceof Error) handleSocketError(error, socket, code);
     }

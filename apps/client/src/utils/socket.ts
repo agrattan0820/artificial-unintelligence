@@ -8,7 +8,7 @@ export interface ServerToClientEvents {
   message: (str: string) => void;
   roomState: (roomInfo: RoomInfo) => void;
   startGame: (gameId: number) => void;
-  playAnotherGame: () => void;
+  playAnotherGame: (gameId: number) => void;
   serverEvent: (event: EventFrom<typeof gameMachine>) => void;
   submittedPlayers: (players: string[]) => void;
   votedPlayers: (votes: UserVote[]) => void;
