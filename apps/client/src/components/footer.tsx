@@ -6,7 +6,7 @@ const Footer = () => {
           Free and{" "}
           <a
             href="https://github.com/agrattan0820/artificial-unintelligence"
-            className="text-indigo-300 underline"
+            className="text-indigo-300 underline underline-offset-2"
           >
             open source
           </a>{" "}
@@ -16,9 +16,9 @@ const Footer = () => {
           Like the game?{" "}
           <a
             href="https://www.buymeacoffee.com/agrattan"
-            className="text-indigo-300 underline"
+            className="text-indigo-300 underline underline-offset-2"
           >
-            Donate some cereal
+            Buy me a bowl of cereal
           </a>{" "}
           🥣
         </p>
