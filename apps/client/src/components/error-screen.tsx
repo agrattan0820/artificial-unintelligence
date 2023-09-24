@@ -8,7 +8,7 @@ export default function ErrorScreen({ details }: { details: string }) {
           artif<span className="">i</span>cial <br /> unintelligence
         </h1>
         <p className="mb-6">{details}</p>
-        <LinkButton href="/">Go To The Homepage</LinkButton>
+        <LinkButton href="/">Go to the Homepage</LinkButton>
       </section>
     </main>
   );

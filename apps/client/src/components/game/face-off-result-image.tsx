@@ -248,8 +248,12 @@ const FaceOffResultImage = ({
               }}
               className="mb-2 flex justify-between"
             >
-              <h3 className="text-lg text-indigo-300">{nickname}</h3>{" "}
-              <p>{percentage.toLocaleString()}%</p>
+              <h3 className="w-32 truncate text-sm text-indigo-300 sm:w-auto sm:text-base md:text-lg">
+                {nickname}
+              </h3>{" "}
+              <p className="text-sm sm:text-base">
+                {Math.round(percentage).toLocaleString()}%
+              </p>
             </motion.div>
           )}
           {(isWinner || isLoser || isTie) && (

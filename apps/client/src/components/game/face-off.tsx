@@ -75,7 +75,7 @@ const FaceOff = ({
             }}
             selectedImage={selectedImage}
             setSelectedImage={setSelectedImage}
-            disabled={currUserInFaceOff}
+            disabled={currUserInFaceOff || voteSubmitted}
           />
           <div className="mt-8">
             {currUserInFaceOff || voteSubmitted ? (
@@ -99,7 +99,13 @@ const FaceOff = ({
                   onClick={onImageChoice}
                   disabled={!selectedImage || loading}
                 >
-                  {!loading ? "Confirm Vote" : <Ellipsis />}
+                  {loading ? (
+                    <Ellipsis />
+                  ) : !selectedImage ? (
+                    "Select an Image"
+                  ) : (
+                    "Confirm Vote"
+                  )}
                 </Button>
               </div>
             )}
