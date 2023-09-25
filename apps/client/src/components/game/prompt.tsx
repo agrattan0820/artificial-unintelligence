@@ -176,16 +176,15 @@ const Prompt = ({
       return;
     }
 
-    if (soundEnabled) {
-      play();
-    }
-
     if (stage === "FIRST") {
       setCurrQuestionNumGenerations(0);
       setStage("SECOND");
       setImagePrompt("");
       resetImage();
     } else {
+      if (soundEnabled) {
+        play();
+      }
       send({ type: "SUBMIT" });
     }
 
