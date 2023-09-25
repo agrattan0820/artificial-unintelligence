@@ -176,7 +176,9 @@ const Prompt = ({
       return;
     }
 
-    play();
+    if (soundEnabled) {
+      play();
+    }
 
     if (stage === "FIRST") {
       setCurrQuestionNumGenerations(0);
