@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 import AuthProvider from "@ai/components/auth-provider";
 import { cn } from "@ai/utils/cn";
+import SoundProvider from "@ai/utils/sound-provider";
 
 const spaceMono = Space_Mono({
   subsets: ["latin"],
@@ -36,7 +37,9 @@ export default function RootLayout({
         )}
       >
         <Toaster containerStyle={{ textAlign: "center" }} />
-        <AuthProvider>{children}</AuthProvider>
+        <SoundProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </SoundProvider>
         <Analytics />
       </body>
     </html>

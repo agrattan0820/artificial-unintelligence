@@ -20,8 +20,9 @@ import {
 } from "@ai/components/game/game-machine";
 import { SocketContext } from "@ai/utils/socket-provider";
 import { cn } from "@ai/utils/cn";
-import { Session } from "next-auth";
+import type { Session } from "next-auth";
 import Menu from "@ai/components/menu";
+import useIsMounted from "@ai/utils/hooks/use-is-mounted";
 
 // ! ----------> TYPES <----------
 
@@ -39,7 +40,7 @@ export default function Game({ gameInfo, session }: GameProps) {
   const router = useRouter();
 
   // Wait until the client mounts to avoid hydration errors
-  const [isMounted, setIsMounted] = useState(false);
+  const isMounted = useIsMounted();
 
   // Id of the user who is the current host of the game
   const [hostId, setHostId] = useState<string | null>(gameInfo.hostId);
@@ -191,11 +192,6 @@ export default function Game({ gameInfo, session }: GameProps) {
     leaderboard,
     session,
   ]);
-
-  // Avoid hydration issues by ensuring app has mounted
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
 
   return (
     <main

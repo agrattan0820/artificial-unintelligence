@@ -1,6 +1,6 @@
 "use client";
 
-import { Session } from "next-auth";
+import type { Session } from "next-auth";
 import { signOut } from "next-auth/react";
 import { useContext, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -9,7 +9,14 @@ import * as Sentry from "@sentry/nextjs";
 import useClickAway from "@ai/utils/hooks/use-click-away";
 import { SocketContext } from "@ai/utils/socket-provider";
 
-import { FiSettings, FiLogOut, FiX } from "react-icons/fi";
+import {
+  FiSettings,
+  FiLogOut,
+  FiX,
+  FiVolume2,
+  FiVolumeX,
+} from "react-icons/fi";
+import { useStickyState } from "@ai/utils/hooks/use-sticky-state";
 
 type MenuProps = {
   session: Session;
@@ -19,11 +26,16 @@ type MenuProps = {
 const Menu = ({ session, roomCode }: MenuProps) => {
   const [showMenu, setShowMenu] = useState(false);
   const socket = useContext(SocketContext);
+  const [soundEnabled, setSoundEnabled] = useStickyState(true, "soundEnabled");
 
   const menuRef = useRef<HTMLElement>(null);
   useClickAway(menuRef, () => {
     setShowMenu(false);
   });
+
+  const handleToggleSound = () => {
+    setSoundEnabled(!soundEnabled);
+  };
 
   const handleSignOutAndLeave = () => {
     if (roomCode) {
@@ -58,7 +70,7 @@ const Menu = ({ session, roomCode }: MenuProps) => {
         {showMenu && (
           <motion.ul
             id="main-menu"
-            className="mt-4 rounded-md border border-gray-300 bg-slate-900 p-4"
+            className="mt-4 flex flex-col gap-4 rounded-md border border-gray-300 bg-slate-900 p-4"
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{
               scale: 1,
@@ -68,8 +80,17 @@ const Menu = ({ session, roomCode }: MenuProps) => {
           >
             <li>
               <button
+                onClick={handleToggleSound}
+                className="flex items-center gap-4 text-sm focus-within:underline hover:underline md:text-base"
+              >
+                {soundEnabled ? "Mute" : "Enable"} Sound{" "}
+                {soundEnabled ? <FiVolumeX /> : <FiVolume2 />}
+              </button>
+            </li>
+            <li>
+              <button
                 onClick={handleSignOutAndLeave}
-                className="flex items-center gap-2 text-sm hover:underline focus:underline md:text-base"
+                className="flex w-full items-center justify-between gap-4 text-sm focus-within:underline hover:underline md:text-base"
               >
                 Sign Out{roomCode && " and Leave Game"} <FiLogOut />
               </button>

@@ -5,7 +5,7 @@
 
 import { motion } from "framer-motion";
 import { FiCheck } from "react-icons/fi";
-import { Session } from "next-auth";
+import type { Session } from "next-auth";
 
 import { cn } from "@ai/utils/cn";
 import { GameInfo } from "@ai/utils/queries";

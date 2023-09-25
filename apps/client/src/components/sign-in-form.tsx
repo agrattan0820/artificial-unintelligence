@@ -1,7 +1,7 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
-import { Session } from "next-auth";
+import { FormEvent, useState } from "react";
+import type { Session } from "next-auth";
 import { signIn } from "next-auth/react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
@@ -11,6 +11,7 @@ import Button, { LinkSecondaryButton } from "./button";
 import { RoomInfo } from "@ai/utils/queries";
 import Input from "./input";
 import Ellipsis from "./ellipsis";
+import useIsMounted from "@ai/utils/hooks/use-is-mounted";
 
 interface FormElementsType extends HTMLFormControlsCollection {
   nickname: HTMLInputElement;
@@ -37,11 +38,7 @@ type SignInFormProps =
 const SignInForm = ({ session, room, submitLabel, type }: SignInFormProps) => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+  const isMounted = useIsMounted();
 
   const onSubmit = async (e: FormEvent<NicknameFormType>) => {
     e.preventDefault();
