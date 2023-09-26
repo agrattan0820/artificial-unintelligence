@@ -29,6 +29,9 @@ importers:
       '@sentry/nextjs':
         specifier: ^7.70.0
         version: 7.70.0(next@13.5.2)(react@18.2.0)
+      '@stripe/stripe-js':
+        specifier: ^2.1.6
+        version: 2.1.6
       '@tanstack/react-query':
         specifier: ^4.35.3
         version: 4.35.3(react-dom@18.2.0)(react@18.2.0)
@@ -89,6 +92,9 @@ importers:
       socket.io-client:
         specifier: ^4.7.2
         version: 4.7.2(bufferutil@4.0.7)(utf-8-validate@6.0.3)
+      stripe:
+        specifier: ^13.7.0
+        version: 13.7.0
       tailwind-merge:
         specifier: ^1.14.0
         version: 1.14.0
@@ -153,7 +159,7 @@ importers:
         version: 16.3.1
       drizzle-orm:
         specifier: ^0.28.6
-        version: 0.28.6(postgres@3.3.5)
+        version: 0.28.6
       express:
         specifier: ^4.18.2
         version: 4.18.2
@@ -172,6 +178,9 @@ importers:
       socket.io:
         specifier: ^4.7.2
         version: 4.7.2(bufferutil@4.0.7)(utf-8-validate@6.0.3)
+      stripe:
+        specifier: ^13.7.0
+        version: 13.7.0
       zod:
         specifier: ^3.22.2
         version: 3.22.2
@@ -1589,6 +1598,10 @@ packages:
     resolution: {integrity: sha512-+9jVqKhRSpsc591z5vX+X5Yyw+he/HCB4iQ/RYxw35CEPaY1gnsNE43nf9n9AaYjAQrTiI/mOwKUKdUs9vf7Xg==}
     dev: false
 
+  /@stripe/stripe-js@2.1.6:
+    resolution: {integrity: sha512-QSzqQIcowgap7a40f3a7oUR+59Xet/i8fp1EsnzzwxK5oPRQsCbbLQ4Cd6qM0y1pdZMonFnCrAWayWdE9Lr0iA==}
+    dev: false
+
   /@swc/helpers@0.5.2:
     resolution: {integrity: sha512-E4KcWTpoLHqwPHLxidpOqQbcrZVgi0rsmmZXUle1jXmJfuIf/UWpczUJ7MZZ5tlxytgJXyp0w4PGkkeLiuIdZw==}
     dependencies:
@@ -2948,6 +2961,69 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /drizzle-orm@0.28.6:
+    resolution: {integrity: sha512-yBe+F9htrlYER7uXgDJUQsTHFoIrI5yMm5A0bg0GiZ/kY5jNXTWoEy4KQtg35cE27sw1VbgzoMWHAgCckUUUww==}
+    peerDependencies:
+      '@aws-sdk/client-rds-data': '>=3'
+      '@cloudflare/workers-types': '>=3'
+      '@libsql/client': '*'
+      '@neondatabase/serverless': '>=0.1'
+      '@opentelemetry/api': ^1.4.1
+      '@planetscale/database': '>=1'
+      '@types/better-sqlite3': '*'
+      '@types/pg': '*'
+      '@types/sql.js': '*'
+      '@vercel/postgres': '*'
+      better-sqlite3: '>=7'
+      bun-types: '*'
+      knex: '*'
+      kysely: '*'
+      mysql2: '>=2'
+      pg: '>=8'
+      postgres: '>=3'
+      sql.js: '>=1'
+      sqlite3: '>=5'
+    peerDependenciesMeta:
+      '@aws-sdk/client-rds-data':
+        optional: true
+      '@cloudflare/workers-types':
+        optional: true
+      '@libsql/client':
+        optional: true
+      '@neondatabase/serverless':
+        optional: true
+      '@opentelemetry/api':
+        optional: true
+      '@planetscale/database':
+        optional: true
+      '@types/better-sqlite3':
+        optional: true
+      '@types/pg':
+        optional: true
+      '@types/sql.js':
+        optional: true
+      '@vercel/postgres':
+        optional: true
+      better-sqlite3:
+        optional: true
+      bun-types:
+        optional: true
+      knex:
+        optional: true
+      kysely:
+        optional: true
+      mysql2:
+        optional: true
+      pg:
+        optional: true
+      postgres:
+        optional: true
+      sql.js:
+        optional: true
+      sqlite3:
+        optional: true
+    dev: false
 
   /drizzle-orm@0.28.6(postgres@3.3.5):
     resolution: {integrity: sha512-yBe+F9htrlYER7uXgDJUQsTHFoIrI5yMm5A0bg0GiZ/kY5jNXTWoEy4KQtg35cE27sw1VbgzoMWHAgCckUUUww==}
@@ -6507,6 +6583,14 @@ packages:
     resolution: {integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==}
     engines: {node: '>=8'}
     dev: true
+
+  /stripe@13.7.0:
+    resolution: {integrity: sha512-0cbUNl5aDwt5rIZeE/WgyTxZN/PtwyeA5KcVJrHj260tjN4IOo2BZikN+dxhKoeBfI4aSRAd3E5vHRKmjjaSbA==}
+    engines: {node: '>=12.*'}
+    dependencies:
+      '@types/node': 20.6.3
+      qs: 6.11.0
+    dev: false
 
   /styled-jsx@5.1.1(react@18.2.0):
     resolution: {integrity: sha512-pW7uC1l4mBZ8ugbiZrcIsiIvVx1UmTfw7UkC3Um2tmfUq9Bhk8IiyEIPl6F8agHgjzku6j0xQEZbfA5uSgSaCw==}

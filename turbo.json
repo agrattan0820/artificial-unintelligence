@@ -20,7 +20,9 @@
     "REDIS_URL",
     "PORT",
     "NODE_ENV",
-    "APP_URL"
+    "APP_URL",
+    "STRIPE_SECRET_KEY",
+    "STRIPE_ENDPOINT_SECRET"
    ],
    "dependsOn": [
     "^build"

@@ -13,6 +13,8 @@ import UserList from "./user-list";
 import StartGame from "./start-game";
 import { SocketContext } from "@ai/utils/socket-provider";
 import Menu from "@ai/components/menu";
+import Button from "@ai/components/button";
+import { URL } from "@ai/utils/socket";
 
 export default function Lobby({
   roomInfo,
@@ -67,6 +69,25 @@ export default function Lobby({
     };
   }, [handleStartGame, roomInfo.code, socket, session]);
 
+  const makePayment = async () => {
+    const res = await fetch(`${URL}/payment`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        priceId: "price_1NuOk7IO4upsA5iQx3beTGGg",
+      }),
+    });
+
+    const data = await res.json();
+
+    console.log("[PAYMENT DATA]", data);
+
+    router.push(data.url);
+  };
+
   return (
     <main className="flex min-h-[100dvh] flex-col justify-center">
       <motion.section layout="position" className="container mx-auto px-4">
@@ -92,6 +113,7 @@ export default function Lobby({
           roomIsFull={roomIsFull}
           session={session}
         />
+        <Button onClick={makePayment}>Pay Up</Button>
       </motion.section>
     </main>
   );
