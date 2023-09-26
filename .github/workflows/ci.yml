@@ -55,4 +55,5 @@ jobs:
         run: pnpm test
 
       - name: 🆙 Upload sourcemaps
-        run: npx sentry-cli sourcemaps inject ./apps/server/dist && sentry-cli sourcemaps upload ./apps/server/dist
+        working-directory: "./apps/server"
+        run: pnpm sentry:sourcemaps
