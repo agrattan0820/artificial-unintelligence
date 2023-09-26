@@ -53,7 +53,3 @@ jobs:
 
       - name: 🧪 Test
         run: pnpm test
-
-      - name: 🆙 Upload sourcemaps
-        working-directory: "./apps/server"
-        run: pnpm sentry:sourcemaps
