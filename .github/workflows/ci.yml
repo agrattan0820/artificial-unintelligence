@@ -19,6 +19,9 @@ jobs:
       GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
       GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
       NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+      SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+      SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
     steps:
       - name: 🏗 Check out code
@@ -50,3 +53,6 @@ jobs:
 
       - name: 🧪 Test
         run: pnpm test
+
+      - name: 🆙 Upload sourcemaps
+        run: npx sentry-cli sourcemaps inject ./apps/server/dist && sentry-cli sourcemaps upload ./apps/server/dist
