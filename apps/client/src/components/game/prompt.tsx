@@ -12,6 +12,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { EventFrom, StateFrom } from "xstate";
 import toast from "react-hot-toast";
 import { FiHelpCircle, FiX } from "react-icons/fi";
+import useSound from "use-sound";
+import type { Session } from "next-auth";
 
 import Button, { SecondaryButton } from "@ai/components/button";
 import Ellipsis from "@ai/components/ellipsis";
@@ -23,7 +25,7 @@ import {
 } from "@ai/utils/queries";
 import { gameMachine } from "./game-machine";
 import { SocketContext } from "@ai/utils/socket-provider";
-import { Session } from "next-auth";
+import { SoundContext } from "@ai/utils/sound-provider";
 
 interface FormElementsType extends HTMLFormControlsCollection {
   prompt: HTMLInputElement;
@@ -46,6 +48,8 @@ const Prompt = ({
 }) => {
   const socket = useContext(SocketContext);
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const { soundEnabled } = useContext(SoundContext);
+  const [play] = useSound("/sounds/confirmation.ogg", { soundEnabled });
 
   const gameId = gameInfo.game.id;
   const userId = session.user.id;
@@ -178,6 +182,9 @@ const Prompt = ({
       setImagePrompt("");
       resetImage();
     } else {
+      if (soundEnabled) {
+        play();
+      }
       send({ type: "SUBMIT" });
     }
 
@@ -200,15 +207,19 @@ const Prompt = ({
     <motion.div layout="position" className="max-w-2xl">
       <div className="relative mb-14">
         <AnimatePresence>
-          <motion.h2
+          <motion.div
             layout="position"
             initial={{ y: 10, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 10, opacity: 0 }}
-            className="text-lg md:text-2xl"
           >
-            {currQuestion ? currQuestion.text : null}
-          </motion.h2>
+            <p className="mb-4 text-sm">
+              Question {stage === "FIRST" ? 1 : 2}/2
+            </p>
+            <h2 className="text-lg md:text-2xl">
+              {currQuestion ? currQuestion.text : null}
+            </h2>
+          </motion.div>
         </AnimatePresence>
       </div>
       <ImageChoice

@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 
 import { socket } from "./socket";
 import { useParams } from "next/navigation";
-import { Session } from "next-auth";
+import type { Session } from "next-auth";
 
 export const SocketContext = createContext(socket);
 
