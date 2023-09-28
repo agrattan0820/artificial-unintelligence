@@ -1,23 +1,27 @@
 import type { NextFunction, Request, Response } from "express";
 import type Stripe from "stripe";
 
-import { createCheckoutSession } from "../services/payment.service";
+import {
+  createCheckoutSession,
+  increaseUserCreditAmount,
+} from "../services/payment.service";
 import { stripe } from "../stripe";
 
 export async function paymentController(
-  req: Request<{}, {}, { priceId: string }>,
+  req: Request<{}, {}, { email: string; priceId: string }>,
   res: Response,
   next: NextFunction
 ) {
   try {
+    const email = req.body.email;
     const priceId = req.body.priceId;
 
-    if (!priceId) {
-      res.status(400).send({ error: `Body must include priceId` });
+    if (!email || !priceId) {
+      res.status(400).send({ error: `Body must include email and priceId` });
       return;
     }
 
-    const checkoutSession = await createCheckoutSession({ priceId });
+    const checkoutSession = await createCheckoutSession({ email, priceId });
 
     res.status(200).send(checkoutSession);
   } catch (error) {
@@ -42,10 +46,6 @@ export async function paymentWebhookController(
 ) {
   try {
     const sig = req.headers["stripe-signature"];
-
-    console.log("PAYLOAD?", req);
-
-    console.log("INSTANCE OF BUFFER?", req.body instanceof Buffer);
 
     if (!sig) {
       res.status(400).send(`No stripe-signature header value was provided`);
@@ -77,6 +77,17 @@ export async function paymentWebhookController(
 
       // Fulfill the purchase...
       fulfillOrder(lineItems);
+
+      if (!sessionWithLineItems.customer_email) {
+        throw new Error("Customer email was not attached to payment");
+      }
+
+      const userWithCredits = await increaseUserCreditAmount({
+        email: sessionWithLineItems.customer_email,
+        addCredits: 1,
+      });
+
+      console.log("[USER WITH CREDITS]", userWithCredits);
     }
 
     res.status(200).end();

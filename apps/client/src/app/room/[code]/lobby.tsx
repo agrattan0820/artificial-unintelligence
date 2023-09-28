@@ -77,6 +77,7 @@ export default function Lobby({
       },
       credentials: "include",
       body: JSON.stringify({
+        email: session.user.email,
         priceId: "price_1NuOk7IO4upsA5iQx3beTGGg",
       }),
     });
