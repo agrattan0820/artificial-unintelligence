@@ -98,6 +98,9 @@ importers:
       typescript:
         specifier: 5.2.2
         version: 5.2.2
+      use-sound:
+        specifier: ^4.0.1
+        version: 4.0.1(react@18.2.0)
       xstate:
         specifier: ^4.38.2
         version: 4.38.2
@@ -4077,6 +4080,10 @@ packages:
       react-is: 16.13.1
     dev: false
 
+  /howler@2.2.4:
+    resolution: {integrity: sha512-iARIBPgcQrwtEr+tALF+rapJ8qSc+Set2GJQl7xT1MQzWaVkFebdJhR3alVlSiUf5U7nAANKuj3aWpwerocD5w==}
+    dev: false
+
   /html-escaper@2.0.2:
     resolution: {integrity: sha512-H2iMtd0I4Mt5eYiapRdIDjp+XzelXQ0tFE4JS7YFwFevXXMmOp9myNrUvCg0D6ws8iqkRPBfKHgbwig1SmlLfg==}
     dev: true
@@ -6984,6 +6991,15 @@ packages:
         optional: true
     dependencies:
       '@types/react': 18.2.22
+      react: 18.2.0
+    dev: false
+
+  /use-sound@4.0.1(react@18.2.0):
+    resolution: {integrity: sha512-hykJ86kNcu6y/FzlSHcQxhjSGMslZx2WlfLpZNoPbvueakv4OF3xPxEtGV2YmculrIaH0tPp9LtG4jgy17xMWg==}
+    peerDependencies:
+      react: '>=16.8'
+    dependencies:
+      howler: 2.2.4
       react: 18.2.0
     dev: false
 

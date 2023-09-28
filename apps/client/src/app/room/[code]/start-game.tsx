@@ -1,14 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { FiCheckSquare, FiPlusSquare, FiPlay } from "react-icons/fi";
-import { Session } from "next-auth";
+import type { Session } from "next-auth";
 import type { User } from "database";
 
 import Button, { SecondaryButton } from "@ai/components/button";
 import Ellipsis from "@ai/components/ellipsis";
 import useLinkShare from "@ai/utils/hooks/use-link-share";
+import useIsMounted from "@ai/utils/hooks/use-is-mounted";
 
 const StartGame = ({
   players,
@@ -27,7 +28,7 @@ const StartGame = ({
   roomIsFull: boolean;
   session: Session;
 }) => {
-  const [isMounted, setIsMounted] = useState(false);
+  const isMounted = useIsMounted();
 
   const { copying, setCopying, onClick } = useLinkShare({
     title: "Join My Artificial Unintelligence Room",
@@ -43,10 +44,6 @@ const StartGame = ({
       };
     }
   }, [copying, setCopying]);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
 
   return (
     <>

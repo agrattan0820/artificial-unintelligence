@@ -1,18 +1,18 @@
-name: Run Development Database Migrations
+name: Upload Server Sourcemaps
 
 on:
   push:
-    branches: ["dev"]
+    branches: ["main", "dev"]
 
 jobs:
   build:
-    name: Build and Run Migrations
+    name: Build and Upload Server Sourcemaps to Sentry.io
     timeout-minutes: 15
     runs-on: ubuntu-latest
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
-      DATABASE_URL: ${{ secrets.DEV_DATABASE_URL }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
       POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
       NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
       NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
@@ -42,9 +42,6 @@ jobs:
       - name: 👷 Install dependencies
         run: pnpm install
 
-      # - name: 📀 Install Playwright Browsers
-      #   run: npx playwright install --with-deps
-
-      - name: 🥾 Run db migrations
-        working-directory: "./packages/database"
-        run: pnpm db:migrate:run
+      - name: 🆙 Upload sourcemaps
+        working-directory: "./apps/server"
+        run: pnpm sourcemaps

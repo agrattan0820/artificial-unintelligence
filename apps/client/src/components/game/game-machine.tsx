@@ -7,7 +7,7 @@ import {
   assign,
   createMachine,
 } from "xstate";
-import { Session } from "next-auth";
+import type { Session } from "next-auth";
 
 import ConnectToMainframe from "./connect-to-mainframe";
 import ConnectionEstablished from "./connection-established";

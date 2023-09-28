@@ -1,5 +1,4 @@
 import "server-only";
-
 import type { Session } from "next-auth";
 import { db, games, usersToRooms, usersToGames, rooms } from "database";
 import { sql, eq, and, isNull, desc, gt } from "drizzle-orm";
