@@ -1,5 +1,4 @@
 import type { NextFunction, Request, Response } from "express";
-import type Stripe from "stripe";
 
 import {
   createCheckoutSession,
@@ -28,13 +27,6 @@ export async function paymentController(
     next(error);
   }
 }
-
-const fulfillOrder = (
-  lineItems: Stripe.ApiList<Stripe.LineItem> | undefined
-) => {
-  // TODO: fill me in
-  console.log("Fulfilling order", lineItems);
-};
 
 const endpointSecret =
   "whsec_97726b3392e302b9229b20ac5d7c196f1ee22249dd1665a6ef750aeb7e1ced5d";
@@ -73,10 +65,6 @@ export async function paymentWebhookController(
           expand: ["line_items"],
         }
       );
-      const lineItems = sessionWithLineItems.line_items;
-
-      // Fulfill the purchase...
-      fulfillOrder(lineItems);
 
       if (!sessionWithLineItems.customer_email) {
         throw new Error("Customer email was not attached to payment");

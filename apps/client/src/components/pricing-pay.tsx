@@ -19,8 +19,6 @@ const PricingPay = ({ email }: { email: string }) => {
     try {
       const paymentData = await makePayment({ email });
 
-      console.log("[PAYMENT DATA]", paymentData);
-
       router.push(paymentData.url);
     } catch (error) {
       console.error(error);
