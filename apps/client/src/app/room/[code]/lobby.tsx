@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Session } from "next-auth";
+import type { Session } from "next-auth";
 import type { User } from "database";
 
 import InviteLink from "./invite-link";
