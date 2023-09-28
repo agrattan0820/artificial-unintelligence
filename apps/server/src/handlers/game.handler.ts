@@ -10,6 +10,7 @@ import { getRoom } from "../services/room.service";
 import { ClientToServerEvents, ServerToClientEvents } from "../types";
 import { handleSocketError } from "../utils";
 import { redis } from "../redis";
+import { deductCreditsFromPlayers } from "../services/payment.service";
 
 export function gameSocketHandlers(
   io: Server<ClientToServerEvents, ServerToClientEvents>,
@@ -17,16 +18,25 @@ export function gameSocketHandlers(
 ) {
   socket.on("initiateGame", async (code) => {
     try {
-      const room = await getRoom({ code });
+      const roomInfo = await getRoom({ code });
 
-      if (!room) {
+      if (!roomInfo) {
         throw new Error(
           `Could not find room: ${code} for game to be initiated`
         );
       }
 
-      const playerWithoutCredits = room.players.find(
-        (player) => typeof !player.credits || player.credits === 0
+      if (!roomInfo?.players) {
+        throw new Error(
+          "The room's players were not defined when initiating the game"
+        );
+      }
+
+      console.log("[ROOM INFO PLAYERS]", roomInfo.players);
+
+      const playerWithoutCredits = roomInfo.players.find(
+        (player) =>
+          typeof player.credits === "undefined" || player.credits === 0
       );
 
       if (playerWithoutCredits) {
@@ -47,22 +57,18 @@ export function gameSocketHandlers(
 
       await redis.expire(`GAME_${newGame.id}`, 3600); // expire in 1 hour
 
-      const roomInfo = await getRoom({ code });
-
-      if (!roomInfo?.players) {
-        throw new Error(
-          "The room's players were not defined when initiating the game"
-        );
-      }
-
       await addUsersToGame({
         gameId: newGame.id,
-        players: roomInfo?.players,
+        players: roomInfo.players,
       });
 
       await assignQuestionsToPlayers({
         gameId: newGame.id,
-        players: roomInfo?.players,
+        players: roomInfo.players,
+      });
+
+      await deductCreditsFromPlayers({
+        players: roomInfo.players,
       });
 
       socket.emit("startGame", newGame.id); // `socket.in` which is supposed to send to members including the sender is not working as expected, using two emits as a workaround

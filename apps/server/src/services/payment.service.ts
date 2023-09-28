@@ -1,5 +1,6 @@
-import { db, users } from "database";
+import { User, db, users } from "database";
 import { eq } from "drizzle-orm";
+import { sql } from "drizzle-orm";
 import { stripe } from "../stripe";
 
 export async function createCheckoutSession({
@@ -33,24 +34,26 @@ export async function increaseUserCreditAmount({
   addCredits: number;
   email: string;
 }) {
-  const currCreditAmount = await db
-    .select({
-      credits: users.credits,
-    })
-    .from(users)
-    .where(eq(users.email, email));
-
-  if (!currCreditAmount[0]) {
-    throw new Error("User could not be found when increasing credit amount");
-  }
-
-  const amountToAdd = currCreditAmount[0].credits ?? 0;
-
   const updateCreditAmount = await db
     .update(users)
-    .set({ credits: addCredits + amountToAdd })
+    .set({ credits: sql`${users.credits} + ${addCredits}` })
     .where(eq(users.email, email))
     .returning();
 
   return updateCreditAmount[0];
+}
+
+export async function deductCreditsFromPlayers({
+  players,
+}: {
+  players: User[];
+}) {
+  await db.transaction(async (tx) => {
+    for (const player of players) {
+      await tx
+        .update(users)
+        .set({ credits: sql`${users.credits} - 1` })
+        .where(eq(users.id, player.id));
+    }
+  });
 }
