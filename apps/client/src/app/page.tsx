@@ -9,6 +9,7 @@ import { authOptions } from "@ai/pages/api/auth/[...nextauth]";
 import { LinkSecondaryButton } from "@ai/components/button";
 import Menu from "@ai/components/menu";
 import { getRunningGame } from "@ai/utils/server-actions";
+import CreditsAmount from "@ai/components/credits-amount";
 
 export default async function Home() {
   const session = await getServerSession(authOptions());
@@ -26,13 +27,14 @@ export default async function Home() {
   return (
     <main className="relative flex min-h-[100dvh] flex-col justify-center">
       {session && (
-        <div className="absolute right-4 top-4 z-50 mt-4 md:right-8 md:top-8">
+        <div className="absolute right-4 top-4 z-50 mt-4 flex gap-4 md:right-8 md:top-8">
+          <CreditsAmount creditCount={session.user.credits} />
           <Menu session={session} />
         </div>
       )}
       <section className="container mx-auto flex flex-col-reverse items-start justify-center gap-8 px-4 lg:flex-row lg:gap-24">
         {runningGame && (
-          <div className="absolute left-1/2 top-8 w-full -translate-x-1/2">
+          <div className="absolute left-1/2 top-16 w-full -translate-x-1/2 sm:top-8">
             <LinkSecondaryButton
               href={`/room/${runningGame.roomCode}/game/${runningGame.id}`}
               className="mx-auto flex w-full max-w-fit items-center gap-2"

@@ -17,6 +17,24 @@ export function gameSocketHandlers(
 ) {
   socket.on("initiateGame", async (code) => {
     try {
+      const room = await getRoom({ code });
+
+      if (!room) {
+        throw new Error(
+          `Could not find room: ${code} for game to be initiated`
+        );
+      }
+
+      const playerWithoutCredits = room.players.find(
+        (player) => typeof !player.credits || player.credits === 0
+      );
+
+      if (playerWithoutCredits) {
+        throw new Error(
+          `A player in the room needs credits to play the game: ${playerWithoutCredits.nickname}`
+        );
+      }
+
       const newGame = await createGame({ code });
 
       await redis.set(

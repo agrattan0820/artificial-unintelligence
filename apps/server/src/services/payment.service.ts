@@ -18,8 +18,8 @@ export async function createCheckoutSession({
     ],
     customer_email: email,
     mode: "payment",
-    success_url: `${process.env.APP_URL}?success=true`,
-    cancel_url: `${process.env.APP_URL}?canceled=true`,
+    success_url: `${process.env.APP_URL}/pricing?success=true`,
+    cancel_url: `${process.env.APP_URL}/pricing?canceled=true`,
     automatic_tax: { enabled: true },
   });
 

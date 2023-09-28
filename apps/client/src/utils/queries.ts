@@ -301,3 +301,30 @@ export const generateSDXLImages = async (prompt: string) => {
     }
   }
 };
+
+// ! ----------> PAYMENT <----------
+
+export async function makePayment({ email }: { email: string }) {
+  const response = await fetch(`${URL}/payment`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify({
+      email: email,
+      priceId:
+        process.env.NODE_ENV === "production"
+          ? "price_1NuOh1IO4upsA5iQQlM7r458"
+          : "price_1NuOk7IO4upsA5iQx3beTGGg",
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Unable to make payment`);
+  }
+
+  const data: { url: string } = await response.json();
+
+  return data;
+}

@@ -24,6 +24,13 @@ export default function SocketProvider({
   };
   const socketError = (error: string) => {
     console.error("Received socket error:", error);
+
+    if (error.includes("A player in the room needs credits to play the game")) {
+      const nameOfPlayer = error.split(": ")[1];
+      toast.error(`${nameOfPlayer} needs a token to play the game`);
+      return;
+    }
+
     toast.error("An Error Occurred");
   };
 
