@@ -9,7 +9,7 @@ import { assignQuestionsToPlayers } from "../services/question.service";
 import { getRoom } from "../services/room.service";
 import { ClientToServerEvents, ServerToClientEvents } from "../types";
 import { handleSocketError } from "../utils";
-import { redis } from "../redis";
+import redis from "../redis";
 
 export function gameSocketHandlers(
   io: Server<ClientToServerEvents, ServerToClientEvents>,
