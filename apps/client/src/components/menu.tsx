@@ -19,7 +19,7 @@ import {
 import { useStickyState } from "@ai/utils/hooks/use-sticky-state";
 
 type MenuProps = {
-  session: Session;
+  session: Session | null;
   roomCode?: string;
 };
 
@@ -38,7 +38,7 @@ const Menu = ({ session, roomCode }: MenuProps) => {
   };
 
   const handleSignOutAndLeave = () => {
-    if (roomCode) {
+    if (roomCode && session) {
       socket.emit("leaveRoom", {
         userId: session.user.id,
         code: roomCode,
@@ -87,14 +87,16 @@ const Menu = ({ session, roomCode }: MenuProps) => {
                 {soundEnabled ? <FiVolumeX /> : <FiVolume2 />}
               </button>
             </li>
-            <li>
-              <button
-                onClick={handleSignOutAndLeave}
-                className="flex items-center gap-4 text-sm focus-within:underline hover:underline md:text-base"
-              >
-                Sign Out{roomCode && " and Leave Game"} <FiLogOut />
-              </button>
-            </li>
+            {session && (
+              <li>
+                <button
+                  onClick={handleSignOutAndLeave}
+                  className="flex items-center gap-4 text-sm focus-within:underline hover:underline md:text-base"
+                >
+                  Sign Out{roomCode && " and Leave Game"} <FiLogOut />
+                </button>
+              </li>
+            )}
           </motion.ul>
         )}
       </AnimatePresence>
