@@ -30,7 +30,7 @@ export default async function Home() {
           <Menu session={session} />
         </div>
       )}
-      <section className="container mx-auto flex flex-col-reverse items-start justify-center gap-8 px-4 lg:flex-row lg:gap-24">
+      <section className="container mx-auto flex flex-col-reverse items-start justify-center gap-8 px-4 lg:flex-row lg:items-center lg:gap-24">
         {runningGame && (
           <div className="absolute left-1/2 top-8 w-full -translate-x-1/2">
             <LinkSecondaryButton
@@ -42,13 +42,14 @@ export default async function Home() {
           </div>
         )}
         <div>
+          <p className="mb-2">The AI Party Game</p>
           <h1 className="mb-8 text-4xl md:text-6xl">
             artif<span className="ml-0.5 inline-block">i</span>cial <br />{" "}
             unintelligence
           </h1>
           <SignInForm session={session} submitLabel="Host Game" type="HOME" />
         </div>
-        <Friend className="w-32 lg:w-1/4" />
+        <Friend className="w-32 scale-x-[-1] transform lg:w-1/4 lg:scale-x-100" />
       </section>
       <Footer />
     </main>
