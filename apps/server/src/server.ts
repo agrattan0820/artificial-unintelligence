@@ -12,7 +12,6 @@ import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import * as Sentry from "@sentry/node";
 
-import { redis } from "./redis";
 import { userRoutes } from "./routes/user.route";
 import { roomRoutes } from "./routes/room.route";
 import { ClientToServerEvents, ServerToClientEvents } from "./types";
@@ -30,6 +29,7 @@ import { authSocketMiddleware } from "./middleware/auth.middleware";
 import { checkUserSession } from "./services/user.service";
 import { paymentRoutes } from "./routes/payment.route";
 import { paymentWebhookController } from "./controllers/payment.controller";
+import redis from "./redis";
 
 export function buildServer() {
   const app: Express = express();

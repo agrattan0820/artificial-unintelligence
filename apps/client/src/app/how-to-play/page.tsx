@@ -35,6 +35,14 @@ export default function HowToPlay() {
           compete against each other to create the funniest AI-generated images
           in response to amusing prompts.
         </p>
+        <video
+          src="/artificial-unintelligence-promo.mp4"
+          controls
+          autoPlay
+          muted
+          playsInline
+          className="aspect-video w-full"
+        />
         Some prompts you might encounter:
         <ul>
           <li>A canceled children&apos;s toy</li>

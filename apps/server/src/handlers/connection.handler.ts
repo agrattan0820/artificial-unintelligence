@@ -9,7 +9,7 @@ import {
   updateRoomHost,
 } from "../services/room.service";
 import { handleSocketError } from "../utils";
-import { redis } from "../redis";
+import redis from "../redis";
 
 export async function checkIfExistingUser(
   io: Server<ClientToServerEvents, ServerToClientEvents>,
