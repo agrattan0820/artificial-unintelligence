@@ -17,6 +17,7 @@
     "DATABASE_URL",
     "POSTGRES_URL",
     "SESSION_COOKIE_DOMAIN",
+    "REDIS_PRIVATE_URL",
     "REDIS_URL",
     "PORT",
     "NODE_ENV",

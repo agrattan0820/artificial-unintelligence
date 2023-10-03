@@ -1,6 +1,13 @@
 import Redis from "ioredis";
 
-const redis = new Redis(process.env.REDIS_URL ?? "");
+const redis = new Redis(
+  process.env.REDIS_PRIVATE_URL ?? process.env.REDIS_URL ?? "",
+  {
+    tls: {
+      rejectUnauthorized: false,
+    },
+  }
+);
 
 // Listen to connection events to prevent TCP Issue
 // https://github.com/redis/ioredis/issues/1203
