@@ -1,7 +1,7 @@
 import Redis from "ioredis";
 
 const redis = new Redis(
-  process.env.REDIS_PRIVATE_URL ?? process.env.REDIS_URL ?? ""
+process.env.REDIS_URL ?? ""
 );
 
 // Listen to connection events to prevent TCP Issue
