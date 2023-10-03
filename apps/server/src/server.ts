@@ -27,7 +27,7 @@ import { generationSocketHandlers } from "./handlers/generation.handler";
 import { voteSocketHandlers } from "./handlers/vote.handler";
 import { authSocketMiddleware } from "./middleware/auth.middleware";
 import { checkUserSession } from "./services/user.service";
-import { redis } from "./redis";
+import redis from "./redis";
 
 export function buildServer() {
   const app: Express = express();
