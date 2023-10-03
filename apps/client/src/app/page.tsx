@@ -42,7 +42,7 @@ export default async function Home() {
           </div>
         )}
         <div>
-          <p className="mb-2">The AI Party Game</p>
+          <p className="mb-2">The AI Image Party Game</p>
           <h1 className="mb-8 text-4xl md:text-6xl">
             artif<span className="ml-0.5 inline-block">i</span>cial <br />{" "}
             unintelligence
