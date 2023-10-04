@@ -29,16 +29,18 @@ export default function AccountContent({ session }: { session: Session }) {
           <img
             src={session.user.image}
             alt={`${session.user.name}'s Google profile image`}
-            width={64}
-            height={64}
-            className="h-16 w-16 rounded-full shadow"
+            width={96}
+            height={96}
+            className="relative z-10 h-24 w-24 rounded-full shadow"
           />
         )}
-        <div>
+        <div className=" -mt-8 rounded-2xl bg-slate-800 p-8 text-sm md:text-base">
           <p>Name: {session.user.name}</p>
           <p>Email: {session.user.email}</p>
         </div>
-        <Button onClick={handleSignOut}>Sign Out</Button>
+        <Button className="mt-8" onClick={handleSignOut}>
+          Sign Out
+        </Button>
         {/* TODO: finish ability to delete account */}
         {/* <SecondaryButton onClick={() => dialogRef.current?.showModal()}>
           Delete Account
