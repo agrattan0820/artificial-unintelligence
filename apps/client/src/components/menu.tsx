@@ -15,8 +15,10 @@ import {
   FiX,
   FiVolume2,
   FiVolumeX,
+  FiUser,
 } from "react-icons/fi";
 import { useStickyState } from "@ai/utils/hooks/use-sticky-state";
+import Link from "next/link";
 
 type MenuProps = {
   session: Session | null;
@@ -78,13 +80,23 @@ const Menu = ({ session, roomCode }: MenuProps) => {
             }}
             exit={{ scale: 0.9, opacity: 0 }}
           >
+            {session && (
+              <li>
+                <Link
+                  href="/account"
+                  className="flex items-center gap-4 text-sm focus-within:underline hover:underline md:text-base"
+                >
+                  <FiUser /> My Account
+                </Link>
+              </li>
+            )}
             <li>
               <button
                 onClick={handleToggleSound}
                 className="flex items-center gap-4 text-sm focus-within:underline hover:underline md:text-base"
               >
-                {soundEnabled ? "Mute" : "Enable"} Sound{" "}
                 {soundEnabled ? <FiVolumeX /> : <FiVolume2 />}
+                {soundEnabled ? "Mute" : "Enable"} Sound{" "}
               </button>
             </li>
             {session && (
@@ -93,7 +105,7 @@ const Menu = ({ session, roomCode }: MenuProps) => {
                   onClick={handleSignOutAndLeave}
                   className="flex items-center gap-4 text-sm focus-within:underline hover:underline md:text-base"
                 >
-                  Sign Out{roomCode && " and Leave Game"} <FiLogOut />
+                  <FiLogOut /> Sign Out{roomCode && " and Leave Game"}
                 </button>
               </li>
             )}
