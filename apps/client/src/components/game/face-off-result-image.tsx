@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { Dispatch, SetStateAction, useEffect } from "react";
@@ -11,7 +12,6 @@ import {
   useMotionValue,
   useTransform,
 } from "framer-motion";
-import Image, { StaticImageData } from "next/image";
 import { BsTrophy } from "react-icons/bs";
 
 import { cn } from "@ai/utils/cn";
@@ -129,7 +129,7 @@ const FaceOffResultImage = ({
   prompt: string;
   nickname: string;
   percentage: number;
-  image: string | StaticImageData;
+  image: string;
   bothImagesShown: boolean;
   showWinner: boolean;
   showLoser: boolean;
@@ -185,7 +185,7 @@ const FaceOffResultImage = ({
         +<motion.span>{animatedPoints}</motion.span>
       </motion.p>
       <div className="relative">
-        <Image
+        <img
           className={cn(
             `aspect-square transform rounded-xl filter transition`,
             isWinner && "ring ring-yellow-600",

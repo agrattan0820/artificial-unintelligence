@@ -1,8 +1,8 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { Variants, motion } from "framer-motion";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import Image from "next/image";
 import { FiCheck } from "react-icons/fi";
 
 import { cn } from "@ai/utils/cn";
@@ -68,7 +68,7 @@ const ImageChoiceOption = ({
         disabled={disabled ?? !showImage}
         onClick={onClick}
       >
-        <Image
+        <img
           className="aspect-square rounded-xl transition group-hover:brightness-105 group-focus-visible:brightness-105 group-disabled:group-hover:brightness-100 group-disabled:group-focus-visible:brightness-100"
           src={image.src}
           alt={image.alt}

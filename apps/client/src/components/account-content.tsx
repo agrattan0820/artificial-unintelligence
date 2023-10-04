@@ -1,6 +1,6 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
-import Image from "next/image";
 import Button from "./button";
 // import { useRef } from "react";
 // import { FiX } from "react-icons/fi";
@@ -26,7 +26,7 @@ export default function AccountContent({ session }: { session: Session }) {
       <section className="container mx-auto flex flex-col items-center justify-center gap-4 px-4">
         <h1 className="mb-8 text-2xl">Your Account</h1>
         {session.user.image && (
-          <Image
+          <img
             src={session.user.image}
             alt={`${session.user.name}'s Google profile image`}
             width={64}
