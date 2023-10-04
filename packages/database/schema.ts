@@ -13,9 +13,10 @@ export const users = pgTable("users", {
   id: text("id").notNull().primaryKey(),
   nickname: text("nickname").notNull(),
   name: text("name"),
-  email: text("email").notNull(),
+  email: text("email").notNull().unique(),
   emailVerified: timestamp("email_verified", { mode: "date" }),
   image: text("image"),
+  credits: integer("credits").default(1).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

@@ -30,6 +30,7 @@ export const authOptions = (
             emailVerified: new Date(),
             email: profile.email,
             image: profile.picture,
+            credits: 1,
             createdAt: new Date(),
           };
         },

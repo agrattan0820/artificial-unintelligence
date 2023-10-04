@@ -8,6 +8,7 @@ declare module "next-auth" {
     email: string | null;
     emailVerified: Date | null;
     image: string | null;
+    credits: number;
     createdAt: Date;
   }
 

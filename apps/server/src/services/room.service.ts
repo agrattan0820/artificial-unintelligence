@@ -86,6 +86,11 @@ export async function getRoom({ code }: { code: string }) {
     .select({
       id: users.id,
       nickname: users.nickname,
+      name: users.name,
+      email: users.email,
+      emailVerified: users.emailVerified,
+      image: users.image,
+      credits: users.credits,
       createdAt: users.createdAt,
     })
     .from(usersToRooms)

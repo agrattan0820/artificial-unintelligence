@@ -27,6 +27,8 @@ import { generationSocketHandlers } from "./handlers/generation.handler";
 import { voteSocketHandlers } from "./handlers/vote.handler";
 import { authSocketMiddleware } from "./middleware/auth.middleware";
 import { checkUserSession } from "./services/user.service";
+import { paymentRoutes } from "./routes/payment.route";
+import { paymentWebhookController } from "./controllers/payment.controller";
 import redis from "./redis";
 
 export function buildServer() {
@@ -52,7 +54,6 @@ export function buildServer() {
   // Express middleware
   app.use(Sentry.Handlers.requestHandler());
   app.use(Sentry.Handlers.tracingHandler());
-  app.use(express.json());
   app.use(
     cors({
       methods: ["GET", "POST"],
@@ -104,9 +105,20 @@ export function buildServer() {
   app.use(async (req, res, next) => {
     let sessionToken = "";
 
-    const safeURLs = ["/ping", "/room"];
+    const safeGETURLs = ["/ping", "/room", "/payment/webhook"];
+    const safePOSTURLs = ["/payment/webhook"];
 
-    if (safeURLs.some((url) => req.url.includes(url)) && req.method === "GET") {
+    if (
+      safeGETURLs.some((url) => req.url.includes(url)) &&
+      req.method === "GET"
+    ) {
+      next();
+      return;
+    }
+    if (
+      safePOSTURLs.some((url) => req.url.includes(url)) &&
+      req.method === "POST"
+    ) {
       next();
       return;
     }
@@ -148,6 +160,15 @@ export function buildServer() {
     next();
   });
 
+  // Define payment webhook before specifying json middleware
+  app.post(
+    "/payment/webhook",
+    express.raw({ type: "application/json" }),
+    paymentWebhookController
+  );
+
+  app.use(express.json());
+
   // Websockets with socket.io
   const io = new Server<ClientToServerEvents, ServerToClientEvents>(server, {
     cors: {
@@ -185,6 +206,7 @@ export function buildServer() {
   roomRoutes(app);
   gameRoutes(app);
   generationRoutes(app);
+  paymentRoutes(app);
 
   // Error handlers
   app.use(Sentry.Handlers.errorHandler());

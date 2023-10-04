@@ -19,7 +19,7 @@ import {
 import { useStickyState } from "@ai/utils/hooks/use-sticky-state";
 
 type MenuProps = {
-  session: Session;
+  session: Session | null;
   roomCode?: string;
 };
 
@@ -38,7 +38,7 @@ const Menu = ({ session, roomCode }: MenuProps) => {
   };
 
   const handleSignOutAndLeave = () => {
-    if (roomCode) {
+    if (roomCode && session) {
       socket.emit("leaveRoom", {
         userId: session.user.id,
         code: roomCode,
@@ -70,7 +70,7 @@ const Menu = ({ session, roomCode }: MenuProps) => {
         {showMenu && (
           <motion.ul
             id="main-menu"
-            className="mt-4 flex flex-col gap-4 rounded-md border border-gray-300 bg-slate-900 p-4"
+            className="absolute right-0 top-4 mt-4 flex w-48 flex-col gap-4 rounded-md border border-gray-300 bg-slate-900 p-4"
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{
               scale: 1,
@@ -87,14 +87,16 @@ const Menu = ({ session, roomCode }: MenuProps) => {
                 {soundEnabled ? <FiVolumeX /> : <FiVolume2 />}
               </button>
             </li>
-            <li>
-              <button
-                onClick={handleSignOutAndLeave}
-                className="flex w-full items-center justify-between gap-4 text-sm focus-within:underline hover:underline md:text-base"
-              >
-                Sign Out{roomCode && " and Leave Game"} <FiLogOut />
-              </button>
-            </li>
+            {session && (
+              <li>
+                <button
+                  onClick={handleSignOutAndLeave}
+                  className="flex items-center gap-4 text-sm focus-within:underline hover:underline md:text-base"
+                >
+                  Sign Out{roomCode && " and Leave Game"} <FiLogOut />
+                </button>
+              </li>
+            )}
           </motion.ul>
         )}
       </AnimatePresence>
