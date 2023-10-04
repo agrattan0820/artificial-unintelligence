@@ -12,7 +12,7 @@ import { RoomInfo } from "@ai/utils/queries";
 import UserList from "./user-list";
 import StartGame from "./start-game";
 import { SocketContext } from "@ai/utils/socket-provider";
-import Menu from "@ai/components/menu";
+import Header from "@ai/components/header";
 
 export default function Lobby({
   roomInfo,
@@ -68,31 +68,31 @@ export default function Lobby({
   }, [handleStartGame, roomInfo.code, socket, session]);
 
   return (
-    <main className="flex min-h-[100dvh] flex-col justify-center">
-      <motion.section layout="position" className="container mx-auto px-4">
-        {!roomIsFull && (
-          <p className="mb-2 hidden text-center text-xl sm:block">
-            Your Invite Link is
-          </p>
-        )}
-        <InviteLink code={roomInfo.code} roomIsFull={roomIsFull} />
-        <div className="mx-auto mt-4 flex items-center justify-center md:absolute md:left-8 md:top-8">
-          <UserCount count={players.length} />
-        </div>
-        <div className="absolute right-8 top-8 z-50 mt-4">
-          <Menu session={session} roomCode={roomInfo.code} />
-        </div>
-        <UserList session={session} hostId={hostId} players={players} />
-        <StartGame
-          players={players}
-          code={roomInfo.code}
-          hostId={hostId}
-          onStartGame={initiateStartGame}
-          loading={startGameLoading}
-          roomIsFull={roomIsFull}
-          session={session}
-        />
-      </motion.section>
-    </main>
+    <>
+      <Header session={session} />
+      <main className="flex min-h-[100dvh] flex-col justify-center">
+        <motion.section layout="position" className="container mx-auto px-4">
+          {!roomIsFull && (
+            <p className="mb-2 hidden text-center text-xl sm:block">
+              Your Invite Link is
+            </p>
+          )}
+          <InviteLink code={roomInfo.code} roomIsFull={roomIsFull} />
+          <div className="mx-auto mt-4 flex items-center justify-center md:container md:absolute md:left-0 md:right-0 md:top-8 md:justify-start md:px-4">
+            <UserCount count={players.length} />
+          </div>
+          <UserList session={session} hostId={hostId} players={players} />
+          <StartGame
+            players={players}
+            code={roomInfo.code}
+            hostId={hostId}
+            onStartGame={initiateStartGame}
+            loading={startGameLoading}
+            roomIsFull={roomIsFull}
+            session={session}
+          />
+        </motion.section>
+      </main>
+    </>
   );
 }
