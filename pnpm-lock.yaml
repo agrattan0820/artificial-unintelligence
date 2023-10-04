@@ -38,12 +38,12 @@ importers:
       '@upstash/ratelimit':
         specifier: ^0.4.4
         version: 0.4.4
+      '@upstash/redis':
+        specifier: ^1.22.1
+        version: 1.22.1
       '@vercel/analytics':
         specifier: ^1.0.2
         version: 1.0.2
-      '@vercel/kv':
-        specifier: ^0.2.3
-        version: 0.2.3
       '@xstate/react':
         specifier: ^3.2.2
         version: 3.2.2(@types/react@18.2.23)(react@18.2.0)(xstate@4.38.2)
@@ -2019,14 +2019,6 @@ packages:
       - encoding
     dev: false
 
-  /@upstash/redis@1.22.0:
-    resolution: {integrity: sha512-sXoJDoEqqik0HbrNE7yRWckOySEFsoBxfRdCgOqkc0w6py19ZZG50SpGkDDEUXSnBqP8VgGYXhWAiBpqxrt5oA==}
-    dependencies:
-      isomorphic-fetch: 3.0.0
-    transitivePeerDependencies:
-      - encoding
-    dev: false
-
   /@upstash/redis@1.22.1:
     resolution: {integrity: sha512-7ec2eCMkVxZzuHNb+hPKonX4b/Pu0BdDeSBsEy+jKIqiweXzCs5Dpu9642vJgf57YnEsfwgXnQMVEataarvyeQ==}
     dependencies:
@@ -2037,15 +2029,6 @@ packages:
 
   /@vercel/analytics@1.0.2:
     resolution: {integrity: sha512-BZFxVrv24VbNNl5xMxqUojQIegEeXMI6rX3rg1uVLYUEXsuKNBSAEQf4BWEcjQDp/8aYJOj6m8V4PUA3x/cxgg==}
-    dev: false
-
-  /@vercel/kv@0.2.3:
-    resolution: {integrity: sha512-Wq1+EsRBQmvLlcqCZeYVg1MAARWrnETgLe3Sy3UCqG+zg7LThpkt0YHZe1NN3Aj4IRmCKQamotWrLDdEx+ZB3w==}
-    engines: {node: '>=14.6'}
-    dependencies:
-      '@upstash/redis': 1.22.0
-    transitivePeerDependencies:
-      - encoding
     dev: false
 
   /@xstate/react@3.2.2(@types/react@18.2.23)(react@18.2.0)(xstate@4.38.2):
