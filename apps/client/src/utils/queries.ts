@@ -124,6 +124,9 @@ export type DeleteUserResponse = {
 export async function deleteUser(userId: string) {
   const response = await fetch(`${URL}/user/${userId}`, {
     method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
     credentials: "include",
   });
 
