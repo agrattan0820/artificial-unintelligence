@@ -63,7 +63,7 @@ export const verificationTokens = pgTable(
 
 export const rooms = pgTable("rooms", {
   code: text("code").primaryKey(),
-  hostId: text("host_id").references(() => users.id),
+  hostId: text("host_id").references(() => users.id, { onDelete: "set null" }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -71,10 +71,10 @@ export const usersToRooms = pgTable(
   "users_to_rooms",
   {
     userId: text("user_id")
-      .references(() => users.id)
+      .references(() => users.id, { onDelete: "cascade" })
       .notNull(),
     roomCode: text("room_code")
-      .references(() => rooms.code)
+      .references(() => rooms.code, { onDelete: "cascade" })
       .notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
@@ -104,17 +104,17 @@ export const questionsToGames = pgTable(
   "questions_to_games",
   {
     questionId: integer("question_id")
-      .references(() => questions.id)
+      .references(() => questions.id, { onDelete: "cascade" })
       .notNull(),
     gameId: integer("game_id")
-      .references(() => games.id)
+      .references(() => games.id, { onDelete: "cascade" })
       .notNull(),
     round: integer("round").notNull(),
     player1: text("player_1")
-      .references(() => users.id)
+      .references(() => users.id, { onDelete: "cascade" })
       .notNull(),
     player2: text("player_2")
-      .references(() => users.id)
+      .references(() => users.id, { onDelete: "cascade" })
       .notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
@@ -126,13 +126,13 @@ export const questionsToGames = pgTable(
 export const generations = pgTable("generations", {
   id: serial("id").primaryKey(),
   userId: text("user_id")
-    .references(() => users.id)
+    .references(() => users.id, { onDelete: "cascade" })
     .notNull(),
   gameId: integer("game_id")
-    .references(() => games.id)
+    .references(() => games.id, { onDelete: "cascade" })
     .notNull(),
   questionId: integer("question_id")
-    .references(() => questions.id)
+    .references(() => questions.id, { onDelete: "cascade" })
     .notNull(),
   text: text("text").notNull(),
   imageUrl: text("image_url").notNull(),
@@ -143,10 +143,10 @@ export const generations = pgTable("generations", {
 export const votes = pgTable("votes", {
   id: serial("id").primaryKey(),
   userId: text("user_id")
-    .references(() => users.id)
+    .references(() => users.id, { onDelete: "cascade" })
     .notNull(),
   generationId: integer("generation_id")
-    .references(() => generations.id)
+    .references(() => generations.id, { onDelete: "cascade" })
     .notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
@@ -155,10 +155,10 @@ export const usersToGames = pgTable(
   "users_to_games",
   {
     userId: text("user_id")
-      .references(() => users.id)
+      .references(() => users.id, { onDelete: "cascade" })
       .notNull(),
     gameId: integer("game_id")
-      .references(() => games.id)
+      .references(() => games.id, { onDelete: "cascade" })
       .notNull(),
     points: integer("points").default(0).notNull(),
   },

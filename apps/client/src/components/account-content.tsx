@@ -1,25 +1,33 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import Button from "./button";
-// import { useRef } from "react";
-// import { FiX } from "react-icons/fi";
+import Button, { SecondaryButton } from "./button";
+import { useRef } from "react";
+import { FiX } from "react-icons/fi";
 import { Session } from "next-auth";
 import { signOut } from "next-auth/react";
 import * as Sentry from "@sentry/nextjs";
+import { deleteUser } from "@ai/utils/queries";
+import toast from "react-hot-toast";
 
 export default function AccountContent({ session }: { session: Session }) {
-  // const dialogRef = useRef<HTMLDialogElement>(null);
+  const dialogRef = useRef<HTMLDialogElement>(null);
 
   const handleSignOut = () => {
     Sentry.setUser(null);
     signOut();
   };
 
-  // const handleDeleteAccount = () => {
-  //   Sentry.setUser(null);
-  //   signOut();
-  // };
+  const handleDeleteAccount = async () => {
+    try {
+      await deleteUser(session.user.id);
+      Sentry.setUser(null);
+      signOut();
+    } catch (error) {
+      toast.error("Unable to delete your account");
+      Sentry.captureException(error);
+    }
+  };
 
   return (
     <>
@@ -41,13 +49,11 @@ export default function AccountContent({ session }: { session: Session }) {
         <Button className="mt-8" onClick={handleSignOut}>
           Sign Out
         </Button>
-        {/* TODO: finish ability to delete account */}
-        {/* <SecondaryButton onClick={() => dialogRef.current?.showModal()}>
+        <SecondaryButton onClick={() => dialogRef.current?.showModal()}>
           Delete Account
-        </SecondaryButton> */}
+        </SecondaryButton>
       </section>
-      {/* TODO: finish ability to delete account */}
-      {/* <dialog
+      <dialog
         ref={dialogRef}
         className="relative mx-auto w-full max-w-2xl rounded-xl p-8 transition backdrop:bg-slate-900/50 open:animate-modal open:backdrop:animate-modal"
       >
@@ -65,7 +71,7 @@ export default function AccountContent({ session }: { session: Session }) {
             </SecondaryButton>
           </div>
         </form>
-      </dialog> */}
+      </dialog>
     </>
   );
 }

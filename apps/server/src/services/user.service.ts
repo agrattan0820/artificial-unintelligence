@@ -43,3 +43,12 @@ export async function checkUserSession({
 
   return checkDBForSession[0];
 }
+
+export async function deleteUser({ userId }: { userId: string }) {
+  const deletedUser = await db
+    .delete(users)
+    .where(eq(users.id, userId))
+    .returning();
+
+  return deletedUser[0];
+}

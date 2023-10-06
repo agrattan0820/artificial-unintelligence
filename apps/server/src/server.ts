@@ -55,7 +55,7 @@ export function buildServer() {
   app.use(express.json());
   app.use(
     cors({
-      methods: ["GET", "POST"],
+      methods: ["GET", "POST", "DELETE"],
       origin: process.env.APP_URL ?? "https://www.artificialunintelligence.gg",
       credentials: true,
     })
