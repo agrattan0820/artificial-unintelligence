@@ -37,10 +37,7 @@ export async function deleteUserController(
   try {
     const { id } = req.params;
 
-    console.log("HEREEEE????");
-
     const deletedUser = await deleteUser({ userId: id });
-    console.log("DELETED USER", deletedUser);
 
     res.status(200).json({ user: deletedUser });
   } catch (error) {
