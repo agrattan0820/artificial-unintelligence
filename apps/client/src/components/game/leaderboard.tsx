@@ -164,7 +164,7 @@ const Leaderboard = ({
           {leaderboard.allGenerations.map((generation, i) => (
             <li key={i} className="w-[240px] flex-none">
               <div className="relative overflow-hidden rounded-xl">
-                <Image
+                <img
                   className="aspect-square"
                   src={generation.generation.imageUrl}
                   width={1024}

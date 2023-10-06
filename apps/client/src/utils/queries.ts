@@ -117,6 +117,28 @@ export async function existingHost({
   return data;
 }
 
+export type DeleteUserResponse = {
+  user: User;
+};
+
+export async function deleteUser(userId: string) {
+  const response = await fetch(`${URL}/user/${userId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to delete user");
+  }
+
+  const data: DeleteUserResponse = await response.json();
+
+  return data;
+}
+
 // ! ----------> ROOMS <----------
 
 export type JoinRoomResponse = {
