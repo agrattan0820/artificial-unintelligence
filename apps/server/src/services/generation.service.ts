@@ -237,7 +237,7 @@ const replicateAPISchema = z.array(z.string()).length(2);
 
 export async function getReplicateAIImages({ prompt }: { prompt: string }) {
   const output = await replicate.run(
-    "stability-ai/sdxl:8beff3369e81422112d93b89ca01426147de542cd4684c244b673b105188fe5f",
+    "stability-ai/sdxl:1bfb924045802467cf8869d96b231a12e6aa994abfe37e337c63a4e49a8c6c41",
     {
       input: { prompt, num_outputs: 2, width: 768, height: 768 },
     }
