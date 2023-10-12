@@ -14,7 +14,7 @@
     "sentry:sourcemaps": "sentry-cli sourcemaps inject --org alexander-grattan --project artificial-unintelligence-server ./dist && sentry-cli sourcemaps upload --org alexander-grattan --project artificial-unintelligence-server ./dist"
   },
   "dependencies": {
-    "@sentry/node": "^7.72.0",
+    "@sentry/node": "^7.73.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "database": "workspace:*",
@@ -24,18 +24,17 @@
     "helmet": "^7.0.0",
     "ioredis": "^5.3.2",
     "morgan": "^1.10.0",
-    "replicate": "^0.18.1",
-    "socket.io": "^4.7.2",
-    "zod": "^3.22.2"
+    "replicate": "^0.20.1",
+    "socket.io": "^4.7.2"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
-    "@sentry/cli": "^2.21.1",
+    "@sentry/cli": "^2.21.2",
     "@types/cookie-parser": "^1.4.4",
     "@types/cors": "^2.8.14",
-    "@types/express": "^4.17.18",
+    "@types/express": "^4.17.19",
     "@types/morgan": "^1.9.6",
-    "@types/node": "^20.8.0",
+    "@types/node": "^20.8.4",
     "cross-env": "^7.0.3",
     "eslint-config-custom": "workspace:*",
     "jest": "^29.7.0",

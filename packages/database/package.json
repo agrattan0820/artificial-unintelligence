@@ -16,7 +16,7 @@
   "dependencies": {
     "dotenv": "^16.3.1",
     "drizzle-orm": "^0.28.6",
-    "postgres": "^3.3.5"
+    "postgres": "^3.4.0"
   },
   "devDependencies": {
     "@auth/core": "^0.16.1",

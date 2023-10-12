@@ -10,7 +10,6 @@ import {
 } from "database";
 import { GameRoundGeneration, QuestionGenerations } from "../types";
 import { replicate } from "../replicate";
-import { z } from "zod";
 
 export async function getGameRoundGenerations({
   gameId,
@@ -233,7 +232,9 @@ export async function setGenerationAsSubmitted({
   return updatedGenerations[0];
 }
 
-const replicateAPISchema = z.array(z.string()).length(2);
+function isReplicateResponse(res: object): res is [string, string] {
+  return Array.isArray(res) && res.length === 2 && typeof res[0] === "string";
+}
 
 export async function getReplicateAIImages({ prompt }: { prompt: string }) {
   const output = await replicate.run(
@@ -245,7 +246,9 @@ export async function getReplicateAIImages({ prompt }: { prompt: string }) {
 
   console.log("Received images:", output);
 
-  const resultingImages = replicateAPISchema.parse(output);
+  if (!isReplicateResponse(output)) {
+    throw new Error("Did not receive the correct amount of images");
+  }
 
-  return resultingImages;
+  return output;
 }
