@@ -22,6 +22,34 @@
       "when": 1696551373425,
       "tag": "0002_romantic_meltdown",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1697194616965,
+      "tag": "0003_cold_ironclad",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1697194648403,
+      "tag": "0004_lazy_malice",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1697194668309,
+      "tag": "0005_fearless_roxanne_simpson",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1697194688555,
+      "tag": "0006_polite_micromax",
+      "breakpoints": true
     }
   ]
 }
