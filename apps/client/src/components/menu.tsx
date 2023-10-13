@@ -105,7 +105,8 @@ const Menu = ({ session, roomCode }: MenuProps) => {
                   onClick={handleSignOutAndLeave}
                   className="flex items-center gap-4 text-sm focus-within:underline hover:underline md:text-base"
                 >
-                  <FiLogOut /> Sign Out{roomCode && " and Leave Game"}
+                  <FiLogOut />
+                  Sign Out
                 </button>
               </li>
             )}
