@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { EventFrom, State } from "xstate";
 import { useMachine } from "@xstate/react";
 import { AnimatePresence } from "framer-motion";
@@ -15,8 +15,8 @@ import {
   getLeaderboardById,
 } from "@ai/utils/queries";
 import {
+  CurrentGameComponent,
   gameMachine,
-  getCurrentComponent,
 } from "@ai/components/game/game-machine";
 import { SocketContext } from "@ai/utils/socket-provider";
 import { cn } from "@ai/utils/cn";
@@ -37,6 +37,7 @@ export default function Game({ gameInfo, session }: GameProps) {
   // Socket for real-time communication
   const socket = useContext(SocketContext);
 
+  // Next.js router
   const router = useRouter();
 
   // Wait until the client mounts to avoid hydration errors
@@ -168,31 +169,6 @@ export default function Game({ gameInfo, session }: GameProps) {
     };
   }, [handlePlayAnotherGame, handleServerEvent, socket]);
 
-  // Game component shown based off state
-  const currentComponent = useMemo(() => {
-    return getCurrentComponent(
-      gameInfo,
-      state,
-      send,
-      hostId,
-      submittedPlayerIds,
-      currFaceOffQuestion,
-      votedPlayers,
-      leaderboard,
-      session,
-    );
-  }, [
-    gameInfo,
-    state,
-    send,
-    hostId,
-    submittedPlayerIds,
-    currFaceOffQuestion,
-    votedPlayers,
-    leaderboard,
-    session,
-  ]);
-
   return (
     <main
       className={cn(
@@ -205,7 +181,20 @@ export default function Game({ gameInfo, session }: GameProps) {
           <Menu session={session} roomCode={gameInfo.game.roomCode} />
         </div>
         <AnimatePresence mode="wait">
-          {isMounted ? currentComponent : null}
+          {isMounted ? (
+            <CurrentGameComponent
+              key={state.value as string}
+              gameInfo={gameInfo}
+              state={state}
+              send={send}
+              hostId={hostId}
+              submittedPlayerIds={submittedPlayerIds}
+              currFaceOffQuestion={currFaceOffQuestion}
+              votedPlayers={votedPlayers}
+              leaderboard={leaderboard}
+              session={session}
+            />
+          ) : null}
         </AnimatePresence>
       </section>
     </main>

@@ -174,102 +174,127 @@ export const gameMachine = createMachine(
   },
 );
 
-export const getCurrentComponent = (
-  gameInfo: GameInfo,
-  state: StateFrom<typeof gameMachine>,
-  send: (event: EventFrom<typeof gameMachine>) => StateFrom<typeof gameMachine>,
-  hostId: string | null,
-  submittedPlayerIds: Set<string>,
-  currFaceOffQuestion: QuestionGenerations | undefined,
-  votedPlayers: UserVote[],
-  leaderboard: GetGameLeaderboardResponse | undefined,
-  session: Session,
-) => {
-  const stateMachineComponentMap: Record<
-    StateValueFrom<typeof gameMachine>,
-    ReactNode
-  > = {
-    connectingToMainframe: (
-      <TransitionWrapper key="connectingToMainframe">
-        <ConnectToMainframe />
-      </TransitionWrapper>
-    ),
-    connectionEstablished: (
-      <TransitionWrapper key="connectionEstablished">
-        <ConnectionEstablished />
-      </TransitionWrapper>
-    ),
-    prompt: (
-      <TransitionWrapper key="prompt">
-        <Prompt
-          gameInfo={gameInfo}
-          state={state}
-          send={send}
-          session={session}
-        />
-      </TransitionWrapper>
-    ),
-    promptSubmitted: (
-      <TransitionWrapper key="promptSubmitted">
-        <PromptSubmitted
-          gameInfo={gameInfo}
-          submittedPlayerIds={submittedPlayerIds}
-          session={session}
-        />
-      </TransitionWrapper>
-    ),
-    promptDone: (
-      <TransitionWrapper key="promptDone">
-        <AnnouncementText text="All participants have submitted!" />
-      </TransitionWrapper>
-    ),
-    faceOff: (
-      <TransitionWrapper key="faceOff">
-        <FaceOff
-          gameInfo={gameInfo}
-          currQuestionGenerations={currFaceOffQuestion}
-          session={session}
-        />
-      </TransitionWrapper>
-    ),
-    faceOffResults: (
-      <TransitionWrapper key="faceOffResults">
-        <FaceOffResult
-          currQuestionGenerations={currFaceOffQuestion}
-          votedPlayers={votedPlayers}
-        />
-      </TransitionWrapper>
-    ),
-    nextRound: (
-      <TransitionWrapper key="nextRound">
-        <NextRound nextQueryNum={state.context.round} totalQueries={3} />
-      </TransitionWrapper>
-    ),
-    winnerLeadUp: (
-      <TransitionWrapper key="winnerLeadUp">
-        <WinnerLeadUp />
-      </TransitionWrapper>
-    ),
-    winner: (
-      <TransitionWrapper key="winner">
-        <Winner leaderboard={leaderboard} />
-      </TransitionWrapper>
-    ),
-    leaderboard: (
-      <TransitionWrapper key="leaderboard">
-        <Leaderboard
-          gameInfo={gameInfo}
-          state={state}
-          send={send}
-          leaderboard={leaderboard}
-          hostId={hostId}
-          session={session}
-        />
-      </TransitionWrapper>
-    ),
-  };
-
-  return stateMachineComponentMap[
-    state.value as StateValueFrom<typeof gameMachine>
-  ];
+export const CurrentGameComponent = ({
+  gameInfo,
+  state,
+  send,
+  hostId,
+  submittedPlayerIds,
+  currFaceOffQuestion,
+  votedPlayers,
+  leaderboard,
+  session,
+}: {
+  gameInfo: GameInfo;
+  state: StateFrom<typeof gameMachine>;
+  send: (event: EventFrom<typeof gameMachine>) => StateFrom<typeof gameMachine>;
+  hostId: string | null;
+  submittedPlayerIds: Set<string>;
+  currFaceOffQuestion: QuestionGenerations | undefined;
+  votedPlayers: UserVote[];
+  leaderboard: GetGameLeaderboardResponse | undefined;
+  session: Session;
+}) => {
+  switch (state.value as StateValueFrom<typeof gameMachine>) {
+    case "connectingToMainframe": {
+      return (
+        <TransitionWrapper key="connectingToMainframe">
+          <ConnectToMainframe />
+        </TransitionWrapper>
+      );
+    }
+    case "connectionEstablished": {
+      return (
+        <TransitionWrapper key="connectionEstablished">
+          <ConnectionEstablished />
+        </TransitionWrapper>
+      );
+    }
+    case "prompt": {
+      return (
+        <TransitionWrapper key="prompt">
+          <Prompt
+            gameInfo={gameInfo}
+            state={state}
+            send={send}
+            session={session}
+          />
+        </TransitionWrapper>
+      );
+    }
+    case "promptSubmitted": {
+      return (
+        <TransitionWrapper key="promptSubmitted">
+          <PromptSubmitted
+            gameInfo={gameInfo}
+            submittedPlayerIds={submittedPlayerIds}
+            session={session}
+          />
+        </TransitionWrapper>
+      );
+    }
+    case "promptDone": {
+      return (
+        <TransitionWrapper key="promptDone">
+          <AnnouncementText text="All participants have submitted!" />
+        </TransitionWrapper>
+      );
+    }
+    case "faceOff": {
+      return (
+        <TransitionWrapper key="faceOff">
+          <FaceOff
+            gameInfo={gameInfo}
+            currQuestionGenerations={currFaceOffQuestion}
+            session={session}
+          />
+        </TransitionWrapper>
+      );
+    }
+    case "faceOffResults": {
+      return (
+        <TransitionWrapper key="faceOffResults">
+          <FaceOffResult
+            currQuestionGenerations={currFaceOffQuestion}
+            votedPlayers={votedPlayers}
+          />
+        </TransitionWrapper>
+      );
+    }
+    case "nextRound": {
+      return (
+        <TransitionWrapper key="nextRound">
+          <NextRound nextQueryNum={state.context.round} totalQueries={3} />
+        </TransitionWrapper>
+      );
+    }
+    case "winnerLeadUp": {
+      return (
+        <TransitionWrapper key="winnerLeadUp">
+          <WinnerLeadUp />
+        </TransitionWrapper>
+      );
+    }
+    case "winner": {
+      return (
+        <TransitionWrapper key="winner">
+          <Winner leaderboard={leaderboard} />
+        </TransitionWrapper>
+      );
+    }
+    case "leaderboard": {
+      return (
+        <TransitionWrapper key="leaderboard">
+          <Leaderboard
+            gameInfo={gameInfo}
+            state={state}
+            send={send}
+            leaderboard={leaderboard}
+            hostId={hostId}
+            session={session}
+          />
+        </TransitionWrapper>
+      );
+    }
+  }
 };
