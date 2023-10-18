@@ -183,6 +183,7 @@ export default function Game({ gameInfo, session }: GameProps) {
         <AnimatePresence mode="wait">
           {isMounted ? (
             <CurrentGameComponent
+              key={state.value as string}
               gameInfo={gameInfo}
               state={state}
               send={send}
