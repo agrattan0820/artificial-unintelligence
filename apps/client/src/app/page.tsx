@@ -27,8 +27,8 @@ export default async function Home() {
     <>
       <Header session={session} />
       <main className="relative">
-        <section className="container mx-auto flex min-h-[100dvh] flex-col-reverse items-start justify-center gap-8 px-4 md:items-center lg:flex-row lg:gap-24">
-          {runningGame && (
+        <section className="container mx-auto flex min-h-[100dvh] flex-col-reverse items-start justify-center gap-8 px-4 sm:items-center lg:flex-row lg:gap-24">
+          {runningGame ? (
             <div className=" absolute left-1/2 top-16 mx-auto w-full -translate-x-1/2 sm:top-8">
               <LinkSecondaryButton
                 href={`/room/${runningGame.roomCode}/game/${runningGame.id}`}
@@ -36,6 +36,22 @@ export default async function Home() {
               >
                 Join Back Into {runningGame ? "Game" : "Room"} <FiLogIn />
               </LinkSecondaryButton>
+            </div>
+          ) : (
+            <div className="absolute left-1/2 top-16 mx-auto w-full -translate-x-1/2 text-center sm:top-8 lg:hidden">
+              <a
+                href="https://www.producthunt.com/posts/artificial-unintelligence?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-artificial&#0045;unintelligence"
+                target="_blank"
+                className="mx-auto flex w-full max-w-fit items-center"
+              >
+                <img
+                  src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=419632&theme=neutral"
+                  alt="Artificial&#0032;Unintelligence - Compete&#0032;to&#0032;create&#0032;the&#0032;funniest&#0032;AI&#0032;images&#0032;in&#0032;this&#0032;party&#0032;game | Product Hunt"
+                  style={{ width: "250px", height: "54px" }}
+                  width="250"
+                  height="54"
+                />
+              </a>
             </div>
           )}
           <div>
