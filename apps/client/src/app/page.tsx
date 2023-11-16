@@ -62,7 +62,7 @@ export default async function Home() {
             </h1>
             <SignInForm session={session} submitLabel="Host Game" type="HOME" />
           </div>
-          <div className="group relative">
+          <div className="group relative w-full">
             <Friend className="absolute right-8 w-32 transform transition group-focus-within:-translate-y-16 group-hover:-translate-y-16" />
             <video
               src="/artificial-unintelligence-promo.mp4"
@@ -70,7 +70,7 @@ export default async function Home() {
               autoPlay
               muted
               playsInline
-              className="relative aspect-video w-full max-w-md rounded-2xl shadow-2xl shadow-indigo-500 lg:max-w-full"
+              className="relative aspect-video w-full max-w-md rounded-2xl bg-black shadow-2xl shadow-indigo-500 lg:max-w-full"
             />
           </div>
         </section>
