@@ -10,49 +10,49 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
-    "@auth/drizzle-adapter": "^0.3.3",
-    "@sentry/nextjs": "^7.73.0",
-    "@tanstack/react-query": "^4.36.1",
+    "@auth/drizzle-adapter": "^0.3.6",
+    "@sentry/nextjs": "^7.80.1",
+    "@tanstack/react-query": "^5.8.4",
     "@upstash/ratelimit": "^0.4.4",
-    "@upstash/redis": "^1.23.3",
-    "@vercel/analytics": "^1.1.0",
+    "@upstash/redis": "^1.25.1",
+    "@vercel/analytics": "^1.1.1",
     "@xstate/react": "^3.2.2",
     "autoprefixer": "10.4.16",
     "clsx": "^2.0.0",
     "database": "workspace:*",
-    "drizzle-orm": "^0.28.6",
-    "framer-motion": "^10.16.4",
-    "next": "^13.5.4",
-    "next-auth": "^4.23.2",
+    "drizzle-orm": "^0.29.0",
+    "framer-motion": "^10.16.5",
+    "next": "^14.0.2",
+    "next-auth": "^4.24.5",
     "postcss": "8.4.31",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.1",
-    "react-icons": "^4.11.0",
+    "react-icons": "^4.12.0",
     "server-only": "^0.0.1",
     "sharp": "^0.32.6",
     "socket.io-client": "^4.7.2",
-    "tailwind-merge": "^1.14.0",
-    "tailwindcss": "^3.3.3",
+    "tailwind-merge": "^2.0.0",
+    "tailwindcss": "^3.3.5",
     "typescript": "5.2.2",
     "use-sound": "^4.0.1",
-    "xstate": "^4.38.2"
+    "xstate": "^4.38.3"
   },
   "devDependencies": {
     "@playwright/test": "^1.39.0",
     "@tailwindcss/typography": "^0.5.10",
-    "@types/node": "^20.8.4",
-    "@types/react": "^18.2.28",
-    "@types/react-dom": "^18.2.13",
+    "@types/node": "^20.9.0",
+    "@types/react": "^18.2.37",
+    "@types/react-dom": "^18.2.15",
     "eslint-config-custom": "workspace:*",
-    "prettier-plugin-tailwindcss": "^0.5.5",
+    "prettier-plugin-tailwindcss": "^0.5.7",
     "tsconfig": "workspace:*"
   },
   "engines": {
     "node": "18"
   },
   "optionalDependencies": {
-    "bufferutil": "^4.0.7",
+    "bufferutil": "^4.0.8",
     "utf-8-validate": "^6.0.3"
   }
 }

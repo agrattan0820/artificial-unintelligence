@@ -26,8 +26,8 @@ export default async function Home() {
   return (
     <>
       <Header session={session} />
-      <main className="relative flex min-h-[100dvh] flex-col justify-center">
-        <section className="container mx-auto flex flex-col-reverse items-start justify-center gap-8 px-4 lg:flex-row lg:items-center lg:gap-24">
+      <main className="relative">
+        <section className="container mx-auto flex min-h-[100dvh] flex-col-reverse items-start justify-center gap-8 px-4 md:items-center lg:flex-row lg:gap-24">
           {runningGame && (
             <div className=" absolute left-1/2 top-16 mx-auto w-full -translate-x-1/2 sm:top-8">
               <LinkSecondaryButton
@@ -40,13 +40,23 @@ export default async function Home() {
           )}
           <div>
             <p className="mb-2">The AI Image Party Game</p>
-            <h1 className="mb-8 text-4xl md:text-6xl">
+            <h1 className="mb-8 text-4xl md:text-5xl lg:text-6xl">
               artif<span className="ml-0.5 inline-block">i</span>cial <br />{" "}
               unintelligence
             </h1>
             <SignInForm session={session} submitLabel="Host Game" type="HOME" />
           </div>
-          <Friend className="w-32 scale-x-[-1] transform lg:w-1/4 lg:scale-x-100" />
+          <div className="group relative">
+            <Friend className="absolute right-8 w-32 transform transition group-focus-within:-translate-y-16 group-hover:-translate-y-16" />
+            <video
+              src="/artificial-unintelligence-promo.mp4"
+              controls
+              autoPlay
+              muted
+              playsInline
+              className="relative aspect-video w-full max-w-md rounded-2xl shadow-2xl shadow-indigo-500 lg:max-w-full"
+            />
+          </div>
         </section>
       </main>
       <Footer />
