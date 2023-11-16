@@ -1,8 +1,26 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import DiscordProvider from "next-auth/providers/discord";
 import { db } from "database";
 import { myDrizzleAdapter } from "@ai/components/my-drizzle-adapter";
+
+function getCookieNickname(req?: NextApiRequest | Request) {
+  if (
+    req &&
+    "cookies" in req &&
+    typeof req.cookies === "object" &&
+    typeof req.cookies["next-auth.callback-url"] === "string"
+  ) {
+    return (
+      new URL(req.cookies["next-auth.callback-url"]).searchParams.get(
+        "nickname",
+      ) ?? ""
+    );
+  }
+
+  return "";
+}
 
 export const authOptions = (
   req?: NextApiRequest | Request,
@@ -14,19 +32,25 @@ export const authOptions = (
         clientId: process.env.GOOGLE_CLIENT_ID ?? "",
         clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
         profile(profile) {
-          const cookieNickname =
-            req && "cookies" in req && typeof req.cookies === "object"
-              ? typeof req.cookies["next-auth.callback-url"] === "string"
-                ? new URL(
-                    req.cookies["next-auth.callback-url"],
-                  ).searchParams.get("nickname") ?? ""
-                : ""
-              : "";
-
           return {
             id: profile.sub,
             name: profile.name,
-            nickname: cookieNickname,
+            nickname: getCookieNickname(req),
+            emailVerified: new Date(),
+            email: profile.email,
+            image: profile.picture,
+            createdAt: new Date(),
+          };
+        },
+      }),
+      DiscordProvider({
+        clientId: process.env.DISCORD_CLIENT_ID ?? "",
+        clientSecret: process.env.DISCORD_CLIENT_SECRET ?? "",
+        profile(profile) {
+          return {
+            id: profile.sub,
+            name: profile.name,
+            nickname: getCookieNickname(req),
             emailVerified: new Date(),
             email: profile.email,
             image: profile.picture,
