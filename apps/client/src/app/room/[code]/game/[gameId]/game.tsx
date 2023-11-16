@@ -106,27 +106,23 @@ export default function Game({ gameInfo, session }: GameProps) {
 
   const gameId = gameInfo.game.id;
   const round = state.context.round;
-  const { data: faceOffs, isLoading: faceOffsLoading } = useQuery(
-    ["faceOffs", "gameId", gameId, "round", round],
-    () => getFaceOffs({ gameId, round }),
-    {
-      enabled:
-        !!gameId &&
-        !!round &&
-        (state.matches("faceOff") || state.matches("faceOffResults")),
-    },
-  );
-  const { data: leaderboard } = useQuery(
-    ["leaderboard", "gameId", gameId],
-    () => getLeaderboardById({ gameId }),
-    {
-      enabled:
-        !!gameId &&
-        (state.matches("winnerLeadUp") ||
-          state.matches("winner") ||
-          state.matches("leaderboard")),
-    },
-  );
+  const { data: faceOffs, isLoading: faceOffsLoading } = useQuery({
+    queryKey: ["faceOffs", "gameId", gameId, "round", round],
+    queryFn: () => getFaceOffs({ gameId, round }),
+    enabled:
+      !!gameId &&
+      !!round &&
+      (state.matches("faceOff") || state.matches("faceOffResults")),
+  });
+  const { data: leaderboard } = useQuery({
+    queryKey: ["leaderboard", "gameId", gameId],
+    queryFn: () => getLeaderboardById({ gameId }),
+    enabled:
+      !!gameId &&
+      (state.matches("winnerLeadUp") ||
+        state.matches("winner") ||
+        state.matches("leaderboard")),
+  });
 
   const currFaceOffQuestion =
     !faceOffsLoading && faceOffs && faceOffs.length > 0
