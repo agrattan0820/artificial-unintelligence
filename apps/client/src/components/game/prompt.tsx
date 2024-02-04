@@ -43,7 +43,7 @@ const Prompt = ({
 }: {
   gameInfo: GameInfo;
   state: StateFrom<typeof gameMachine>;
-  send: (event: EventFrom<typeof gameMachine>) => StateFrom<typeof gameMachine>;
+  send: (event: EventFrom<typeof gameMachine>) => void;
   session: Session;
 }) => {
   const socket = useContext(SocketContext);

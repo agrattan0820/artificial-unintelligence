@@ -238,7 +238,7 @@ function isReplicateResponse(res: object): res is [string, string] {
 
 export async function getReplicateAIImages({ prompt }: { prompt: string }) {
   const output = await replicate.run(
-    "stability-ai/sdxl:1bfb924045802467cf8869d96b231a12e6aa994abfe37e337c63a4e49a8c6c41",
+    "stability-ai/sdxl:39ed52f2a78e934b3ba6e2a89f5b1c712de7dfea535525255b1aa35c5565e08b",
     {
       input: { prompt, num_outputs: 2, width: 768, height: 768 },
     }

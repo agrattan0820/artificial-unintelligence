@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useContext, useEffect, useState } from "react";
-import { EventFrom, State } from "xstate";
+import type { EventFrom } from "xstate";
 import { useMachine } from "@xstate/react";
 import { AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
@@ -59,17 +59,12 @@ export default function Game({ gameInfo, session }: GameProps) {
   // Persisted state from server for state machine
   const serverState =
     gameInfo.game.state !== "START_GAME"
-      ? gameMachine.resolveState(State.create(JSON.parse(gameInfo.game.state)))
+      ? JSON.parse(gameInfo.game.state)
       : undefined;
 
   // State machine
-  const [state, send] = useMachine(gameMachine, {
-    state: serverState,
-    context: {
-      round: serverState ? serverState.context.round : gameInfo.game.round,
-      playerCount: gameInfo.players.length,
-      questionIdx: serverState ? serverState.context.questionIdx : 0,
-    },
+  const [state, send, actor] = useMachine(gameMachine, {
+    snapshot: serverState,
   });
 
   const handleRoomState = (roomInfo: RoomInfo) => {
@@ -81,7 +76,7 @@ export default function Game({ gameInfo, session }: GameProps) {
     // Don't send state change to backend if it is a `promptSubmitted` state
     if (!state.matches("promptSubmitted")) {
       socket.emit("clientEvent", {
-        state: JSON.stringify(state),
+        state: JSON.stringify(actor.getPersistedSnapshot()),
         gameId: gameInfo.game.id,
         round: state.context.round,
         completedAt: state.matches("leaderboard")
@@ -89,7 +84,7 @@ export default function Game({ gameInfo, session }: GameProps) {
           : undefined,
       });
     }
-  }, [gameInfo.game.id, socket, state]);
+  }, [actor, gameInfo.game.id, socket, state]);
 
   // Receive state changes from server
   const handleServerEvent = useCallback(
@@ -137,7 +132,7 @@ export default function Game({ gameInfo, session }: GameProps) {
   // Handle "play another game" request from server
   const handlePlayAnotherGame = useCallback(
     (gameId: number) => {
-      send("NEXT");
+      send({ type: "NEXT" });
       router.push(`/room/${gameInfo.game.roomCode}/game/${gameId}`);
     },
     [gameInfo.game.roomCode, router, send],

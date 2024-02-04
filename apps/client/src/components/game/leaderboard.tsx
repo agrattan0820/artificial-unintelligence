@@ -21,7 +21,7 @@ import Friend from "./friend";
 type LeaderboardProps = {
   gameInfo: GameInfo;
   state: StateFrom<typeof gameMachine>;
-  send: (event: EventFrom<typeof gameMachine>) => StateFrom<typeof gameMachine>;
+  send: (event: EventFrom<typeof gameMachine>) => void;
   leaderboard: GetGameLeaderboardResponse | undefined;
   hostId: string | null;
   session: Session;
