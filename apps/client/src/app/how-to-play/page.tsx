@@ -27,7 +27,7 @@ const ImageFigure = ({
 
 export default function HowToPlay() {
   return (
-    <main className="container mx-auto px-4 py-16 md:py-32 ">
+    <main className="container mx-auto px-4 py-16 md:py-32">
       <section className="prose mx-auto text-white prose-headings:text-white prose-a:text-white prose-a:underline-offset-2 prose-a:transition hover:prose-a:text-indigo-200  prose-blockquote:text-white">
         <h1>How to Play</h1>
         <p>

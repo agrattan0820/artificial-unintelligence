@@ -53,13 +53,14 @@ export const gameMachine = createMachine(
   {
     /** @xstate-layout N4IgpgJg5mDOIC5QFkCGBjAFgSwHZgDp0B7XfdAFzygBVi08AzAJ1QFswBiAD1gtQqFUjQcwAUAVgAMMgJSc0WPIRJkwlanQa4W7MAG0pAXUSgADsVjYqpUyG6IAjABYAbAQDsjqQA4PEnx8AJmcpDxCAGhAATydXCQIATh8AZmdnNJSpFOSPAF88qMUcfCJSchtcAFE+VAAjABtsWExIHlrBAmFRSRkpeWLlMrUNUhr+RubWiEMTJBALK0q7BwQXdy9ff0CQsKCPKNiEZ28CCXjnRI9fEIkCoowSwjNmYjYzCk4AZQBVACFkABJGizOyLazYWzzVYpIKJJK+FIpRw+KSJRGJVyHRASDzw0KuZxBRywxIpPGOe4gQalF5vD7tfidbpgcTovoDR5DOnvCig+bg5bQxAAWmcHgIjlc4XSsPOaX8EmxCACUiSjlxiUS518ZKCVJpz1evJo2A4sB+ZkZAiEIlZvTkCi5tONH1N5st-PMlghUNAqykyqkBudRvpFC+AFc6mxrIIIJwAHJVAAaIOMYJ9Qv9iCRPk8HmurhSrnRQVcPkxyo8gQIpfChZ8rkcWtSIaULvDABFSFxeEzbT1pI7DQQeR8e-gvQss5DcCtEIGYov208CIwMGAAPKMRjff5A9Nzb1LOcLhCkhGpZGo9GpKvLta+dwSDXxEvE5wSCTOVdDDfoNuu7WsydriFkHJOh2hAAUBjDToKZ7CggYobIkQRBBIJbIl4LbOMq3i1lImFSG4jhwq4+wpH+pSwTujAAEpwJGDQULASapkemann69iIB47iUUixbOH45aYfhj4uMEkopPKsIZBkZI0TBm70UxsAsWxHFpvojjHjOPHzshjj+AQH4BKZaIpIED5HBqWoEMELgKa4pZSip65qbuGlaexyBbgxVQIbOvGrBqzhOUExGWU2WonEEBEohKXgBD4KKiVIbm-oU1KhgQ+DcBQDHEJGuAJsmukZgKoXGTmKqwgQUgtnJFZSNIEjasqP7uBkNkhF4mLRXcuWjgA7ng+DMAAMmAqAQJaOlcTVRnniKjWUW55YSJh36lk2BGURKmHodkxYyNcI0PNBBATWozBLSFq0mecdZwriYTJc1mEEaiCQZYpqRYZSVK4MQEBwHYhrcb6dV8ShjhSk51zkgpiQnNIjjKiKfh1v4xFhNqLZhFdeU3aoFSaPQqBMKwHAw9m8PomcwQeG47WlnsBxSf96RE4j6TfsR+qjflFPqJU4z1E0LSQAzSH1dqngUWiTaUejpnKuWkXkkW30uBdpOjuOFDy2FTjluZuL44EoS3Fjj7SPmUrEj4lxsy4HhyZ5JvunAlpm3DqwihWyPZF7IQa5jyoVgkuIYa+DmI2zPuuhG0axhQ8aB+eFFJNeQR+LisLNkqj6x2c4SYYjnXJzl11ribk5gDnJlIgQJxeEEWQ2WiiOJY+fiOAQuyUZ15wYSSnl0burf1Rqw8BAENneJc+xl-Z2TD+E6H7KZBL12Ta4z4xzGsfAK2w+e5GRTWe9u1+0glliUklsdokkuSzVndRos3YVxVSrlTnvDd2TlmzoniGSZI0oX72W-JFKUD8EHtS8J5O6U1ZrzQDpfRmwdiyyULg2ZE2popuwIjtf6xF-BwnLPFI2+UMGshAeFH8TVYTXDdpWZq4QCJeAlN4aSaQl47RBg3IYDQ5oQ2YHUYgqBmAQBYU4NITlXx818JWDUXsCLoQlHJRI5EfzpHFD4AoBQgA */
     id: "Machine",
-    schema: {
+    types: {
+      // TODO: Uncomment when XState VSCode extension is compatible with XState V5
+      // typegen: {} as import("./game-machine.typegen").Typegen0,
       context: {} as MachineContext,
       events: {} as MachineEvent,
     },
-    tsTypes: {} as import("./game-machine.typegen").Typegen0,
+    // tsTypes: {} as import("./game-machine.typegen").Typegen0,
     initial: "connectingToMainframe",
-    predictableActionArguments: true,
     context: {
       round: 1,
       playerCount: 0,
@@ -106,12 +107,12 @@ export const gameMachine = createMachine(
         after: {
           18000: [
             {
+              guard: "completedRounds",
               target: "winnerLeadUp",
-              cond: "completedRounds",
             },
             {
+              guard: "completedCurrentRound",
               target: "nextRound",
-              cond: "completedCurrentRound",
             },
             {
               target: "faceOff",
@@ -150,11 +151,11 @@ export const gameMachine = createMachine(
   {
     actions: {
       startNewRound: assign({
-        round: (context) => context.round + 1,
+        round: ({ context }) => context.round + 1,
         questionIdx: 0,
       }),
       incrementQuestionIdx: assign({
-        questionIdx: (context) => context.questionIdx + 1,
+        questionIdx: ({ context }) => context.questionIdx + 1,
       }),
       resetContext: assign({
         round: 1,
@@ -162,12 +163,12 @@ export const gameMachine = createMachine(
       }),
     },
     guards: {
-      completedRounds: (context) => {
+      completedRounds: ({ context }) => {
         return (
           context.round === 3 && context.playerCount === context.questionIdx + 1
         );
       },
-      completedCurrentRound: (context) => {
+      completedCurrentRound: ({ context }) => {
         return context.playerCount === context.questionIdx + 1;
       },
     },
@@ -187,7 +188,7 @@ export const CurrentGameComponent = ({
 }: {
   gameInfo: GameInfo;
   state: StateFrom<typeof gameMachine>;
-  send: (event: EventFrom<typeof gameMachine>) => StateFrom<typeof gameMachine>;
+  send: (event: EventFrom<typeof gameMachine>) => void;
   hostId: string | null;
   submittedPlayerIds: Set<string>;
   currFaceOffQuestion: QuestionGenerations | undefined;
