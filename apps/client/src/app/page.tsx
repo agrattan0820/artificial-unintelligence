@@ -63,7 +63,10 @@ export default async function Home() {
             <SignInForm session={session} submitLabel="Host Game" type="HOME" />
           </div>
           <div className="group relative w-full">
-            <Friend className="absolute right-8 w-32 transform transition group-focus-within:-translate-y-16 group-hover:-translate-y-16" />
+            <Friend
+              className="absolute right-8 w-32 transform transition group-focus-within:-translate-y-16 group-hover:-translate-y-16"
+              type="SMILING"
+            />
             <video
               src="/artificial-unintelligence-promo.mp4"
               controls
