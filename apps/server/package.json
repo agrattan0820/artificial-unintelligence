@@ -14,7 +14,7 @@
     "sentry:sourcemaps": "sentry-cli sourcemaps inject --org alexander-grattan --project artificial-unintelligence-server ./dist && sentry-cli sourcemaps upload --org alexander-grattan --project artificial-unintelligence-server ./dist"
   },
   "dependencies": {
-    "@sentry/node": "^7.99.0",
+    "@sentry/node": "^7.100.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "database": "workspace:*",
@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
-    "@sentry/cli": "^2.27.0",
+    "@sentry/cli": "^2.28.0",
     "@types/cookie-parser": "^1.4.6",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
