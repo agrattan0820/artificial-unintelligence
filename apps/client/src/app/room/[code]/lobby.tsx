@@ -78,7 +78,7 @@ export default function Lobby({
             </p>
           )}
           <InviteLink code={roomInfo.code} roomIsFull={roomIsFull} />
-          <div className="mx-auto mt-4 flex items-center justify-center md:container md:absolute md:left-0 md:right-0 md:top-8 md:justify-start md:px-4">
+          <div className="mx-auto mt-4 flex items-center justify-center lg:absolute lg:left-1/2 lg:top-4 lg:w-full lg:-translate-x-1/2 lg:px-4">
             <UserCount count={players.length} />
           </div>
           <UserList session={session} hostId={hostId} players={players} />
