@@ -22,19 +22,12 @@ export interface NicknameFormType extends HTMLFormElement {
   readonly elements: FormElementsType;
 }
 
-type SignInFormProps =
-  | {
-      session: Session | null;
-      room?: never;
-      submitLabel: string;
-      type: "HOME";
-    }
-  | {
-      session: Session | null;
-      room: RoomInfo;
-      submitLabel: string;
-      type: "INVITE";
-    };
+type SignInFormProps = {
+  session: Session | null;
+  room: RoomInfo | undefined;
+  submitLabel: string;
+  type: "HOME" | "INVITE";
+};
 
 const SignInForm = ({ session, room, submitLabel, type }: SignInFormProps) => {
   const router = useRouter();
@@ -53,9 +46,9 @@ const SignInForm = ({ session, room, submitLabel, type }: SignInFormProps) => {
           : "https://www.artificialunintelligence.gg";
 
         const callbackUrl = new URL(
-          type === "HOME"
-            ? `/api/host/?nickname=${formNickname}`
-            : `/api/join/?nickname=${formNickname}&code=${room.code}`,
+          type === "INVITE" && room
+            ? `/api/join/?nickname=${formNickname}&code=${room.code}`
+            : `/api/host/?nickname=${formNickname}`,
           origin,
         );
 
@@ -67,7 +60,7 @@ const SignInForm = ({ session, room, submitLabel, type }: SignInFormProps) => {
         ? true
         : !window.localStorage.getItem("existing-user");
 
-      const url = `/${isNewUser ? "create-account" : "sign-in"}/${formNickname}${type === "HOME" ? "" : `?code=${room.code}`}`;
+      const url = `/${isNewUser ? "create-account" : "sign-in"}/${formNickname}${type === "INVITE" && room ? `?code=${room.code}` : ""}`;
 
       if (isMounted) {
         window.localStorage.setItem("existing-user", "true");
