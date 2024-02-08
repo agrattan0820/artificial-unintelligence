@@ -26,8 +26,8 @@ type MenuProps = {
 };
 
 const Menu = ({ session, roomCode }: MenuProps) => {
-  const [showMenu, setShowMenu] = useState(false);
   const socket = useContext(SocketContext);
+  const [showMenu, setShowMenu] = useState(false);
   const [soundEnabled, setSoundEnabled] = useStickyState(true, "soundEnabled");
 
   const menuRef = useRef<HTMLElement>(null);
