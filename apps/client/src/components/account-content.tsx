@@ -9,11 +9,16 @@ import { signOut } from "next-auth/react";
 import * as Sentry from "@sentry/nextjs";
 import { deleteUser } from "@ai/utils/queries";
 import toast from "react-hot-toast";
+import useIsMounted from "@ai/utils/hooks/use-is-mounted";
 
 export default function AccountContent({ session }: { session: Session }) {
+  const isMounted = useIsMounted();
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   const handleSignOut = () => {
+    if (isMounted) {
+      window.localStorage.removeItem("existing-user");
+    }
     Sentry.setUser(null);
     signOut();
   };
