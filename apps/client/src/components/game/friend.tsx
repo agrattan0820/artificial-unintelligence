@@ -258,8 +258,8 @@ const Friend = ({
           <path
             d="M38 51C38 51 42.5 54 45.5 54C48.5 54 53 51 53 51"
             stroke="#A5B4FC"
-            stroke-width="2"
-            stroke-linecap="round"
+            strokeWidth="2"
+            strokeLinecap="round"
           />
           <rect
             x="32.5"
