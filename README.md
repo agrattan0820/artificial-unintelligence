@@ -1,6 +1,6 @@
 <div align="center" style="padding-bottom:20px">
   <a href="https://artificial-unintelligence.vercel.app/">
-    <img src="./apps/client/src/images/friend.svg" width="150" height="auto" alt="Friend from Artificial Unintelligence"/>
+    <img src="./apps/client/src/images/friend/friend.svg" width="150" height="auto" alt="Friend from Artificial Unintelligence"/>
   </a>
 </div>
 
