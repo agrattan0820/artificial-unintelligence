@@ -74,6 +74,17 @@ export const authOptions = (
           domain: process.env.SESSION_COOKIE_DOMAIN,
         },
       },
+      // https://github.com/nextauthjs/next-auth/discussions/6898
+      pkceCodeVerifier: {
+        name: "next-auth.pkce.code_verifier",
+        options: {
+          httpOnly: true,
+          sameSite: "none",
+          path: "/",
+          secure: process.env.NODE_ENV === "production",
+          domain: process.env.SESSION_COOKIE_DOMAIN,
+        },
+      },
     },
   };
 };
