@@ -14,6 +14,7 @@ export const authOptions = (
       GoogleProvider({
         clientId: process.env.GOOGLE_CLIENT_ID ?? "",
         clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
+        checks: ["none"],
         profile(profile) {
           const cookieNickname =
             req && "cookies" in req && typeof req.cookies === "object"
@@ -69,17 +70,6 @@ export const authOptions = (
         options: {
           httpOnly: true,
           sameSite: "lax",
-          path: "/",
-          secure: process.env.NODE_ENV === "production",
-          domain: process.env.SESSION_COOKIE_DOMAIN,
-        },
-      },
-      // https://github.com/nextauthjs/next-auth/discussions/6898
-      pkceCodeVerifier: {
-        name: "next-auth.pkce.code_verifier",
-        options: {
-          httpOnly: true,
-          sameSite: "none",
           path: "/",
           secure: process.env.NODE_ENV === "production",
           domain: process.env.SESSION_COOKIE_DOMAIN,
