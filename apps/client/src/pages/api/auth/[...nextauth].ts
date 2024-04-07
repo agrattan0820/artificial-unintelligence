@@ -3,6 +3,7 @@ import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { db } from "database";
 import { myDrizzleAdapter } from "@ai/components/my-drizzle-adapter";
+import { captureMessage } from "@sentry/nextjs";
 
 export const authOptions = (
   req?: NextApiRequest | Request,
@@ -20,8 +21,19 @@ export const authOptions = (
                 ? new URL(
                     req.cookies["next-auth.callback-url"],
                   ).searchParams.get("nickname") ?? ""
-                : ""
+                : typeof req.cookies["__Secure-next-auth.callback-url"] ===
+                    "string"
+                  ? new URL(
+                      req.cookies["__Secure-next-auth.callback-url"],
+                    ).searchParams.get("nickname") ?? ""
+                  : ""
               : "";
+
+          if (!cookieNickname) {
+            captureMessage(
+              "No nickname was found when returning profile from Google callback.",
+            );
+          }
 
           return {
             id: profile.sub,
@@ -43,7 +55,7 @@ export const authOptions = (
       // newUser: "/auth/new-user", // New users will be directed here on first sign in (leave the property out if not of interest)
     },
     callbacks: {
-      async session({ session, user }) {
+      session({ session, user }) {
         session.user = user;
         return session;
       },
