@@ -17,7 +17,7 @@ export default async function Invite({ params }: { params: { code: string } }) {
     const runningGameQuery = await getRunningGame({ session });
 
     if (runningGameQuery) {
-      runningGame = runningGameQuery.game as Game;
+      runningGame = runningGameQuery.game;
     }
   }
 
