@@ -46,7 +46,7 @@
     "typescript": "^5.5.2"
   },
   "engines": {
-    "node": "18"
+    "node": "20.15.0"
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.8",
