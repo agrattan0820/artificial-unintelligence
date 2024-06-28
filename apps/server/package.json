@@ -20,7 +20,7 @@
     "cors": "^2.8.5",
     "database": "workspace:*",
     "dotenv": "^16.4.5",
-    "drizzle-orm": "0.30.7",
+    "drizzle-orm": "^0.31.2",
     "express": "^4.19.2",
     "helmet": "^7.1.0",
     "ioredis": "^5.4.1",
@@ -43,7 +43,7 @@
     "ts-jest": "^29.1.5",
     "ts-node": "^10.9.2",
     "tsconfig": "workspace:*",
-    "typescript": "^5.5.2"
+    "typescript": "5.4.4"
   },
   "engines": {
     "node": "20.15.0"
