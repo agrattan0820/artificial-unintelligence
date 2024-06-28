@@ -14,7 +14,7 @@ export default async function Home() {
     const runningGameQuery = await getRunningGame({ session });
 
     if (runningGameQuery) {
-      runningGame = runningGameQuery.game;
+      runningGame = runningGameQuery.game as Game;
     }
   }
 
