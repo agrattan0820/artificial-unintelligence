@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@sentry/node": "^8.13.0",
+    "@sentry/profiling-node": "^8.13.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "database": "workspace:*",

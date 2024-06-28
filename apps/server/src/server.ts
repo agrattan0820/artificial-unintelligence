@@ -1,3 +1,4 @@
+import "./instrument";
 import express, {
   ErrorRequestHandler,
   Express,
@@ -33,25 +34,7 @@ export function buildServer() {
   const app: Express = express();
   const server = createServer(app);
 
-  Sentry.init({
-    dsn: "https://94861f92f5354fe0ae1a921b9a55d909@o4505598670209024.ingest.sentry.io/4505598751211520",
-    integrations: [
-      // enable HTTP calls tracing
-      new Sentry.Integrations.Http({
-        tracing: true,
-      }),
-      // enable Express.js middleware tracing
-      new Sentry.Integrations.Express({
-        app,
-      }),
-    ],
-    // Performance Monitoring
-    tracesSampleRate: process.env.NODE_ENV === "production" ? 0.5 : 1.0,
-  });
-
   // Express middleware
-  app.use(Sentry.Handlers.requestHandler());
-  app.use(Sentry.Handlers.tracingHandler());
   app.use(express.json());
   app.use(
     cors({
@@ -172,7 +155,7 @@ export function buildServer() {
   generationRoutes(app);
 
   // Error handlers
-  app.use(Sentry.Handlers.errorHandler());
+  Sentry.setupExpressErrorHandler(app);
   const expressErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     if (res.headersSent) {
       return next(err);

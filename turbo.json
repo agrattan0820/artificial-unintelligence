@@ -20,7 +20,8 @@
         "REDIS_URL",
         "PORT",
         "NODE_ENV",
-        "APP_URL"
+        "APP_URL",
+        "NEXT_RUNTIME"
       ],
       "dependsOn": [
         "^build"

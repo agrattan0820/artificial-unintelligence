@@ -11,7 +11,7 @@
     "eslint": "8.57.0",
     "prettier": "^3.3.2",
     "tsconfig": "workspace:*",
-    "turbo": "^2.0.5"
+    "turbo": "^2.0.6"
   },
   "engines": {
     "node": "18"
