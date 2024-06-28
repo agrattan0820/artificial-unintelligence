@@ -2,7 +2,7 @@ import crypto from "crypto";
 import { describe, expect, test } from "@jest/globals";
 
 import { filterFaceOffGenerationsByQuestionId } from "../services/generation.service";
-import { GameRoundGeneration } from "../types";
+import type { GameRoundGeneration } from "../types";
 
 describe("filterGameRoundGenerationsByQuestionId", () => {
   test("expects the filtered array to not have any generations from other questions", () => {

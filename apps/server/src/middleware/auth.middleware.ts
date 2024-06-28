@@ -1,7 +1,7 @@
-import { Server } from "socket.io";
-import { ClientToServerEvents, ServerToClientEvents } from "../types";
+import type { Server } from "socket.io";
 import { parseCookie } from "../utils";
 import { checkUserSession } from "../services/user.service";
+import type { ClientToServerEvents, ServerToClientEvents } from "../types";
 
 export function authSocketMiddleware(
   io: Server<ClientToServerEvents, ServerToClientEvents>

@@ -1,6 +1,6 @@
-import { db, sessions, users } from "database";
 import crypto from "crypto";
 import { and, eq, gt } from "drizzle-orm";
+import { db, sessions, users } from "database";
 
 export async function createUser({ nickname }: { nickname: string }) {
   const newUser = await db

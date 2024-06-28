@@ -8,8 +8,8 @@ import {
   questionsToGames,
   users,
 } from "database";
-import { GameRoundGeneration, QuestionGenerations } from "../types";
 import { replicate } from "../replicate";
+import type { GameRoundGeneration, QuestionGenerations } from "../types";
 
 export async function getGameRoundGenerations({
   gameId,

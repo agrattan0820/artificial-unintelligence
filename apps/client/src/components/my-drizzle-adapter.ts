@@ -7,8 +7,8 @@ import {
   integer,
   PgTableFn,
 } from "drizzle-orm/pg-core";
-import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
-import { Adapter, AdapterAccount } from "next-auth/adapters";
+import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import type { Adapter, AdapterAccount } from "next-auth/adapters";
 
 export function createTables(pgTable: PgTableFn) {
   const users = pgTable("users", {

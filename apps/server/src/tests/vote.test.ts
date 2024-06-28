@@ -1,6 +1,6 @@
 import crypto from "crypto";
 import { describe, expect, test } from "@jest/globals";
-import { Generation } from "database";
+import type { Generation } from "database";
 
 import { calculateVotePoints, createVoteMap } from "../services/vote.service";
 import { UserVote } from "../types";

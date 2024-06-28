@@ -1,4 +1,4 @@
-import { Server, Socket } from "socket.io";
+import type { Server, Socket } from "socket.io";
 
 import {
   createGame,
@@ -7,7 +7,7 @@ import {
 } from "../services/game.service";
 import { assignQuestionsToPlayers } from "../services/question.service";
 import { getRoom } from "../services/room.service";
-import { ClientToServerEvents, ServerToClientEvents } from "../types";
+import type { ClientToServerEvents, ServerToClientEvents } from "../types";
 import { handleSocketError } from "../utils";
 import redis from "../redis";
 
