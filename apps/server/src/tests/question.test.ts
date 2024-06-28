@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import { User } from "database";
+import type { User } from "database";
 import { describe, expect, test } from "@jest/globals";
 
 import { prepareQuestionsForGame } from "../services/question.service";

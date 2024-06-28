@@ -1,6 +1,5 @@
-import { Server, Socket } from "socket.io";
+import type { Server, Socket } from "socket.io";
 
-import { ClientToServerEvents, ServerToClientEvents } from "../types";
 import {
   checkRoomForUserAndAdd,
   findNextHost,
@@ -10,6 +9,7 @@ import {
 } from "../services/room.service";
 import { handleSocketError } from "../utils";
 import redis from "../redis";
+import type { ClientToServerEvents, ServerToClientEvents } from "../types";
 
 export async function checkIfExistingUser(
   io: Server<ClientToServerEvents, ServerToClientEvents>,

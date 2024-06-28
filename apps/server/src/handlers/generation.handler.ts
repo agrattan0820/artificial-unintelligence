@@ -1,6 +1,6 @@
-import { Server, Socket } from "socket.io";
+import type { Server, Socket } from "socket.io";
 
-import { ClientToServerEvents, ServerToClientEvents } from "../types";
+import type { ClientToServerEvents, ServerToClientEvents } from "../types";
 import { handleSocketError } from "../utils";
 import {
   getFaceOffGenerations,

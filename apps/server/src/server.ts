@@ -15,7 +15,7 @@ import * as Sentry from "@sentry/node";
 
 import { userRoutes } from "./routes/user.route";
 import { roomRoutes } from "./routes/room.route";
-import { ClientToServerEvents, ServerToClientEvents } from "./types";
+import type { ClientToServerEvents, ServerToClientEvents } from "./types";
 import { gameRoutes } from "./routes/game.route";
 import { generationRoutes } from "./routes/generation.route";
 import {
