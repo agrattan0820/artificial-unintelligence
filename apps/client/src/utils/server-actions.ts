@@ -1,4 +1,3 @@
-import "server-only";
 import type { Session } from "next-auth";
 import { db, games, usersToRooms, usersToGames, rooms } from "database";
 import { sql, eq, and, isNull, desc, gt } from "drizzle-orm";
@@ -17,7 +16,8 @@ export async function getRunningGame({ session }: { session: Session }) {
     )
     .orderBy(desc(games.createdAt))
     .groupBy(games.id)
-    .having(({ playerCount }) => gt(playerCount, 0));
+    .having(({ playerCount }) => gt(playerCount, 0))
+    .limit(1);
 
   return runningGame[0];
 }
@@ -33,7 +33,8 @@ export async function isUserInGame({
     .select()
     .from(games)
     .innerJoin(usersToGames, eq(games.id, usersToGames.gameId))
-    .where(and(eq(usersToGames.userId, session.user.id), eq(games.id, gameId)));
+    .where(and(eq(usersToGames.userId, session.user.id), eq(games.id, gameId)))
+    .limit(1);
 
   return userInGame[0];
 }
@@ -51,7 +52,8 @@ export async function isUserInRoom({
     .innerJoin(usersToRooms, eq(rooms.code, usersToRooms.roomCode))
     .where(
       and(eq(usersToRooms.userId, session.user.id), eq(rooms.code, roomCode)),
-    );
+    )
+    .limit(1);
 
   return userInRoom[0];
 }
