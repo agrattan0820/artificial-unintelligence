@@ -1,50 +1,50 @@
 {
- "$schema": "https://turbo.build/schema.json",
- "globalDependencies": [
-  "**/.env.*local"
- ],
- "pipeline": {
-  "build": {
-   "env": [
-    "CI",
-    "GOOGLE_CLIENT_ID",
-    "GOOGLE_CLIENT_SECRET",
-    "NEXT_PUBLIC_API_URL",
-    "KV_REST_API_URL",
-    "KV_REST_API_TOKEN",
-    "OPENAI_API_KEY",
-    "REPLICATE_API_TOKEN",
-    "DATABASE_URL",
-    "POSTGRES_URL",
-    "SESSION_COOKIE_DOMAIN",
-    "REDIS_URL",
-    "PORT",
-    "NODE_ENV",
-    "APP_URL"
-   ],
-   "dependsOn": [
-    "^build"
-   ],
-   "outputs": [
-    "dist/**",
-    ".next/**",
-    "!.next/cache/**"
-   ]
-  },
-  "start": {
-   "dependsOn": [
-    "^build"
-   ]
-  },
-  "lint": {},
-  "dev": {
-   "cache": false,
-   "persistent": true
-  },
-  "test": {
-   "dependsOn": [
-    "^build"
-   ]
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": [
+    "**/.env.*local"
+  ],
+  "tasks": {
+    "build": {
+      "env": [
+        "CI",
+        "GOOGLE_CLIENT_ID",
+        "GOOGLE_CLIENT_SECRET",
+        "NEXT_PUBLIC_API_URL",
+        "KV_REST_API_URL",
+        "KV_REST_API_TOKEN",
+        "OPENAI_API_KEY",
+        "REPLICATE_API_TOKEN",
+        "DATABASE_URL",
+        "POSTGRES_URL",
+        "SESSION_COOKIE_DOMAIN",
+        "REDIS_URL",
+        "PORT",
+        "NODE_ENV",
+        "APP_URL"
+      ],
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "dist/**",
+        ".next/**",
+        "!.next/cache/**"
+      ]
+    },
+    "start": {
+      "dependsOn": [
+        "^build"
+      ]
+    },
+    "lint": {},
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "test": {
+      "dependsOn": [
+        "^build"
+      ]
+    }
   }
- }
 }
