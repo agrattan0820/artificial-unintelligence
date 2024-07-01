@@ -32,11 +32,6 @@
         "!.next/cache/**"
       ]
     },
-    "start": {
-      "dependsOn": [
-        "^build"
-      ]
-    },
     "lint": {},
     "dev": {
       "cache": false,
