@@ -9,7 +9,7 @@ import {
   votes,
   questionsToGames,
 } from "database";
-import { UserVote } from "../types";
+import type { UserVote } from "../types";
 
 export async function createVote({
   userId,

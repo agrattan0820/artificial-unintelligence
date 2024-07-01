@@ -1,6 +1,6 @@
-import { Socket } from "socket.io";
 import * as Sentry from "@sentry/node";
-import { ClientToServerEvents, ServerToClientEvents } from "./types";
+import type { Socket } from "socket.io";
+import type { ClientToServerEvents, ServerToClientEvents } from "./types";
 
 export function getRandomInt(min: number, max: number) {
   min = Math.ceil(min);

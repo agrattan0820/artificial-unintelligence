@@ -1,4 +1,4 @@
-import { Generation, Question, RoomInfo, User, Vote } from "database";
+import type { Generation, Question, RoomInfo, User, Vote } from "database";
 
 type StateMachineEvent =
   | {
