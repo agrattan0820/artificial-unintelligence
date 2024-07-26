@@ -3,7 +3,6 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 import type { EventFrom } from "xstate";
 import { useMachine } from "@xstate/react";
-import { AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
