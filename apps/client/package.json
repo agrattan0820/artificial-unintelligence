@@ -20,7 +20,7 @@
     "autoprefixer": "10.4.19",
     "clsx": "^2.1.1",
     "database": "workspace:*",
-    "drizzle-orm": "^0.32.1",
+    "drizzle-orm": "0.31.2",
     "framer-motion": "^11.3.17",
     "next": "^14.2.5",
     "next-auth": "^4.24.7",
