@@ -224,7 +224,6 @@ const Prompt = ({
           layout="position"
           initial={{ y: 10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          exit={{ y: 10, opacity: 0 }}
         >
           <p className="mb-4 text-sm">Question {stage === "FIRST" ? 1 : 2}/2</p>
           <h2 className="text-lg md:text-2xl">
