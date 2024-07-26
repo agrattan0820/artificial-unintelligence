@@ -32,7 +32,7 @@ export default async function SignInPage({
   return (
     <>
       <Header session={session} />
-      <main className="container mx-auto flex items-center justify-center px-4 pb-16 pt-48 lg:min-h-[100dvh] lg:pb-0 lg:pt-0">
+      <main className="page-height-lg container mx-auto flex items-center justify-center px-4 pb-16 pt-48 lg:pb-0 lg:pt-0">
         <section>
           <div className="mx-auto grid w-full max-w-xl grid-cols-1 gap-x-8 gap-y-4 rounded-2xl p-8 ring ring-slate-600 md:grid-cols-[8rem_1fr]">
             <Friend className="w-32" type="KAWAII" />

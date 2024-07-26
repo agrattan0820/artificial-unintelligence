@@ -47,6 +47,9 @@ type MachineContext = {
   questionIdx: number;
 };
 type MachineEvent = { type: "NEXT" } | { type: "SUBMIT" } | { type: "MORE" };
+type MachineInput = {
+  playerCount: number;
+};
 
 // MACHINE
 export const gameMachine = createMachine(
@@ -58,14 +61,15 @@ export const gameMachine = createMachine(
       // typegen: {} as import("./game-machine.typegen").Typegen0,
       context: {} as MachineContext,
       events: {} as MachineEvent,
+      input: {} as MachineInput,
     },
     // tsTypes: {} as import("./game-machine.typegen").Typegen0,
     initial: "connectingToMainframe",
-    context: {
+    context: ({ input }) => ({
       round: 1,
-      playerCount: 0,
+      playerCount: input.playerCount,
       questionIdx: 0,
-    },
+    }),
     states: {
       connectingToMainframe: {
         after: {

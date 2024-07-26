@@ -26,7 +26,7 @@ export default function HomepageTemplate({
     <>
       <Header session={session} />
       <main className="relative">
-        <section className="container mx-auto flex flex-col-reverse items-start justify-center gap-8 px-4 pb-16 pt-32 sm:items-center lg:min-h-[100dvh] lg:flex-row lg:gap-24 lg:pb-0 lg:pt-0">
+        <section className="page-height-lg container mx-auto flex flex-col-reverse items-start justify-center gap-8 px-4 pb-16 pt-32 sm:items-center lg:flex-row lg:gap-24 lg:pb-0 lg:pt-0">
           {runningGame && (
             <div className="absolute left-1/2 top-16 w-full -translate-x-1/2 sm:top-8">
               <LinkSecondaryButton
@@ -56,13 +56,21 @@ export default function HomepageTemplate({
               type="SMILING"
             />
             <video
-              src="/artificial-unintelligence-promo.mp4"
               controls
               autoPlay
               muted
               playsInline
               className="relative mx-auto aspect-video w-full rounded-2xl bg-black shadow-2xl shadow-indigo-500 lg:max-w-full"
-            ></video>
+            >
+              <source
+                src="/artificial-unintelligence-promo.webm"
+                type="video/webm"
+              />
+              <source
+                src="/artificial-unintelligence-promo.mp4"
+                type="video/mp4"
+              />
+            </video>
           </div>
         </section>
       </main>

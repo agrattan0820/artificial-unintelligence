@@ -9,7 +9,11 @@ type NextRoundProps = {
 
 const NextRound = ({ nextQueryNum, totalQueries }: NextRoundProps) => {
   return (
-    <h2 className="relative text-center text-3xl md:text-5xl">
+    <motion.h2
+      initial={{ y: 10, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      className="relative text-center text-3xl md:text-5xl"
+    >
       Round{" "}
       <span className="relative">
         <span className="opacity-0">{nextQueryNum}</span>
@@ -37,7 +41,7 @@ const NextRound = ({ nextQueryNum, totalQueries }: NextRoundProps) => {
         </span>
       </span>{" "}
       of {totalQueries}
-    </h2>
+    </motion.h2>
   );
 };
 

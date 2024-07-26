@@ -3,7 +3,6 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 import type { EventFrom } from "xstate";
 import { useMachine } from "@xstate/react";
-import { AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
@@ -65,6 +64,9 @@ export default function Game({ gameInfo, session }: GameProps) {
   // State machine
   const [state, send, actor] = useMachine(gameMachine, {
     snapshot: serverState,
+    input: {
+      playerCount: gameInfo.players.length,
+    },
   });
 
   const handleRoomState = (roomInfo: RoomInfo) => {
@@ -164,29 +166,27 @@ export default function Game({ gameInfo, session }: GameProps) {
     <main
       className={cn(
         !state.matches("leaderboard") &&
-          "flex min-h-[100dvh] flex-col justify-center",
+          "page-height flex flex-col justify-center",
       )}
     >
       <section className="container mx-auto px-4 py-24 md:py-16">
         <div className="absolute right-4 top-4 z-50 mt-4 md:right-8 md:top-8">
           <Menu session={session} roomCode={gameInfo.game.roomCode} />
         </div>
-        <AnimatePresence mode="wait">
-          {isMounted ? (
-            <CurrentGameComponent
-              key={state.value as string}
-              gameInfo={gameInfo}
-              state={state}
-              send={send}
-              hostId={hostId}
-              submittedPlayerIds={submittedPlayerIds}
-              currFaceOffQuestion={currFaceOffQuestion}
-              votedPlayers={votedPlayers}
-              leaderboard={leaderboard}
-              session={session}
-            />
-          ) : null}
-        </AnimatePresence>
+        {isMounted ? (
+          <CurrentGameComponent
+            key={state.value as string}
+            gameInfo={gameInfo}
+            state={state}
+            send={send}
+            hostId={hostId}
+            submittedPlayerIds={submittedPlayerIds}
+            currFaceOffQuestion={currFaceOffQuestion}
+            votedPlayers={votedPlayers}
+            leaderboard={leaderboard}
+            session={session}
+          />
+        ) : null}
       </section>
     </main>
   );

@@ -162,15 +162,15 @@ const FaceOffResultImage = ({
   return (
     <motion.figure
       layout="position"
-      initial={false}
+      initial="hidden"
       animate={
         isWinner
           ? "winner"
           : isLoser
-          ? "loser"
-          : bothImagesShown
-          ? "visible"
-          : "hidden"
+            ? "loser"
+            : bothImagesShown
+              ? "visible"
+              : "hidden"
       }
       variants={imageVariants}
       transition={{ when: "beforeChildren" }}
@@ -198,8 +198,8 @@ const FaceOffResultImage = ({
           src={image}
           alt={`AI-generated image with the prompt: ${prompt}`}
           onLoad={() => setShowImage(true)}
-          width={1024}
-          height={1024}
+          width={768}
+          height={768}
         />
         <motion.ul
           initial={false}
