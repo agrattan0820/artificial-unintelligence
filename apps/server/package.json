@@ -1,6 +1,6 @@
 {
   "name": "server",
-  "version": "0.3.22",
+  "version": "0.3.23",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
