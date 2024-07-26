@@ -238,9 +238,15 @@ function isReplicateResponse(res: object): res is [string, string] {
 
 export async function getReplicateAIImages({ prompt }: { prompt: string }) {
   const output = await replicate.run(
-    "stability-ai/sdxl:7762fd07cf82c948538e41f63f77d685e02b063e37e496e96eefd46c929f9bdc",
+    "bytedance/sdxl-lightning-4step:5f24084160c9089501c1b3545d9be3c27883ae2239b6f412990e82d4a6210f8f",
     {
-      input: { prompt, num_outputs: 2, width: 768, height: 768 },
+      input: {
+        prompt,
+        negative_prompt: "worst quality, low quality",
+        num_outputs: 2,
+        width: 768,
+        height: 768,
+      },
     }
   );
 
