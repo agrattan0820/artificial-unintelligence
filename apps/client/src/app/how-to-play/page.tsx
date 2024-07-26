@@ -43,13 +43,21 @@ export default async function HowToPlay() {
             AI-generated images in response to amusing prompts.
           </p>
           <video
-            src="/artificial-unintelligence-promo.mp4"
             controls
             autoPlay
             muted
             playsInline
             className="aspect-video w-full"
-          />
+          >
+            <source
+              src="/artificial-unintelligence-promo.webm"
+              type="video/webm"
+            />
+            <source
+              src="/artificial-unintelligence-promo.mp4"
+              type="video/mp4"
+            />
+          </video>
           Some prompts you might encounter:
           <ul>
             <li>A canceled children&apos;s toy</li>

@@ -56,13 +56,21 @@ export default function HomepageTemplate({
               type="SMILING"
             />
             <video
-              src="/artificial-unintelligence-promo.mp4"
               controls
               autoPlay
               muted
               playsInline
               className="relative mx-auto aspect-video w-full rounded-2xl bg-black shadow-2xl shadow-indigo-500 lg:max-w-full"
-            ></video>
+            >
+              <source
+                src="/artificial-unintelligence-promo.webm"
+                type="video/webm"
+              />
+              <source
+                src="/artificial-unintelligence-promo.mp4"
+                type="video/mp4"
+              />
+            </video>
           </div>
         </section>
       </main>
