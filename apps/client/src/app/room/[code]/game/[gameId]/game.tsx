@@ -65,6 +65,9 @@ export default function Game({ gameInfo, session }: GameProps) {
   // State machine
   const [state, send, actor] = useMachine(gameMachine, {
     snapshot: serverState,
+    input: {
+      playerCount: gameInfo.players.length,
+    },
   });
 
   const handleRoomState = (roomInfo: RoomInfo) => {
