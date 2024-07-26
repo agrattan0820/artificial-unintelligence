@@ -2,6 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
+.page-height {
+  min-height: 100vh;
+}
+
+@supports(min-height: 100dvh) {
+  .page-height {
+    min-height: 100dvh;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .page-height-lg {
+    min-height: 100vh;
+  }
+
+  @supports(min-height: 100dvh) {
+    .page-height-lg {
+      min-height: 100dvh;
+    }
+  }
+}
+
+
 .loading-ellipsis:after {
   font-family: var(--font-space);
   overflow: hidden;

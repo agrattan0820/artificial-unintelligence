@@ -15,7 +15,7 @@ export default async function Account() {
   return (
     <>
       <Header session={session} />
-      <main className="relative flex min-h-[100dvh] flex-col justify-center">
+      <main className="page-height relative flex flex-col justify-center">
         <AccountContent session={session} />
       </main>
       <Footer />

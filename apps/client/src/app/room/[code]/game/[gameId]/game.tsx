@@ -167,7 +167,7 @@ export default function Game({ gameInfo, session }: GameProps) {
     <main
       className={cn(
         !state.matches("leaderboard") &&
-          "flex min-h-[100dvh] flex-col justify-center",
+          "page-height flex flex-col justify-center",
       )}
     >
       <section className="container mx-auto px-4 py-24 md:py-16">

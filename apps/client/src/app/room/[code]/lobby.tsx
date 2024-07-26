@@ -70,7 +70,7 @@ export default function Lobby({
   return (
     <>
       <Header session={session} />
-      <main className="flex min-h-[100dvh] flex-col justify-center">
+      <main className="page-height flex flex-col justify-center">
         <motion.section layout="position" className="container mx-auto px-4">
           {!roomIsFull && (
             <p className="mb-2 hidden text-center text-xl sm:block">

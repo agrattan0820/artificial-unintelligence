@@ -26,7 +26,7 @@ export default function HomepageTemplate({
     <>
       <Header session={session} />
       <main className="relative">
-        <section className="container mx-auto flex flex-col-reverse items-start justify-center gap-8 px-4 pb-16 pt-32 sm:items-center lg:min-h-[100dvh] lg:flex-row lg:gap-24 lg:pb-0 lg:pt-0">
+        <section className="page-height-lg container mx-auto flex flex-col-reverse items-start justify-center gap-8 px-4 pb-16 pt-32 sm:items-center lg:flex-row lg:gap-24 lg:pb-0 lg:pt-0">
           {runningGame && (
             <div className="absolute left-1/2 top-16 w-full -translate-x-1/2 sm:top-8">
               <LinkSecondaryButton
