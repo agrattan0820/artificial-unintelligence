@@ -49,6 +49,7 @@ const FaceOff = ({
     setLoading(false);
     setVoteSubmitted(true);
   };
+
   return (
     <div className="mx-auto max-w-2xl">
       {currQuestionGenerations ? (
