@@ -75,6 +75,7 @@ const ImageChoiceOption = ({
           onLoad={onLoad}
           width={1024}
           height={1024}
+          loading="eager"
         />
         <FiCheck
           className={cn(

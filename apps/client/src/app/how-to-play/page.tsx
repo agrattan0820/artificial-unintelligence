@@ -35,7 +35,7 @@ export default async function HowToPlay() {
     <>
       <Header session={session} />
       <main className="container mx-auto px-4 py-24 md:py-40">
-        <section className="prose mx-auto text-white prose-headings:text-white prose-a:text-white prose-a:underline-offset-2 prose-a:transition hover:prose-a:text-indigo-200  prose-blockquote:text-white">
+        <section className="prose mx-auto text-white prose-headings:text-white prose-a:text-white prose-a:underline-offset-2 prose-a:transition hover:prose-a:text-indigo-200 prose-blockquote:text-white">
           <h1>How to Play</h1>
           <p>
             Artificial Unintelligence is an online multiplayer game where
