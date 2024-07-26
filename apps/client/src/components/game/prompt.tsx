@@ -14,6 +14,7 @@ import toast from "react-hot-toast";
 import { FiHelpCircle, FiX } from "react-icons/fi";
 import useSound from "use-sound";
 import type { Session } from "next-auth";
+import { captureException } from "@sentry/nextjs";
 
 import Button, { SecondaryButton } from "@ai/components/button";
 import Ellipsis from "@ai/components/ellipsis";
@@ -109,45 +110,54 @@ const Prompt = ({
   const outOfRegenerations = remainingImageGenerations === 0;
 
   const onPromptSubmit = async (e: FormEvent<PromptFormType>) => {
-    e.preventDefault();
-    setLoading(true);
+    try {
+      e.preventDefault();
+      setLoading(true);
 
-    const formPrompt = e.currentTarget.elements.prompt.value;
-    setImagePrompt(formPrompt);
+      const formPrompt = e.currentTarget.elements.prompt.value;
+      setImagePrompt(formPrompt);
 
-    console.time("Execution Time");
+      console.time("Execution Time");
 
-    const images = await generateSDXLImages(formPrompt);
+      const images = await generateSDXLImages(formPrompt);
 
-    console.timeEnd("Execution Time");
+      console.timeEnd("Execution Time");
 
-    if (images && Array.isArray(images) && images.length === 2) {
-      if (userId) {
-        const generations = await createGenerations({
-          userId,
-          gameId,
-          questionId: currQuestion.id,
-          images: images?.map((image) => {
-            return {
-              text: formPrompt,
-              imageUrl: image,
-            };
-          }),
-        });
-
-        setImageOption1(generations[0]);
-        setImageOption2(generations[1]);
-
-        setCurrQuestionNumGenerations(
-          currQuestionNumGenerations + generations.length,
+      if (!images || !Array.isArray(images) || images.length !== 2) {
+        throw new Error(
+          "Images wasn't defined or the incorrect amount of images were returned",
         );
       }
-    } else {
+
+      if (!userId) {
+        throw new Error("User id not defined when creating generations");
+      }
+
+      const generations = await createGenerations({
+        userId,
+        gameId,
+        questionId: currQuestion.id,
+        images: images?.map((image) => {
+          return {
+            text: formPrompt,
+            imageUrl: image,
+          };
+        }),
+      });
+
+      setImageOption1(generations[0]);
+      setImageOption2(generations[1]);
+
+      setCurrQuestionNumGenerations(
+        currQuestionNumGenerations + generations.length,
+      );
+    } catch (error) {
       console.error("Images were unable to be generated");
       toast.error("I'm afraid I don't know how to process such a request.");
+      captureException(error);
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   const resetImage = () => {
@@ -161,34 +171,38 @@ const Prompt = ({
   };
 
   const onImageSubmit = async () => {
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    if (session && imageOption1 && imageOption2) {
+      if (!session || !imageOption1 || !imageOption2) {
+        throw new Error(
+          "User was not defined when trying to submit a generation",
+        );
+      }
+
       socket.emit("generationSubmitted", {
         generationId: selectedImage === 1 ? imageOption1?.id : imageOption2?.id,
         gameId: gameId,
         round: currRound,
       });
-    } else {
-      console.error("User was not defined when trying to submit a generation");
-      toast.error("Oops, we can't submit your generation.");
-      setLoading(false);
-      return;
-    }
 
-    if (stage === "FIRST") {
-      setCurrQuestionNumGenerations(0);
-      setStage("SECOND");
-      setImagePrompt("");
-      resetImage();
-    } else {
-      if (soundEnabled) {
-        play();
+      if (stage === "FIRST") {
+        setCurrQuestionNumGenerations(0);
+        setStage("SECOND");
+        setImagePrompt("");
+        resetImage();
+      } else {
+        if (soundEnabled) {
+          play();
+        }
+        send({ type: "SUBMIT" });
       }
-      send({ type: "SUBMIT" });
+    } catch (error) {
+      toast.error("Oops, we can't submit your generation.");
+      captureException(error);
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   useEffect(() => {
