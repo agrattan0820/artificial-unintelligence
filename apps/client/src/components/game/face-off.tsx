@@ -49,10 +49,9 @@ const FaceOff = ({
     setLoading(false);
     setVoteSubmitted(true);
   };
-
   return (
     <div className="mx-auto max-w-2xl">
-      {currQuestionGenerations && (
+      {currQuestionGenerations ? (
         <>
           <div className="relative mb-14">
             <motion.h2
@@ -111,6 +110,10 @@ const FaceOff = ({
             )}
           </div>
         </>
+      ) : (
+        <div className="text-center">
+          <Ellipsis />
+        </div>
       )}
     </div>
   );
