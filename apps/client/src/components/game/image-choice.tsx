@@ -59,7 +59,7 @@ const ImageChoiceOption = ({
 
   return (
     <motion.div
-      initial={false}
+      initial="hidden"
       animate={bothShown ? "visible" : "hidden"}
       variants={variants}
     >

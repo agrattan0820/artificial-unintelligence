@@ -167,8 +167,8 @@ const Leaderboard = ({
                 <img
                   className="aspect-square"
                   src={generation.generation.imageUrl}
-                  width={1024}
-                  height={1024}
+                  width={768}
+                  height={768}
                   alt={`Image generated with the prompt: ${generation.generation.text}`}
                 />
                 <p className="absolute -left-1 -top-1 max-w-[160px] rounded-b-md rounded-r-md bg-slate-800/75 py-1 pb-2 pl-3 pr-2 pt-3 text-white">
