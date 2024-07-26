@@ -73,8 +73,8 @@ const ImageChoiceOption = ({
           src={image.src}
           alt={image.alt}
           onLoad={onLoad}
-          width={1024}
-          height={1024}
+          width={768}
+          height={768}
           loading="eager"
         />
         <FiCheck
