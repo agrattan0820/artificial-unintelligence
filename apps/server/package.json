@@ -43,7 +43,7 @@
     "ts-jest": "^29.2.3",
     "ts-node": "^10.9.2",
     "tsconfig": "workspace:*",
-    "typescript": "5.5.4"
+    "typescript": "5.4.4"
   },
   "engines": {
     "node": "20.16.0"
