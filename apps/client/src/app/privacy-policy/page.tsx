@@ -25,7 +25,7 @@ export default async function PrivacyPolicy() {
             Policy has been created with the help of the{" "}
             <a
               href="https://www.freeprivacypolicy.com/free-privacy-policy-generator/"
-              target="_blank"
+              target="_blank" rel="noreferrer"
             >
               Free Privacy Policy Generator
             </a>
@@ -126,7 +126,7 @@ export default async function PrivacyPolicy() {
                 accessible from{" "}
                 <a
                   href="https://www.artificialunintelligence.gg"
-                  rel="external nofollow noopener"
+                  rel="external nofollow noopener noreferrer"
                   target="_blank"
                 >
                   https://www.artificialunintelligence.gg
@@ -240,7 +240,7 @@ export default async function PrivacyPolicy() {
             the{" "}
             <a
               href="https://www.freeprivacypolicy.com/blog/sample-privacy-policy-template/#Use_Of_Cookies_And_Tracking"
-              target="_blank"
+              target="_blank" rel="noreferrer"
             >
               Free Privacy Policy website
             </a>{" "}

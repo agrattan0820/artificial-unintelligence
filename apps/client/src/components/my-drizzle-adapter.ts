@@ -8,7 +8,14 @@ import {
   PgTableFn,
 } from "drizzle-orm/pg-core";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
-import type { Adapter, AdapterAccount } from "next-auth/adapters";
+import type {
+  Adapter,
+  AdapterAccount,
+  AdapterSession,
+  AdapterUser,
+  VerificationToken,
+} from "next-auth/adapters";
+import crypto from "crypto";
 
 export function createTables(pgTable: PgTableFn) {
   const users = pgTable("users", {
@@ -38,9 +45,9 @@ export function createTables(pgTable: PgTableFn) {
       id_token: text("id_token"),
       session_state: text("session_state"),
     },
-    (account) => ({
-      compoundKey: primaryKey(account.provider, account.providerAccountId),
-    }),
+    (account) => [
+      primaryKey({ columns: [account.provider, account.providerAccountId] }),
+    ],
   );
 
   const sessions = pgTable("sessions", {
@@ -58,9 +65,7 @@ export function createTables(pgTable: PgTableFn) {
       token: text("token").notNull(),
       expires: timestamp("expires", { mode: "date" }).notNull(),
     },
-    (vt) => ({
-      compoundKey: primaryKey(vt.identifier, vt.token),
-    }),
+    (vt) => [primaryKey({ columns: [vt.identifier, vt.token] })],
   );
 
   return { users, accounts, sessions, verificationTokens };
@@ -72,7 +77,9 @@ export function myDrizzleAdapter(
   const { users, accounts, sessions, verificationTokens } =
     createTables(tableFn);
   return {
-    async createUser(data) {
+    async createUser(
+      data: Omit<AdapterUser, "id"> & Partial<Pick<AdapterUser, "id">>,
+    ) {
       return await client
         .insert(users)
         .values({ ...data, id: crypto.randomUUID() })
@@ -100,7 +107,7 @@ export function myDrizzleAdapter(
         .returning()
         .then((res) => res[0]);
     },
-    async getSessionAndUser(data) {
+    async getSessionAndUser(data: string) {
       return await client
         .select({
           session: sessions,
@@ -111,7 +118,7 @@ export function myDrizzleAdapter(
         .innerJoin(users, eq(users.id, sessions.userId))
         .then((res) => res[0] ?? null);
     },
-    async updateUser(data) {
+    async updateUser(data: Partial<AdapterUser> & { id: string }) {
       if (!data.id) {
         throw new Error("No user id.");
       }
@@ -122,7 +129,9 @@ export function myDrizzleAdapter(
         .returning()
         .then((res) => res[0]);
     },
-    async updateSession(data) {
+    async updateSession(
+      data: Partial<AdapterSession> & Pick<AdapterSession, "sessionToken">,
+    ) {
       return await client
         .update(sessions)
         .set(data)
@@ -130,7 +139,7 @@ export function myDrizzleAdapter(
         .returning()
         .then((res) => res[0]);
     },
-    async linkAccount(rawAccount) {
+    async linkAccount(rawAccount: AdapterAccount) {
       const updatedAccount = await client
         .insert(accounts)
         .values(rawAccount)
@@ -177,28 +186,24 @@ export function myDrizzleAdapter(
         .then((res) => res[0] ?? null);
       return session;
     },
-    async createVerificationToken(token) {
+    async createVerificationToken(token: VerificationToken) {
       return await client
         .insert(verificationTokens)
         .values(token)
         .returning()
         .then((res) => res[0]);
     },
-    async useVerificationToken(token) {
-      try {
-        return await client
-          .delete(verificationTokens)
-          .where(
-            and(
-              eq(verificationTokens.identifier, token.identifier),
-              eq(verificationTokens.token, token.token),
-            ),
-          )
-          .returning()
-          .then((res) => res[0] ?? null);
-      } catch (err) {
-        throw new Error("No verification token found.");
-      }
+    async useVerificationToken(params: { identifier: string; token: string }) {
+      return await client
+        .delete(verificationTokens)
+        .where(
+          and(
+            eq(verificationTokens.identifier, params.identifier),
+            eq(verificationTokens.token, params.token),
+          ),
+        )
+        .returning()
+        .then((res) => res[0] ?? null);
     },
     async deleteUser(id) {
       await client

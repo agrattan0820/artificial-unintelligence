@@ -9,9 +9,11 @@ import { authOptions } from "@ai/pages/api/auth/[...nextauth]";
 export async function GET(req: Request): Promise<never> {
   const session = await getServerSession(authOptions(req));
 
+  const cookieStore = await cookies();
+
   const sessionToken =
-    cookies().get("__Secure-next-auth.session-token") ??
-    cookies().get("next-auth.session-token");
+    cookieStore.get("__Secure-next-auth.session-token") ??
+    cookieStore.get("next-auth.session-token");
 
   if (!session || !sessionToken) {
     redirect("/");

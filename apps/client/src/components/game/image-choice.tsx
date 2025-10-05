@@ -27,7 +27,7 @@ const SkeletonImage = () => {
     <motion.div
       initial={{ opacity: 0, y: -15 }}
       animate={{ opacity: 1, y: 0 }}
-      className="relative isolate aspect-square min-h-[324px] w-full min-w-[324px] overflow-hidden rounded-xl bg-slate-800 shadow-xl shadow-black/5 before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:border-t before:border-slate-100/10 before:bg-gradient-to-r before:from-transparent before:via-slate-700 before:to-transparent"
+      className="relative isolate aspect-square min-h-[324px] w-full min-w-[324px] overflow-hidden rounded-xl bg-slate-800 shadow-xl shadow-black/5 before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:border-t before:border-slate-100/10 before:bg-linear-to-r before:from-transparent before:via-slate-700 before:to-transparent"
     />
   );
 };

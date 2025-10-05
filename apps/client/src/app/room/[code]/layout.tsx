@@ -7,9 +7,8 @@ import * as Sentry from "@sentry/nextjs";
 
 export default async function RoomLayout({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+}: LayoutProps<"/room/[code]">) {
+
   const session = await getServerSession(authOptions());
 
   if (!session) {

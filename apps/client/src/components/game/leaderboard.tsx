@@ -89,7 +89,7 @@ const Leaderboard = ({
           <motion.h2
             initial={{ y: 15, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className="text-2xl [text-wrap:balance] md:text-4xl"
+            className="text-2xl text-balance md:text-4xl"
           >
             Thanks for training with us!
           </motion.h2>

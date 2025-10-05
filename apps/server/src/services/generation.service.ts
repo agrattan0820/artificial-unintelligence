@@ -93,7 +93,7 @@ export async function getFaceOffGenerations({
   return gameRoundGenerations;
 }
 
-// TODO: test this function
+// Note: test coverage pending for this function
 export function mapGenerationsByQuestion({
   faceOffGenerations,
 }: {
@@ -132,7 +132,7 @@ export function mapGenerationsByQuestion({
   return questionGenerations;
 }
 
-// TODO: Test this function
+// Note: test coverage pending for this function
 export function getSubmittedPlayers({
   faceOffGenerations,
 }: {

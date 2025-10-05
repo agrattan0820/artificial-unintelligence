@@ -12,9 +12,8 @@
   "dependencies": {
     "@auth/drizzle-adapter": "^1.10.0",
     "@sentry/nextjs": "^10.17.0",
+    "@tailwindcss/postcss": "^4.1.14",
     "@tanstack/react-query": "^5.90.2",
-    "@upstash/ratelimit": "^2.0.6",
-    "@upstash/redis": "^1.35.4",
     "@vercel/analytics": "^1.5.0",
     "@xstate/react": "^6.0.0",
     "autoprefixer": "10.4.21",
