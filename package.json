@@ -8,14 +8,14 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
-    "eslint": "8.57.0",
-    "prettier": "^3.3.3",
+    "eslint": "9.37.0",
+    "prettier": "^3.6.2",
     "tsconfig": "workspace:*",
-    "turbo": "^2.0.9"
+    "turbo": "^2.5.8"
   },
   "engines": {
-    "node": "20.16.0"
+    "node": "22.14.0"
   },
-  "packageManager": "pnpm@9.6.0",
+  "packageManager": "pnpm@10.18.0",
   "name": "artificial-unintelligence"
 }

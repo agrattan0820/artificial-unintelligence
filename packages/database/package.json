@@ -14,16 +14,16 @@
     "db:migrate:run": "ts-node migrate.ts"
   },
   "dependencies": {
-    "dotenv": "^16.4.5",
-    "drizzle-orm": "^0.32.1",
-    "postgres": "^3.4.4"
+    "dotenv": "^17.2.3",
+    "drizzle-orm": "^0.44.6",
+    "postgres": "^3.4.7"
   },
   "devDependencies": {
-    "@auth/core": "^0.34.1",
-    "drizzle-kit": "^0.23.0",
+    "@auth/core": "^0.40.0",
+    "drizzle-kit": "^0.31.5",
     "eslint-config-custom": "workspace:*",
     "ts-node": "^10.9.2",
     "tsconfig": "workspace:*",
-    "typescript": "5.4.4"
+    "typescript": "5.9.3"
   }
 }
