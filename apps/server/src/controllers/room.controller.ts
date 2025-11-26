@@ -24,7 +24,7 @@ export async function getRoomController(
 }
 
 export async function joinRoomController(
-  req: Request<{}, {}, { userId: string; nickname: string; code: string }>,
+  req: Request<Record<string, never>, Record<string, never>, { userId: string; nickname: string; code: string }>,
   res: Response,
   next: NextFunction
 ) {

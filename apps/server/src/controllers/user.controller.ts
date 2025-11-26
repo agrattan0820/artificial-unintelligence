@@ -4,7 +4,7 @@ import { createRoom, joinRoom } from "../services/room.service";
 import { deleteUser, updateUserNickname } from "../services/user.service";
 
 export async function existingHostController(
-  req: Request<{}, {}, { userId: string; nickname: string }>,
+  req: Request<Record<string, never>, Record<string, never>, { userId: string; nickname: string }>,
   res: Response,
   next: NextFunction
 ) {

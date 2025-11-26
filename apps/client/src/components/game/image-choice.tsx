@@ -103,6 +103,7 @@ const ImageChoice = ({
 
   useEffect(() => {
     if (!imageOption1) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- intentionally resetting state when image is cleared
       setShowImage1(false);
     }
     if (!imageOption2) {

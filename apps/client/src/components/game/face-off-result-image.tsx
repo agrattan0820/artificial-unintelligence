@@ -150,7 +150,9 @@ const FaceOffResultImage = ({
     }
 
     return () => {
-      controls && controls.stop();
+      if (controls) {
+        controls.stop();
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pointIncrease, showPoints]);

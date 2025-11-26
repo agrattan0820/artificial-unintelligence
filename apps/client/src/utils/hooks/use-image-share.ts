@@ -25,7 +25,7 @@ export default function useImageShare() {
           })
           .catch(console.error);
       }
-    } catch (error) {
+    } catch {
       toast.error("Oops, looks like we can't download this image.");
     }
   };

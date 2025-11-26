@@ -15,12 +15,12 @@
   },
   "dependencies": {
     "dotenv": "^17.2.3",
-    "drizzle-orm": "^0.44.6",
+    "drizzle-orm": "^0.44.7",
     "postgres": "^3.4.7"
   },
   "devDependencies": {
     "@auth/core": "^0.40.0",
-    "drizzle-kit": "^0.31.5",
+    "drizzle-kit": "^0.31.7",
     "eslint-config-custom": "workspace:*",
     "ts-node": "^10.9.2",
     "tsconfig": "workspace:*",

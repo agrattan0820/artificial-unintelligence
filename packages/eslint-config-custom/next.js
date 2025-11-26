@@ -13,6 +13,9 @@ import { config as libraryConfig } from "./library.js";
  * @type {import("eslint").Linter.Config[]}
  * */
 export const nextJsConfig = [
+  {
+    ignores: [".next/**", "out/**", ".next-env.d.ts"],
+  },
   ...libraryConfig,
   js.configs.recommended,
   eslintConfigPrettier,

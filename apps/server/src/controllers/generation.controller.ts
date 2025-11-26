@@ -9,8 +9,8 @@ import {
 
 export async function createGenerationsController(
   req: Request<
-    {},
-    {},
+    Record<string, never>,
+    Record<string, never>,
     {
       userId: string;
       gameId: string;
@@ -57,8 +57,8 @@ export async function createGenerationsController(
 
 export async function replicateAIController(
   req: Request<
-    {},
-    {},
+    Record<string, never>,
+    Record<string, never>,
     {
       prompt: string;
     }
