@@ -14,6 +14,9 @@ importers:
       prettier:
         specifier: ^3.7.4
         version: 3.7.4
+      prettier-plugin-tailwindcss:
+        specifier: ^0.7.2
+        version: 0.7.2(prettier@3.7.4)
       tsconfig:
         specifier: workspace:*
         version: link:packages/tsconfig
@@ -126,9 +129,6 @@ importers:
       eslint-config-custom:
         specifier: workspace:*
         version: link:../../packages/eslint-config-custom
-      prettier-plugin-tailwindcss:
-        specifier: ^0.7.2
-        version: 0.7.2(prettier@3.7.4)
       tsconfig:
         specifier: workspace:*
         version: link:../../packages/tsconfig

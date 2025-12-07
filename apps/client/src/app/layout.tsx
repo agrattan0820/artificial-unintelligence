@@ -23,17 +23,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}: LayoutProps<"/">) {
+export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en">
-      <body
-        className={cn(
-          spaceMono.variable,
-          "scroll-smooth bg-slate-900 font-space text-white antialiased",
-        )}
-      >
+    <html
+      lang="en"
+      className={cn(spaceMono.variable, "font-space antialiased")}
+    >
+      <body className="scroll-smooth bg-slate-900 text-white">
         <Toaster containerStyle={{ textAlign: "center" }} />
         <SoundProvider>
           <AuthProvider>{children}</AuthProvider>

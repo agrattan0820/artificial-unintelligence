@@ -37,8 +37,8 @@ export async function checkUserSession({
     .where(
       and(
         eq(sessions.sessionToken, sessionToken),
-        gt(sessions.expires, new Date())
-      )
+        gt(sessions.expires, new Date()),
+      ),
     );
 
   return checkDBForSession[0];

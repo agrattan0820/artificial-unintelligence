@@ -1,10 +1,14 @@
-@import 'tailwindcss';
+@import "tailwindcss";
+
+@theme inline {
+  --font-space: var(--font-space);
+}
 
 .page-height {
   min-height: 100vh;
 }
 
-@supports(min-height: 100dvh) {
+@supports (min-height: 100dvh) {
   .page-height {
     min-height: 100dvh;
   }
@@ -15,13 +19,12 @@
     min-height: 100vh;
   }
 
-  @supports(min-height: 100dvh) {
+  @supports (min-height: 100dvh) {
     .page-height-lg {
       min-height: 100dvh;
     }
   }
 }
-
 
 .loading-ellipsis:after {
   font-family: var(--font-space);

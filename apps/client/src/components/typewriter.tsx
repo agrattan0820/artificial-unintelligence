@@ -1,6 +1,6 @@
 const TypewriterText = ({ children }: { children: React.ReactNode }) => {
   return (
-    <span className="mx-auto block animate-typewriter overflow-hidden whitespace-nowrap border-r-2 border-r-white">
+    <span className="animate-typewriter mx-auto block overflow-hidden border-r-2 border-r-white whitespace-nowrap">
       {children}
     </span>
   );

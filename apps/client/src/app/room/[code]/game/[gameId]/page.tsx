@@ -10,13 +10,11 @@ import { isUserInGame } from "@ai/utils/server-actions";
 export default async function GamePage({
   params,
 }: PageProps<"/room/[code]/game/[gameId]">) {
-
   const session = await getServerSession(authOptions());
 
   const { gameId } = await params;
 
   const cookieStore = await cookies();
-
 
   const sessionToken =
     cookieStore.get("__Secure-next-auth.session-token") ??

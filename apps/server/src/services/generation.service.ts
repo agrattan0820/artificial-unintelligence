@@ -37,13 +37,13 @@ export async function getGameRoundGenerations({
       questionsToGames,
       and(
         eq(questionsToGames.gameId, generations.gameId),
-        eq(questionsToGames.questionId, generations.questionId)
-      )
+        eq(questionsToGames.questionId, generations.questionId),
+      ),
     )
     .innerJoin(questions, eq(questions.id, generations.questionId))
     .innerJoin(users, eq(users.id, generations.userId))
     .where(
-      and(eq(generations.gameId, gameId), eq(questionsToGames.round, round))
+      and(eq(generations.gameId, gameId), eq(questionsToGames.round, round)),
     )
     .orderBy(desc(generations.createdAt));
 
@@ -76,8 +76,8 @@ export async function getFaceOffGenerations({
       questionsToGames,
       and(
         eq(questionsToGames.gameId, generations.gameId),
-        eq(questionsToGames.questionId, generations.questionId)
-      )
+        eq(questionsToGames.questionId, generations.questionId),
+      ),
     )
     .innerJoin(questions, eq(questions.id, generations.questionId))
     .innerJoin(users, eq(users.id, generations.userId))
@@ -85,8 +85,8 @@ export async function getFaceOffGenerations({
       and(
         eq(generations.gameId, gameId),
         eq(questionsToGames.round, round),
-        eq(generations.selected, true)
-      )
+        eq(generations.selected, true),
+      ),
     )
     .orderBy(asc(questionsToGames.createdAt), asc(questionsToGames.questionId));
 
@@ -187,7 +187,7 @@ export function filterFaceOffGenerationsByQuestionId({
 
       return acc;
     },
-    []
+    [],
   );
 
   return filteredGenerations;
@@ -211,8 +211,8 @@ export async function getGenerationCount({
       and(
         eq(generations.gameId, gameId),
         eq(generations.userId, userId),
-        eq(generations.questionId, questionId)
-      )
+        eq(generations.questionId, questionId),
+      ),
     );
 
   return generationCount[0].count;
@@ -247,7 +247,7 @@ export async function getReplicateAIImages({ prompt }: { prompt: string }) {
         width: 768,
         height: 768,
       },
-    }
+    },
   );
 
   console.log("Received images:", output);

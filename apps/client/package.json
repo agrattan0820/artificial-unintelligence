@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint .",
+    "lint": "prettier . --check && eslint .",
     "test:e2e": "playwright test"
   },
   "dependencies": {
@@ -46,7 +46,6 @@
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "eslint-config-custom": "workspace:*",
-    "prettier-plugin-tailwindcss": "^0.7.2",
     "tsconfig": "workspace:*"
   },
   "engines": {

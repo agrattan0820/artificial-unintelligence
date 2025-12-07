@@ -182,7 +182,7 @@ const FaceOffResultImage = ({
         initial={false}
         animate={showPoints ? "visible" : "hidden"}
         variants={pointVariants}
-        className="absolute -top-8 left-0 right-0 z-0 text-center"
+        className="absolute -top-8 right-0 left-0 z-0 text-center"
       >
         +<motion.span>{animatedPoints}</motion.span>
       </motion.p>
@@ -224,7 +224,7 @@ const FaceOffResultImage = ({
 
       <div
         className={cn(
-          "absolute -right-2 -top-2 scale-0 transform rounded-full bg-yellow-600 p-2 text-xl text-white opacity-0 transition",
+          "absolute -top-2 -right-2 scale-0 transform rounded-full bg-yellow-600 p-2 text-xl text-white opacity-0 transition",
           isWinner && "scale-100 opacity-100",
         )}
       >

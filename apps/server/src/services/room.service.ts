@@ -68,7 +68,7 @@ export async function leaveRoom({
   const removeUserFromRoom = await db
     .delete(usersToRooms)
     .where(
-      and(eq(usersToRooms.userId, userId), eq(usersToRooms.roomCode, code))
+      and(eq(usersToRooms.userId, userId), eq(usersToRooms.roomCode, code)),
     )
     .returning();
 

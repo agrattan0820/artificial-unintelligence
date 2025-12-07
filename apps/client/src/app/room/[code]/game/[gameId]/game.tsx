@@ -170,7 +170,7 @@ export default function Game({ gameInfo, session }: GameProps) {
       )}
     >
       <section className="container mx-auto px-4 py-24 md:py-16">
-        <div className="absolute right-4 top-4 z-50 mt-4 md:right-8 md:top-8">
+        <div className="absolute top-4 right-4 z-50 mt-4 md:top-8 md:right-8">
           <Menu session={session} roomCode={gameInfo.game.roomCode} />
         </div>
         {isMounted ? (

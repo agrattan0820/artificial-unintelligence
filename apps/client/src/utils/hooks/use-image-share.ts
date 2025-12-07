@@ -11,7 +11,7 @@ export default function useImageShare() {
       const imageFile = new File(
         [imageData],
         "artificial_unintelligence_img.jpg",
-        metadata
+        metadata,
       );
 
       if (navigator.share) {

@@ -47,7 +47,7 @@ export default function AccountContent({ session }: { session: Session }) {
             className="relative z-10 h-24 w-24 rounded-full shadow"
           />
         )}
-        <div className=" -mt-8 rounded-2xl bg-slate-800 p-8 text-sm md:text-base">
+        <div className="-mt-8 rounded-2xl bg-slate-800 p-8 text-sm md:text-base">
           <p>Name: {session.user.name}</p>
           <p>Email: {session.user.email}</p>
         </div>
@@ -60,10 +60,10 @@ export default function AccountContent({ session }: { session: Session }) {
       </section>
       <dialog
         ref={dialogRef}
-        className="relative mx-auto w-full max-w-2xl rounded-xl p-8 transition backdrop:bg-slate-900/50 open:animate-modal open:backdrop:animate-modal"
+        className="open:animate-modal open:backdrop:animate-modal relative mx-auto w-full max-w-2xl rounded-xl p-8 transition backdrop:bg-slate-900/50"
       >
         <form method="dialog">
-          <button className="absolute right-4 top-4 text-xl md:text-2xl">
+          <button className="absolute top-4 right-4 text-xl md:text-2xl">
             <FiX />
           </button>
           <p className="text-2xl">

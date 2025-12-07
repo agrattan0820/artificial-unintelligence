@@ -41,7 +41,7 @@ export function buildServer() {
       methods: ["GET", "POST", "DELETE"],
       origin: process.env.APP_URL ?? "https://www.artificialunintelligence.gg",
       credentials: true,
-    })
+    }),
   );
   app.use(helmet());
   app.use(morgan("tiny"));
@@ -107,7 +107,7 @@ export function buildServer() {
 
       await redis.expireat(
         sessionToken,
-        Math.floor(checkDBForSession.expires.getTime() / 1000)
+        Math.floor(checkDBForSession.expires.getTime() / 1000),
       );
     } else {
       Sentry.setUser({ id: redisSession });

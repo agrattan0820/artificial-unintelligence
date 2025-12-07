@@ -7,7 +7,7 @@
     "build": "tsc",
     "start": "node ./dist/app.js",
     "dev": "cross-env NODE_ENV=development nodemon src/app.ts",
-    "lint": "eslint . --ext .ts",
+    "lint": "prettier . --check && eslint . --ext .ts",
     "test": "jest",
     "migrate": "drizzle-kit generate:pg --out drizzle --schema db/schema.ts",
     "sourcemaps": "pnpm run build && pnpm run sentry:sourcemaps",

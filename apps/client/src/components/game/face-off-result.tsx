@@ -51,8 +51,8 @@ const FaceOffResult = ({
     voteMap.player1Votes.length > voteMap.player2Votes.length
       ? 1
       : voteMap.player1Votes.length < voteMap.player2Votes.length
-      ? 2
-      : null;
+        ? 2
+        : null;
 
   const [showImage1, setShowImage1] = useState(false);
   const [showImage2, setShowImage2] = useState(false);

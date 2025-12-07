@@ -128,7 +128,7 @@ const Leaderboard = ({
                 </p>
                 <p className="flex items-center justify-center gap-4">
                   {result.standing === 1 && (
-                    <span className="absolute -right-2 -top-2 rounded-full bg-yellow-600 p-2 text-sm text-white md:static md:text-base">
+                    <span className="absolute -top-2 -right-2 rounded-full bg-yellow-600 p-2 text-sm text-white md:static md:text-base">
                       <BsTrophy />
                     </span>
                   )}
@@ -171,14 +171,14 @@ const Leaderboard = ({
                   height={768}
                   alt={`Image generated with the prompt: ${generation.generation.text}`}
                 />
-                <p className="absolute -left-1 -top-1 max-w-[160px] rounded-b-md rounded-r-md bg-slate-800/75 py-1 pb-2 pl-3 pr-2 pt-3 text-white">
+                <p className="absolute -top-1 -left-1 max-w-[160px] rounded-r-md rounded-b-md bg-slate-800/75 py-1 pt-3 pr-2 pb-2 pl-3 text-white">
                   {generation.user.nickname}
                 </p>
                 <a
                   href={generation.generation.imageUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="absolute -right-1 -top-1 block rounded-b-md rounded-l-md bg-slate-800/75 pb-2 pl-2 pr-3 pt-3 text-xl text-white transition hover:ring-2 hover:ring-white"
+                  className="absolute -top-1 -right-1 block rounded-l-md rounded-b-md bg-slate-800/75 pt-3 pr-3 pb-2 pl-2 text-xl text-white transition hover:ring-2 hover:ring-white"
                 >
                   <FiDownload />
                 </a>

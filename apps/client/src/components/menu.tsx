@@ -72,7 +72,7 @@ const Menu = ({ session, roomCode }: MenuProps) => {
         {showMenu && (
           <motion.ul
             id="main-menu"
-            className="absolute right-0 top-4 mt-4 flex w-48 flex-col gap-4 rounded-md border border-gray-300 bg-slate-900 p-4"
+            className="absolute top-4 right-0 mt-4 flex w-48 flex-col gap-4 rounded-md border border-gray-300 bg-slate-900 p-4"
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{
               scale: 1,

@@ -79,7 +79,7 @@ const ImageChoiceOption = ({
         />
         <FiCheck
           className={cn(
-            "absolute -right-2 -top-2 scale-0 transform rounded-full bg-green-600 p-0.5 text-3xl text-white transition",
+            "absolute -top-2 -right-2 scale-0 transform rounded-full bg-green-600 p-0.5 text-3xl text-white transition",
             selectedImage === option && "scale-100",
           )}
         />

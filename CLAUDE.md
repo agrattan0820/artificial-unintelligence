@@ -29,6 +29,7 @@ pnpm run format
 ### App-Specific Commands
 
 **Client (apps/client):**
+
 ```bash
 pnpm --filter client dev      # Next.js dev server (port 3000)
 pnpm --filter client build    # Production build
@@ -36,6 +37,7 @@ pnpm --filter client test:e2e # Playwright E2E tests
 ```
 
 **Server (apps/server):**
+
 ```bash
 pnpm --filter server dev      # Nodemon dev server (port 8080)
 pnpm --filter server build    # TypeScript compile
@@ -43,6 +45,7 @@ pnpm --filter server test     # Jest unit tests
 ```
 
 **Database (packages/database):**
+
 ```bash
 pnpm --filter database db:push          # Push schema to database
 pnpm --filter database db:migrate:create # Generate migration
@@ -73,6 +76,7 @@ pnpm --filter database db:migrate:run    # Run migrations
 ### Game Flow
 
 The game state machine (`game-machine.tsx`) controls the UI flow:
+
 1. `connectingToMainframe` → `connectionEstablished` → `prompt` (generation phase)
 2. `promptSubmitted` → `promptDone` → `faceOff` → `faceOffResults` (voting phase)
 3. Repeats for 3 rounds, then `winnerLeadUp` → `winner` → `leaderboard`
@@ -88,6 +92,7 @@ The game state machine (`game-machine.tsx`) controls the UI flow:
 ### Database Schema (packages/database/schema.ts)
 
 Core tables: `users`, `rooms`, `games`, `questions`, `generations`, `votes`
+
 - Users join rooms, rooms host games
 - Games have multiple rounds with questions assigned to player pairs
 - Players submit generations (AI images) for questions
@@ -96,7 +101,9 @@ Core tables: `users`, `rooms`, `games`, `questions`, `generations`, `votes`
 ## Environment Variables
 
 **Server (.env):**
+
 - `PORT`, `DATABASE_URL`, `OPENAI_API_KEY`, `REPLICATE_API_TOKEN`, `REDIS_URL`
 
 **Client (.env.local):**
+
 - `NEXT_PUBLIC_API_URL`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `OPENAI_API_KEY`

@@ -19,7 +19,7 @@ export async function createGenerationsController(
     }
   >,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   try {
     const { userId, gameId, questionId, images } = req.body;
@@ -45,8 +45,8 @@ export async function createGenerationsController(
           questionId: questionIdToNum,
           text: image.text,
           imageUrl: image.imageUrl,
-        })
-      )
+        }),
+      ),
     );
 
     res.status(200).send(generations);
@@ -64,7 +64,7 @@ export async function replicateAIController(
     }
   >,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   try {
     const { prompt } = req.body;
@@ -89,7 +89,7 @@ export async function replicateAIController(
 export async function getFaceOffsController(
   req: Request<{ gameId: string; round: string }>,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   try {
     const gameId = Number.parseInt(req.params.gameId);

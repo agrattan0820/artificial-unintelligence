@@ -13,7 +13,7 @@ import redis from "../redis";
 
 export function gameSocketHandlers(
   io: Server<ClientToServerEvents, ServerToClientEvents>,
-  socket: Socket<ClientToServerEvents, ServerToClientEvents>
+  socket: Socket<ClientToServerEvents, ServerToClientEvents>,
 ) {
   socket.on("initiateGame", async (code) => {
     try {
@@ -24,7 +24,7 @@ export function gameSocketHandlers(
         JSON.stringify({
           state: newGame.state,
           round: newGame.round,
-        })
+        }),
       );
 
       await redis.expire(`GAME_${newGame.id}`, 3600); // expire in 1 hour
@@ -33,7 +33,7 @@ export function gameSocketHandlers(
 
       if (!roomInfo?.players) {
         throw new Error(
-          "The room's players were not defined when initiating the game"
+          "The room's players were not defined when initiating the game",
         );
       }
 
@@ -65,7 +65,7 @@ export function gameSocketHandlers(
         JSON.stringify({
           state: newGame.state,
           round: newGame.round,
-        })
+        }),
       );
 
       await redis.expire(`GAME_${newGame.id}`, 3600); // expire in 1 hour
@@ -74,7 +74,7 @@ export function gameSocketHandlers(
 
       if (!roomInfo?.players) {
         throw new Error(
-          "The room's players were not defined when initiating the game"
+          "The room's players were not defined when initiating the game",
         );
       }
 
@@ -131,7 +131,7 @@ export function gameSocketHandlers(
             JSON.stringify({
               state,
               round,
-            })
+            }),
           );
 
           await redis.expire(`GAME_${gameId}`, 3600); // expire in 1 hour

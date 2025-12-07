@@ -4,9 +4,13 @@ import { createRoom, joinRoom } from "../services/room.service";
 import { deleteUser, updateUserNickname } from "../services/user.service";
 
 export async function existingHostController(
-  req: Request<Record<string, never>, Record<string, never>, { userId: string; nickname: string }>,
+  req: Request<
+    Record<string, never>,
+    Record<string, never>,
+    { userId: string; nickname: string }
+  >,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   try {
     const { userId, nickname } = req.body;
@@ -32,7 +36,7 @@ export async function existingHostController(
 export async function deleteUserController(
   req: Request<{ id: string }>,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   try {
     const { id } = req.params;

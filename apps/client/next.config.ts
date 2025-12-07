@@ -30,7 +30,7 @@ const nextConfig: NextConfig = {
 export default withSentryConfig(nextConfig, {
   org: "alexander-grattan",
   project: "artificial-unintelligence-client",
-// Only print logs for uploading source maps in CI
+  // Only print logs for uploading source maps in CI
   // Set to `true` to suppress logs
   silent: !process.env.CI,
   // Automatically tree-shake Sentry logger statements to reduce bundle size

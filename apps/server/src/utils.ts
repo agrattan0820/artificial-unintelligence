@@ -22,7 +22,7 @@ export function shuffleArray<T>(arr: T[]) {
 export function handleSocketError(
   error: Error,
   socket: Socket<ClientToServerEvents, ServerToClientEvents>,
-  code?: string
+  code?: string,
 ) {
   console.error("Socket Error: ", error);
   socket.emit("error", error.message);
@@ -39,6 +39,6 @@ export function parseCookie(cookieHeader: string) {
         acc[decodeURIComponent(v[0].trim())] = decodeURIComponent(v[1].trim());
         return acc;
       },
-      {} as Record<string, string>
+      {} as Record<string, string>,
     );
 }

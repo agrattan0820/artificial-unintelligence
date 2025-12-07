@@ -31,8 +31,8 @@ const Timer = ({ totalSeconds }: { totalSeconds: number }) => {
   return (
     <div
       className={cn(
-        "fixed left-8 top-8 flex h-16 w-16 items-center justify-center rounded-full border border-gray-400 transition",
-        seconds <= 30 && "border-red-400 text-red-400"
+        "fixed top-8 left-8 flex h-16 w-16 items-center justify-center rounded-full border border-gray-400 transition",
+        seconds <= 30 && "border-red-400 text-red-400",
       )}
     >
       {timeString(seconds)}

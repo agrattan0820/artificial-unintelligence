@@ -132,7 +132,7 @@ describe("filterGameRoundGenerationsByQuestionId", () => {
     expect(filteredGenerations.length).toBe(2);
 
     const includesOtherQuestions = filteredGenerations.some(
-      (generation) => generation.questionId !== testQuestionId
+      (generation) => generation.questionId !== testQuestionId,
     );
 
     expect(includesOtherQuestions).toBe(false);

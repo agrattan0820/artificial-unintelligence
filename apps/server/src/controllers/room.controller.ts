@@ -5,7 +5,7 @@ import { updateUserNickname } from "../services/user.service";
 export async function getRoomController(
   req: Request<{ code: string }>,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   try {
     const code = req.params.code;
@@ -24,9 +24,13 @@ export async function getRoomController(
 }
 
 export async function joinRoomController(
-  req: Request<Record<string, never>, Record<string, never>, { userId: string; nickname: string; code: string }>,
+  req: Request<
+    Record<string, never>,
+    Record<string, never>,
+    { userId: string; nickname: string; code: string }
+  >,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   try {
     const { userId, nickname, code } = req.body;
