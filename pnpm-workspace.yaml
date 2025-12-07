@@ -7,4 +7,5 @@ onlyBuiltDependencies:
   - '@sentry/cli'
   - '@tailwindcss/oxide'
   - bufferutil
+  - esbuild
   - utf-8-validate
