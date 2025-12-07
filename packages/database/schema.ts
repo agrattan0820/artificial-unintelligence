@@ -36,9 +36,9 @@ export const accounts = pgTable(
     id_token: text("id_token"),
     session_state: text("session_state"),
   },
-  (account) => ({
-    compoundKey: primaryKey(account.provider, account.providerAccountId),
-  })
+  (account) => [
+    primaryKey({ columns: [account.provider, account.providerAccountId] }),
+  ],
 );
 
 export const sessions = pgTable("sessions", {
@@ -56,9 +56,7 @@ export const verificationTokens = pgTable(
     token: text("token").notNull(),
     expires: timestamp("expires", { mode: "date" }).notNull(),
   },
-  (vt) => ({
-    compoundKey: primaryKey(vt.identifier, vt.token),
-  })
+  (vt) => [primaryKey({ columns: [vt.identifier, vt.token] })],
 );
 
 export const rooms = pgTable("rooms", {
@@ -78,9 +76,7 @@ export const usersToRooms = pgTable(
       .notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
-  (table) => ({
-    cpk: primaryKey(table.userId, table.roomCode),
-  })
+  (table) => [primaryKey({ columns: [table.userId, table.roomCode] })],
 );
 
 export const questions = pgTable("questions", {
@@ -118,9 +114,7 @@ export const questionsToGames = pgTable(
       .notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
-  (table) => ({
-    cpk: primaryKey(table.gameId, table.questionId),
-  })
+  (table) => [primaryKey({ columns: [table.gameId, table.questionId] })],
 );
 
 export const generations = pgTable("generations", {
@@ -162,9 +156,7 @@ export const usersToGames = pgTable(
       .notNull(),
     points: integer("points").default(0).notNull(),
   },
-  (table) => ({
-    cpk: primaryKey(table.userId, table.gameId),
-  })
+  (table) => [primaryKey({ columns: [table.userId, table.gameId] })],
 );
 
 export type User = typeof users.$inferInsert;

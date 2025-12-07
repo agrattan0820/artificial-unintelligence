@@ -11,6 +11,7 @@ export function useStickyState<T>(defaultValue: T, key: string) {
   useEffect(() => {
     if (isMounted) {
       const stickyValue = window.localStorage.getItem(key);
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- intentionally syncing with localStorage
       setValue(stickyValue ? JSON.parse(stickyValue) : defaultValue);
     }
   }, [defaultValue, isMounted, key]);
@@ -19,7 +20,7 @@ export function useStickyState<T>(defaultValue: T, key: string) {
     if (isMounted) {
       window.localStorage.setItem(key, JSON.stringify(value));
     }
-  }, [key, value]);
+  }, [key, value, isMounted]);
 
   return [value, setValue] as const;
 }

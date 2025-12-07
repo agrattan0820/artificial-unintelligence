@@ -1,3 +1,13 @@
 packages:
-  - "apps/*"
-  - "packages/*"
+  - apps/*
+  - packages/*
+
+onlyBuiltDependencies:
+  - "@sentry-internal/node-cpu-profiler"
+  - "@sentry/cli"
+  - "@tailwindcss/oxide"
+  - bufferutil
+  - esbuild
+  - sharp
+  - unrs-resolver
+  - utf-8-validate

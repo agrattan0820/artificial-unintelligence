@@ -17,7 +17,7 @@ const NextRound = ({ nextQueryNum, totalQueries }: NextRoundProps) => {
       Round{" "}
       <span className="relative">
         <span className="opacity-0">{nextQueryNum}</span>
-        <span className="absolute left-0 top-1/2 inline-block -translate-y-1/2">
+        <span className="absolute top-1/2 left-0 inline-block -translate-y-1/2">
           <motion.span
             className="inline-block"
             initial={{ y: 0, opacity: 1 }}
@@ -28,7 +28,7 @@ const NextRound = ({ nextQueryNum, totalQueries }: NextRoundProps) => {
             {nextQueryNum - 1}
           </motion.span>
         </span>
-        <span className="absolute left-0 top-1/2 inline-block -translate-y-1/2">
+        <span className="absolute top-1/2 left-0 inline-block -translate-y-1/2">
           <motion.span
             className="inline-block"
             initial={{ y: -15, opacity: 0 }}

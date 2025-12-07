@@ -9,26 +9,28 @@ import { isUserInGame } from "@ai/utils/server-actions";
 
 export default async function GamePage({
   params,
-}: {
-  params: { code: string; gameId: number };
-}) {
+}: PageProps<"/room/[code]/game/[gameId]">) {
   const session = await getServerSession(authOptions());
 
+  const { gameId } = await params;
+
+  const cookieStore = await cookies();
+
   const sessionToken =
-    cookies().get("__Secure-next-auth.session-token") ??
-    cookies().get("next-auth.session-token");
+    cookieStore.get("__Secure-next-auth.session-token") ??
+    cookieStore.get("next-auth.session-token");
 
   if (!session || !sessionToken) {
     redirect("/");
   }
 
-  const userInGame = await isUserInGame({ gameId: params.gameId, session });
+  const userInGame = await isUserInGame({ gameId: Number(gameId), session });
 
   if (!userInGame) {
     redirect("/");
   }
 
-  const gameInfo = await getGameInfo(params.gameId, sessionToken.value);
+  const gameInfo = await getGameInfo(Number(gameId), sessionToken.value);
 
   return <Game gameInfo={gameInfo} session={session} />;
 }

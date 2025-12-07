@@ -38,8 +38,8 @@ export async function getVotesByQuestionId({
     .where(
       and(
         eq(generations.questionId, questionId),
-        eq(generations.gameId, gameId)
-      )
+        eq(generations.gameId, gameId),
+      ),
     );
 
   const questionVotes = await db
@@ -52,8 +52,8 @@ export async function getVotesByQuestionId({
     .where(
       inArray(
         votes.generationId,
-        getAssociatedGenerations.map((generation) => generation.id)
-      )
+        getAssociatedGenerations.map((generation) => generation.id),
+      ),
     );
 
   return questionVotes;
@@ -76,7 +76,7 @@ export async function getVotesByGameRound({
     .innerJoin(generations, eq(votes.generationId, generations.id))
     .innerJoin(
       questionsToGames,
-      eq(generations.questionId, questionsToGames.questionId)
+      eq(generations.questionId, questionsToGames.questionId),
     )
     .innerJoin(games, eq(questionsToGames.gameId, games.id))
     .where(and(eq(games.id, gameId), eq(games.round, round)));
@@ -96,7 +96,7 @@ export function createVoteMap({
       acc[curr.id] = curr.userId;
       return acc;
     },
-    {}
+    {},
   );
 
   const voteMap = userVotes.reduce<Record<string, number>>((acc, curr) => {
@@ -154,8 +154,8 @@ export async function saveVotePoints({
     .where(
       and(
         eq(usersToGames.gameId, gameId),
-        inArray(usersToGames.userId, userIdArray)
-      )
+        inArray(usersToGames.userId, userIdArray),
+      ),
     );
 
   await Promise.all(
@@ -171,9 +171,9 @@ export async function saveVotePoints({
         .where(
           and(
             eq(usersToGames.userId, prev.userId),
-            eq(usersToGames.gameId, prev.gameId)
-          )
+            eq(usersToGames.gameId, prev.gameId),
+          ),
         );
-    })
+    }),
   );
 }

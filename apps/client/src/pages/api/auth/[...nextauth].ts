@@ -18,14 +18,14 @@ export const authOptions = (
           const cookieNickname =
             req && "cookies" in req && typeof req.cookies === "object"
               ? typeof req.cookies["next-auth.callback-url"] === "string"
-                ? new URL(
+                ? (new URL(
                     req.cookies["next-auth.callback-url"],
-                  ).searchParams.get("nickname") ?? ""
+                  ).searchParams.get("nickname") ?? "")
                 : typeof req.cookies["__Secure-next-auth.callback-url"] ===
                     "string"
-                  ? new URL(
+                  ? (new URL(
                       req.cookies["__Secure-next-auth.callback-url"],
-                    ).searchParams.get("nickname") ?? ""
+                    ).searchParams.get("nickname") ?? "")
                   : ""
               : "";
 

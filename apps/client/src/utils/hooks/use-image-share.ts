@@ -11,7 +11,7 @@ export default function useImageShare() {
       const imageFile = new File(
         [imageData],
         "artificial_unintelligence_img.jpg",
-        metadata
+        metadata,
       );
 
       if (navigator.share) {
@@ -25,7 +25,7 @@ export default function useImageShare() {
           })
           .catch(console.error);
       }
-    } catch (error) {
+    } catch {
       toast.error("Oops, looks like we can't download this image.");
     }
   };

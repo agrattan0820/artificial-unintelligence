@@ -13,7 +13,7 @@ import redis from "../redis";
 
 export function roomSocketHandlers(
   io: Server<ClientToServerEvents, ServerToClientEvents>,
-  socket: Socket<ClientToServerEvents, ServerToClientEvents>
+  socket: Socket<ClientToServerEvents, ServerToClientEvents>,
 ) {
   socket.on("connectToRoom", async (data) => {
     const { userId, code } = data;
@@ -27,7 +27,7 @@ export function roomSocketHandlers(
         }
 
         const playerInRoom = roomInfo.players.some(
-          (player) => player.id === userId
+          (player) => player.id === userId,
         );
 
         if (roomInfo.players.length >= 8 && !playerInRoom) {

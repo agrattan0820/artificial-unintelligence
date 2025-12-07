@@ -11,28 +11,28 @@ import { ContinueWithGoogleButton } from "@ai/components/sign-in-form";
 export default async function CreateAccountPage({
   params,
   searchParams,
-}: {
-  params: { nickname: string };
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
+}: PageProps<"/create-account/[nickname]">) {
   const session = await getServerSession(authOptions());
+
+  const { nickname } = await params;
+  const { code } = await searchParams;
 
   if (session) {
     redirect("/");
   }
 
-  const nickname = decodeURI(params.nickname);
+  const decodedNickname = decodeURI(nickname);
 
-  const roomCode = Array.isArray(searchParams?.code)
-    ? searchParams?.code[0]
-    : typeof searchParams?.code === "string"
-      ? decodeURI(searchParams?.code)
+  const roomCode = Array.isArray(code)
+    ? code[0]
+    : typeof code === "string"
+      ? decodeURI(code)
       : undefined;
 
   return (
     <>
       <Header session={session} />
-      <main className="page-height-lg container mx-auto flex items-center justify-center px-4 pb-16 pt-48 lg:pb-0 lg:pt-0">
+      <main className="page-height-lg container mx-auto flex items-center justify-center px-4 pt-48 pb-16 lg:pt-0 lg:pb-0">
         <section>
           <div className="mx-auto grid w-full max-w-xl grid-cols-1 gap-x-8 gap-y-4 rounded-2xl p-8 ring ring-slate-600 md:grid-cols-[8rem_1fr]">
             <Friend className="w-32" type="SMILING" />
@@ -41,13 +41,13 @@ export default async function CreateAccountPage({
             </h1>
             <div className="md:col-start-2">
               <ContinueWithGoogleButton
-                nickname={nickname}
+                nickname={decodedNickname}
                 roomCode={roomCode}
               />
               <p className="mt-4 text-xs">
                 Already played before?{" "}
                 <Link
-                  href={`/sign-in/${encodeURI(nickname)}${roomCode ? `?code=${encodeURI(roomCode)}` : ""}`}
+                  href={`/sign-in/${encodeURI(decodedNickname)}${roomCode ? `?code=${encodeURI(roomCode)}` : ""}`}
                   className="underline underline-offset-2"
                 >
                   Sign in

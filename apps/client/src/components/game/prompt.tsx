@@ -268,7 +268,7 @@ const Prompt = ({
                   />
                   <label
                     htmlFor="prompt"
-                    className="absolute -top-6 left-2 text-sm text-gray-400 transition-all peer-placeholder-shown:left-4 peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:-top-6 peer-focus:left-2 peer-focus:text-sm peer-focus:text-gray-400"
+                    className="absolute -top-6 left-2 text-sm text-gray-400 transition-all peer-placeholder-shown:top-2 peer-placeholder-shown:left-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:-top-6 peer-focus:left-2 peer-focus:text-sm peer-focus:text-gray-400"
                   >
                     Describe a funny image
                   </label>
@@ -293,10 +293,10 @@ const Prompt = ({
           </motion.form>
           <dialog
             ref={dialogRef}
-            className="relative mx-auto w-full max-w-2xl rounded-xl p-8 transition backdrop:bg-slate-900/50 open:animate-modal open:backdrop:animate-modal"
+            className="open:animate-modal open:backdrop:animate-modal relative mx-auto w-full max-w-2xl rounded-xl p-8 transition backdrop:bg-slate-900/50"
           >
             <form method="dialog">
-              <button className="absolute right-4 top-4 text-xl md:text-2xl">
+              <button className="absolute top-4 right-4 text-xl md:text-2xl">
                 <FiX />
               </button>
               <p>
@@ -356,7 +356,7 @@ const Prompt = ({
       {imagesLoaded && (
         <div className="mt-4">
           <p className="mb-8">{imagePrompt}</p>
-          <div className="fixed bottom-8 left-0 right-0 mx-auto flex w-full max-w-2xl gap-x-2 gap-y-4 px-6 md:static md:px-0">
+          <div className="fixed right-0 bottom-8 left-0 mx-auto flex w-full max-w-2xl gap-x-2 gap-y-4 px-6 md:static md:px-0">
             <Button
               className="w-full shadow-lg md:w-auto"
               onClick={onImageSubmit}

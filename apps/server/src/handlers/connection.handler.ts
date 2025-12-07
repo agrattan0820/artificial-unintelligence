@@ -13,7 +13,7 @@ import type { ClientToServerEvents, ServerToClientEvents } from "../types";
 
 export async function checkIfExistingUser(
   io: Server<ClientToServerEvents, ServerToClientEvents>,
-  socket: Socket<ClientToServerEvents, ServerToClientEvents>
+  socket: Socket<ClientToServerEvents, ServerToClientEvents>,
 ) {
   if (socket.handshake.auth.roomCode) {
     const roomCode: string = socket.handshake.auth.roomCode;
@@ -41,7 +41,7 @@ export async function checkIfExistingUser(
 
 export async function connectionSocketHandlers(
   io: Server<ClientToServerEvents, ServerToClientEvents>,
-  socket: Socket<ClientToServerEvents, ServerToClientEvents>
+  socket: Socket<ClientToServerEvents, ServerToClientEvents>,
 ) {
   socket.on("disconnecting", async () => {
     try {
@@ -82,7 +82,7 @@ export async function connectionSocketHandlers(
           }
 
           socket.to(room).emit("roomState", roomInfo);
-        })
+        }),
       );
     } catch (error) {
       if (error instanceof Error)

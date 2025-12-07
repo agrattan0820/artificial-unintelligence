@@ -72,7 +72,6 @@ Once 3 rounds have been completed, all points are tallied up from the votes the 
 ## Dev Tutorial
 
 1. Configure your environment variables (`.env` for the server folder and `.env.local` for the client folder):
-
    1. Server:
       1. `PORT` - port the HTTP server runs on
       2. `DATABASE_URL` - connection string to your PostgreSQL database

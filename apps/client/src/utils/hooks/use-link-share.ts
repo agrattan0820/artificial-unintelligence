@@ -47,7 +47,9 @@ export default function useLinkShare({
       cb.writeText(link)
         .then(() => {
           setCopying(true);
-          callback && callback();
+          if (callback) {
+            callback();
+          }
         })
         .catch(console.error);
     }

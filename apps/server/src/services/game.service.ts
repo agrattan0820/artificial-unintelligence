@@ -100,7 +100,7 @@ export async function getGamePageInfo({
     // Grab only the generations where selected is true because those are the ones that are submitted for face-offs.
     submittedPlayers = getSubmittedPlayers({
       faceOffGenerations: gameRoundGenerations.filter(
-        (generation) => generation.generation.selected
+        (generation) => generation.generation.selected,
       ),
     });
     votedPlayers = await getVotesByGameRound({
@@ -194,7 +194,7 @@ export async function addUsersToGame({
     .values(
       players.map((player) => {
         return { userId: player.id, gameId };
-      })
+      }),
     )
     .returning();
 

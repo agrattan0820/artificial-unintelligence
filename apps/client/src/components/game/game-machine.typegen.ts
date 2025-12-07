@@ -1,4 +1,5 @@
 // This file was automatically generated. Edits will be overwritten
+/* eslint-disable @typescript-eslint/no-empty-object-type */
 
 export interface Typegen0 {
   "@@xstate/typegen": true;

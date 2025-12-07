@@ -9,7 +9,7 @@ export default async function PrivacyPolicy() {
     <>
       <Header session={session} />
       <main className="container mx-auto px-4 py-24 md:py-40">
-        <section className="prose mx-auto text-white prose-headings:text-white prose-a:text-white prose-a:underline-offset-2 prose-a:transition hover:prose-a:text-indigo-200 prose-blockquote:text-white  prose-strong:text-white">
+        <section className="prose prose-headings:text-white prose-a:text-white prose-a:underline-offset-2 prose-a:transition hover:prose-a:text-indigo-200 prose-blockquote:text-white prose-strong:text-white mx-auto text-white">
           <h1>Privacy Policy</h1>
           <p>Last updated: February 04, 2024</p>
           <p>
@@ -26,6 +26,7 @@ export default async function PrivacyPolicy() {
             <a
               href="https://www.freeprivacypolicy.com/free-privacy-policy-generator/"
               target="_blank"
+              rel="noreferrer"
             >
               Free Privacy Policy Generator
             </a>
@@ -126,7 +127,7 @@ export default async function PrivacyPolicy() {
                 accessible from{" "}
                 <a
                   href="https://www.artificialunintelligence.gg"
-                  rel="external nofollow noopener"
+                  rel="external nofollow noopener noreferrer"
                   target="_blank"
                 >
                   https://www.artificialunintelligence.gg
@@ -241,6 +242,7 @@ export default async function PrivacyPolicy() {
             <a
               href="https://www.freeprivacypolicy.com/blog/sample-privacy-policy-template/#Use_Of_Cookies_And_Tracking"
               target="_blank"
+              rel="noreferrer"
             >
               Free Privacy Policy website
             </a>{" "}

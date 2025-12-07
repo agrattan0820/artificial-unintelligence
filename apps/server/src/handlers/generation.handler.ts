@@ -11,7 +11,7 @@ import { getGameInfo } from "../services/game.service";
 
 export function generationSocketHandlers(
   io: Server<ClientToServerEvents, ServerToClientEvents>,
-  socket: Socket<ClientToServerEvents, ServerToClientEvents>
+  socket: Socket<ClientToServerEvents, ServerToClientEvents>,
 ) {
   socket.on("generationSubmitted", async (data) => {
     try {

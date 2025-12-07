@@ -19,7 +19,7 @@ const ImageFigure = ({
   caption: string;
 }) => {
   return (
-    <figure className="relative rounded-xl pb-12 pt-8 ring ring-indigo-600">
+    <figure className="relative rounded-xl pt-8 pb-12 ring ring-indigo-600">
       <Image className="rounded-xl" src={image.src} alt={image.alt} />
       <figcaption className="absolute bottom-4 left-4 m-0 pr-4 italic">
         {caption}
@@ -35,7 +35,7 @@ export default async function HowToPlay() {
     <>
       <Header session={session} />
       <main className="container mx-auto px-4 py-24 md:py-40">
-        <section className="prose mx-auto text-white prose-headings:text-white prose-a:text-white prose-a:underline-offset-2 prose-a:transition hover:prose-a:text-indigo-200 prose-blockquote:text-white">
+        <section className="prose prose-headings:text-white prose-a:text-white prose-a:underline-offset-2 prose-a:transition hover:prose-a:text-indigo-200 prose-blockquote:text-white mx-auto text-white">
           <h1>How to Play</h1>
           <p>
             Artificial Unintelligence is an online multiplayer game where

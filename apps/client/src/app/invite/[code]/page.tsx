@@ -6,8 +6,10 @@ import { authOptions } from "@ai/pages/api/auth/[...nextauth]";
 import { getRunningGame } from "@ai/utils/server-actions";
 import HomepageTemplate from "@ai/components/homepage-template";
 
-export default async function Invite({ params }: { params: { code: string } }) {
-  const roomInfo = await getRoomInfo(params.code);
+export default async function Invite({ params }: PageProps<"/invite/[code]">) {
+  const { code } = await params;
+
+  const roomInfo = await getRoomInfo(code);
 
   const session = await getServerSession(authOptions());
 

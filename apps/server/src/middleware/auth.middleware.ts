@@ -4,7 +4,7 @@ import { checkUserSession } from "../services/user.service";
 import type { ClientToServerEvents, ServerToClientEvents } from "../types";
 
 export function authSocketMiddleware(
-  io: Server<ClientToServerEvents, ServerToClientEvents>
+  io: Server<ClientToServerEvents, ServerToClientEvents>,
 ) {
   io.use(async (socket, next) => {
     const userId = socket.handshake.auth.userId;

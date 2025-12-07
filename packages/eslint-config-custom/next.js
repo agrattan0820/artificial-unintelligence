@@ -1,40 +1,52 @@
-const { resolve } = require("node:path");
+import js from "@eslint/js";
+import eslintConfigPrettier from "eslint-config-prettier";
+import tseslint from "typescript-eslint";
+import pluginReactHooks from "eslint-plugin-react-hooks";
+import pluginReact from "eslint-plugin-react";
+import globals from "globals";
+import pluginNext from "@next/eslint-plugin-next";
+import { config as libraryConfig } from "./library.js";
 
-const project = resolve(process.cwd(), "tsconfig.json");
-
-module.exports = {
-  extends: [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "next/core-web-vitals",
-    "eslint-config-turbo",
-    "prettier",
-  ],
-  parserOptions: {
-    project,
+/**
+ * A custom ESLint configuration for libraries that use Next.js.
+ *
+ * @type {import("eslint").Linter.Config[]}
+ * */
+export const nextJsConfig = [
+  {
+    ignores: [".next/**", "out/**", ".next-env.d.ts"],
   },
-  globals: {
-    React: true,
-    JSX: true,
-  },
-  settings: {
-    "import/resolver": {
-      typescript: {
-        project,
+  ...libraryConfig,
+  js.configs.recommended,
+  eslintConfigPrettier,
+  ...tseslint.configs.recommended,
+  {
+    ...pluginReact.configs.flat.recommended,
+    languageOptions: {
+      ...pluginReact.configs.flat.recommended.languageOptions,
+      globals: {
+        ...globals.serviceworker,
       },
     },
   },
-  ignorePatterns: ["node_modules/", "dist/"],
-  rules: {
-    "@typescript-eslint/ban-types": [
-      "error",
-      {
-        types: {
-          "{}": false,
-        },
-        extendDefaults: true,
-      },
-    ],
-    "import/no-default-export": "off",
+  {
+    plugins: {
+      "@next/next": pluginNext,
+    },
+    rules: {
+      ...pluginNext.configs.recommended.rules,
+      ...pluginNext.configs["core-web-vitals"].rules,
+    },
   },
-};
+  {
+    plugins: {
+      "react-hooks": pluginReactHooks,
+    },
+    settings: { react: { version: "detect" } },
+    rules: {
+      ...pluginReactHooks.configs.recommended.rules,
+      // React scope no longer necessary with new JSX transform.
+      "react/react-in-jsx-scope": "off",
+    },
+  },
+];

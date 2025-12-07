@@ -8,7 +8,7 @@ import {
 export async function getGameInfoController(
   req: Request<{ id: string }>,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   try {
     const gameId = Number(req.params.id);
@@ -36,7 +36,7 @@ export async function getGameInfoController(
 export async function getLeaderboardByIdController(
   req: Request<{ id: string }>,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   try {
     const id = Number.parseInt(req.params.id);

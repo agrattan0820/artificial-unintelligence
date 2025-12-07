@@ -8,7 +8,9 @@ const Footer = () => {
           <a
             href="https://www.producthunt.com/posts/artificial-unintelligence?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-artificial&#0045;unintelligence"
             target="_blank"
+            rel="noreferrer"
           >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=419632&theme=neutral"
               alt="Artificial&#0032;Unintelligence - Compete&#0032;to&#0032;create&#0032;the&#0032;funniest&#0032;AI&#0032;images&#0032;in&#0032;this&#0032;party&#0032;game | Product Hunt"

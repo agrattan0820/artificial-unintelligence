@@ -36,9 +36,9 @@ export async function getLeastAppearingQuestions({
         eq(questionsToGames.questionId, questions.id),
         or(
           inArray(questionsToGames.player1, userIds),
-          inArray(questionsToGames.player2, userIds)
-        )
-      )
+          inArray(questionsToGames.player2, userIds),
+        ),
+      ),
     )
     .groupBy(({ questionId }) => questionId)
     .orderBy(({ count, questionId }) => [count, questionId]);
@@ -134,9 +134,9 @@ export async function getUserQuestionsForRound({
         eq(questionsToGames.round, round),
         or(
           eq(questionsToGames.player1, userId),
-          eq(questionsToGames.player2, userId)
-        )
-      )
+          eq(questionsToGames.player2, userId),
+        ),
+      ),
     );
 
   return userQuestionsForRound;
