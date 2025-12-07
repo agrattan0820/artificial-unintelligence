@@ -238,7 +238,7 @@ function isReplicateResponse(res: object): res is [string, string] {
 
 export async function getReplicateAIImages({ prompt }: { prompt: string }) {
   const output = await replicate.run(
-    "bytedance/sdxl-lightning-4step:5f24084160c9089501c1b3545d9be3c27883ae2239b6f412990e82d4a6210f8f",
+    "bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe",
     {
       input: {
         prompt,
