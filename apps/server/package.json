@@ -3,6 +3,7 @@
   "version": "0.3.23",
   "main": "index.js",
   "license": "MIT",
+  "type": "module",
   "scripts": {
     "build": "tsc",
     "start": "node ./dist/app.js",
