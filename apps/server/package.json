@@ -5,7 +5,8 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "build": "tsc",
+    "build": "esbuild src/app.ts --bundle --platform=node --format=esm --outfile=dist/app.js --packages=external --sourcemap",
+    "typecheck": "tsc --noEmit",
     "start": "node ./dist/app.js",
     "dev": "cross-env NODE_ENV=development nodemon src/app.ts",
     "lint": "prettier . --check && eslint . --ext .ts",
@@ -38,6 +39,7 @@
     "@types/morgan": "^1.9.10",
     "@types/node": "^24.10.1",
     "cross-env": "^10.1.0",
+    "esbuild": "^0.27.1",
     "eslint-config-custom": "workspace:*",
     "jest": "^30.2.0",
     "nodemon": "^3.1.11",
