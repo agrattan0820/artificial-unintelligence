@@ -244,6 +244,9 @@ importers:
       '@auth/core':
         specifier: ^0.40.0
         version: 0.40.0
+      '@types/node':
+        specifier: ^24.10.1
+        version: 24.10.1
       drizzle-kit:
         specifier: ^0.31.8
         version: 0.31.8

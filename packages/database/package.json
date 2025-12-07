@@ -20,6 +20,7 @@
   },
   "devDependencies": {
     "@auth/core": "^0.40.0",
+    "@types/node": "^24.10.1",
     "drizzle-kit": "^0.31.8",
     "eslint-config-custom": "workspace:*",
     "ts-node": "^10.9.2",
