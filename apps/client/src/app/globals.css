@@ -1,7 +1,59 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
-@theme inline {
-  --font-space: var(--font-space);
+@theme {
+  --font-space:
+    var(--font-space), ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+  --animate-dot-bounce: dot 2s infinite;
+  --animate-dot-bounce-2: dot 2s infinite 0.25s;
+  --animate-dot-bounce-3: dot 2s infinite 0.5s;
+  --animate-modal: modal 300ms ease-in-out;
+  --animate-typewriter:
+    typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+
+  @keyframes dot {
+    0% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes modal {
+    0% {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+  }
+
+  @keyframes typing {
+    from {
+      width: 0;
+    }
+    to {
+      width: 100%;
+    }
+  }
+
+  @keyframes blink-caret {
+    from,
+    to {
+      border-color: inherit;
+    }
+    50% {
+      border-color: transparent;
+    }
+  }
 }
 
 .page-height {
@@ -32,7 +84,7 @@
   display: inline-block;
   vertical-align: bottom;
   animation: ellipsis steps(4, end) 900ms infinite;
-  content: "\2026"; /* ascii code for the ellipsis character */
+  content: "\2026";
   width: 0;
 }
 
