@@ -16,33 +16,35 @@
     "sentry:sourcemaps": "sentry-cli sourcemaps inject --org alexander-grattan --project artificial-unintelligence-server ./dist && sentry-cli sourcemaps upload --org alexander-grattan --project artificial-unintelligence-server ./dist"
   },
   "dependencies": {
-    "@sentry/node": "^10.29.0",
-    "@sentry/profiling-node": "^10.29.0",
+    "@sentry/node": "^10.32.1",
+    "@sentry/profiling-node": "^10.32.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "database": "workspace:*",
     "dotenv": "^17.2.3",
-    "drizzle-orm": "^0.45.0",
+    "drizzle-orm": "^0.45.1",
     "express": "^5.2.1",
     "helmet": "^8.1.0",
     "ioredis": "^5.8.2",
     "morgan": "^1.10.1",
     "replicate": "^1.4.0",
-    "socket.io": "^4.8.1"
+    "socket.io": "^4.8.3"
   },
   "devDependencies": {
     "@jest/globals": "^30.2.0",
-    "@sentry/cli": "^2.58.2",
+    "@sentry/cli": "^3.0.1",
     "@types/cookie-parser": "^1.4.10",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/morgan": "^1.9.10",
-    "@types/node": "^24.10.1",
+    "@types/node": "^25.0.3",
     "cross-env": "^10.1.0",
-    "esbuild": "^0.27.1",
+    "esbuild": "^0.27.2",
+    "eslint": "^9.39.2",
     "eslint-config-custom": "workspace:*",
     "jest": "^30.2.0",
     "nodemon": "^3.1.11",
+    "prettier": "^3.7.4",
     "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
     "tsconfig": "workspace:*",
@@ -52,7 +54,7 @@
     "node": "22.14.0"
   },
   "optionalDependencies": {
-    "bufferutil": "^4.0.9",
-    "utf-8-validate": "^6.0.5"
+    "bufferutil": "^4.1.0",
+    "utf-8-validate": "^6.0.6"
   }
 }

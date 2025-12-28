@@ -5,15 +5,11 @@
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
-    "test": "turbo run test",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "test": "turbo run test"
   },
   "devDependencies": {
-    "eslint": "9.39.1",
-    "prettier": "^3.7.4",
-    "prettier-plugin-tailwindcss": "^0.7.2",
     "tsconfig": "workspace:*",
-    "turbo": "^2.6.3"
+    "turbo": "^2.7.2"
   },
   "engines": {
     "node": "22.14.0"

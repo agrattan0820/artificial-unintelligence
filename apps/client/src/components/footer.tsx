@@ -4,22 +4,8 @@ const Footer = () => {
   return (
     <footer className="w-full py-8 lg:absolute lg:bottom-8 lg:left-1/2 lg:-translate-x-1/2 lg:py-0">
       <div className="container mx-auto flex flex-col items-center justify-between gap-4 px-4 lg:flex-row">
-        <div className="flex w-full max-w-sm flex-col items-center justify-center gap-4 md:items-start lg:max-w-full lg:flex-row lg:items-center lg:justify-start">
-          <a
-            href="https://www.producthunt.com/posts/artificial-unintelligence?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-artificial&#0045;unintelligence"
-            target="_blank"
-            rel="noreferrer"
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=419632&theme=neutral"
-              alt="Artificial&#0032;Unintelligence - Compete&#0032;to&#0032;create&#0032;the&#0032;funniest&#0032;AI&#0032;images&#0032;in&#0032;this&#0032;party&#0032;game | Product Hunt"
-              style={{ width: "250px", height: "54px" }}
-              width="250"
-              height="54"
-            />
-          </a>
-          <div className="flex flex-col items-start justify-center gap-2 text-left text-xs sm:text-sm">
+        <div className="flex w-full max-w-sm flex-col items-center justify-center gap-2 md:items-start lg:max-w-full lg:flex-row lg:items-center lg:justify-start">
+          <div className="flex flex-col items-center justify-center gap-2 text-center text-xs sm:text-sm md:items-start md:text-left">
             <p>
               Made with 💜 by{" "}
               <a

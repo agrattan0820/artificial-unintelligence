@@ -7,6 +7,13 @@ import * as Sentry from "@sentry/nextjs";
 Sentry.init({
   dsn: "https://a2ba8b67a2b34a83a517773ed9ff1567@o4505598670209024.ingest.sentry.io/4505598672175104",
 
+  // Adds request headers and IP for users, for more info visit:
+  // https://docs.sentry.io/platforms/javascript/guides/nextjs/configuration/options/#sendDefaultPii
+  sendDefaultPii: true,
+
+  // Enable logs to be sent to Sentry
+  enableLogs: true,
+
   // Adjust this value in production, or use tracesSampler for greater control
   tracesSampleRate: process.env.NODE_ENV === "production" ? 0.5 : 1,
 
