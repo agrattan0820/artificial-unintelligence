@@ -12,10 +12,9 @@
     "lint": "prettier . --check && eslint .",
     "db:push": "drizzle-kit push:pg --schema schema.ts",
     "db:migrate:create": "drizzle-kit generate:pg --out drizzle --schema schema.ts",
-    "db:migrate:run": "ts-node migrate.ts"
+    "db:migrate:run": "tsx --env-file=.env migrate.ts"
   },
   "dependencies": {
-    "dotenv": "^17.2.3",
     "drizzle-orm": "^0.45.1",
     "postgres": "^3.4.7"
   },
@@ -26,8 +25,8 @@
     "eslint": "^9.39.2",
     "eslint-config-custom": "workspace:*",
     "prettier": "^3.7.4",
-    "ts-node": "^10.9.2",
     "tsconfig": "workspace:*",
+    "tsx": "^4.21.0",
     "typescript": "5.9.3"
   }
 }
