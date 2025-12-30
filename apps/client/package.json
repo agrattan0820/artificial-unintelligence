@@ -7,7 +7,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "prettier . --check && eslint .",
+    "lint": "prettier . --check --experimental-cli && eslint .",
     "test:e2e": "playwright test"
   },
   "dependencies": {

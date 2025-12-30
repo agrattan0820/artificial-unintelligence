@@ -9,7 +9,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
-    "lint": "prettier . --check && eslint .",
+    "lint": "prettier . --check --experimental-cli && eslint .",
     "db:push": "drizzle-kit push:pg --schema schema.ts",
     "db:migrate:create": "drizzle-kit generate:pg --out drizzle --schema schema.ts",
     "db:migrate:run": "tsx --env-file=.env migrate.ts"
