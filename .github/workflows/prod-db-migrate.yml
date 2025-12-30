@@ -36,7 +36,7 @@ jobs:
       - name: 🏗 Setup Node.js environment
         uses: actions/setup-node@v4
         with:
-          node-version: 22.14.0
+          node-version: 24.12.0
           cache: "pnpm"
 
       - name: 👷 Install dependencies

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Build and Development Commands
 
-This is a pnpm monorepo managed by Turborepo (Node 22.14.0, pnpm 10.26.2).
+This is a pnpm monorepo managed by Turborepo (Node 24.12.0, pnpm 10.26.2).
 
 ```bash
 # Install all dependencies
