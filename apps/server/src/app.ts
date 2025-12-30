@@ -1,8 +1,3 @@
-import dotenv from "dotenv";
-
-// Load .env file before importing db
-dotenv.config();
-
 import { buildServer } from "./server";
 
 const server = buildServer();

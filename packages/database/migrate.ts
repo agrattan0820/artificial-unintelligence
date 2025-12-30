@@ -1,10 +1,6 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import { migrate } from "drizzle-orm/postgres-js/migrator";
-import dotenv from "dotenv";
 import postgres from "postgres";
-
-// Load .env file before importing db
-dotenv.config();
 
 const client = postgres(
   process.env.POSTGRES_URL ?? process.env.DATABASE_URL ?? "",
