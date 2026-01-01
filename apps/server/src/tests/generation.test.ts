@@ -1,7 +1,10 @@
 import crypto from "crypto";
 import { describe, expect, test } from "@jest/globals";
 
-import { filterFaceOffGenerationsByQuestionId } from "../services/generation.service";
+import {
+  filterFaceOffGenerationsByQuestionId,
+  isReplicateImageOutput,
+} from "../services/generation.service";
 import type { GameRoundGeneration } from "../types";
 
 describe("filterGameRoundGenerationsByQuestionId", () => {
@@ -136,5 +139,55 @@ describe("filterGameRoundGenerationsByQuestionId", () => {
     );
 
     expect(includesOtherQuestions).toBe(false);
+  });
+});
+
+describe("isReplicateImageOutput", () => {
+  const createMockFileOutput = () => ({
+    url: () => new URL("https://replicate.delivery/test/image.png"),
+    blob: () => Promise.resolve(new Blob()),
+  });
+
+  test("returns true for valid FileOutput array with two elements", () => {
+    const mockOutput = [createMockFileOutput(), createMockFileOutput()];
+    expect(isReplicateImageOutput(mockOutput)).toBe(true);
+  });
+
+  test("returns false for string array (legacy format)", () => {
+    const legacyOutput = [
+      "https://replicate.delivery/test/image1.png",
+      "https://replicate.delivery/test/image2.png",
+    ];
+    expect(isReplicateImageOutput(legacyOutput)).toBe(false);
+  });
+
+  test("returns false for array with only one element", () => {
+    const singleOutput = [createMockFileOutput()];
+    expect(isReplicateImageOutput(singleOutput)).toBe(false);
+  });
+
+  test("returns false for empty array", () => {
+    expect(isReplicateImageOutput([])).toBe(false);
+  });
+
+  test("returns false for null", () => {
+    expect(isReplicateImageOutput(null)).toBe(false);
+  });
+
+  test("returns false for undefined", () => {
+    expect(isReplicateImageOutput(undefined)).toBe(false);
+  });
+
+  test("returns false for object without url method", () => {
+    const invalidOutput = [{ blob: () => Promise.resolve(new Blob()) }, {}];
+    expect(isReplicateImageOutput(invalidOutput)).toBe(false);
+  });
+
+  test("returns false when url is a property instead of a method", () => {
+    const invalidOutput = [
+      { url: "https://replicate.delivery/test/image.png" },
+      { url: "https://replicate.delivery/test/image.png" },
+    ];
+    expect(isReplicateImageOutput(invalidOutput)).toBe(false);
   });
 });

@@ -233,12 +233,15 @@ export async function setGenerationAsSubmitted({
 }
 
 // Replicate SDK v1.x returns FileOutput objects (ReadableStream with url() method)
+// See: https://github.com/replicate/replicate-javascript#file-outputs
 interface FileOutput extends ReadableStream {
   url(): URL;
   blob(): Promise<Blob>;
 }
 
-function isFileOutputArray(res: unknown): res is [FileOutput, FileOutput] {
+export function isReplicateImageOutput(
+  res: unknown,
+): res is [FileOutput, FileOutput] {
   return (
     Array.isArray(res) &&
     res.length === 2 &&
@@ -269,7 +272,7 @@ export async function getReplicateAIImages({
 
   console.log("Received images:", output);
 
-  if (!isFileOutputArray(output)) {
+  if (!isReplicateImageOutput(output)) {
     throw new Error("Did not receive the correct amount of images");
   }
 
