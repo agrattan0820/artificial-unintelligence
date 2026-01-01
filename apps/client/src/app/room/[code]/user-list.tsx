@@ -21,8 +21,8 @@ const UserList = ({
       className="mx-auto mt-8 flex max-w-lg flex-wrap items-center justify-center gap-3"
     >
       <AnimatePresence>
-        {players.map((player, i) => (
-          <motion.li layout="position" key={i}>
+        {players.map((player) => (
+          <motion.li layout="position" key={player.id}>
             <UserCard
               nickname={player.nickname}
               color={player.id === hostId ? "INDIGO" : "GRAY"}
