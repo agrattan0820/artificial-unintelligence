@@ -1,4 +1,5 @@
 import { drizzle } from "drizzle-orm/postgres-js";
+import { sql } from "drizzle-orm";
 import postgres from "postgres";
 
 const client = postgres(
@@ -6,4 +7,13 @@ const client = postgres(
 );
 
 export const db = drizzle(client);
+
+/**
+ * Ping the database to verify the connection is working.
+ * Throws an error if the connection fails.
+ */
+export async function pingDatabase(): Promise<void> {
+  await db.execute(sql`SELECT 1`);
+}
+
 export * from "./schema";
