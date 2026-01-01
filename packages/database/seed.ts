@@ -2,6 +2,7 @@ import { db } from "./index";
 import { questions } from "./schema";
 
 const questionData = [
+  // --- Original Prompts ---
   "The bizarre reality TV show crossover",
   "The little known mythical creature",
   "The work of the world's worst tattoo artist",

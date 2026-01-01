@@ -10,8 +10,8 @@
     "build": "tsc",
     "dev": "tsc --watch",
     "lint": "prettier . --check --experimental-cli && eslint .",
-    "db:migrate:run": "tsx --env-file=.env migrate.ts",
-    "db:seed": "tsx --env-file=.env seed.ts"
+    "db:migrate:run": "tsx --env-file-if-exists=.env migrate.ts",
+    "db:seed": "tsx --env-file-if-exists=.env seed.ts"
   },
   "dependencies": {
     "drizzle-orm": "^0.45.1",
