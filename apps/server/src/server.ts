@@ -122,6 +122,11 @@ export function buildServer() {
       origin: process.env.APP_URL ?? "https://www.artificialunintelligence.gg",
       credentials: true,
     },
+    // Increase timeouts to handle browser throttling when tabs are hidden
+    // Browsers heavily throttle JavaScript timers for background tabs,
+    // which can delay heartbeat responses and cause false disconnections
+    pingInterval: 25000,
+    pingTimeout: 60000,
   });
 
   io.engine.use(helmet());
