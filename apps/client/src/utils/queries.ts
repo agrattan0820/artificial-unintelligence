@@ -95,7 +95,7 @@ export async function existingHost({
   nickname: string;
   sessionToken: string;
 }) {
-  const response = await fetch(`${URL}/user/existingHost`, {
+  const response = await fetch(`${URL}/user/existing-host`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${sessionToken}`,

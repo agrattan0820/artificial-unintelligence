@@ -5,6 +5,6 @@ import {
 } from "../controllers/user.controller";
 
 export function userRoutes(app: Express) {
-  app.post("/user/existingHost", existingHostController);
+  app.post("/user/existing-host", existingHostController);
   app.delete("/user/:id", deleteUserController);
 }

@@ -232,11 +232,28 @@ export async function setGenerationAsSubmitted({
   return updatedGenerations[0];
 }
 
-function isReplicateResponse(res: object): res is [string, string] {
-  return Array.isArray(res) && res.length === 2 && typeof res[0] === "string";
+// Replicate SDK v1.x returns FileOutput objects (ReadableStream with url() method)
+interface FileOutput extends ReadableStream {
+  url(): URL;
+  blob(): Promise<Blob>;
 }
 
-export async function getReplicateAIImages({ prompt }: { prompt: string }) {
+function isFileOutputArray(res: unknown): res is [FileOutput, FileOutput] {
+  return (
+    Array.isArray(res) &&
+    res.length === 2 &&
+    typeof res[0] === "object" &&
+    res[0] !== null &&
+    "url" in res[0] &&
+    typeof res[0].url === "function"
+  );
+}
+
+export async function getReplicateAIImages({
+  prompt,
+}: {
+  prompt: string;
+}): Promise<[string, string]> {
   const output = await replicate.run(
     "bytedance/sdxl-lightning-4step:6f7a773af6fc3e8de9d5a3c00be77c17308914bf67772726aff83496ba1e3bbe",
     {
@@ -252,9 +269,13 @@ export async function getReplicateAIImages({ prompt }: { prompt: string }) {
 
   console.log("Received images:", output);
 
-  if (!isReplicateResponse(output)) {
+  if (!isFileOutputArray(output)) {
     throw new Error("Did not receive the correct amount of images");
   }
 
-  return output;
+  const [image1, image2] = output;
+  const urls: [string, string] = [image1.url().href, image2.url().href];
+  console.log("Extracted URLs:", urls);
+
+  return urls;
 }
