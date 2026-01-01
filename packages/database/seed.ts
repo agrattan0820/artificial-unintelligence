@@ -19,7 +19,7 @@ const questionData = [
   "The collector and the odd type of item they collect",
   "Who your grandma is cheating on your grandpa with",
   "The unlikely mascot for a sports team",
-  "You in an alternate diemension",
+  "You in an alternate dimension",
   "The dystopian version of a popular TV show",
   "Not the expected location to have an extravagant resort",
   "The celebrity chef's secret ingredient that no one saw coming",
@@ -167,6 +167,88 @@ const questionData = [
   "The unexpected shape of the Loch Ness monster",
   "The board game that could also be considered a war crime",
   "Oops, we now have unlimited of this because of a failed science experiment",
+
+  // --- Absurd Discoveries & Mysteries ---
+  "What's really at the end of a rainbow",
+  "The controversial new emoji",
+  "The thing hiding under your bed that's actually friendly",
+  "The rejected theme park ride",
+  "What the WiFi router is doing when the internet is slow",
+  "The scene at the warehouse that delayed your package",
+  "What's really in the ball pit at Chuck E. Cheese",
+  "The rejected Pixar movie concept",
+  "What vending machines do when no one is watching",
+  "The item left behind in a hotel room that concerned housekeeping",
+
+  // --- Unexpected Crossovers & Collaborations ---
+  "Gordon Ramsay's kids' menu",
+  "The cursed collaboration between IKEA and NASA",
+  "If your dentist was also a DJ",
+  "The crossover episode between The Office and Lord of the Rings",
+  "The collaboration between Crocs and a luxury fashion brand",
+  "If HGTV renovated the Batcave",
+  "The Netflix adaptation of your search history",
+  "If Bob Ross painted a crime scene",
+
+  // --- Internet & Modern Life ---
+  "The LinkedIn post that went viral for the wrong reasons",
+  "The influencer's sponsored content no brand wanted",
+  "What your Roomba has seen",
+  "The Uber driver you'll never forget",
+  "The AI-generated art that became sentient",
+  "Your sleep paralysis demon's side hustle",
+  "The Discord server you accidentally joined",
+  "The group chat that should have stayed private",
+  "The phone screen showing the notification you never want to wake up to",
+  "What the algorithm thinks you want to see",
+
+  // --- Alternate History & Hypotheticals ---
+  "If dogs had invented the internet",
+  "The sport that should have been in the Olympics but was too dangerous",
+  "What historians found in King Tut's tomb that they're not telling us",
+  "The rejected state flag design",
+  "The seventh dwarf that got cut from Snow White",
+  "The 11th plague of Egypt",
+  "The deleted scene from the moon landing",
+  "What the Founding Fathers would order at a drive-thru",
+
+  // --- Awkward & Cringe Moments ---
+  "The worst possible thing to find in your Airbnb",
+  "What made everyone evacuate the water park",
+  "The baby shower gift that crossed a line",
+  "The office after someone hit reply-all by accident",
+  "The person who said the wrong thing at a funeral",
+  "The tattoo you got on spring break",
+  "The photo that ended a friendship",
+  "The gift that got regifted too many times",
+
+  // --- Food & Dining Disasters ---
+  "The appetizer that made Gordon Ramsay cry",
+  "The food truck that got shut down",
+  "What they're really putting in the airport sushi",
+  "The potluck dish no one touched",
+  "The secret menu item at Taco Bell",
+  "What makes gas station food so addictive",
+  "The meal that got someone banned from a restaurant",
+
+  // --- Workplace & School Chaos ---
+  "The reason the school banned this science fair project",
+  "The HR violation that somehow wasn't illegal",
+  "The team-building exercise that went too far",
+  "The substitute teacher's side job",
+  "What the janitor has seen at night",
+  "The office fridge that became a biohazard",
+  "The senior prank that went down in history",
+
+  // --- Creatures & Characters ---
+  "The Florida Man headline come to life",
+  "The cryptid that only appears in Costco parking lots",
+  "The villain origin story for a harmless cartoon character",
+  "What cats are planning while you sleep",
+  "The rejected Pokémon design",
+  "Your Elf on the Shelf after-hours",
+  "The monster under the bed writing a Yelp review of your room",
+  "The animal that evolution gave up on",
 ];
 
 async function seed() {
