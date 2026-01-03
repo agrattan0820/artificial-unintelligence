@@ -5,7 +5,7 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "build": "esbuild src/app.ts --bundle --platform=node --format=esm --outfile=dist/app.js --packages=external --sourcemap",
+    "build": "esbuild src/app.ts src/instrument.ts --bundle --platform=node --format=esm --outdir=dist --packages=external --sourcemap",
     "typecheck": "tsc --noEmit",
     "start": "node --import ./dist/instrument.js ./dist/app.js",
     "dev": "cross-env NODE_ENV=development tsx --env-file=.env --watch src/app.ts",

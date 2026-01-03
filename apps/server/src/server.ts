@@ -1,4 +1,3 @@
-import "./instrument";
 import express, {
   ErrorRequestHandler,
   Express,
