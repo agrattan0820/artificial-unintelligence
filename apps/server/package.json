@@ -5,14 +5,15 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "build": "esbuild src/app.ts src/instrument.ts --bundle --platform=node --format=esm --outdir=dist --packages=external --sourcemap",
+    "build": "esbuild src/app.ts src/instrument.ts --bundle --platform=node --format=esm --outdir=dist --packages=external",
+    "build:sourcemaps": "esbuild src/app.ts src/instrument.ts --bundle --platform=node --format=esm --outdir=dist --packages=external --sourcemap",
     "typecheck": "tsc --noEmit",
     "start": "node --import ./dist/instrument.js ./dist/app.js",
     "dev": "cross-env NODE_ENV=development tsx --env-file=.env --watch src/app.ts",
     "lint": "prettier . --check --experimental-cli && eslint . --ext .ts",
     "test": "jest",
     "migrate": "drizzle-kit generate:pg --out drizzle --schema db/schema.ts",
-    "sourcemaps": "pnpm run build && pnpm run sentry:sourcemaps",
+    "sourcemaps": "pnpm run build:sourcemaps && pnpm run sentry:sourcemaps",
     "sentry:sourcemaps": "sentry-cli sourcemaps inject --org alexander-grattan --project artificial-unintelligence-server ./dist && sentry-cli sourcemaps upload --org alexander-grattan --project artificial-unintelligence-server ./dist"
   },
   "dependencies": {
