@@ -9,7 +9,7 @@
   },
   "devDependencies": {
     "tsconfig": "workspace:*",
-    "turbo": "^2.7.2"
+    "turbo": "^2.8.20"
   },
   "engines": {
     "node": "24.12.0"
