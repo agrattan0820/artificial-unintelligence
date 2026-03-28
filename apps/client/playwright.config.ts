@@ -32,6 +32,7 @@ export default defineConfig({
           command: "cd .. && cd server && pnpm run dev",
           url: "http://localhost:8080",
           reuseExistingServer: !process.env.CI,
+          env: { E2E_TESTING: "true" },
         },
       ]
     : undefined,

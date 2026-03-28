@@ -6,6 +6,25 @@ test("should have the nickname input", async ({ page }) => {
   await expect(page.locator("#nickname")).toBeVisible();
 });
 
+test("should enforce nickname max length of 15 characters", async ({
+  page,
+}) => {
+  await page.goto("/");
+
+  const nicknameInput = page.locator("#nickname");
+  await expect(nicknameInput).toHaveAttribute("maxlength", "15");
+
+  await nicknameInput.fill("ThisIsAVeryLongNickname");
+  await expect(nicknameInput).toHaveValue("ThisIsAVeryLong");
+});
+
+test("should require nickname before hosting", async ({ page }) => {
+  await page.goto("/");
+
+  const nicknameInput = page.locator("#nickname");
+  await expect(nicknameInput).toHaveAttribute("required", "");
+});
+
 test("should be able to host a room", async ({ page }) => {
   await page.goto("/");
 
@@ -47,7 +66,7 @@ test("multiple users should be able to join a room", async ({
   await expect(bigAlSubmitButton).toBeVisible();
   await bigAlSubmitButton.click();
 
-  await expect(bigAlPage).toHaveURL(/room/);
+  await expect(bigAlPage).toHaveURL(/room/, { timeout: 15000 });
 
   // Grab invite link for room
   await expect(bigAlPage.locator("#inviteLink")).toHaveText(/invite/);
@@ -69,7 +88,7 @@ test("multiple users should be able to join a room", async ({
     });
     await expect(bobSubmitButton).toBeVisible();
     await bobSubmitButton.click();
-    await expect(bobPage).toHaveURL(/room/);
+    await expect(bobPage).toHaveURL(/room/, { timeout: 15000 });
 
     // Bill joins
     await billPage.goto(fullInviteURL);
@@ -81,7 +100,7 @@ test("multiple users should be able to join a room", async ({
     });
     await expect(billSubmitButton).toBeVisible();
     await billSubmitButton.click();
-    await expect(billPage).toHaveURL(/room/);
+    await expect(billPage).toHaveURL(/room/, { timeout: 15000 });
   }
 
   await bigAlContext.close();

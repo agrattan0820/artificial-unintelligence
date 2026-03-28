@@ -48,24 +48,28 @@ export function buildServer() {
 
   // Rate limiter
   // Based on https://redis.io/commands/incr#pattern-rate-limiter-1
-  app.use(async (req, res, next) => {
-    let redisIncr: number;
-    if (req.ip) {
-      try {
-        redisIncr = await redis.incr(req.ip);
-      } catch (error) {
-        console.error(`Could not increment rate limit key for ${req.ip}`);
-        throw error;
+  if (process.env.E2E_TESTING !== "true") {
+    app.use(async (req, res, next) => {
+      let redisIncr: number;
+      if (req.ip) {
+        try {
+          redisIncr = await redis.incr(req.ip);
+        } catch (error) {
+          console.error(`Could not increment rate limit key for ${req.ip}`);
+          throw error;
+        }
+        if (redisIncr === 1) {
+          await redis.expire(req.ip, 10);
+        }
+        if (redisIncr > 100) {
+          res.status(429).send("Too many requests - try again later");
+          return;
+        }
       }
-      if (redisIncr > 10) {
-        res.status(429).send("Too many requests - try again later");
-        return;
-      }
-      await redis.expire(req.ip, 10);
-    }
 
-    next();
-  });
+      next();
+    });
+  }
 
   // Session check
   app.use(async (req, res, next) => {
