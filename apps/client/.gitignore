@@ -7,6 +7,7 @@
 
 # testing
 /coverage
+src/e2e/.auth/
 
 # next.js
 /.next/

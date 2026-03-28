@@ -17,6 +17,7 @@
         "DATABASE_URL",
         "POSTGRES_URL",
         "SESSION_COOKIE_DOMAIN",
+        "E2E_TESTING",
         "REDIS_URL",
         "PORT",
         "NODE_ENV",
@@ -32,7 +33,11 @@
         "!.next/cache/**"
       ]
     },
-    "lint": {},
+    "lint": {
+      "env": [
+        "E2E_TESTING"
+      ]
+    },
     "typecheck": {},
     "dev": {
       "cache": false,
