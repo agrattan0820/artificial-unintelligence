@@ -50,7 +50,7 @@
     "typescript": "5.9.3"
   },
   "engines": {
-    "node": "24.12.0"
+    "node": "24.14.1"
   },
   "optionalDependencies": {
     "bufferutil": "^4.1.0",

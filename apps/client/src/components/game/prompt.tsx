@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  FormEvent,
+  SubmitEventHandler,
   useContext,
   useEffect,
   useMemo,
@@ -109,7 +109,7 @@ const Prompt = ({
     maxRegenerations - (currQuestionNumGenerations - 2) / 2;
   const outOfRegenerations = remainingImageGenerations === 0;
 
-  const onPromptSubmit = async (e: FormEvent<PromptFormType>) => {
+  const onPromptSubmit: SubmitEventHandler<PromptFormType> = async (e) => {
     try {
       e.preventDefault();
       setLoading(true);

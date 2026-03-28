@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { SubmitEventHandler, useState } from "react";
 import type { Session } from "next-auth";
 import { signIn } from "next-auth/react";
 import toast from "react-hot-toast";
@@ -34,7 +34,7 @@ const SignInForm = ({ session, room, submitLabel, type }: SignInFormProps) => {
   const isMounted = useIsMounted();
   const [loading, setLoading] = useState(false);
 
-  const onSubmit = async (e: FormEvent<NicknameFormType>) => {
+  const onSubmit: SubmitEventHandler<NicknameFormType> = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
