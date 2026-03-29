@@ -148,6 +148,13 @@
       "when": 1774742400000,
       "tag": "0020_restore_users_name",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "5",
+      "when": 1774828800000,
+      "tag": "0021_restore_auth_user_columns",
+      "breakpoints": true
     }
   ]
 }
