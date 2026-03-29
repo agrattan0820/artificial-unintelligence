@@ -3,7 +3,7 @@ import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { db } from "database";
 import { myDrizzleAdapter } from "@ai/components/my-drizzle-adapter";
-import { captureMessage } from "@sentry/nextjs";
+import { captureMessage, captureException } from "@sentry/nextjs";
 
 export const authOptions = (
   req?: NextApiRequest | Request,
@@ -58,6 +58,11 @@ export const authOptions = (
       session({ session, user }) {
         session.user = user;
         return session;
+      },
+    },
+    logger: {
+      error(code, metadata) {
+        captureException(metadata, { tags: { code } });
       },
     },
     cookies: {
