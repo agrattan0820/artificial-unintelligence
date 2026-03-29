@@ -33,4 +33,5 @@ export default withSentryConfig(nextConfig, {
   // Only print logs for uploading source maps in CI
   // Set to `true` to suppress logs
   silent: !process.env.CI,
+  authToken: process.env.SENTRY_AUTH_TOKEN,
 });

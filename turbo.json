@@ -22,7 +22,8 @@
         "PORT",
         "NODE_ENV",
         "APP_URL",
-        "NEXT_RUNTIME"
+        "NEXT_RUNTIME",
+        "SENTRY_AUTH_TOKEN"
       ],
       "dependsOn": [
         "^build"
