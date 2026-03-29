@@ -141,6 +141,13 @@
       "when": 1743120000000,
       "tag": "0019_fix_user_id_type",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "5",
+      "when": 1774742400000,
+      "tag": "0020_restore_users_name",
+      "breakpoints": true
     }
   ]
 }

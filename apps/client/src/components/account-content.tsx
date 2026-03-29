@@ -14,6 +14,7 @@ import useIsMounted from "@ai/utils/hooks/use-is-mounted";
 export default function AccountContent({ session }: { session: Session }) {
   const isMounted = useIsMounted();
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const displayName = session.user.name ?? session.user.nickname ?? "User";
 
   const handleSignOut = () => {
     if (isMounted) {
@@ -41,14 +42,14 @@ export default function AccountContent({ session }: { session: Session }) {
         {session.user.image && (
           <img
             src={session.user.image}
-            alt={`${session.user.name}'s Google profile image`}
+            alt={`${displayName}'s Google profile image`}
             width={96}
             height={96}
             className="relative z-10 h-24 w-24 rounded-full shadow"
           />
         )}
         <div className="-mt-8 rounded-2xl bg-slate-800 p-8 text-sm md:text-base">
-          <p>Name: {session.user.name}</p>
+          <p>Name: {displayName}</p>
           <p>Email: {session.user.email}</p>
         </div>
         <Button className="mt-8" onClick={handleSignOut}>
