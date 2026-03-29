@@ -98,7 +98,14 @@ export function buildServer() {
     const redisSession = await redis.get(sessionToken);
 
     if (!redisSession) {
-      const checkDBForSession = await checkUserSession({ sessionToken });
+      let checkDBForSession;
+      try {
+        checkDBForSession = await checkUserSession({ sessionToken });
+      } catch (error) {
+        Sentry.captureException(error);
+        res.status(500).send("Internal server error");
+        return;
+      }
       if (!checkDBForSession) {
         res.status(401).send("Unauthorized");
         return;

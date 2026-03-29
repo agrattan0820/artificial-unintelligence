@@ -27,7 +27,13 @@ export function authSocketMiddleware(
       return;
     }
 
-    const checkDBForSession = await checkUserSession({ sessionToken });
+    let checkDBForSession;
+    try {
+      checkDBForSession = await checkUserSession({ sessionToken });
+    } catch {
+      next(new Error("Internal server error"));
+      return;
+    }
 
     if (!checkDBForSession) {
       next(new Error("Unauthorized"));
