@@ -14,9 +14,7 @@ test.describe("Account page", () => {
   test("should have a sign out button", async ({ page }) => {
     await page.goto("/account");
 
-    await expect(
-      page.getByRole("button", { name: "Sign Out" }),
-    ).toBeVisible();
+    await expect(page.getByRole("button", { name: "Sign Out" })).toBeVisible();
   });
 
   test("should open delete account confirmation modal", async ({ page }) => {
@@ -35,9 +33,7 @@ test.describe("Account page", () => {
     ).toBeVisible();
   });
 
-  test("should close delete account modal when dismissed", async ({
-    page,
-  }) => {
+  test("should close delete account modal when dismissed", async ({ page }) => {
     await page.goto("/account");
 
     await page.getByRole("button", { name: "Delete Account" }).click();
