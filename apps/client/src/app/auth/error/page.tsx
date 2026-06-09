@@ -7,16 +7,12 @@ const errorDetails: Record<string, string> = {
     "You do not have permission to sign in with that account. Please try a different account.",
   Verification:
     "That sign-in link is no longer valid. Please start the sign-in flow again.",
-  OAuthSignin:
-    "Google sign-in could not be started. Please try again.",
-  OAuthCallback:
-    "Google sign-in could not be completed. Please try again.",
+  OAuthSignin: "Google sign-in could not be started. Please try again.",
+  OAuthCallback: "Google sign-in could not be completed. Please try again.",
   OAuthCreateAccount:
     "We could not create your account from Google sign-in. Please try again.",
-  Callback:
-    "We could not finish signing you in. Please try again.",
-  Default:
-    "Something went wrong while signing you in. Please try again.",
+  Callback: "We could not finish signing you in. Please try again.",
+  Default: "Something went wrong while signing you in. Please try again.",
 };
 
 export default async function AuthErrorPage({

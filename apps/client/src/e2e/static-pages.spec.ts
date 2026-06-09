@@ -6,7 +6,9 @@ test.describe("How to Play page", () => {
   }) => {
     await page.goto("/how-to-play");
 
-    await expect(page.getByRole("heading", { name: "How to Play" })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "How to Play" }),
+    ).toBeVisible();
     await expect(
       page.getByRole("heading", { name: "Generation Phase" }),
     ).toBeVisible();
@@ -39,7 +41,9 @@ test.describe("Privacy Policy page", () => {
   test("should have a contact email link", async ({ page }) => {
     await page.goto("/privacy-policy");
 
-    await expect(page.getByRole("link", { name: "alex@grattan.me" })).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: "alex@grattan.me" }),
+    ).toBeVisible();
   });
 });
 
@@ -50,7 +54,9 @@ test.describe("Homepage navigation", () => {
     await page.getByRole("link", { name: "How to Play" }).click();
 
     await expect(page).toHaveURL("/how-to-play");
-    await expect(page.getByRole("heading", { name: "How to Play" })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "How to Play" }),
+    ).toBeVisible();
   });
 
   test("should have a Privacy Policy link in the footer", async ({ page }) => {

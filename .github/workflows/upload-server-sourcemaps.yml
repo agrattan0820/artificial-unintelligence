@@ -1,46 +1,46 @@
 name: Upload Server Sourcemaps
 
 on:
-  push:
-    branches: ["main", "dev"]
+ push:
+  branches: ["main", "dev"]
 
 jobs:
-  build:
-    name: Build and Upload Server Sourcemaps to Sentry.io
-    timeout-minutes: 15
-    runs-on: ubuntu-latest
-    env:
-      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
-      NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
-      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-      GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-      NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
-      SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-      SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+ build:
+  name: Build and Upload Server Sourcemaps to Sentry.io
+  timeout-minutes: 15
+  runs-on: ubuntu-latest
+  env:
+   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+   TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+   DATABASE_URL: ${{ secrets.DATABASE_URL }}
+   NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+   NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+   GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+   GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+   NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+   SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+   SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+   SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
-    steps:
-      - name: 🏗 Check out code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
+  steps:
+   - name: 🏗 Check out code
+     uses: actions/checkout@v4
+     with:
+      fetch-depth: 2
 
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10.33.0
+   - uses: pnpm/action-setup@v4
+     with:
+      version: 11.5.2
 
-      - name: 🏗 Setup Node.js environment
-        uses: actions/setup-node@v4
-        with:
-          node-version: 24.14.1
-          cache: "pnpm"
+   - name: 🏗 Setup Node.js environment
+     uses: actions/setup-node@v4
+     with:
+      node-version: 24.14.1
+      cache: "pnpm"
 
-      - name: 👷 Install dependencies
-        run: pnpm install
+   - name: 👷 Install dependencies
+     run: pnpm install
 
-      - name: 🆙 Upload sourcemaps
-        working-directory: "./apps/server"
-        run: pnpm sourcemaps
+   - name: 🆙 Upload sourcemaps
+     working-directory: "./apps/server"
+     run: pnpm sourcemaps
