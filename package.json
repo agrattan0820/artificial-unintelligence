@@ -9,11 +9,11 @@
   },
   "devDependencies": {
     "tsconfig": "workspace:*",
-    "turbo": "^2.8.20"
+    "turbo": "^2.9.16"
   },
   "engines": {
     "node": "24.14.1"
   },
-  "packageManager": "pnpm@10.33.0",
+  "packageManager": "pnpm@11.5.2",
   "name": "artificial-unintelligence"
 }
