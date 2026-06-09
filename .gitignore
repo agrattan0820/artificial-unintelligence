@@ -37,3 +37,9 @@ yarn-error.log*
 
 # server
 dist
+
+# Claude Code
+.claude
+
+# Playwright
+.playwright
