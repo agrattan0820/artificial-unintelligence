@@ -3,6 +3,7 @@ packages:
   - packages/*
 
 allowBuilds:
+  '@parcel/watcher': true
   '@sentry-internal/node-cpu-profiler': true
   '@sentry/cli': true
   '@sentry/node-cpu-profiler': true
