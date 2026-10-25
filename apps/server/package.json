@@ -39,7 +39,7 @@
     "@types/morgan": "^1.9.10",
     "@types/node": "^25.9.9",
     "cross-env": "^10.1.0",
-    "esbuild": "^0.27.7",
+    "esbuild": "^0.28.2",
     "eslint": "^9.39.5",
     "eslint-config-custom": "workspace:*",
     "jest": "^30.5.2",
