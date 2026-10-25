@@ -14,18 +14,18 @@
     "db:seed": "tsx --env-file-if-exists=.env seed.ts"
   },
   "dependencies": {
-    "drizzle-orm": "^0.45.2",
+    "drizzle-orm": "^0.45.4",
     "postgres": "^3.4.9"
   },
   "devDependencies": {
     "@auth/core": "^0.40.0",
-    "@types/node": "^25.9.4",
-    "drizzle-kit": "^0.31.10",
-    "eslint": "^9.39.4",
+    "@types/node": "^25.9.9",
+    "drizzle-kit": "^0.31.11",
+    "eslint": "^9.39.5",
     "eslint-config-custom": "workspace:*",
-    "prettier": "^3.9.4",
+    "prettier": "^3.9.10",
     "tsconfig": "workspace:*",
-    "tsx": "^4.23.0",
+    "tsx": "^4.23.15",
     "typescript": "5.9.3"
   }
 }
